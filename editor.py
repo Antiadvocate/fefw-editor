@@ -32,7 +32,7 @@ from fefw_save import (GRADES, ITEM_KINDS, SKILL_NAMES, SKILL_THRESHOLDS,  # noq
                        save_money_sig, set_convoy_row)
 
 APP_NAME = "Fortune's Weave Save Editor"
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
 ICON_DIR = os.path.join(USER_DIR, "icons")
 
@@ -792,7 +792,7 @@ class App(tk.Tk):
         ttk.Button(r1, text="Open folder…", command=self.open_dialog).pack(side="left")
         r2 = ttk.Frame(mid, style="Header.TFrame")
         r2.pack(fill="x", pady=(6, 0))
-        self.mirror_chk = ttk.Checkbutton(r2, text="Apply edits to every slot of this route",
+        self.mirror_chk = ttk.Checkbutton(r2, text="Apply edits to this route's other saves",
                                           style="Side.TCheckbutton", variable=self.mirror,
                                           command=self._mirror_changed)
         self.mirror_chk.pack(side="left")
@@ -1147,7 +1147,8 @@ class App(tk.Tk):
 
     def _mirror_changed(self):
         self._save_settings()
-        self.flash("Edits now go into every slot of this route." if self.mirror.get()
+        self.flash("Edits now also go into this route's other saves (never chapter "
+                   "checkpoints)." if self.mirror.get()
                    else "Edits now go into the selected slot only.")
 
     def _show_welcome(self):
@@ -1252,11 +1253,14 @@ class App(tk.Tk):
         if path in self.slot_paths:
             self.slot_box.current(self.slot_paths.index(path))
         self._update_file_label()
-        peers = sum(1 for pth in self.slot_paths
-                    if pth != path and self.files.get(pth) and self._same_route(self.files[pth]))
-        self.mirror_chk.configure(
-            text=f"Apply edits to every slot of this route ({peers + 1} slots)" if peers
-            else "Apply edits to every slot of this route (only this one)")
+        peers = [os.path.basename(p) for p in self._peers()]
+        if self._is_checkpoint(path):
+            text = "Apply edits to this route's other saves (off for chapter checkpoints)"
+        elif peers:
+            text = f"Apply edits to this route's other saves (also {', '.join(peers)})"
+        else:
+            text = "Apply edits to this route's other saves (none — this slot only)"
+        self.mirror_chk.configure(text=text)
         self.refresh_units(keep=keep)
         self.refresh_convoy()
         self.locate_gold()
@@ -1367,18 +1371,37 @@ class App(tk.Tk):
             return False
         return len(a & b) * 2 >= min(len(a), len(b))
 
+    @staticmethod
+    def _is_checkpoint(path: str) -> bool:
+        """Chapter_* slots are chapter checkpoints the game can rewind to."""
+        return os.path.basename(path).startswith("Chapter_")
+
+    def _peers(self) -> list[str]:
+        """Other slots an edit is mirrored into: the same route's live saves.
+
+        Chapter_* checkpoints are never included — they are the points the
+        game's "go back in time" feature returns to, so each keeps its own
+        state.  When the open slot is itself a checkpoint, nothing is
+        mirrored: editing one point in time leaves the others alone.
+        """
+        if not self.sv or self._is_checkpoint(self.sv.path):
+            return []
+        out = []
+        for pth in self.slot_paths:
+            if pth == self.sv.path or self._is_checkpoint(pth):
+                continue
+            sv = self._get(pth)
+            if sv is not None and self._same_route(sv):
+                out.append(pth)
+        return out
+
     def _targets(self) -> list[SaveFile]:
-        """The open slot, plus the other slots of the same route when mirroring."""
+        """The open slot, plus the same route's live saves when mirroring."""
         if not self.sv:
             return []
         out = [self.sv]
         if self.mirror.get():
-            for pth in self.slot_paths:
-                if pth == self.sv.path:
-                    continue
-                sv = self._get(pth)
-                if sv is not None and self._same_route(sv):
-                    out.append(sv)
+            out += [self.files[p] for p in self._peers()]
         return out
 
     def _touch(self, svs):
@@ -1903,7 +1926,7 @@ class App(tk.Tk):
             return
         name = job_name(new_hash)
         n = len(self._targets())
-        scope = f"{n} slots of this route" if n > 1 else "this slot"
+        scope = f"{n} saves of this route" if n > 1 else "this slot"
         if not messagebox.askyesno(
                 "Change class",
                 f"Change {u.name} from {u.job} to {name} in {scope}?\n\n"

@@ -60,13 +60,17 @@ file inside it.
   memory; slots with pending changes get a ● in the drop-down and the Save button
   shows how many will be written. *Discard changes* (F5) re-reads everything.
   Quitting with unsaved changes asks first.
-* **"Apply edits to every slot of this route"** (on by default) writes each
-  edit into the same unit / convoy / gold in every slot of the route you're
-  playing. Mid-chapter the game resumes from a `Chapter_*` slot rather than
-  `Auto`, so an edit made to one slot alone can look like it did nothing.
-  Slots that belong to another lord's route (a `Route_*` slot with a different
-  party) are left alone — their convoy and gold are separate. Turn it off to
-  edit one slot only.
+* **What the slots are.** `Auto` is your latest save on whichever lord's route
+  you were last playing. `Route_<lord>` (e.g. `Route_Ism`) is that lord's route
+  while you play someone else. `Chapter_<lord>_<part>_<chapter>` are chapter
+  checkpoints, the points the game's "go back in time" feature returns to.
+  `Global` holds settings only.
+* **"Apply edits to this route's other saves"** (on by default) also writes each
+  edit into the route's other *live* saves (`Auto` and that lord's `Route_*`),
+  so it sticks whichever one the game loads. Another lord's route is left
+  alone (its party, convoy and gold are separate), and so is every `Chapter_*`
+  checkpoint, so each point in time keeps its own state. Open a checkpoint to
+  edit it on its own. Turn the option off to edit only the open slot.
 * A unit is stored as **several copies** inside one slot. Every edit goes into
   all of them; the header shows "copies in sync", or offers *Make copies match*
   if they disagree.
