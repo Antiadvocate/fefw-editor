@@ -12,12 +12,33 @@ Eden / eglantine Switch emulator. Plain Python + Tkinter, one extra library.
 
 | Page | Tab | What |
 |---|---|---|
-| **Units** | Stats | Level, EXP and all nine stats (HP, Str, Mag, Dex, Spd, Lck, Def, Res, Cha) |
+| **Units** | Stats | Level, EXP, max HP, and the points each of the nine stats has gained from level-ups (see below) |
 | | Weapon ranks | Rank EXP for every rank the unit owns, with the letter grade, progress to the next grade and a one-click "set every rank to…" |
 | | Inventory | Swap any carried item for another, picked from a searchable catalogue (known spells are listed too, read-only) |
 | | Class | Pick any class the game knows (searchable, English + internal name) |
 | **Convoy** | | Everything in storage, materials included: swap the item in any row or change its quantity |
 | **Gold** | | Set gold — locate it once by the amount the game shows, then it's found automatically |
+
+### What it doesn't do (yet)
+
+This edits the parts of the save that have been mapped, not the whole game. Not
+supported:
+
+* **Total stats.** The nine stored numbers are what a unit gained from level-ups;
+  the game adds class and personal bases (and any stat-up items) on top. So the
+  editor's numbers are lower than the unit screen, and raising one raises the
+  in-game stat by the same amount. Stat-up item bonuses aren't located yet.
+* **Movement.** Units have their own movement values. Where they're stored isn't
+  known yet.
+* **Weapon-rank rewards.** Raising a rank only changes the letter; skills and
+  combat arts granted on reaching a rank in play are not added.
+* **Skills, combat arts, supports, renown, mounts, battalions, karma shards.**
+  Skills and arts are stored as lists of hashed ids per unit, and without the
+  game's name table they can't be shown or edited meaningfully. The others
+  haven't been found in the save yet.
+
+If you know where any of these live (offsets, a cheat table, the game's data
+files), contributions are welcome.
 
 ## Download
 
@@ -108,13 +129,13 @@ PNGs into `icons/items/` and `icons/units/` to use real images — see
 
 ## Known limits
 
-* Only the class **id** is written. The game derives movement, usable weapons,
-  class skills and max HP from the class; those are not recalculated here.
+* Only the class **id** is written. Usable weapons and class skills that come
+  with a class are not recalculated here.
 * A unit only has entries for the weapon ranks it owns. The others display `E` in
   game and can't be added from here — the list is fixed-size inside the record.
-* Max HP is not stored in the save — only current HP can be edited.
 * Gold needs to be located once using the amount the game is currently showing
-  (not 0).
+  (not 0). If the bytes around it aren't unique, the editor won't guess and
+  asks you to locate it again.
 * **Adding to or emptying a convoy slot isn't supported.** The convoy is a fixed
   row of 1329 slots, and an empty slot is smaller than a filled one, so either
   would shift every slot after it. Put any spare item into the convoy in game,
@@ -123,7 +144,6 @@ PNGs into `icons/items/` and `icons/units/` to use real images — see
   shows a warning on a list damaged that way.)
 * Enemy and NPC records can be viewed but not edited — their layout is only
   partly known.
-* Supports, renown and the material/gift bag are not editable.
 
 ## Files
 
