@@ -875,18 +875,28 @@ def money_signature(payload: bytes, off: int) -> dict:
     return {"pre": pre.hex(), "post": post.hex()}
 
 
-def locate_money(payload: bytes, sig: dict) -> int | None:
+def money_matches(payload: bytes, sig: dict) -> list[int]:
+    """Every offset whose surrounding bytes match the remembered signature."""
     pre = bytes.fromhex(sig["pre"])
     post = bytes.fromhex(sig["post"])
-    needle = pre + bytes(4) + post
-    # walk every occurrence of the pre-bytes and verify the post-bytes
-    i = payload.find(pre)
+    out, i = [], payload.find(pre)
     while i >= 0:
         off = i + len(pre)
         if bytes(payload[off + 4:off + 4 + len(post)]) == post:
-            return off
+            out.append(off)
         i = payload.find(pre, i + 1)
-    return None
+    return out
+
+
+def locate_money(payload: bytes, sig: dict) -> int | None:
+    """The gold offset, but only when the signature picks out exactly one spot.
+
+    Gold has no decoded fixed position, so it is found by the bytes around it.
+    If those bytes occur more than once the right one can't be told apart, and
+    guessing could overwrite some other counter, so None is returned instead.
+    """
+    hits = money_matches(payload, sig)
+    return hits[0] if len(hits) == 1 else None
 
 
 def load_money_sig() -> dict | None:

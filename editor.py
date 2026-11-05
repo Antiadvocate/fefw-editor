@@ -28,11 +28,11 @@ from fefw_save import (GRADES, ITEM_KINDS, SKILL_NAMES, SKILL_THRESHOLDS,  # noq
                        default_save_dir, find_money_candidates, grade_label, grade_of,
                        is_enemy, is_shadow, is_slot_name, item_category, item_ids,
                        item_kind, item_label, job_ids, job_name, load_money_sig,
-                       locate_money, money_signature, next_threshold, pick_live,
+                       locate_money, money_matches, money_signature, next_threshold, pick_live,
                        save_money_sig)
 
 APP_NAME = "Fortune's Weave Save Editor"
-__version__ = "1.0.4"
+__version__ = "1.0.5"
 SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
 ICON_DIR = os.path.join(USER_DIR, "icons")
 
@@ -908,8 +908,21 @@ class App(tk.Tk):
             sp.bind("<FocusOut>", lambda e, f=fn: f())
         self.exp_bar = Bar(row, self, width=160, height=6)
         self.exp_bar.pack(side="left", anchor="s", pady=(0, 12))
+        hpbox = ttk.Frame(row, style="Card.TFrame")
+        hpbox.pack(side="left", padx=(40, 0))
+        ttk.Label(hpbox, text="MAX HP", style="StatName.TLabel").pack(anchor="w")
+        self.maxhp_lbl = ttk.Label(hpbox, text="—", style="CardH1.TLabel")
+        self.maxhp_lbl.pack(anchor="w")
 
         ttk.Separator(tab).pack(fill="x", pady=16)
+        gh = ttk.Frame(tab, style="Card.TFrame")
+        gh.pack(fill="x", pady=(0, 10))
+        ttk.Label(gh, text="Points gained from level-ups", style="CardH3.TLabel").pack(anchor="w")
+        ttk.Label(gh, style="CardFaint.TLabel", wraplength=700, justify="left",
+                  text="These are what the unit has gained from levelling, not the totals "
+                       "shown in game: the game adds them to the unit's class and personal "
+                       "bases, and stat-up items aren't included. Raising one raises the "
+                       "in-game stat by the same amount.").pack(anchor="w")
 
         grid = ttk.Frame(tab, style="Card.TFrame")
         grid.pack(fill="x")
@@ -939,9 +952,8 @@ class App(tk.Tk):
             self.stat_bars.append(bar)
 
         ttk.Label(tab, style="CardFaint.TLabel", wraplength=700, justify="left",
-                  text="HP here is current HP — max HP isn't stored in the save; the game "
-                       "derives it from class and stats. Stats are capped at 255. Changes "
-                       "apply as you type (Enter / Tab) and are written when you Save."
+                  text="Changing HP gained moves max HP by the same amount. Changes apply "
+                       "as you type (Enter / Tab) and are written when you Save."
                   ).pack(anchor="w", side="bottom")
 
     def _build_ranks_tab(self):
@@ -964,7 +976,9 @@ class App(tk.Tk):
                   text="The stored number is cumulative rank EXP; the game turns it into a "
                        "letter (E 0 · D 100 · C 300 · B 680 · A 1320 · S 2520 · S+ 3600). "
                        "A unit only has rows for ranks it already owns — the rest read E in "
-                       "game and can't be added from here."
+                       "game and can't be added from here. Raising a rank here only changes "
+                       "the letter: skills and combat arts the game hands out when a rank is "
+                       "reached in play are not granted."
                   ).pack(anchor="w", side="bottom")
 
     def _build_inventory_tab(self):
@@ -1602,6 +1616,7 @@ class App(tk.Tk):
         self.lvl_var.set(str(u.level))
         self.exp_var.set(str(u.exp))
         self.exp_bar.set(min(u.exp, 100) / 100)
+        self.maxhp_lbl.configure(text=str(u.max_hp) if u.max_hp else "—")
         top = max(40, max(u.stats))
         for i, v in enumerate(self.stat_vars):
             v.set(str(u.stats[i]))
@@ -1627,9 +1642,11 @@ class App(tk.Tk):
             self.copies_chip.configure(text=f"✓ {len(copies)} copies in sync",
                                        style="ChipOk.TLabel")
         else:
-            self.copies_chip.configure(text=f"⚠ {len(copies)} copies disagree",
-                                       style="ChipWarn.TLabel")
-            self.sync_btn.pack(anchor="e", pady=(6, 0))
+            # In Auto the first copy is the chapter-start snapshot and the last is
+            # the live unit, so differing copies are normal — not something to
+            # "fix" (that would overwrite the rewind point).
+            self.copies_chip.configure(text=f"{len(copies)} copies · live + chapter start",
+                                       style="Chip.TLabel")
 
     def _num(self, var, lo, hi):
         try:
@@ -1713,15 +1730,26 @@ class App(tk.Tk):
         def fn(r, sv):
             if r.stats[i] == v:
                 return False
+            if i == 0:
+                self._move_max_hp(r, sv, v - r.stats[0])
             r.set_stat(i, v, sv.payload)
             r.stats[i] = v
         n, s = self._edit_units(fn)
+        self.maxhp_lbl.configure(text=str(u.max_hp) if u.max_hp else "—")
         top = max(40, max(u.stats))
         for k, bar in enumerate(self.stat_bars):
             bar.set(u.stats[k] / top)
         if n:
             self._update_copies_chip(u)
             self.flash(f"{u.name}: {STAT_LONG[STAT_NAMES[i]]} → {v}  ({self._where(n, s)})")
+
+    @staticmethod
+    def _move_max_hp(r, sv, delta: int):
+        """Keep max HP = base + HP gained (true in every unedited save checked)."""
+        if delta and r.max_hp:
+            new = max(1, min(999, r.max_hp + delta))
+            r.set_hp(new, sv.payload)
+            r.max_hp = new
 
     def sync_copies(self):
         u = self._current()
@@ -1738,6 +1766,7 @@ class App(tk.Tk):
             r.set_level(lv, sv.payload)
             r.set_exp(ex, sv.payload)
             r.level, r.exp = lv, ex
+            self._move_max_hp(r, sv, stats[0] - r.stats[0])
             for k, val in enumerate(stats):
                 r.set_stat(k, val, sv.payload)
                 r.stats[k] = val
@@ -2133,7 +2162,12 @@ class App(tk.Tk):
             return self._show_gold(None, "")
         if not sig:
             return self._show_gold(None, "Not located yet — use the search below once.")
-        off = locate_money(self.sv.payload, sig)
+        hits = money_matches(bytes(self.sv.payload), sig)
+        if len(hits) > 1:
+            return self._show_gold(None, f"The remembered location matches {len(hits)} places "
+                                         "in this slot, so the editor won't guess — search "
+                                         "for the amount below.")
+        off = hits[0] if hits else None
         if off is None:
             return self._show_gold(None, "The remembered location isn't in this slot — "
                                          "search for the amount below.")
@@ -2193,7 +2227,9 @@ class App(tk.Tk):
             self.flash("Gold must be between 0 and 4,294,967,295.", "warn")
             return
         sig = money_signature(bytes(self.sv.payload), self.money_off)
-        save_money_sig(sig)
+        unique = len(money_matches(bytes(self.sv.payload), sig)) == 1
+        if unique:
+            save_money_sig(sig)
         touched = []
         for sv in self._targets():
             off = self.money_off if sv is self.sv else locate_money(sv.payload, sig)
@@ -2202,7 +2238,9 @@ class App(tk.Tk):
             struct.pack_into("<I", sv.payload, off, val)
             touched.append(sv)
         self._touch(touched)
-        self._show_gold(val, "Location remembered for future saves.")
+        self._show_gold(val, "Location remembered for future saves." if unique else
+                        "Set — but the bytes around this spot aren't unique, so it isn't "
+                        "remembered; search again next time.")
         self.flash(f"Gold → {val:,}" + (f" in {len(touched)} slots" if len(touched) > 1 else ""))
 
 
