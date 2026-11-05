@@ -32,7 +32,7 @@ from fefw_save import (GRADES, ITEM_KINDS, SKILL_NAMES, SKILL_THRESHOLDS,  # noq
                        save_money_sig, set_convoy_row)
 
 APP_NAME = "Fortune's Weave Save Editor"
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
 ICON_DIR = os.path.join(USER_DIR, "icons")
 
@@ -408,7 +408,9 @@ class App(tk.Tk):
         self._skill_shown: dict[int, int] = {}
         self._flash_job = None
 
-        self.mirror = tk.BooleanVar(value=self.settings.get("mirror", True))
+        # Off by default: Auto is the live save, the other slots are snapshots.
+        # (New key, so a "mirror": true saved by an older version doesn't stick.)
+        self.mirror = tk.BooleanVar(value=self.settings.get("mirror_route", False))
         self.show_enemies = tk.BooleanVar(value=self.settings.get("show_enemies", False))
         self.show_internal = tk.BooleanVar(value=False)
         self.show_bad_classes = tk.BooleanVar(value=False)
@@ -437,7 +439,7 @@ class App(tk.Tk):
             return {}
 
     def _save_settings(self):
-        self.settings.update(theme=self.theme_name(), mirror=bool(self.mirror.get()),
+        self.settings.update(theme=self.theme_name(), mirror_route=bool(self.mirror.get()),
                              show_enemies=bool(self.show_enemies.get()),
                              last_folder=self.folder)
         try:
@@ -1164,7 +1166,8 @@ class App(tk.Tk):
             path = os.path.join(folder, name)
             if is_slot_name(name) and os.path.isfile(path):
                 out.append(path)
-        out.sort(key=lambda pth: os.path.getmtime(pth), reverse=True)
+        # Auto (the live save) first, then the rest newest first
+        out.sort(key=lambda pth: (os.path.basename(pth) != "Auto", -os.path.getmtime(pth)))
         return out
 
     def _get(self, path: str) -> SaveFile | None:
@@ -1216,11 +1219,18 @@ class App(tk.Tk):
             for pth in self.slot_paths:
                 self._get(pth)
             self._save_settings()
-            target = os.path.abspath(prefer) if prefer else self.slot_paths[0]
+            target = os.path.abspath(prefer) if prefer else self._default_slot()
             self._populate_slot_box()
             self.load(target)
         finally:
             self.config(cursor="")
+
+    def _default_slot(self) -> str:
+        """Auto is the live save the game continues from; open it first."""
+        for pth in self.slot_paths:
+            if os.path.basename(pth) == "Auto":
+                return pth
+        return self.slot_paths[0]
 
     def _populate_slot_box(self):
         labels = []
@@ -1229,7 +1239,10 @@ class App(tk.Tk):
             sv = self.files.get(pth)
             n = len({u.uid for u in sv.units if not is_enemy(u)}) if sv else 0
             mark = "● " if pth in self.dirty else ""
-            tag = "   ★ newest" if pth == newest and len(self.slot_paths) > 1 else ""
+            base = os.path.basename(pth)
+            tag = ("   ★ live save" if base == "Auto" else
+                   "   checkpoint" if base.startswith("Chapter_") else
+                   "   newest" if pth == newest and len(self.slot_paths) > 1 else "")
             labels.append(f"{mark}{os.path.basename(pth)}  ·  {n} units  ·  "
                           f"{_fmt_time(os.path.getmtime(pth))}{tag}")
         self.slot_box.configure(values=labels)
