@@ -384,16 +384,74 @@ class UnitRecord:
     def job(self) -> str:
         return job_name(self.job_hash or 0)
 
-    def item_slots(self, payload: bytes) -> list[tuple[int, int]]:
-        """(offset, item id) pairs found around this record."""
-        items = item_ids()
-        out = []
-        lo, hi = max(0, self.base - 0x60), min(len(payload) - 4, self.base + 0x180)
-        for o in range(lo, hi):
-            v = struct.unpack_from("<I", payload, o)[0]
-            if v in items:
-                out.append((o, v))
-        return out
+    def inventory(self, payload: bytes) -> "Inventory | None":
+        """The unit's carried items and known spells, or None if not found."""
+        return find_inventory(payload, self)
+
+
+# --------------------------------------------------------------------------
+# carried items / spells
+# --------------------------------------------------------------------------
+# After the class history every unit block holds (verified on real Auto and
+# Route_* slots, three units, counts matching the game):
+#
+#   u32  section marker
+#   u8   0
+#   u8   number of carried items
+#   u8   number of spells
+#   entries, items first, then spells:
+#     0x41  u32 item id                    (5 bytes)
+#     0x61  u32 item id  + 8 bytes of data  (13 bytes; uses and the like)
+#
+# The editor used to treat every item id found near the record as a carried
+# item, which pulled in the spell list and, for some units, the convoy that
+# follows the record.
+INV_ENTRY = {0x41: 5, 0x61: 13}
+
+
+class Inventory:
+    __slots__ = ("header", "items", "spells")
+
+    def __init__(self, header: int, items: list, spells: list):
+        self.header = header
+        self.items = items      # [(offset of the u32 id, item id, tag)]
+        self.spells = spells
+
+
+def _parse_inventory(payload: bytes, h: int, ids) -> Inventory | None:
+    if h + 7 > len(payload) or payload[h + 4] != 0:
+        return None
+    marker = struct.unpack_from("<I", payload, h)[0]
+    if not (0 < marker < 0x01000000):
+        return None
+    n_items, n_spells = payload[h + 5], payload[h + 6]
+    if n_items + n_spells == 0 or n_items > 32 or n_spells > 64:
+        return None
+    entries, o = [], h + 7
+    for _ in range(n_items + n_spells):
+        if o + 5 > len(payload):
+            return None
+        tag = payload[o]
+        size = INV_ENTRY.get(tag)
+        iid = struct.unpack_from("<I", payload, o + 1)[0]
+        if size is None or iid not in ids:
+            return None
+        entries.append((o + 1, iid, tag))
+        o += size
+    return Inventory(h, entries[:n_items], entries[n_items:])
+
+
+def find_inventory(payload: bytes, rec: "UnitRecord") -> Inventory | None:
+    """Locate the item/spell lists that follow a unit record's class history."""
+    if rec.skill_off is None:
+        return None
+    start = rec.skill_off + 1 + 3 * payload[rec.skill_off]
+    ids = item_ids()
+    for h in range(start, min(len(payload) - 7, start + 0x80)):
+        inv = _parse_inventory(payload, h, ids)
+        if inv is not None:
+            return inv
+    return None
 
 
 def find_units(payload: bytes) -> list[UnitRecord]:

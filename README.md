@@ -14,7 +14,7 @@ Eden / eglantine Switch emulator. Plain Python + Tkinter, one extra library.
 |---|---|---|
 | **Units** | Stats | Level, EXP and all nine stats (HP, Str, Mag, Dex, Spd, Lck, Def, Res, Cha) |
 | | Weapon ranks | Rank EXP for every rank the unit owns, with the letter grade, progress to the next grade and a one-click "set every rank to…" |
-| | Inventory | Swap any carried item for another, picked from a searchable catalogue |
+| | Inventory | Swap any carried item for another, picked from a searchable catalogue (known spells are listed too, read-only) |
 | | Class | Pick any class the game knows (searchable, English + internal name) |
 | **Convoy** | | Add items, replace a row, change quantities, clear rows |
 | **Gold** | | Set gold — locate it once by the amount the game shows, then it's found automatically |
@@ -60,10 +60,13 @@ file inside it.
   memory; slots with pending changes get a ● in the drop-down and the Save button
   shows how many will be written. *Discard changes* (F5) re-reads everything.
   Quitting with unsaved changes asks first.
-* **"Apply edits to every slot in this folder"** (on by default) writes each
-  edit into the same unit / convoy / gold in every slot. Mid-chapter the game
-  resumes from a `Chapter_*` slot rather than `Auto`, so an edit made to one slot
-  alone can look like it did nothing. Turn it off to edit one slot only.
+* **"Apply edits to every slot of this route"** (on by default) writes each
+  edit into the same unit / convoy / gold in every slot of the route you're
+  playing. Mid-chapter the game resumes from a `Chapter_*` slot rather than
+  `Auto`, so an edit made to one slot alone can look like it did nothing.
+  Slots that belong to another lord's route (a `Route_*` slot with a different
+  party) are left alone — their convoy and gold are separate. Turn it off to
+  edit one slot only.
 * A unit is stored as **several copies** inside one slot. Every edit goes into
   all of them; the header shows "copies in sync", or offers *Make copies match*
   if they disagree.
@@ -108,7 +111,9 @@ PNGs into `icons/items/` and `icons/units/` to use real images — see
   (not 0).
 * An item already in the convoy can't be added as a second stack — change its
   quantity instead.
-* Renown and the material/gift bag are not editable.
+* Enemy and NPC records can be viewed but not edited — their layout is only
+  partly known.
+* Supports, renown and the material/gift bag are not editable.
 
 ## Files
 
