@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.bak
+*.tmp
+money_sig.json
+editor_settings.json

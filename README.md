@@ -1,32 +1,23 @@
 # Fortune's Weave Save Editor
 
-A small save editor for **Fire Emblem: Fortune's Weave** saves created by the
-Eden / eglantine Switch emulator. Plain Python + Tkinter, no install beyond one
-library.
+A save editor for **Fire Emblem: Fortune's Weave** saves created by the
+Eden / eglantine Switch emulator. Plain Python + Tkinter, one extra library.
 
-> **Unofficial and reverse-engineered.** Back up your save folder before using it.
+> **Unofficial and reverse-engineered.** The first save next to each slot keeps
+> the untouched original as `<slot>.bak` — but keep your own backup too.
 
-## Features
+![Units page](docs/units.png)
 
-| Tab | What you can edit |
-|---|---|
-| **Unit** | Level, EXP and all nine stats (HP, Str, Mag, Dex, Spd, Lck, Def, Res, Cha) |
-| **Unit** | Class — pick any class the game knows, English name + original id |
-| **Aptitude** | Skill experience for every skill family, with the grade (E → S+) shown next to it |
-| **Items** | The items a unit is carrying (swap the id, keep the uses) |
-| **Convoy** | Shared storage — append, replace or clear rows |
-| **Money** | Gold — search for the amount the game shows, then set it |
+## What you can edit
 
-Skill families the editor understands: Swords, Lances, Axes, Bows, Fists,
-Black Magic, White Magic, Infantry, Riding, Heavy Armor, Flying, Authority.
-
-Grade thresholds used when you pick a letter: `E 0, E+ 40, D 100, D+ 180,
-C 300, C+ 460, B 680, B+ 960, A 1320, A+ 1760, S 2520, S+ 3600`.
-
-## Requirements
-
-* Python 3.10 or newer
-* `pip install -r requirements.txt` (only `zstandard`)
+| Page | Tab | What |
+|---|---|---|
+| **Units** | Stats | Level, EXP and all nine stats (HP, Str, Mag, Dex, Spd, Lck, Def, Res, Cha) |
+| | Weapon ranks | Rank EXP for every rank the unit owns, with the letter grade, progress to the next grade and a one-click "set every rank to…" |
+| | Inventory | Swap any carried item for another, picked from a searchable catalogue |
+| | Class | Pick any class the game knows (searchable, English + internal name) |
+| **Convoy** | | Add items, replace a row, change quantities, clear rows |
+| **Gold** | | Set gold — locate it once by the amount the game shows, then it's found automatically |
 
 ## Running it
 
@@ -35,7 +26,10 @@ pip install -r requirements.txt
 python editor.py
 ```
 
-or double-click **FEFW Save Editor.bat** on Windows.
+or double-click **FEFW Save Editor.bat** on Windows. Python 3.10+.
+
+You can also pass a folder (or any slot file) on the command line:
+`python editor.py "C:\path\to\save\folder"`.
 
 ## Finding your save
 
@@ -43,50 +37,91 @@ or double-click **FEFW Save Editor.bat** on Windows.
 %APPDATA%\eden\nand\user\save\<play-uid>\<account>\04007EF01F8AE000\000\
 ```
 
-The editor finds this automatically and lists every slot file
-(`Auto`, `Chapter_*`, `Route_*`) with its unit count and timestamp.
+The editor finds this on its own (most recently played first) and remembers
+the last folder you opened. Otherwise use **Open folder…** and pick any slot
+file inside it.
 
-## How it behaves
+## How it works
 
-* **One slot file at a time.** Whatever file is selected in the dropdown is what
-  you are editing, and *Save file* writes only that file.
-* **Mid-chapter the game resumes from a `Chapter_*` slot, not `Auto`.** If your
-  edit "doesn't show up", this is usually why — the Aptitude tab has a button
-  that copies the grades into every slot in the folder.
-* A unit is stored as **several copies** inside one save file. The editor shows
-  one row per unit, writes every copy, and tells you when the copies disagree.
-* **Close the game before writing.** The first write next to a slot leaves a
-  `.bak` file.
+* **Every slot in the folder is loaded.** The slot drop-down lists `Auto`,
+  `Chapter_*` and `Route_*` with unit count and time; the newest one is marked
+  ★ and opened first.
+* **Nothing touches the disk until you press Save** (Ctrl+S). Edits are held in
+  memory; slots with pending changes get a ● in the drop-down and the Save button
+  shows how many will be written. *Discard changes* (F5) re-reads everything.
+  Quitting with unsaved changes asks first.
+* **"Apply edits to every slot in this folder"** (on by default) writes each
+  edit into the same unit / convoy / gold in every slot. Mid-chapter the game
+  resumes from a `Chapter_*` slot rather than `Auto`, so an edit made to one slot
+  alone can look like it did nothing. Turn it off to edit one slot only.
+* A unit is stored as **several copies** inside one slot. Every edit goes into
+  all of them; the header shows "copies in sync", or offers *Make copies match*
+  if they disagree.
+* **Close the game before saving.**
+
+![Convoy page](docs/convoy.png)
+
+## Finding items
+
+The item catalogue (Inventory and Convoy) searches English name, Japanese name
+and id at once, as you type. Every search word must match, so `silver bow`
+or `+3 sword` narrow things down. Use the **Type** filter (Sword, Lance, Tome,
+Accessory, …) to cut it further. Forged copies show their level (`Silver Axe +2`)
+even where the game's English text leaves it out.
+
+When you pick an inventory slot, the catalogue only offers items of the same
+kind (weapons for a weapon slot, etc.); tick *Allow any item type* to override.
+
+**Icons:** items get a coloured dot by type and units an initials badge. Drop
+PNGs into `icons/items/` and `icons/units/` to use real images — see
+[icons/README.md](icons/README.md).
+
+## Keyboard
+
+| Key | Does |
+|---|---|
+| Ctrl+S | Save every changed slot |
+| Ctrl+O | Open a save folder |
+| Ctrl+F | Jump to the search box on the current page |
+| F5 | Discard changes and re-read from disk |
+| Enter / double-click | Use the selected catalogue item |
+| Delete | Clear the selected convoy row(s) |
 
 ## Known limits
 
 * Only the class **id** is written. The game derives movement, usable weapons,
   class skills and max HP from the class; those are not recalculated here.
-* A unit only has entries for the skills it owns. The others display `E` in game
-  and can't be added from here — the list is fixed-size inside the record.
-* Max HP is not stored in the save — the game derives it from class and stats, so
-  only current HP can be edited.
-* Gold needs the amount the game is currently showing.
+* A unit only has entries for the weapon ranks it owns. The others display `E` in
+  game and can't be added from here — the list is fixed-size inside the record.
+* Max HP is not stored in the save — only current HP can be edited.
+* Gold needs to be located once using the amount the game is currently showing
+  (not 0).
+* An item already in the convoy can't be added as a second stack — change its
+  quantity instead.
 * Renown and the material/gift bag are not editable.
 
 ## Files
 
 ```
 editor.py            the GUI
-fefw_save.py         save container, unit records, all the edits
+fefw_save.py         save container, unit records, all the edits (also a small CLI)
 unit_ids.json        person id  -> name
 item_ids.json        item id    -> Japanese + English name
 job_ids.json         class id   -> Japanese + English name
+icons/               optional item / unit images
 requirements.txt     zstandard
 FEFW Save Editor.bat launcher
 ```
 
-The three JSON files are generated from the game's own data files. A different
+`editor_settings.json` (theme, last folder, options) and `money_sig.json` (where
+gold lives) are created next to the editor on first use.
+
+The three id files are generated from the game's own data files. A different
 game version may need them rebuilt; unknown ids then show as
 `unknown <hash>` instead of a name.
 
 ## Disclaimer
 
 No warranty. Editing saves can corrupt them, and this was built by inspecting a
-single save file — behaviour may differ on other game versions. Keep your own
-backups.
+handful of save files — behaviour may differ on other game versions. Keep your
+own backups.

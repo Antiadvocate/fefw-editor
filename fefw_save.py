@@ -40,6 +40,7 @@ import json
 import os
 import re
 import struct
+import unicodedata
 
 import zstandard
 
@@ -252,14 +253,22 @@ class SaveFile:
         path = path or self.path
         if not path:
             raise SaveError("no output path")
+        # The .bak is the untouched original: it is written once and never
+        # replaced, so it survives any number of later saves.  (Replacing it
+        # whenever the size changed meant the second save overwrote the
+        # original with the first edit.)
         if backup and os.path.exists(path):
             bak = path + ".bak"
-            if not os.path.exists(bak) or os.path.getsize(bak) != os.path.getsize(path):
+            if not os.path.exists(bak):
                 with open(path, "rb") as src, open(bak, "wb") as dst:
                     dst.write(src.read())
         data = self.to_bytes()
-        with open(path, "wb") as fh:
+        # write next to the target and swap it in, so a crash mid-write never
+        # leaves a half-written slot behind
+        tmp = path + ".tmp"
+        with open(tmp, "wb") as fh:
             fh.write(data)
+        os.replace(tmp, path)
         self.raw = data
         return path
 
@@ -831,90 +840,138 @@ def save_money_sig(sig: dict) -> None:
 # --------------------------------------------------------------------------
 # helpers
 # --------------------------------------------------------------------------
-def default_save_dir() -> str | None:
+def save_roots() -> list[str]:
+    """Places the Eden emulator keeps its NAND saves (Windows and Linux)."""
+    roots = []
+    for var in ("APPDATA",):
+        base = os.environ.get(var)
+        if base:
+            roots += [os.path.join(base, "eden", "nand", "user", "save"),
+                      os.path.join(base, "Eden", "nand", "user", "save")]
+    home = os.path.expanduser("~")
+    roots += [os.path.join(home, ".local", "share", "eden", "nand", "user", "save"),
+              os.path.join(home, "AppData", "Roaming", "eden", "nand", "user", "save")]
+    seen, out = set(), []
+    for r in roots:
+        key = os.path.normcase(os.path.abspath(r))
+        if key not in seen and os.path.isdir(r):
+            seen.add(key)
+            out.append(r)
+    return out
+
+
+def find_save_dirs() -> list[str]:
+    """Every Fortune's Weave save folder found, most recently played first."""
     title = "04007EF01F8AE000"
-    roots = [os.path.expandvars(r"%APPDATA%\eden\nand\user\save"),
-             os.path.expandvars(r"%APPDATA%\Eden\nand\user\save")]
-    for root in roots:
-        if not os.path.isdir(root):
-            continue
+    found = []
+    for root in save_roots():
         for dirpath, dirnames, _f in os.walk(root):
-            if os.path.basename(dirpath) == title:
-                for d in dirnames:
-                    cand = os.path.join(dirpath, d)
-                    if os.path.exists(os.path.join(cand, "Auto")):
-                        return cand
-    return None
+            if os.path.basename(dirpath).upper() != title:
+                continue
+            for d in dirnames:
+                cand = os.path.join(dirpath, d)
+                auto = os.path.join(cand, "Auto")
+                if os.path.exists(auto):
+                    found.append((os.path.getmtime(auto), cand))
+            dirnames[:] = []
+    found.sort(reverse=True)
+    return [p for _t, p in found]
 
 
-def main(argv: list[str]) -> int:
-    import argparse
-    ap = argparse.ArgumentParser(description="Fortune's Weave save editor")
-    ap.add_argument("target", nargs="?", help="save folder or single slot")
-    ap.add_argument("--list", action="store_true")
-    ap.add_argument("--verify", action="store_true")
-    ap.add_argument("--set-stat", nargs=3, metavar=("UNIT", "STAT", "N"))
-    ap.add_argument("--set-hp", nargs=2, metavar=("UNIT", "N"))
-    ap.add_argument("--set-level", nargs=2, metavar=("UNIT", "N"))
-    ap.add_argument("--set-exp", nargs=2, metavar=("UNIT", "N"))
-    args = ap.parse_args(argv)
-
-    target = args.target or default_save_dir()
-    if not target or not os.path.exists(target):
-        print("no save found")
-        return 2
-    if not os.path.isdir(target):
-        target = os.path.dirname(target)
-
-    svs = SaveSet(target)
-    best = svs.best_slot()
-    print("slots:", svs.slot_report())
-    if best:
-        print("unit data taken from:", os.path.basename(best.path))
-    for sv in svs.slots:
-        print(f"{os.path.basename(sv.path)}: {len(sv.raw)} B, payload {len(sv.payload)} B, "
-              f"units {len(sv.units)}")
-        print("  checksums:", sv.verify() or "OK")
-    for uid in svs.uids():
-        u = svs.summary(uid)
-        slots, copies = svs.slot_count(uid)
-        print(f"  {u.name:<18} lv {u.level:>3}  exp {u.exp:>3}  HP {u.max_hp:>3}  "
-              f"class {u.klass:>2}  stats {u.stats}  ({slots} slots / {copies} copies)")
-
-    def find_unit(token: str):
-        for uid in svs.uids():
-            u = svs.summary(uid)
-            t = token.lower()
-            if t in u.name.lower() or t in u.pid.lower():
-                return uid
-        return None
-
-    changed = False
-    for attr, fn in (("set_stat", None), ("set_hp", svs.patch_hp),
-                     ("set_level", svs.patch_level), ("set_exp", svs.patch_exp)):
-        arg = getattr(args, attr)
-        if not arg:
-            continue
-        uid = find_unit(arg[0])
-        if uid is None:
-            print(f"unit {arg[0]!r} not found")
-            return 3
-        if attr == "set_stat":
-            stat = arg[1]
-            idx = STAT_NAMES.index(stat) if stat in STAT_NAMES else int(stat)
-            n = svs.patch_stat(uid, idx, int(arg[2]))
-        else:
-            n = fn(uid, int(arg[1]))
-        print(f"{arg[0]}: {attr} -> {arg[1:]} ({n} copies)")
-        changed = True
-    if changed:
-        print("wrote", ", ".join(svs.write()))
-    return 0
+def default_save_dir() -> str | None:
+    dirs = find_save_dirs()
+    return dirs[0] if dirs else None
 
 
-if __name__ == "__main__":
-    raise SystemExit(main(__import__("sys").argv[1:]))
+# --------------------------------------------------------------------------
+# display helpers
+# --------------------------------------------------------------------------
+ITEM_KINDS = ["Sword", "Lance", "Axe", "Bow", "Tome", "Staff", "Fist", "Shield",
+              "Weapon", "Accessory", "Consumable", "Item"]
 
+_KIND_WORDS = [
+    ("Staff", ("staff", "rod", "wand"), ("杖",)),
+    ("Sword", ("sword", "blade", "katana", "rapier", "sabre", "saber", "zanbato", "gladius"),
+     ("剣", "刀")),
+    ("Lance", ("lance", "spear", "javelin", "pike", "halberd", "trident"), ("槍", "鉾", "薙刀")),
+    ("Axe", ("axe", "hatchet", "tomahawk", "poleax"), ("斧",)),
+    ("Bow", ("bow", "longbow", "shortbow"), ("弓",)),
+    ("Tome", ("tome", "magic book", "grimoire"), ("魔導書", "魔弾", "魔輪")),
+    ("Fist", ("knuckle", "fist", "gauntlet", "claw", "cestus"), ("拳", "爪")),
+    ("Shield", ("shield", "buckler"), ("盾",)),
+]
+
+
+def item_kind(meta: dict) -> str:
+    """A finer, display-only type for an item (Sword, Lance, Tome, Accessory…).
+
+    Built on top of item_category(), which stays the conservative check used to
+    decide what may go into a slot; this one only picks a label and a colour.
+    """
+    cat = item_category(meta or {})
+    if cat == "accessory":
+        return "Accessory"
+    if cat == "consumable":
+        return "Consumable"
+    jp = re.sub(r"＋[０-９0-9]+$", "", (meta or {}).get("jp") or "")
+    en = re.sub(r"\s*\+\d+$", "", ((meta or {}).get("en") or "").lower())
+    words = set(re.findall(r"[a-z]+", en))
+    for kind, en_words, jp_tails in _KIND_WORDS:
+        if any((" " in w and w in en) or w in words for w in en_words):
+            return kind
+        if jp.endswith(jp_tails):
+            return kind
+    if cat == "weapon":
+        return "Tome" if jp.endswith("書") else "Weapon"
+    return "Item"
+
+
+def item_label(iid: int, meta: dict | None = None) -> str:
+    """English name, with the forge level (+1, +2…) the Japanese name carries.
+
+    Many English names drop it, so "Silver Axe" would otherwise appear four
+    times in a list with nothing to tell the copies apart.
+    """
+    meta = item_ids().get(iid) if meta is None else meta
+    if not meta:
+        return f"unknown item {iid:08x}"
+    en = unicodedata.normalize("NFKC", meta.get("en") or "").strip()
+    jp = unicodedata.normalize("NFKC", meta.get("jp") or "").strip()
+    m = re.search(r"\+(\d+)$", jp)
+    base_jp = jp[:m.start()] if m else jp
+    # forged copies take the base item's name, so "+1…+5" line up with it, and
+    # half-translated names ("Poison 剣+1", "疾風 Sword") borrow a clean one
+    if base_jp in _clean_names() and (m or not en or _CJK.search(en)):
+        en = _clean_names()[base_jp]
+    if not en:
+        return jp or f"item {iid:08x}"
+    en = re.sub(r"\s*\+\s*\d+$", "", en)
+    return f"{en} +{m.group(1)}" if m else en
+
+
+_CJK = re.compile(r"[\u3040-\u30ff\u3400-\u9fff]")
+_CLEAN: dict[str, str] | None = None
+
+
+def _clean_names() -> dict[str, str]:
+    """Japanese base name -> English name, for items whose English is complete."""
+    global _CLEAN
+    if _CLEAN is None:
+        _CLEAN = {}
+        forged: dict[str, str] = {}
+        for meta in item_ids().values():
+            jp = unicodedata.normalize("NFKC", meta.get("jp") or "").strip()
+            en = unicodedata.normalize("NFKC", meta.get("en") or "").strip()
+            if not (jp and en) or _CJK.search(en):
+                continue
+            m = re.search(r"\+(\d+)$", jp)
+            if m:
+                forged.setdefault(jp[:m.start()], re.sub(r"\s*\+\s*\d+$", "", en))
+            else:
+                _CLEAN.setdefault(jp, en)
+        for jp, en in forged.items():
+            _CLEAN.setdefault(jp, en)
+    return _CLEAN
 
 
 # ----------------------------------------------------------------- convoy
@@ -923,23 +980,15 @@ CONVOY_ENTRY = 7          # 0x41 tag, u32 item id, u16 pad
 
 
 CONVOY_SIG = b"\x01\x31\x05\x01\x00"
-ITEMS_CACHE = set()
-
-
-def _items_cache():
-    global ITEMS_CACHE
-    if not ITEMS_CACHE:
-        ITEMS_CACHE = set(item_ids())
-    return ITEMS_CACHE
-ITEMS_CACHE = set()
-
-
-def _items_cache():
-    global ITEMS_CACHE
-    if not ITEMS_CACHE:
-        ITEMS_CACHE = set(item_ids())
-    return ITEMS_CACHE
 CONVOY_TAGS = (0x41, 0x61)
+ITEMS_CACHE: set[int] = set()
+
+
+def _items_cache() -> set[int]:
+    global ITEMS_CACHE
+    if not ITEMS_CACHE:
+        ITEMS_CACHE = set(item_ids())
+    return ITEMS_CACHE
 
 
 def convoy_blocks(payload: bytes) -> list:
@@ -949,7 +998,6 @@ def convoy_blocks(payload: bytes) -> list:
     fixed stride in every save (padding bytes appear between rows), so each row
     is located by its signature and the scan resynchronises afterwards.
     """
-    ids = _items_cache()
     ids = _items_cache()
     lists = []
     i = -1
@@ -1084,3 +1132,75 @@ def material_add(payload: bytearray, stride: int, entries, qty: int, iid: int) -
         return 0
     material_set(payload, off, qty, iid)
     return 1
+
+
+# --------------------------------------------------------------------------
+# command line
+# --------------------------------------------------------------------------
+def main(argv: list[str]) -> int:
+    import argparse
+    ap = argparse.ArgumentParser(description="Fortune's Weave save editor")
+    ap.add_argument("target", nargs="?", help="save folder or single slot")
+    ap.add_argument("--list", action="store_true")
+    ap.add_argument("--verify", action="store_true")
+    ap.add_argument("--set-stat", nargs=3, metavar=("UNIT", "STAT", "N"))
+    ap.add_argument("--set-hp", nargs=2, metavar=("UNIT", "N"))
+    ap.add_argument("--set-level", nargs=2, metavar=("UNIT", "N"))
+    ap.add_argument("--set-exp", nargs=2, metavar=("UNIT", "N"))
+    args = ap.parse_args(argv)
+
+    target = args.target or default_save_dir()
+    if not target or not os.path.exists(target):
+        print("no save found")
+        return 2
+    if not os.path.isdir(target):
+        target = os.path.dirname(target)
+
+    svs = SaveSet(target)
+    best = svs.best_slot()
+    print("slots:", svs.slot_report())
+    if best:
+        print("unit data taken from:", os.path.basename(best.path))
+    for sv in svs.slots:
+        print(f"{os.path.basename(sv.path)}: {len(sv.raw)} B, payload {len(sv.payload)} B, "
+              f"units {len(sv.units)}")
+        print("  checksums:", sv.verify() or "OK")
+    for uid in svs.uids():
+        u = svs.summary(uid)
+        slots, copies = svs.slot_count(uid)
+        print(f"  {u.name:<18} lv {u.level:>3}  exp {u.exp:>3}  HP {u.max_hp:>3}  "
+              f"class {u.klass:>2}  stats {u.stats}  ({slots} slots / {copies} copies)")
+
+    def find_unit(token: str):
+        for uid in svs.uids():
+            u = svs.summary(uid)
+            t = token.lower()
+            if t in u.name.lower() or t in u.pid.lower():
+                return uid
+        return None
+
+    changed = False
+    for attr, fn in (("set_stat", None), ("set_hp", svs.patch_hp),
+                     ("set_level", svs.patch_level), ("set_exp", svs.patch_exp)):
+        arg = getattr(args, attr)
+        if not arg:
+            continue
+        uid = find_unit(arg[0])
+        if uid is None:
+            print(f"unit {arg[0]!r} not found")
+            return 3
+        if attr == "set_stat":
+            stat = arg[1]
+            idx = STAT_NAMES.index(stat) if stat in STAT_NAMES else int(stat)
+            n = svs.patch_stat(uid, idx, int(arg[2]))
+        else:
+            n = fn(uid, int(arg[1]))
+        print(f"{arg[0]}: {attr} -> {arg[1:]} ({n} copies)")
+        changed = True
+    if changed:
+        print("wrote", ", ".join(svs.write()))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(__import__("sys").argv[1:]))
