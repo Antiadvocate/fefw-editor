@@ -16,7 +16,7 @@ Eden / eglantine Switch emulator. Plain Python + Tkinter, one extra library.
 | | Weapon ranks | Rank EXP for every rank the unit owns, with the letter grade, progress to the next grade and a one-click "set every rank to…" |
 | | Inventory | Swap any carried item for another, picked from a searchable catalogue (known spells are listed too, read-only) |
 | | Class | Pick any class the game knows (searchable, English + internal name) |
-| **Convoy** | | Add items, replace a row, change quantities, clear rows |
+| **Convoy** | | Everything in storage, materials included: swap the item in any row or change its quantity |
 | **Gold** | | Set gold — locate it once by the amount the game shows, then it's found automatically |
 
 ## Download
@@ -56,9 +56,13 @@ file inside it.
 * **Every slot in the folder is loaded, and `Auto` opens first.** `Auto` is
   the live save the game continues from, so editing it alone is enough. The
   drop-down marks it ★ and labels the `Chapter_*` checkpoints.
+* **Reload (F5) re-reads every slot from disk.** The editor also checks when
+  you switch back to its window. If the game saved since, a slot with no
+  unsaved edits is re-read on its own. If you have unsaved edits in it, Save
+  warns you instead of overwriting the game's newer save.
 * **Nothing touches the disk until you press Save** (Ctrl+S). Edits are held in
   memory; slots with pending changes get a ● in the drop-down and the Save button
-  shows how many will be written. *Discard changes* (F5) re-reads everything.
+  shows how many will be written.
   Quitting with unsaved changes asks first.
 * **What the slots are.** `Auto` is your latest save on whichever lord's route
   you were last playing. `Route_<lord>` (e.g. `Route_Ism`) is that lord's route
@@ -99,9 +103,8 @@ PNGs into `icons/items/` and `icons/units/` to use real images — see
 | Ctrl+S | Save every changed slot |
 | Ctrl+O | Open a save folder |
 | Ctrl+F | Jump to the search box on the current page |
-| F5 | Discard changes and re-read from disk |
+| F5 | Reload every slot from disk (asks first if you have unsaved edits) |
 | Enter / double-click | Use the selected catalogue item |
-| Delete | Clear the selected convoy row(s) |
 
 ## Known limits
 
@@ -112,8 +115,12 @@ PNGs into `icons/items/` and `icons/units/` to use real images — see
 * Max HP is not stored in the save — only current HP can be edited.
 * Gold needs to be located once using the amount the game is currently showing
   (not 0).
-* An item already in the convoy can't be added as a second stack — change its
-  quantity instead.
+* **Adding to or emptying a convoy slot isn't supported.** The convoy is a fixed
+  row of 1329 slots, and an empty slot is smaller than a filled one, so either
+  would shift every slot after it. Put any spare item into the convoy in game,
+  save, then replace it in the editor. (Older versions did "Add" by writing over
+  empty slots, which knocked the rest of the list out of line. The Convoy page
+  shows a warning on a list damaged that way.)
 * Enemy and NPC records can be viewed but not edited — their layout is only
   partly known.
 * Supports, renown and the material/gift bag are not editable.
