@@ -53,9 +53,9 @@ file inside it.
 
 ## How it works
 
-* **Every slot in the folder is loaded.** The slot drop-down lists `Auto`,
-  `Chapter_*` and `Route_*` with unit count and time; the newest one is marked
-  ★ and opened first.
+* **Every slot in the folder is loaded, and `Auto` opens first.** `Auto` is
+  the live save the game continues from, so editing it alone is enough. The
+  drop-down marks it ★ and labels the `Chapter_*` checkpoints.
 * **Nothing touches the disk until you press Save** (Ctrl+S). Edits are held in
   memory; slots with pending changes get a ● in the drop-down and the Save button
   shows how many will be written. *Discard changes* (F5) re-reads everything.
@@ -65,12 +65,11 @@ file inside it.
   while you play someone else. `Chapter_<lord>_<part>_<chapter>` are chapter
   checkpoints, the points the game's "go back in time" feature returns to.
   `Global` holds settings only.
-* **"Apply edits to this route's other saves"** (on by default) also writes each
-  edit into the route's other *live* saves (`Auto` and that lord's `Route_*`),
-  so it sticks whichever one the game loads. Another lord's route is left
-  alone (its party, convoy and gold are separate), and so is every `Chapter_*`
+* **"Apply edits to this route's other saves"** (off by default) also writes
+  each edit into the route's other live saves, e.g. that lord's `Route_*`.
+  Another lord's route is never touched, and neither is any `Chapter_*`
   checkpoint, so each point in time keeps its own state. Open a checkpoint to
-  edit it on its own. Turn the option off to edit only the open slot.
+  edit it on its own.
 * A unit is stored as **several copies** inside one slot. Every edit goes into
   all of them; the header shows "copies in sync", or offers *Make copies match*
   if they disagree.
