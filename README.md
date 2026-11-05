@@ -10,7 +10,7 @@ library.
 
 | Tab | What you can edit |
 |---|---|
-| **Unit** | Level, EXP, Max HP, and all nine stats (HP, Str, Mag, Dex, Spd, Lck, Def, Res, Cha) |
+| **Unit** | Level, EXP and all nine stats (HP, Str, Mag, Dex, Spd, Lck, Def, Res, Cha) |
 | **Unit** | Class — pick any class the game knows, English name + original id |
 | **Aptitude** | Skill experience for every skill family, with the grade (E → S+) shown next to it |
 | **Items** | The items a unit is carrying (swap the id, keep the uses) |
@@ -64,6 +64,8 @@ The editor finds this automatically and lists every slot file
   class skills and max HP from the class; those are not recalculated here.
 * A unit only has entries for the skills it owns. The others display `E` in game
   and can't be added from here — the list is fixed-size inside the record.
+* Max HP is not stored in the save — the game derives it from class and stats, so
+  only current HP can be edited.
 * Gold needs the amount the game is currently showing.
 * Renown and the material/gift bag are not editable.
 
