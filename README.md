@@ -19,7 +19,17 @@ Eden / eglantine Switch emulator. Plain Python + Tkinter, one extra library.
 | **Convoy** | | Add items, replace a row, change quantities, clear rows |
 | **Gold** | | Set gold — locate it once by the amount the game shows, then it's found automatically |
 
-## Running it
+## Download
+
+Grab the latest build from the
+[**Releases page**](https://github.com/Antiadvocate/fefw-editor/releases/latest):
+
+* **Windows:** `FEFW-Save-Editor-<version>-windows.zip` — unzip it anywhere you
+  can write to and run `FEFW Save Editor.exe`. No Python needed. The exe isn't
+  code-signed, so SmartScreen may ask you to click *More info → Run anyway*.
+* **Anything else:** `…-source.zip`, then follow *Running from source* below.
+
+## Running from source
 
 ```
 pip install -r requirements.txt
@@ -110,15 +120,31 @@ item_ids.json        item id    -> Japanese + English name
 job_ids.json         class id   -> Japanese + English name
 icons/               optional item / unit images
 requirements.txt     zstandard
-FEFW Save Editor.bat launcher
+FEFW Save Editor.bat launcher (source install)
+.github/workflows/   release build
 ```
 
 `editor_settings.json` (theme, last folder, options) and `money_sig.json` (where
-gold lives) are created next to the editor on first use.
+gold lives) are created next to the editor (or next to the `.exe`) on first use.
 
 The three id files are generated from the game's own data files. A different
 game version may need them rebuilt; unknown ids then show as
 `unknown <hash>` instead of a name.
+
+## Making a release
+
+1. Bump `__version__` in `editor.py` (e.g. `"1.0.1"`) and commit.
+2. Push a matching tag:
+
+   ```
+   git tag v1.0.1
+   git push origin v1.0.1
+   ```
+
+GitHub Actions ([.github/workflows/release.yml](.github/workflows/release.yml))
+builds the Windows `.exe` with PyInstaller, zips it with the README and the
+`icons/` folder, adds a source zip and publishes the release. It can also be run
+by hand from the Actions tab.
 
 ## Disclaimer
 

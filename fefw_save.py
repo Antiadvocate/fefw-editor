@@ -40,6 +40,7 @@ import json
 import os
 import re
 import struct
+import sys
 import unicodedata
 
 import zstandard
@@ -48,8 +49,14 @@ MAGIC = 0xCDEFBCDD
 HDR_FNV_START = 0x1F
 HDR_FNV_LEN = 0xE0
 HERE = os.path.dirname(os.path.abspath(__file__))
-ID_MAP_PATH = os.path.join(HERE, "unit_ids.json")
-ITEM_MAP_PATH = os.path.join(HERE, "item_ids.json")
+# Packaged as a single .exe (PyInstaller), the bundled id files are unpacked to a
+# temporary folder that disappears on exit: read data from there, but keep
+# anything the editor writes (settings, money_sig.json) next to the .exe.
+FROZEN = bool(getattr(sys, "frozen", False))
+DATA_DIR = getattr(sys, "_MEIPASS", HERE)
+USER_DIR = os.path.dirname(os.path.abspath(sys.executable)) if FROZEN else HERE
+ID_MAP_PATH = os.path.join(DATA_DIR, "unit_ids.json")
+ITEM_MAP_PATH = os.path.join(DATA_DIR, "item_ids.json")
 
 # The nine u16s are the game's stat block in the struct's own order, which a
 # community cheat table exposes as `+8 Max Hp, +A Str, +C Mag, +E Dex, +10 Spd,
@@ -67,7 +74,7 @@ class SaveError(Exception):
 # --------------------------------------------------------------------------
 # job / class ids — the record's u32 at +0x04 is low32(FNV-1 64 of "JID_...")
 # --------------------------------------------------------------------------
-JOB_MAP_PATH = os.path.join(HERE, "job_ids.json")
+JOB_MAP_PATH = os.path.join(DATA_DIR, "job_ids.json")
 _JOB_IDS: dict[int, dict] | None = None
 
 
@@ -790,7 +797,7 @@ class SaveSet:
 # --------------------------------------------------------------------------
 # money (gold) — located once per save, then remembered by a byte signature
 # --------------------------------------------------------------------------
-MONEY_SIG_PATH = os.path.join(HERE, "money_sig.json")
+MONEY_SIG_PATH = os.path.join(USER_DIR, "money_sig.json")
 
 
 def find_money_candidates(payload: bytes, value: int) -> list[int]:

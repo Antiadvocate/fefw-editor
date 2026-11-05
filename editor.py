@@ -22,6 +22,7 @@ from tkinter import filedialog, messagebox, ttk
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+from fefw_save import USER_DIR  # noqa: E402
 from fefw_save import (GRADES, ITEM_KINDS, SKILL_NAMES, SKILL_THRESHOLDS,  # noqa: E402
                        STAT_NAMES, SaveError, SaveFile, add_convoy_item, convoy_blocks,
                        default_save_dir, find_money_candidates, grade_label, grade_of,
@@ -31,8 +32,9 @@ from fefw_save import (GRADES, ITEM_KINDS, SKILL_NAMES, SKILL_THRESHOLDS,  # noq
                        save_money_sig, set_convoy_row)
 
 APP_NAME = "Fortune's Weave Save Editor"
-SETTINGS_PATH = os.path.join(HERE, "editor_settings.json")
-ICON_DIR = os.path.join(HERE, "icons")
+__version__ = "1.0.0"
+SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
+ICON_DIR = os.path.join(USER_DIR, "icons")
 
 STAT_MAX = 255          # the record parser rejects stat blocks with values >= 300
 SKILL_MAX = 9999        # find_skills() stops recognising a table above this
@@ -762,7 +764,8 @@ class App(tk.Tk):
         brand = ttk.Frame(head, style="Header.TFrame")
         brand.pack(side="left")
         ttk.Label(brand, text="Fortune's Weave", style="Title.TLabel").pack(anchor="w")
-        ttk.Label(brand, text="SAVE EDITOR", style="Subtitle.TLabel").pack(anchor="w")
+        ttk.Label(brand, text=f"SAVE EDITOR  ·  v{__version__}",
+                  style="Subtitle.TLabel").pack(anchor="w")
 
         right = ttk.Frame(head, style="Header.TFrame")
         right.pack(side="right")
