@@ -401,7 +401,7 @@ class App(tk.Tk):
         self.uid: int | None = None          # unit shown in the form
         self.money_off: int | None = None
         self._gold_cands: list[int] = []
-        self._inv_slots: list[tuple[int, int]] = []
+        self._inv_items: list[tuple[int, int, int]] = []
         self._conv_rows: list[tuple[int, int, int]] = []
         self._skill_rows: list = []
         self._shown: dict = {}
@@ -673,6 +673,7 @@ class App(tk.Tk):
             tree.tag_configure("enemy", foreground=p["faint"])
         for tree in (self.conv_tree, self.inv_tree):
             tree.tag_configure("empty", foreground=p["faint"])
+        self.inv_tree.tag_configure("header", foreground=p["muted"], font=self.f_small)
         self.gold_tree.tag_configure("ctx", foreground=p["muted"])
 
     def toggle_theme(self):
@@ -791,9 +792,10 @@ class App(tk.Tk):
         ttk.Button(r1, text="Open folder…", command=self.open_dialog).pack(side="left")
         r2 = ttk.Frame(mid, style="Header.TFrame")
         r2.pack(fill="x", pady=(6, 0))
-        ttk.Checkbutton(r2, text="Apply edits to every slot in this folder",
-                        style="Side.TCheckbutton", variable=self.mirror,
-                        command=self._mirror_changed).pack(side="left")
+        self.mirror_chk = ttk.Checkbutton(r2, text="Apply edits to every slot of this route",
+                                          style="Side.TCheckbutton", variable=self.mirror,
+                                          command=self._mirror_changed)
+        self.mirror_chk.pack(side="left")
         self.file_lbl = ttk.Label(r2, text="", style="SideMuted.TLabel")
         self.file_lbl.pack(side="left", padx=(16, 0))
 
@@ -885,6 +887,7 @@ class App(tk.Tk):
     def _build_stats_tab(self):
         tab = ttk.Frame(self.unit_tabs, style="Card.TFrame", padding=18)
         self.unit_tabs.add(tab, text="Stats")
+        self._stat_spins: list[ttk.Spinbox] = []
         vcmd = self._num_vcmd()
 
         row = ttk.Frame(tab, style="Card.TFrame")
@@ -898,6 +901,7 @@ class App(tk.Tk):
             sp = ttk.Spinbox(box, from_=lo, to=hi, width=6, textvariable=var, command=fn,
                              validate="key", validatecommand=vcmd, style="Stat.TSpinbox")
             sp.pack(anchor="w", pady=(4, 0))
+            self._stat_spins.append(sp)
             sp.bind("<Return>", lambda e, f=fn: f())
             sp.bind("<FocusOut>", lambda e, f=fn: f())
         self.exp_bar = Bar(row, self, width=160, height=6)
@@ -924,6 +928,7 @@ class App(tk.Tk):
                              command=lambda i=i: self.commit_stat(i), validate="key",
                              validatecommand=vcmd, style="Stat.TSpinbox")
             sp.pack(side="left")
+            self._stat_spins.append(sp)
             sp.bind("<Return>", lambda e, i=i: self.commit_stat(i))
             sp.bind("<FocusOut>", lambda e, i=i: self.commit_stat(i))
             bar = Bar(body, self, width=100, height=6)
@@ -1142,7 +1147,7 @@ class App(tk.Tk):
 
     def _mirror_changed(self):
         self._save_settings()
-        self.flash("Edits now go into every slot in this folder." if self.mirror.get()
+        self.flash("Edits now go into every slot of this route." if self.mirror.get()
                    else "Edits now go into the selected slot only.")
 
     def _show_welcome(self):
@@ -1247,6 +1252,11 @@ class App(tk.Tk):
         if path in self.slot_paths:
             self.slot_box.current(self.slot_paths.index(path))
         self._update_file_label()
+        peers = sum(1 for pth in self.slot_paths
+                    if pth != path and self.files.get(pth) and self._same_route(self.files[pth]))
+        self.mirror_chk.configure(
+            text=f"Apply edits to every slot of this route ({peers + 1} slots)" if peers
+            else "Apply edits to every slot of this route (only this one)")
         self.refresh_units(keep=keep)
         self.refresh_convoy()
         self.locate_gold()
@@ -1340,8 +1350,25 @@ class App(tk.Tk):
         self.title(f"{'● ' if n else ''}{name + ' — ' if name else ''}{APP_NAME}")
 
     # ---------------------------------------------------------- targets
+    @staticmethod
+    def _party(sv: SaveFile) -> set[int]:
+        return {u.uid for u in sv.units if not is_enemy(u)}
+
+    def _same_route(self, other: SaveFile) -> bool:
+        """True when `other` holds the same playthrough as the open slot.
+
+        Each lord's route has its own party, convoy and gold (Auto may be
+        Theodora's route while Route_Ism is Ishmael's).  Slots of one route
+        share most of their party — an older Chapter_* slot just has fewer
+        members — so at least half of the smaller party must overlap.
+        """
+        a, b = self._party(self.sv), self._party(other)
+        if not a or not b:
+            return False
+        return len(a & b) * 2 >= min(len(a), len(b))
+
     def _targets(self) -> list[SaveFile]:
-        """The slot being edited, plus every other slot when mirroring is on."""
+        """The open slot, plus the other slots of the same route when mirroring."""
         if not self.sv:
             return []
         out = [self.sv]
@@ -1350,7 +1377,7 @@ class App(tk.Tk):
                 if pth == self.sv.path:
                     continue
                 sv = self._get(pth)
-                if sv is not None:
+                if sv is not None and self._same_route(sv):
                     out.append(sv)
         return out
 
@@ -1362,11 +1389,23 @@ class App(tk.Tk):
             self._populate_slot_box()
         self._update_dirty()
 
+    def _read_only(self) -> bool:
+        """Enemy / NPC records are only partly understood (their stat block is
+        found one field off for some), so they can be viewed but not edited."""
+        u = self._current()
+        if u is not None and is_enemy(u):
+            self.flash("Enemy and NPC records are read-only — their layout isn't fully "
+                       "known, so an edit could land on the wrong bytes.", "warn")
+            return True
+        return False
+
     def _edit_units(self, fn) -> tuple[int, int]:
         """fn(record, savefile) -> bool for every copy of the shown unit.
 
         Returns (copies changed, slots changed).
         """
+        if self._read_only():
+            return 0, 0
         copies, touched = 0, []
         for sv in self._targets():
             hit = 0
@@ -1489,7 +1528,12 @@ class App(tk.Tk):
         copies = [r for r in self.sv.units if r.uid == u.uid]
         variants = {(r.level, r.exp, tuple(r.stats)) for r in copies}
         self.sync_btn.pack_forget()
-        if len(copies) <= 1:
+        enemy = is_enemy(u)
+        for sp in self._stat_spins:
+            sp.configure(state="disabled" if enemy else "normal")
+        if enemy:
+            self.copies_chip.configure(text="🔒 Enemy / NPC — read-only", style="ChipWarn.TLabel")
+        elif len(copies) <= 1:
             self.copies_chip.configure(text="1 copy in slot", style="Chip.TLabel")
         elif len(variants) == 1:
             self.copies_chip.configure(text=f"✓ {len(copies)} copies in sync",
@@ -1745,60 +1789,71 @@ class App(tk.Tk):
         prev = tree.selection()
         tree.delete(*tree.get_children())
         u = self._current()
+        self._inv_items = []
         if not u:
-            self._inv_slots = []
             return
-        self._inv_slots = u.item_slots(bytes(self.sv.payload))
+        inv = u.inventory(bytes(self.sv.payload))
         names = item_ids()
-        for n, (off, iid) in enumerate(self._inv_slots):
+        if inv is None:
+            tree.insert("", "end", iid="none", text="  Couldn't find this unit's item list",
+                        tags=("empty",))
+            self._inv_lock()
+            return
+        self._inv_items = inv.items
+        for n, (_off, iid, _tag) in enumerate(inv.items):
             meta = names.get(iid, {})
             kind = item_kind(meta) if meta else "Item"
-            empty = iid == 0x42b1baed
-            tree.insert("", "end", iid=str(n), text=f" {n + 1}.  {item_label(iid, meta)}",
-                        image=self.item_icon(iid, meta, kind),
-                        values=("" if empty else kind,), tags=("empty",) if empty else ())
-        if not self._inv_slots:
-            tree.insert("", "end", iid="none", text="  No items found near this unit's record",
-                        tags=("empty",))
-        if prev and tree.exists(prev[0]):
+            tree.insert("", "end", iid=f"i{n}", text=f" {n + 1}.  {item_label(iid, meta)}",
+                        image=self.item_icon(iid, meta, kind), values=(kind,))
+        if not inv.items:
+            tree.insert("", "end", iid="none", text="  Carrying nothing", tags=("empty",))
+        if inv.spells:
+            tree.insert("", "end", iid="spells", text="  SPELLS  (read-only)",
+                        tags=("header",))
+            for n, (_off, iid, _tag) in enumerate(inv.spells):
+                meta = names.get(iid, {})
+                tree.insert("", "end", iid=f"s{n}", text="      " + item_label(iid, meta),
+                            image=self._dot(KIND_COLORS["Tome"]), values=("Spell",),
+                            tags=("empty",))
+        if prev and tree.exists(prev[0]) and prev[0].startswith("i"):
             tree.selection_set(prev[0])
         self._inv_lock()
 
     def _inv_slot(self) -> int | None:
         sel = self.inv_tree.selection()
-        if not sel or sel[0] == "none":
+        if not sel or not sel[0].startswith("i"):
             return None
-        return int(sel[0])
+        return int(sel[0][1:])
 
     def _inv_lock(self):
         idx = self._inv_slot()
         cat = None
-        if idx is not None and idx < len(self._inv_slots):
-            cat = item_category(item_ids().get(self._inv_slots[idx][1], {}))
+        if idx is not None and idx < len(self._inv_items):
+            cat = item_category(item_ids().get(self._inv_items[idx][1], {}))
         self.inv_picker.set_lock(cat, self.allow_any_item.get())
 
     def replace_item(self, new_id: int):
         u = self._current()
         idx = self._inv_slot()
-        if not u or idx is None or idx >= len(self._inv_slots):
+        sel = self.inv_tree.selection()
+        if sel and sel[0][:1] == "s":
+            self.flash("Spells are read-only — pick one of the carried items.", "warn")
+            return
+        if not u or idx is None or idx >= len(self._inv_items):
             self.flash("Select one of the carried items on the left first.", "warn")
             return
-        off, old_id = self._inv_slots[idx]
+        old_id = self._inv_items[idx][1]
         if new_id == old_id:
             self.flash("That slot already holds this item.")
             return
-        delta = off - u.base
-        known = item_ids()
 
         def fn(r, sv):
-            target = r.base + delta
-            if not (0 <= target <= len(sv.payload) - 4):
+            # each copy is parsed on its own, so a copy laid out a byte
+            # differently is still hit at the right place
+            inv = r.inventory(bytes(sv.payload))
+            if inv is None or idx >= len(inv.items):
                 return False
-            # only overwrite something that is itself an item id, so a copy whose
-            # layout is shifted is skipped instead of corrupted
-            if struct.unpack_from("<I", sv.payload, target)[0] not in known:
-                return False
-            struct.pack_into("<I", sv.payload, target, new_id)
+            struct.pack_into("<I", sv.payload, inv.items[idx][0], new_id)
         n, s = self._edit_units(fn)
         name = item_label(new_id)
         if n:
@@ -1840,12 +1895,15 @@ class App(tk.Tk):
         if not u or not sel:
             self.flash("Pick a class from the list first.", "warn")
             return
+        if self._read_only():
+            return
         new_hash = int(sel[0], 16)
         if new_hash == u.job_hash:
             self.flash(f"{u.name} is already a {u.job}.")
             return
         name = job_name(new_hash)
-        scope = "every slot in this folder" if self.mirror.get() else "this slot"
+        n = len(self._targets())
+        scope = f"{n} slots of this route" if n > 1 else "this slot"
         if not messagebox.askyesno(
                 "Change class",
                 f"Change {u.name} from {u.job} to {name} in {scope}?\n\n"
