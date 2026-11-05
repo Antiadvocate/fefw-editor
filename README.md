@@ -17,7 +17,7 @@ Eden / eglantine Switch emulator. Plain Python + Tkinter, one extra library.
 | | Inventory | Swap any carried item for another, picked from a searchable catalogue (known spells are listed too, read-only) |
 | | Class | Pick any class the game knows (searchable, English + internal name) |
 | **Convoy** | | Everything in storage, materials included: swap the item in any row or change its quantity |
-| **Gold** | | Set gold — locate it once by the amount the game shows, then it's found automatically |
+| **Gold** | | Set gold. Found automatically in Theodora-route saves; other slots locate it once by the amount the game shows |
 
 ### What it doesn't do (yet)
 
@@ -133,9 +133,10 @@ PNGs into `icons/items/` and `icons/units/` to use real images — see
   with a class are not recalculated here.
 * A unit only has entries for the weapon ranks it owns. The others display `E` in
   game and can't be added from here — the list is fixed-size inside the record.
-* Gold needs to be located once using the amount the game is currently showing
-  (not 0). If the bytes around it aren't unique, the editor won't guess and
-  asks you to locate it again.
+* Gold is found automatically wherever its record exists (`Auto` and the
+  Theodora-route files so far). Only the live record near the start of the save
+  is written; chapter and battle snapshots keep their own amount. Slots without the record
+  (the Ishmael files) still need it located once by the amount the game shows.
 * **Adding to or emptying a convoy slot isn't supported.** The convoy is a fixed
   row of 1329 slots, and an empty slot is smaller than a filled one, so either
   would shift every slot after it. Put any spare item into the convoy in game,
