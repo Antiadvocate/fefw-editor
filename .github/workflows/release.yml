@@ -1,0 +1,72 @@
+# Builds the Windows .exe and a source zip, then publishes a GitHub release.
+#
+# Release a new version:
+#   1. bump __version__ in editor.py (e.g. "1.0.1") and commit
+#   2. git tag v1.0.1 && git push origin v1.0.1
+# or run this workflow by hand from the Actions tab and type the tag.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to create / release, e.g. v1.0.1"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    env:
+      TAG: ${{ github.event.inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: pip install -r requirements.txt pyinstaller==6.11.1
+
+      - name: Check the tag matches the version in editor.py
+        shell: pwsh
+        run: |
+          $v = python -c "import re;print(re.search(r'__version__ = \"(.+?)\"', open('editor.py', encoding='utf8').read()).group(1))"
+          if ("v$v" -ne $env:TAG) { throw "Tag $env:TAG does not match __version__ $v in editor.py" }
+
+      - name: Build exe
+        run: >
+          pyinstaller --noconfirm --onefile --windowed --name "FEFW Save Editor"
+          --add-data "unit_ids.json;." --add-data "item_ids.json;." --add-data "job_ids.json;."
+          editor.py
+
+      - name: Smoke test (data files bundled, module imports)
+        run: python -c "import fefw_save as f; assert f.item_ids() and f.unit_ids() and f.job_ids()"
+
+      - name: Package
+        shell: pwsh
+        run: |
+          $name = "FEFW-Save-Editor-$env:TAG"
+          $stage = "stage/$name"
+          New-Item -ItemType Directory -Force "$stage/icons/items", "$stage/icons/units" | Out-Null
+          Copy-Item "dist/FEFW Save Editor.exe", README.md -Destination $stage
+          Copy-Item icons/README.md -Destination "$stage/icons"
+          Copy-Item icons/items/.gitkeep -Destination "$stage/icons/items"
+          Copy-Item icons/units/.gitkeep -Destination "$stage/icons/units"
+          New-Item -ItemType Directory -Force out | Out-Null
+          Compress-Archive -Path "stage/$name" -DestinationPath "out/$name-windows.zip"
+          git archive --format zip --prefix "$name-source/" -o "out/$name-source.zip" HEAD
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          name: Fortune's Weave Save Editor ${{ env.TAG }}
+          body_path: .github/release-notes.md
+          generate_release_notes: true
+          files: out/*.zip
