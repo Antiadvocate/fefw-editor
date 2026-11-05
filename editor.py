@@ -32,7 +32,7 @@ from fefw_save import (GRADES, ITEM_KINDS, SKILL_NAMES, SKILL_THRESHOLDS,  # noq
                        save_money_sig, set_convoy_row)
 
 APP_NAME = "Fortune's Weave Save Editor"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
 ICON_DIR = os.path.join(USER_DIR, "icons")
 
