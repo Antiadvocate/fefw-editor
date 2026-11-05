@@ -24,21 +24,21 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from fefw_save import USER_DIR  # noqa: E402
 from fefw_save import (GRADES, ITEM_KINDS, SKILL_NAMES, SKILL_THRESHOLDS,  # noqa: E402
-                       STAT_NAMES, SaveError, SaveFile, add_convoy_item, convoy_blocks,
+                       STAT_NAMES, SaveError, SaveFile, live_convoy, set_convoy_item, set_convoy_qty,
                        default_save_dir, find_money_candidates, grade_label, grade_of,
                        is_enemy, is_shadow, is_slot_name, item_category, item_ids,
                        item_kind, item_label, job_ids, job_name, load_money_sig,
                        locate_money, money_signature, next_threshold, pick_live,
-                       save_money_sig, set_convoy_row)
+                       save_money_sig)
 
 APP_NAME = "Fortune's Weave Save Editor"
-__version__ = "1.0.3"
+__version__ = "1.0.4"
 SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
 ICON_DIR = os.path.join(USER_DIR, "icons")
 
 STAT_MAX = 255          # the record parser rejects stat blocks with values >= 300
 SKILL_MAX = 9999        # find_skills() stops recognising a table above this
-QTY_MAX = 999           # convoy_blocks() stops recognising a row above this
+QTY_MAX = 999           # quantities seen in real saves stay well under this
 
 STAT_LONG = {"HP": "Hit points", "Str": "Strength", "Mag": "Magic", "Dex": "Dexterity",
              "Spd": "Speed", "Lck": "Luck", "Def": "Defense", "Res": "Resistance",
@@ -402,7 +402,7 @@ class App(tk.Tk):
         self.money_off: int | None = None
         self._gold_cands: list[int] = []
         self._inv_items: list[tuple[int, int, int]] = []
-        self._conv_rows: list[tuple[int, int, int]] = []
+        self._conv_rows: list = []          # ConvoyRow, in slot order
         self._skill_rows: list = []
         self._shown: dict = {}
         self._skill_shown: dict[int, int] = {}
@@ -778,7 +778,7 @@ class App(tk.Tk):
         self.save_btn = ttk.Button(right, text="Save", style="Accent.TButton",
                                    command=self.save_all)
         self.save_btn.pack(side="right", padx=(8, 0))
-        self.revert_btn = ttk.Button(right, text="Discard changes", command=self.reload)
+        self.revert_btn = ttk.Button(right, text="⟳ Reload", command=self.reload)
         self.revert_btn.pack(side="right")
 
         mid = ttk.Frame(head, style="Header.TFrame")
@@ -1038,39 +1038,42 @@ class App(tk.Tk):
         ttk.Label(top, text="Convoy", style="CardH3.TLabel").pack(side="left")
         self.conv_count = ttk.Label(top, text="", style="CardMuted.TLabel")
         self.conv_count.pack(side="right")
-        ttk.Label(left, text="Shared storage — what the convoy screen shows with no owner.",
-                  style="CardMuted.TLabel").pack(anchor="w", pady=(2, 8))
+        ttk.Label(left, text="Everything in storage, materials included, by slot.",
+                  style="CardMuted.TLabel").pack(anchor="w", pady=(2, 6))
+        self.conv_problem = ttk.Label(left, text="", style="CardWarn.TLabel", wraplength=420,
+                                      justify="left")
+        self.conv_filter = SearchEntry(left, "Filter the convoy…", self.refresh_convoy)
+        self.conv_filter.pack(fill="x", pady=(0, 6))
         ctl = ttk.Frame(left, style="Card.TFrame")
         ctl.pack(side="bottom", fill="x", pady=(10, 0))
+        ttk.Label(left, style="CardFaint.TLabel", wraplength=420, justify="left",
+                  text="To add something new: put any spare item into the convoy in game, "
+                       "save, then replace it here. An empty slot is smaller than a filled "
+                       "one, so filling one directly would shift every slot after it."
+                  ).pack(side="bottom", anchor="w", pady=(8, 0))
         self.conv_tree = scrolled_tree(left, columns=("kind", "qty"), show="tree headings",
                                        selectmode="extended", height=6)
-        self.conv_tree.heading("#0", text="Item", anchor="w")
+        self.conv_tree.heading("#0", text="Slot · Item", anchor="w")
         self.conv_tree.heading("kind", text="Type", anchor="w")
         self.conv_tree.heading("qty", text="Qty", anchor="e")
-        self.conv_tree.column("#0", width=240)
+        self.conv_tree.column("#0", width=250)
         self.conv_tree.column("kind", width=90, stretch=False)
         self.conv_tree.column("qty", width=56, anchor="e", stretch=False)
         self.conv_tree.container.pack(fill="both", expand=True)
         self.conv_tree.bind("<<TreeviewSelect>>", self._conv_row_picked)
-        self.conv_tree.bind("<Delete>", lambda e: self.clear_convoy())
 
         ttk.Label(ctl, text="Quantity", style="Card.TLabel").pack(side="left")
         self.qty_var = tk.StringVar(value="1")
-        ttk.Spinbox(ctl, from_=1, to=QTY_MAX, width=5, textvariable=self.qty_var,
-                    validate="key", validatecommand=self._num_vcmd()
-                    ).pack(side="left", padx=(8, 12))
+        qs = ttk.Spinbox(ctl, from_=1, to=QTY_MAX, width=5, textvariable=self.qty_var,
+                         validate="key", validatecommand=self._num_vcmd())
+        qs.pack(side="left", padx=(8, 12))
+        qs.bind("<Return>", lambda e: self.set_convoy_qty())
         ttk.Button(ctl, text="Set qty", command=self.set_convoy_qty).pack(side="left")
-        ttk.Button(ctl, text="Clear row", style="Danger.TButton",
-                   command=self.clear_convoy).pack(side="right")
 
         right = ttk.Frame(pane, padding=(10, 0, 0, 0))
         pane.add(right, weight=1)
-        self.conv_picker = ItemPicker(right, self, self.add_convoy, "Add to convoy")
+        self.conv_picker = ItemPicker(right, self, self.replace_convoy, "Put in selected row")
         self.conv_picker.pack(fill="both", expand=True)
-        self.conv_replace_btn = ttk.Button(self.conv_picker.action_btn.master,
-                                           text="Replace selected row",
-                                           command=self.replace_convoy)
-        self.conv_replace_btn.pack(side="right", padx=(0, 8))
 
     # --------------------------------------------------------- gold page
     def _build_gold(self):
@@ -1128,6 +1131,8 @@ class App(tk.Tk):
         self.bind_all("<Control-o>", lambda e: self.open_dialog())
         self.bind_all("<Control-f>", self._focus_search)
         self.bind_all("<F5>", lambda e: self.reload())
+        self.bind("<FocusIn>", lambda e: self.after_idle(self._check_disk)
+                  if e.widget is self else None)
 
     def _focus_search(self, _e=None):
         page = self.pages.index(self.pages.select())
@@ -1290,6 +1295,44 @@ class App(tk.Tk):
         shown = folder if len(parts) <= 4 else os.sep.join(["…"] + parts[-3:])
         self.file_lbl.configure(text=f"{shown}" + (f"   ⚠ {', '.join(bad)}" if bad else ""))
 
+    def _changed_on_disk(self, path: str) -> bool:
+        try:
+            return os.path.getmtime(path) != self.mtimes.get(path)
+        except OSError:
+            return False
+
+    def _check_disk(self, _e=None):
+        """When the window comes back into focus, pick up saves the game made.
+
+        A slot with no unsaved edits is simply re-read.  One with unsaved edits
+        is left alone, and the warning in save_all() stops it overwriting the
+        game's newer file.
+        """
+        if not self.folder or getattr(self, "_checking", False):
+            return
+        self._checking = True
+        try:
+            changed = [p for p in self.slot_paths if self._changed_on_disk(p)]
+            if not changed:
+                return
+            clean = [p for p in changed if p not in self.dirty]
+            if clean:
+                for p in clean:
+                    self.files.pop(p, None)
+                    self._get(p)
+                self._populate_slot_box()
+                if self.sv is not None and self.sv.path in clean:
+                    self._shown, self._skill_rows = {}, []
+                    self.load(self.sv.path)
+                self.flash("Picked up a newer save from the game: "
+                           + ", ".join(os.path.basename(p) for p in clean), "ok")
+            if len(clean) < len(changed):
+                self.flash("The game saved a slot you have unsaved edits in. Saving now "
+                           "would overwrite the game's progress. Reload to start again "
+                           "from the game's save.", "warn")
+        finally:
+            self._checking = False
+
     def _confirm_discard(self, what: str) -> bool:
         if not self.dirty:
             return True
@@ -1306,8 +1349,8 @@ class App(tk.Tk):
         if not self.folder:
             return
         if self.dirty and not messagebox.askyesno(
-                APP_NAME, f"Throw away unsaved changes in {len(self.dirty)} slot(s) and "
-                          "re-read everything from disk?", parent=self):
+                APP_NAME, f"Reload from disk and throw away the unsaved changes in "
+                          f"{len(self.dirty)} slot(s)?", parent=self):
             return
         cur = self.sv.path if self.sv else None
         self._shown, self._skill_rows = {}, []    # don't write the form into fresh data
@@ -1321,6 +1364,16 @@ class App(tk.Tk):
         if not self.dirty:
             self.flash("Nothing to save — no changes yet.")
             return True
+        newer = [p for p in self.dirty if self._changed_on_disk(p)]
+        if newer and not messagebox.askyesno(
+                APP_NAME, "The game has saved " + ", ".join(os.path.basename(p) for p in newer)
+                + " since the editor read it.\n\nSaving now would replace that newer save "
+                  "with the editor's older copy plus your edits, and anything you did in "
+                  "game since would be lost.\n\nOverwrite anyway? (No = keep the game's "
+                  "save; then press Reload and redo your edits.)", icon="warning", parent=self):
+            self.flash("Not saved — the game's newer save was kept. Press Reload, then redo "
+                       "your edits.", "warn")
+            return False
         written, failed = [], []
         for pth in sorted(self.dirty, key=os.path.basename):
             sv = self.files.get(pth)
@@ -1357,12 +1410,11 @@ class App(tk.Tk):
             self.dirty_lbl.configure(text=f"● {n} slot{'s' if n > 1 else ''} with unsaved "
                                           "changes  ·  Ctrl+S to save", style="StatusWarn.TLabel")
             self.save_btn.configure(text=f"Save ({n})", state="normal")
-            self.revert_btn.configure(state="normal")
         else:
             self.dirty_lbl.configure(text="All changes saved" if self.sv else "",
                                      style="Status.TLabel")
             self.save_btn.configure(text="Save", state="normal" if self.sv else "disabled")
-            self.revert_btn.configure(state="disabled")
+        self.revert_btn.configure(state="normal" if self.folder else "disabled")
         name = os.path.basename(self.sv.path) if self.sv else ""
         self.title(f"{'● ' if n else ''}{name + ' — ' if name else ''}{APP_NAME}")
 
@@ -1958,45 +2010,59 @@ class App(tk.Tk):
         self.show_unit()
 
     # ========================================================== convoy
-    @staticmethod
-    def _primary_block(payload) -> list:
-        """The list the game is using: the last one in the payload."""
-        blocks = convoy_blocks(bytes(payload))
-        return max(blocks, key=lambda b: b[0][0]) if blocks else []
-
     def refresh_convoy(self, select: list[int] | None = None):
+        """List the live convoy.  Tree ids are slot numbers."""
         tree = self.conv_tree
         prev = select if select is not None else [int(i) for i in tree.selection()
                                                   if i.isdigit()]
         tree.delete(*tree.get_children())
-        self._conv_rows = self._primary_block(self.sv.payload) if self.sv else []
+        conv = live_convoy(bytes(self.sv.payload)) if self.sv else None
+        self._conv_rows = conv.rows if conv else []
         names = item_ids()
-        filled = 0
-        for k, (off, qty, iid) in enumerate(self._conv_rows):
-            meta = names.get(iid, {})
+        q = self.conv_filter.get_query().lower()
+        shown = 0
+        for row in self._conv_rows:
+            meta = names.get(row.iid, {})
             kind = item_kind(meta) if meta else "Item"
-            tree.insert("", "end", iid=str(k), text=" " + item_label(iid, meta),
-                        image=self.item_icon(iid, meta, kind),
-                        values=(kind, qty if qty else "—"), tags=("empty",) if not qty else ())
-            filled += 1 if qty else 0
-        if not self._conv_rows:
+            label = item_label(row.iid, meta)
+            if q and not all(t in f"{label} {meta.get('jp', '')} {kind}".lower()
+                             for t in q.split()):
+                continue
+            tree.insert("", "end", iid=str(row.slot), text=f" {row.slot + 1:>4} · {label}",
+                        image=self.item_icon(row.iid, meta, kind), values=(kind, row.qty))
+            shown += 1
+        if conv is None:
             tree.insert("", "end", iid="none", text="  No convoy list found in this slot",
                         tags=("empty",))
-        self.conv_count.configure(text=f"{filled} stacks" if self._conv_rows else "")
+        total = len(self._conv_rows)
+        self.conv_count.configure(text="" if conv is None else
+                                  f"{total} items · {conv.slots} slots" if shown == total
+                                  else f"{shown} of {total} items")
+        if conv is not None and conv.problem:
+            self.conv_problem.configure(
+                text=f"⚠ This list is damaged: {conv.problem}, so the game can't see "
+                     "those items. That's what the old “Add to convoy” did. Restore the "
+                     "slot's .bak or a backup to get them back.")
+            self.conv_problem.pack(fill="x", pady=(0, 6), before=self.conv_filter)
+        else:
+            self.conv_problem.pack_forget()
         keep = [str(i) for i in prev if tree.exists(str(i))]
         if keep:
             tree.selection_set(keep)
             tree.see(keep[-1])
 
+    def _conv_row(self, slot: int):
+        return next((r for r in self._conv_rows if r.slot == slot), None)
+
     def _conv_selected(self) -> list[int]:
         return sorted(int(i) for i in self.conv_tree.selection() if i.isdigit())
 
     def _conv_row_picked(self, _e=None):
-        rows = self._conv_selected()
-        if len(rows) == 1 and rows[0] < len(self._conv_rows):
-            qty = self._conv_rows[rows[0]][1]
-            if qty:
-                self.qty_var.set(str(qty))
+        slots = self._conv_selected()
+        if len(slots) == 1:
+            row = self._conv_row(slots[0])
+            if row:
+                self.qty_var.set(str(row.qty))
 
     def _qty(self) -> int | None:
         v = self._num(self.qty_var, 1, QTY_MAX)
@@ -2004,93 +2070,55 @@ class App(tk.Tk):
             self.flash(f"Quantity must be 1 – {QTY_MAX}.", "warn")
         return v
 
-    def _convoy_edit(self, fn) -> int:
+    def _convoy_edit(self, slots: list[int], fn) -> int:
+        """fn(payload, row) for the given slots of the live list in every target.
+
+        In other saves a slot is only touched when it holds the same item as
+        here, so a list that has moved on is left alone.
+        """
+        want = {s: self._conv_row(s).iid for s in slots if self._conv_row(s)}
         touched = []
         for sv in self._targets():
-            block = self._primary_block(sv.payload)
-            if block and fn(sv.payload, block):
+            conv = live_convoy(bytes(sv.payload))
+            if conv is None:
+                continue
+            hit = False
+            for row in conv.rows:
+                if row.slot in want and row.iid == want[row.slot]:
+                    fn(sv.payload, row)
+                    hit = True
+            if hit:
                 touched.append(sv)
         self._touch(touched)
         return len(touched)
 
-    def add_convoy(self, iid: int):
-        if not self.sv:
+    def replace_convoy(self, iid: int):
+        slots = self._conv_selected()
+        if len(slots) != 1:
+            self.flash("Select one convoy row to replace (any spare item you put there in "
+                       "game).", "warn")
             return
-        if not self._conv_rows:
-            self.flash("This slot has no convoy list to add to.", "warn")
+        row = self._conv_row(slots[0])
+        if row.iid == iid:
+            self.flash("That row already holds this item.")
             return
-        qty = self._qty()
-        if qty is None:
-            return
-        name = item_label(iid)
-        existing = [k for k, (_o, _q, i) in enumerate(self._conv_rows) if i == iid]
-        if existing:
-            self.refresh_convoy(select=existing)
-            self.flash(f"{name} is already in the convoy — selected its row; use "
-                       "“Set qty” to change how many.", "warn")
-            return
-        n = self._convoy_edit(lambda p, b: add_convoy_item(p, iid, [b], qty))
-        self.refresh_convoy(select=[len(self._conv_rows)])
-        self.flash(f"Added {name} ×{qty} to the convoy" + (f" in {n} slots" if n > 1 else ""))
-
-    def replace_convoy(self):
-        rows = self._conv_selected()
-        iid = self.conv_picker.selected()
-        if len(rows) != 1 or iid is None:
-            self.flash("Select one convoy row and one catalogue item to replace it with.",
-                       "warn")
-            return
-        qty = self._qty()
-        if qty is None:
-            return
-        k = rows[0]
-
-        def fn(payload, block):
-            if k >= len(block):
-                return False
-            set_convoy_row(payload, block[k][0], iid, qty)
-            return True
-        n = self._convoy_edit(fn)
-        self.refresh_convoy(select=[k])
-        self.flash(f"Convoy row {k + 1} → {item_label(iid)} ×{qty}"
-                   + (f" in {n} slots" if n > 1 else ""))
+        old = item_label(row.iid)
+        n = self._convoy_edit(slots, lambda p, r: set_convoy_item(p, r, iid))
+        self.refresh_convoy(select=slots)
+        self.flash(f"Convoy slot {slots[0] + 1}: {old} → {item_label(iid)}"
+                   + (f" in {n} saves" if n > 1 else ""))
 
     def set_convoy_qty(self):
-        rows = self._conv_selected()
-        if not rows:
+        slots = self._conv_selected()
+        if not slots:
             self.flash("Select a convoy row first.", "warn")
             return
         qty = self._qty()
         if qty is None:
             return
-
-        def fn(payload, block):
-            hit = False
-            for k in rows:
-                if k < len(block):
-                    struct.pack_into("<H", payload, block[k][0] - 2, qty)
-                    hit = True
-            return hit
-        n = self._convoy_edit(fn)
-        self.refresh_convoy(select=rows)
-        self.flash(f"Quantity → {qty} on {len(rows)} row(s)" + (f" in {n} slots" if n > 1 else ""))
-
-    def clear_convoy(self):
-        rows = self._conv_selected()
-        if not rows:
-            self.flash("Select the convoy row(s) to clear.", "warn")
-            return
-
-        def fn(payload, block):
-            hit = False
-            for k in rows:
-                if k < len(block):
-                    struct.pack_into("<H", payload, block[k][0] - 2, 0)
-                    hit = True
-            return hit
-        n = self._convoy_edit(fn)
-        self.refresh_convoy(select=rows)
-        self.flash(f"Cleared {len(rows)} row(s) (quantity 0)" + (f" in {n} slots" if n > 1 else ""))
+        n = self._convoy_edit(slots, lambda p, r: set_convoy_qty(p, r, qty))
+        self.refresh_convoy(select=slots)
+        self.flash(f"Quantity → {qty} on {len(slots)} row(s)" + (f" in {n} saves" if n > 1 else ""))
 
     # ============================================================ gold
     def _show_gold(self, val: int | None, hint: str):

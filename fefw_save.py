@@ -1040,163 +1040,122 @@ def _clean_names() -> dict[str, str]:
 
 
 # ----------------------------------------------------------------- convoy
+# The convoy is a fixed row of slots (verified on real Auto, Route_* and
+# Chapter_* slots; every untouched list ends exactly where the next section's
+# marker 31 82 be ef begins):
+#
+#   d3 ad 44 76  u32  u32  u32 0  u32      section header
+#   01  u16 N                              N = number of slots (1329 so far)
+#   N slots:
+#     00 00                                empty slot (2 bytes)
+#     u16 qty  41  u32 item id             item (7 bytes)
+#     u16 qty  61  u32 item id  8 bytes    item with extra data (15 bytes)
+#
+# Materials (ore, meat, fish, plants, seals, maps) live in the same row, so a
+# list holds far more than the weapons at its start.
+#
+# An empty slot and an item differ in size, so turning one into the other
+# changes the length of everything after it.  The header holds position
+# values that are not decoded yet, so the editor only makes size-preserving
+# edits: change the item in an occupied slot (keeping its tag and extra data)
+# or its quantity.  Writing a 7-byte item over empty slots, as older versions
+# did for "Add", knocks every later slot out of line and the game can no
+# longer read them.
 CONVOY_ANCHOR = b"\xd3\xad\x44\x76"
-CONVOY_ENTRY = 7          # 0x41 tag, u32 item id, u16 pad
+CONVOY_END = b"\x31\x82\xbe\xef"
+CONVOY_TAIL = {0x41: 4, 0x61: 12}     # bytes after the tag
 
 
-CONVOY_SIG = b"\x01\x31\x05\x01\x00"
-CONVOY_TAGS = (0x41, 0x61)
-ITEMS_CACHE: set[int] = set()
+class ConvoyRow:
+    __slots__ = ("slot", "qty_off", "tag", "iid", "qty")
+
+    def __init__(self, slot, qty_off, tag, iid, qty):
+        self.slot, self.qty_off, self.tag, self.iid, self.qty = slot, qty_off, tag, iid, qty
+
+    @property
+    def id_off(self) -> int:
+        return self.qty_off + 3
+
+
+class Convoy:
+    """One parsed convoy list.  `problem` is None for a list the game can read."""
+    __slots__ = ("header", "slots", "rows", "end", "problem", "broken_slot")
+
+    def __init__(self, header, slots, rows, end, problem=None, broken_slot=None):
+        self.header, self.slots, self.rows, self.end = header, slots, rows, end
+        self.problem, self.broken_slot = problem, broken_slot
+
+
+def parse_convoy(payload: bytes, anchor: int) -> Convoy | None:
+    """Parse the list whose section header starts at `anchor` (d3 ad 44 76)."""
+    h = anchor + 20
+    if h + 3 > len(payload) or payload[h] != 0x01:
+        return None
+    n = struct.unpack_from("<H", payload, h + 1)[0]
+    if not 1 <= n <= 20000:
+        return None
+    ids = _items_cache()
+    rows, o = [], h + 3
+    for k in range(n):
+        if o + 2 > len(payload):
+            return Convoy(h, n, rows, o, "list runs past the end of the save", k)
+        qty = struct.unpack_from("<H", payload, o)[0]
+        if qty == 0:
+            o += 2
+            continue
+        tag = payload[o + 2] if o + 2 < len(payload) else None
+        tail = CONVOY_TAIL.get(tag)
+        iid = struct.unpack_from("<I", payload, o + 3)[0] if o + 7 <= len(payload) else None
+        if tail is None or iid not in ids:
+            return Convoy(h, n, rows, o, f"slot {k + 1} of {n} can't be read — every item "
+                                         "from there on is out of line", k)
+        rows.append(ConvoyRow(k, o, tag, iid, qty))
+        o += 3 + tail
+    # (Lists holding a 0x61 item can end a byte short of the next section:
+    # that item's extra data isn't fully decoded, so this is not checked.)
+    return Convoy(h, n, rows, o)
+
+
+def find_convoys(payload: bytes) -> list[Convoy]:
+    """Every convoy list in a payload, in file order.  The last one is the live
+    list; Auto also holds an earlier copy (the chapter-start snapshot)."""
+    out, i = [], payload.find(CONVOY_ANCHOR)
+    while i >= 0:
+        c = parse_convoy(payload, i)
+        if c is not None:
+            out.append(c)
+        i = payload.find(CONVOY_ANCHOR, i + 1)
+    return out
+
+
+def live_convoy(payload: bytes) -> Convoy | None:
+    lists = find_convoys(payload)
+    return lists[-1] if lists else None
+
+
+def set_convoy_item(payload: bytearray, row: ConvoyRow, item_id: int) -> None:
+    """Swap the item in an occupied slot.  The tag and any extra data stay, so
+    the slot keeps its size."""
+    struct.pack_into("<I", payload, row.id_off, item_id & 0xFFFFFFFF)
+    row.iid = item_id & 0xFFFFFFFF
+
+
+def set_convoy_qty(payload: bytearray, row: ConvoyRow, qty: int) -> None:
+    """Change the quantity of an occupied slot (1 or more; 0 would make it an
+    empty slot of a different size)."""
+    qty = max(1, min(0xFFFF, int(qty)))
+    struct.pack_into("<H", payload, row.qty_off, qty)
+    row.qty = qty
+
+
+_ITEMS_CACHE: set[int] = set()
 
 
 def _items_cache() -> set[int]:
-    global ITEMS_CACHE
-    if not ITEMS_CACHE:
-        ITEMS_CACHE = set(item_ids())
-    return ITEMS_CACHE
-
-
-def convoy_blocks(payload: bytes) -> list:
-    """Every bag/convoy list: [(row offset, qty, item id)] rows, grouped.
-
-    Rows are {u16 qty, tag in (0x41, 0x61), u32 item id} but they are NOT on a
-    fixed stride in every save (padding bytes appear between rows), so each row
-    is located by its signature and the scan resynchronises afterwards.
-    """
-    ids = _items_cache()
-    lists = []
-    i = -1
-    while True:
-        i = payload.find(CONVOY_SIG, i + 1)
-        if i < 0:
-            break
-        o = i + len(CONVOY_SIG) - 1      # first tag byte
-        rows = []
-        misses = 0
-        while o < len(payload) - 6 and len(rows) < 999:
-            t = payload[o]
-            if t in CONVOY_TAGS:
-                qty = struct.unpack_from("<H", payload, o - 2)[0] if o >= 2 else 0
-                iid = struct.unpack_from("<I", payload, o + 1)[0]
-                if 0 <= qty <= 999 and (qty or iid in ids):
-                    rows.append((o, qty, iid))
-                    o += CONVOY_ENTRY
-                    misses = 0
-                    continue
-            o += 1
-            misses += 1
-            if misses > 24:
-                break
-        if rows:
-            lists.append(rows)
-    return lists
-
-
-def convoy_entries(payload: bytes, block) -> list:
-    return [(q, i) for _o, q, i in block]
-
-
-def convoy_items(payload: bytes, block) -> list:
-    return [i for _o, _q, i in block]
-
-
-def add_convoy_item(payload: bytearray, item_id: int, blocks, qty: int = 1) -> int:
-    """Append a stack after the last row of every list, keeping its padding."""
-    n = 0
-    for block in blocks:
-        if item_id in [i for _o, _q, i in block]:
-            continue
-        last = block[-1][0]
-        off = last + CONVOY_ENTRY
-        while off + 7 < len(payload) and payload[off] != 0:
-            off += 1
-        if off + 7 >= len(payload):
-            continue
-        struct.pack_into("<H", payload, off - 2, max(1, int(qty)) & 0xFFFF)
-        payload[off] = 0x41
-        struct.pack_into("<I", payload, off + 1, item_id & 0xFFFFFFFF)
-        block.append((off, max(1, int(qty)), item_id))
-        n += 1
-    return n
-
-
-def set_convoy_row(payload: bytearray, row_off: int, item_id: int, qty: int = 1) -> None:
-    struct.pack_into("<H", payload, row_off - 2, max(1, int(qty)) & 0xFFFF)
-    payload[row_off] = 0x41
-    struct.pack_into("<I", payload, row_off + 1, item_id & 0xFFFFFFFF)
-
-
-def remove_convoy_item(payload: bytearray, start: int, count: int, index: int) -> bool:
-    """Delete entry `index`, shifting later entries up and zeroing the last slot."""
-    if not (0 <= index < count):
-        return False
-    for k in range(index, count - 1):
-        src = start + CONVOY_ENTRY * (k + 1)
-        dst = start + CONVOY_ENTRY * k
-        payload[dst:dst + CONVOY_ENTRY] = payload[src:src + CONVOY_ENTRY]
-    last = start + CONVOY_ENTRY * (count - 1)
-    payload[last:last + CONVOY_ENTRY] = b"\x00" * CONVOY_ENTRY
-    return True
-
-
-# ---------------------------------------------------------------- materials
-def _bag_hits(payload: bytes, ids) -> list:
-    """Every {u16 qty, 0x41, u32 id} triple in the payload."""
-    out = []
-    for o in range(2, len(payload) - 6):
-        if payload[o] != 0x41:
-            continue
-        qty = struct.unpack_from("<H", payload, o - 2)[0]
-        if not (1 <= qty <= 999):
-            continue
-        iid = struct.unpack_from("<I", payload, o + 1)[0]
-        if iid in ids:
-            out.append((o - 2, qty, iid))
-    return out
-
-
-def material_clusters(payload: bytes, ids, skip=()) -> list:
-    """Group bag rows into clusters; each cluster is (stride, [(off, qty, id)]).
-
-    The game stores two bags with different record sizes, so the stride is
-    measured per cluster (gcd of the gaps) instead of assumed.
-    """
-    hits = [h for h in _bag_hits(payload, ids)
-            if not any(s <= h[0] < s + 8 * 200 for s in skip)]
-    hits.sort()
-    clusters = []
-    for off, qty, iid in hits:
-        if clusters and off - clusters[-1][-1][0] <= 0x400:
-            clusters[-1].append((off, qty, iid))
-        else:
-            clusters.append([(off, qty, iid)])
-    out = []
-    for cl in clusters:
-        if len(cl) < 2:
-            continue
-        gaps = [b[0] - a[0] for a, b in zip(cl, cl[1:])]
-        stride = min(gaps)
-        if stride < 6 or any(g % stride for g in gaps):
-            continue
-        out.append((stride, cl))
-    return out
-
-
-def material_set(payload: bytearray, off: int, qty: int, iid: int) -> None:
-    struct.pack_into("<H", payload, off, max(1, qty) & 0xFFFF)
-    payload[off + 2] = 0x41
-    struct.pack_into("<I", payload, off + 3, iid & 0xFFFFFFFF)
-
-
-def material_add(payload: bytearray, stride: int, entries, qty: int, iid: int) -> int:
-    """Append a stack into the first all-zero slot after the last entry."""
-    off = entries[-1][0] + stride
-    if off + stride > len(payload):
-        return 0
-    if any(payload[off:off + stride]):
-        return 0
-    material_set(payload, off, qty, iid)
-    return 1
+    global _ITEMS_CACHE
+    if not _ITEMS_CACHE:
+        _ITEMS_CACHE = set(item_ids())
+    return _ITEMS_CACHE
 
 
 # --------------------------------------------------------------------------
