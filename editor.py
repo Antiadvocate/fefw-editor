@@ -22,7 +22,8 @@ from tkinter import filedialog, messagebox, ttk
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from fefw_save import USER_DIR  # noqa: E402
+from fefw_save import USER_DIR, current_gold  # noqa: E402
+from fefw_save import set_gold as write_gold  # noqa: E402
 from fefw_save import (GRADES, ITEM_KINDS, SKILL_NAMES, SKILL_THRESHOLDS,  # noqa: E402
                        STAT_NAMES, SaveError, SaveFile, live_convoy, set_convoy_item, set_convoy_qty,
                        default_save_dir, find_money_candidates, grade_label, grade_of,
@@ -32,7 +33,7 @@ from fefw_save import (GRADES, ITEM_KINDS, SKILL_NAMES, SKILL_THRESHOLDS,  # noq
                        save_money_sig)
 
 APP_NAME = "Fortune's Weave Save Editor"
-__version__ = "1.0.5"
+__version__ = "1.0.6"
 SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
 ICON_DIR = os.path.join(USER_DIR, "icons")
 
@@ -400,6 +401,7 @@ class App(tk.Tk):
         self.sv: SaveFile | None = None
         self.uid: int | None = None          # unit shown in the form
         self.money_off: int | None = None
+        self.gold_auto = False              # gold found by its record, not by search
         self._gold_cands: list[int] = []
         self._inv_items: list[tuple[int, int, int]] = []
         self._conv_rows: list = []          # ConvoyRow, in slot order
@@ -1116,6 +1118,7 @@ class App(tk.Tk):
 
         find = ttk.Frame(wrap, style="Card.TFrame", padding=24)
         find.pack(fill="both", expand=True, pady=(12, 0))
+        self.gold_find = find
         ttk.Label(find, text="Locate gold in this slot", style="CardH3.TLabel").pack(anchor="w")
         ttk.Label(find, style="CardMuted.TLabel", wraplength=760, justify="left",
                   text="Gold has no fixed address. Type the amount the game is showing right "
@@ -2156,10 +2159,19 @@ class App(tk.Tk):
 
     def locate_gold(self):
         self.money_off = None
+        self.gold_auto = False
         self.gold_tree.delete(*self.gold_tree.get_children())
         sig = load_money_sig()
+        self.gold_find.pack(fill="both", expand=True, pady=(12, 0))
         if not self.sv:
             return self._show_gold(None, "")
+        cur = current_gold(bytes(self.sv.payload))
+        if cur is not None:
+            self.gold_auto = True
+            self.gold_find.pack_forget()
+            return self._show_gold(cur[0], "Found automatically in the save's live record. "
+                                           "Chapter and battle snapshots keep their own "
+                                           "amount.")
         if not sig:
             return self._show_gold(None, "Not located yet — use the search below once.")
         hits = money_matches(bytes(self.sv.payload), sig)
@@ -2208,12 +2220,15 @@ class App(tk.Tk):
         if not sel or not self._gold_cands:
             return
         self.money_off = self._gold_cands[int(sel[0])]
+        self.gold_auto = False
         val = struct.unpack_from("<I", self.sv.payload, self.money_off)[0]
         self._show_gold(val, f"Using the match at 0x{self.money_off:06x}.")
 
     def set_gold(self):
         if not self.sv:
             return
+        if self.gold_auto:
+            return self._set_gold_auto()
         if self.money_off is None:
             self.flash("Locate gold first: type the amount shown in game and press Find.",
                        "warn")
@@ -2241,6 +2256,21 @@ class App(tk.Tk):
         self._show_gold(val, "Location remembered for future saves." if unique else
                         "Set — but the bytes around this spot aren't unique, so it isn't "
                         "remembered; search again next time.")
+        self.flash(f"Gold → {val:,}" + (f" in {len(touched)} slots" if len(touched) > 1 else ""))
+
+
+    def _set_gold_auto(self):
+        try:
+            val = int(self.gold_new.get().replace(",", "").strip())
+        except ValueError:
+            self.flash("Type the new gold amount as a number.", "warn")
+            return
+        if not 0 <= val <= 0xFFFFFFFF:
+            self.flash("Gold must be between 0 and 4,294,967,295.", "warn")
+            return
+        touched = [sv for sv in self._targets() if write_gold(sv.payload, val)]
+        self._touch(touched)
+        self.locate_gold()
         self.flash(f"Gold → {val:,}" + (f" in {len(touched)} slots" if len(touched) > 1 else ""))
 
 
