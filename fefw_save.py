@@ -244,9 +244,21 @@ class SaveFile:
         return out
 
     def to_bytes(self, level: int = 19) -> bytes:
+        import fefw_core as core
+        # embedded copies of the save live inside the payload: their own
+        # checksums have to follow whatever moved
+        core.fix_embedded_hashes(self.payload)
         payload = bytes(self.payload)
         frame = zstandard.ZstdCompressor(level=level).compress(payload)
         out = bytearray(self.raw[:self.zstd_offset]) + frame
+        st = None
+        try:
+            st = core.read_settings(core.SaveFile(payload))
+        except Exception:                     # noqa: BLE001 — keep the header as it was
+            st = None
+        if st and out[36] == 15:              # the load-screen summary
+            out[38] = st[1] & 0xFF
+            out[39] = st[2] & 0xFF
         struct.pack_into("<I", out, 0x100, len(out) - 0x104)
         struct.pack_into("<I", out, 0x104, MAGIC)
         struct.pack_into("<I", out, 0x108, len(out) - self.zstd_offset)
@@ -283,30 +295,30 @@ class SaveFile:
         self.units = find_units(bytes(self.payload))
 
     def set_class(self, uid: int, new_hash: int) -> int:
-        """Write a class id everywhere a unit stores it.
+        """Point every copy of a unit at a class, adding it to its class list.
 
-        The hash appears twice per unit block: the record header (+0x04) and a
-        serialized section keyed by the class, so a half-written change would
-        leave the two disagreeing.  Only occurrences of the *old* hash inside
-        this unit's own block are touched, and both are replaced.
+        A record is addressed at its person id, so the class id is the u32 at
+        +4.  The previous version took *every* u32 in the block equal to that
+        value and replaced it, which rewrote unrelated fields.  A class the unit
+        does not own yet is appended to its class list first, the way the game
+        does when a unit classes up.
         """
-        bases = sorted({r.base for r in self.units})
-        pat_new = struct.pack("<I", int(new_hash) & 0xFFFFFFFF)
+        import fefw_core as core
+        uid = uid & 0xFFFFFFFF
+        f = core.SaveFile(bytes(self.payload))
+        u = next((x for x in f.units() if x.person == uid), None)
+        if u is not None and not any(c[0] == (new_hash & 0xFFFFFFFF) for c in u.classes):
+            self.payload = core.with_lists(
+                f, u, u.masteries, list(u.classes) + [(new_hash & 0xFFFFFFFF, 0, 4)])
+            self.scan()          # the record grew: every offset moved
         n = 0
         for r in self.units:
             if r.uid != uid:
                 continue
-            old = struct.unpack_from("<I", self.payload, r.base + 4)[0]
-            if old == (new_hash & 0xFFFFFFFF):
-                continue
-            end = next((b for b in bases if b > r.base), len(self.payload))
-            pat_old = struct.pack("<I", old)
-            i = self.payload.find(pat_old, r.base, end)
-            while i >= 0:
-                self.payload[i:i + 4] = pat_new
-                n += 1
-                i = self.payload.find(pat_old, i + 4, end)
+            struct.pack_into("<I", self.payload, r.base + 4, new_hash & 0xFFFFFFFF)
             r.job_hash = new_hash & 0xFFFFFFFF
+            r.klass = new_hash & 0xFFFFFFFF
+            n += 1
         return n
 
 
@@ -346,7 +358,11 @@ class UnitRecord:
         payload[self.level_off] = int(value) & 0xFF
 
     def set_exp(self, value: int, payload: bytearray) -> None:
-        payload[self.exp_off] = int(value) & 0xFF
+        """EXP into the level (0-99); the save stores the running total."""
+        lvl = max(1, int(self.level or 1))
+        struct.pack_into("<H", payload, self.exp_off,
+                         ((lvl - 1) * 100 + int(value)) & 0xFFFF)
+        self.exp = int(value)
 
     def ranks(self, payload: bytes) -> list[tuple[int, int, int]]:
         """(value offset, key, value) for the unit's weapon-rank table."""
@@ -543,15 +559,22 @@ def _find_ranks(payload: bytes, base: int) -> list[tuple[int, int, int]]:
 def _make(payload: bytes, o: int, uid: int, meta: dict, s: int, b: int,
           vals) -> UnitRecord:
     hp, hp_w = _read_hp(payload, b)
+    # level u8 at +59 (= b), exp u16 at +60 holding (level-1)*100 + exp into the
+    # level, HP u32 at +64; the class id is the u32 right after the person id.
+    lvl = payload[b]
+    raw = struct.unpack_from("<H", payload, b + 1)[0]
+    into = raw - (lvl - 1) * 100
+    exp = into if 0 <= into <= 99 else (raw % 100)
+    klass = struct.unpack_from("<I", payload, o + 4)[0]
     return UnitRecord(
         base=o, uid=uid, pid=meta["pid"], name=meta.get("name") or meta["pid"],
-        stats_off=s, level_off=b, exp_off=b + 1, class_off=b + 2, hp_off=b + 5,
-        stats=list(vals), level=payload[b], exp=payload[b + 1],
-        klass=struct.unpack_from("<H", payload, b + 2)[0],
+        stats_off=s, level_off=b, exp_off=b + 1, class_off=o + 4, hp_off=b + 5,
+        stats=list(vals), level=lvl, exp=exp,
+        klass=klass,
         max_hp=hp, hp_width=hp_w,
         rank_offs=_find_ranks(payload, o),
         skill_off=find_skills(payload, b + 5),
-        job_hash=struct.unpack_from("<I", payload, o + 4)[0],
+        job_hash=klass,
     )
 
 

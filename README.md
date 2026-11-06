@@ -12,12 +12,22 @@ Eden / eglantine Switch emulator. Plain Python + Tkinter, one extra library.
 
 | Page | Tab | What |
 |---|---|---|
-| **Units** | Stats | Level, EXP, max HP, and the points each of the nine stats has gained from level-ups (see below) |
+| **Units** | Stats | Level, EXP into the level, current HP and the points each of the nine stats has gained from level-ups (see below) |
 | | Weapon ranks | Rank EXP for every rank the unit owns, with the letter grade, progress to the next grade and a one-click "set every rank to…" |
 | | Inventory | Swap any carried item for another, picked from a searchable catalogue (known spells are listed too, read-only) |
-| | Class | Pick any class the game knows (searchable, English + internal name) |
-| **Convoy** | | Everything in storage, materials included: swap the item in any row or change its quantity |
+| | Class | Pick any class the game knows (searchable, English + internal name). The class is added to the unit's own class list, the way the game does it |
+| **Convoy** | | Everything in storage, materials included: add an item, swap the item in any row, change its quantity, clear a row |
 | **Gold** | | Set gold. Found automatically in Theodora-route saves; other slots locate it once by the amount the game shows |
+| **Player** | | Gold, **Renown exp**, **Karma Shards**, difficulty / mode and the playthrough number, written into every copy the save keeps |
+| **Classes** | | A unit's whole class list (value + flags per class, ● = the current one): set the current class, add, swap or remove a class — and the **weapon masteries** with their rank letters (E…S+) and exp, which can be added, removed, or set to a rank |
+| **Supports** | | Every support pair the game data defines, its highest rank and which conversations this save records — **Record conversation as seen** (C / B / A) writes that conversation's flag |
+| **Flags** | | Every named variable the save stores: 支援会話_* (support conversations), 加入_* (recruited), 面識_* (met), 実績_* (achievements), 機能開放_* (unlocks), 兵種解放_* (class unlocks). Search, filter, set a value, add, remove |
+
+Records live in a tree of objects whose pointers are offsets into the save, and
+the editor edits through that tree (`fefw_core.py`): when a list grows or
+shrinks, every pointer after it is rewritten and the result is read back before
+anything is written. That is what makes adding a class, a mastery or a flag
+safe — the same model the ReWeaver tool uses, ported to Python.
 
 ### What it doesn't do (yet)
 
@@ -32,10 +42,15 @@ supported:
   known yet.
 * **Weapon-rank rewards.** Raising a rank only changes the letter; skills and
   combat arts granted on reaching a rank in play are not added.
-* **Skills, combat arts, supports, renown, mounts, battalions, karma shards.**
-  Skills and arts are stored as lists of hashed ids per unit, and without the
-  game's name table they can't be shown or edited meaningfully. The others
-  haven't been found in the save yet.
+* **Skills and combat arts.** Equipped and learned lists are stored per unit as
+  hashed ids; they can be read with the game's name table but there is no page
+  for them yet.
+* **Support Lv and points.** They are not a plain value anywhere in the save.
+  What can be written is the `支援会話_<A>_<B>_<rank>` flag — one per
+  conversation, the same flag the game sets when the conversation is seen — so a
+  support can be opened up to A; the bar itself stays with the game.
+* **Mounts and battalions.** The lists parse and their records are understood
+  (`SaveStable` in `fefw_core.py`), but there is no page for them yet.
 
 If you know where any of these live (offsets, a cheat table, the game's data
 files), contributions are welcome.
@@ -129,20 +144,24 @@ PNGs into `icons/items/` and `icons/units/` to use real images — see
 
 ## Known limits
 
-* Only the class **id** is written. Usable weapons and class skills that come
-  with a class are not recalculated here.
-* A unit only has entries for the weapon ranks it owns. The others display `E` in
-  game and can't be added from here — the list is fixed-size inside the record.
+* Only the class **id** and the class list are written. Usable weapons and class
+  skills that come with a class are not recalculated here.
+* A unit only has entries for the weapon ranks it owns, but a mastery can now be
+  added: the record grows and every pointer after it is rewritten.
+* Max HP is not stored in the save — only current HP can be edited.
+* EXP is a 16-bit running total (`(level - 1) * 100 + exp into the level`); the
+  editor shows and writes the part inside the level, 0–99.
 * Gold is found automatically wherever its record exists (`Auto` and the
-  Theodora-route files so far). Only the live record near the start of the save
-  is written; chapter and battle snapshots keep their own amount. Slots without the record
-  (the Ishmael files) still need it located once by the amount the game shows.
-* **Adding to or emptying a convoy slot isn't supported.** The convoy is a fixed
-  row of 1329 slots, and an empty slot is smaller than a filled one, so either
-  would shift every slot after it. Put any spare item into the convoy in game,
-  save, then replace it in the editor. (Older versions did "Add" by writing over
-  empty slots, which knocked the rest of the list out of line. The Convoy page
-  shows a warning on a list damaged that way.)
+  Theodora-route files so far). Slots without the record (the Ishmael files)
+  still need it located once by the amount the game shows.
+* The convoy is a fixed row of 1329 slots; adding an item rebuilds the list, so
+  nothing shifts out of line, but the same item can't sit in two stacks — change
+  its quantity instead.
+* Renown is an exp total (`GameUserData +14`). The level it lands on comes from
+  the game's own `Reward.bin` table, so the editor shows exp, not a level.
+* A flag whose name isn't in the game's data files shows as `unknown 0x…`. It is
+  a real flag — just one nothing in the data names (about 43% of a mid-game
+  save's 1.7k flags resolve).
 * Enemy and NPC records can be viewed but not edited — their layout is only
   partly known.
 
@@ -150,10 +169,16 @@ PNGs into `icons/items/` and `icons/units/` to use real images — see
 
 ```
 editor.py            the GUI
+editor_advanced.py   Player / Classes / Flags pages, support-conversation writes
+fefw_core.py         the save object tree: records, resizing edits, convoy / mounts / flags
 fefw_save.py         save container, unit records, all the edits (also a small CLI)
+supports.py          support pair chart + conversation-flag lookup
 unit_ids.json        person id  -> name
 item_ids.json        item id    -> Japanese + English name
 job_ids.json         class id   -> Japanese + English name
+supports.json        support pair -> highest rank + per-rank conversation flag hashes
+flag_names.json      flag hash  -> readable name (supports, recruits, achievements…)
+build_flag_names.py  rebuilds flag_names.json from the game's data files
 icons/               optional item / unit images
 requirements.txt     zstandard
 FEFW Save Editor.bat launcher (source install)

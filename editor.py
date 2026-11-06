@@ -31,9 +31,12 @@ from fefw_save import (GRADES, ITEM_KINDS, SKILL_NAMES, SKILL_THRESHOLDS,  # noq
                        item_kind, item_label, job_ids, job_name, load_money_sig,
                        locate_money, money_matches, money_signature, next_threshold, pick_live,
                        save_money_sig)
+import supports  # noqa: E402  (support pair chart + conversation flags)
+import fefw_core as core  # noqa: E402  (save object tree: resizing edits)
+from editor_advanced import AdvancedMixin  # noqa: E402  (Player / Classes / Flags pages)
 
 APP_NAME = "Fortune's Weave Save Editor"
-__version__ = "1.0.6"
+__version__ = "1.1.0"
 SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
 ICON_DIR = os.path.join(USER_DIR, "icons")
 
@@ -377,7 +380,7 @@ class ItemPicker(ttk.Frame):
 # --------------------------------------------------------------------------
 # the app
 # --------------------------------------------------------------------------
-class App(tk.Tk):
+class App(AdvancedMixin, tk.Tk):
     def __init__(self, folder: str | None = None):
         super().__init__()
         self.title(APP_NAME)
@@ -817,13 +820,25 @@ class App(tk.Tk):
         self.units_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.convoy_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.gold_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
+        self.supports_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
+        self.player_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
+        self.classes_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
+        self.flags_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.pages.add(self.units_page, text="Units")
         self.pages.add(self.convoy_page, text="Convoy")
         self.pages.add(self.gold_page, text="Gold")
+        self.pages.add(self.supports_page, text="Supports")
+        self.pages.add(self.player_page, text="Player")
+        self.pages.add(self.classes_page, text="Classes")
+        self.pages.add(self.flags_page, text="Flags")
 
         self._build_units()
         self._build_convoy()
         self._build_gold()
+        self._build_supports()
+        self._build_player()
+        self._build_classes()
+        self._build_flags()
         self._style_trees()
         self._update_dirty()
 
@@ -1143,6 +1158,195 @@ class App(tk.Tk):
         self.gold_tree.bind("<<TreeviewSelect>>", self.on_gold_pick)
 
     # --------------------------------------------------------- keys / misc
+
+    def _visible_units(self) -> int:
+        """Units the save's own unit list holds (the party and its reserves)."""
+        try:
+            return len(self.core_of().units())
+        except Exception:  # noqa: BLE001 — fall back to the scanned copies
+            return len(self._unit_map())
+
+    def _build_supports(self):
+        self.sup_party_only = tk.BooleanVar(value=True)
+        pane = ttk.PanedWindow(self.supports_page, orient="horizontal")
+        pane.pack(fill="both", expand=True)
+
+        side = ttk.Frame(pane, style="Card.TFrame", padding=12)
+        pane.add(side, weight=0)
+        top = ttk.Frame(side, style="Card.TFrame")
+        top.pack(fill="x")
+        ttk.Label(top, text="Support conversations", style="CardH3.TLabel").pack(side="left")
+        self.sup_count = ttk.Label(top, text="", style="CardMuted.TLabel")
+        self.sup_count.pack(side="right")
+        ttk.Label(side, text="Pairs whose C/B/A conversations the game data defines.",
+                  style="CardMuted.TLabel", wraplength=210, justify="left"
+                  ).pack(anchor="w", pady=(2, 8))
+        self.sup_search = SearchEntry(side, "Search characters…", self.refresh_support_chars,
+                                      width=26)
+        self.sup_search.pack(fill="x", pady=(0, 6))
+        ttk.Checkbutton(side, text="Only characters in this save",
+                        style="Card.TCheckbutton", variable=self.sup_party_only,
+                        command=self.refresh_support_chars).pack(anchor="w", pady=(0, 6))
+        self.sup_char_tree = scrolled_tree(side, columns=("n",), show="tree headings",
+                                           selectmode="browse")
+        self.sup_char_tree.heading("#0", text="Character", anchor="w")
+        self.sup_char_tree.heading("n", text="Pairs", anchor="e")
+        self.sup_char_tree.column("#0", width=170, minwidth=120)
+        self.sup_char_tree.column("n", width=52, anchor="e", stretch=False)
+        self.sup_char_tree.container.pack(fill="both", expand=True)
+        self.sup_char_tree.bind("<<TreeviewSelect>>", self.on_support_char)
+
+        main = ttk.Frame(pane)
+        pane.add(main, weight=1)
+
+        card = ttk.Frame(main, style="Card.TFrame", padding=(16, 14))
+        card.pack(fill="x", padx=(10, 0))
+        self.sup_avatar = Avatar(card, self, size=60)
+        self.sup_avatar.pack(side="left")
+        info = ttk.Frame(card, style="Card.TFrame")
+        info.pack(side="left", padx=(14, 0), fill="x", expand=True)
+        self.sup_name = ttk.Label(info, text="No character selected", style="CardH1.TLabel")
+        self.sup_name.pack(anchor="w")
+        self.sup_sub = ttk.Label(info, text="Open a save to see what it records.",
+                                 style="CardMuted.TLabel")
+        self.sup_sub.pack(anchor="w", pady=(2, 0))
+
+        body = ttk.Frame(main, style="Card.TFrame", padding=(12, 10))
+        body.pack(fill="both", expand=True, padx=(10, 0), pady=(10, 0))
+        self.sup_tree = scrolled_tree(body, columns=("jp", "max", "seen", "party"),
+                                      show="tree headings", selectmode="browse")
+        self.sup_tree.heading("#0", text="Support partner", anchor="w")
+        self.sup_tree.heading("jp", text="Japanese", anchor="w")
+        self.sup_tree.heading("max", text="Max", anchor="center")
+        self.sup_tree.heading("seen", text="Conversations seen", anchor="w")
+        self.sup_tree.heading("party", text="In party", anchor="center")
+        self.sup_tree.column("#0", width=190, minwidth=140)
+        self.sup_tree.column("jp", width=150)
+        self.sup_tree.column("max", width=54, anchor="center", stretch=False)
+        self.sup_tree.column("seen", width=170, stretch=False)
+        self.sup_tree.column("party", width=80, anchor="center", stretch=False)
+        self.sup_tree.container.pack(fill="both", expand=True)
+
+        acts = ttk.Frame(body, style="Card.TFrame")
+        acts.pack(fill="x", pady=(8, 0))
+        ttk.Label(acts, text="Record conversation as seen:", style="Card.TLabel").pack(side="left")
+        for r in ("C", "B", "A"):
+            ttk.Button(acts, text=r, width=3, style="Small.TButton",
+                       command=lambda rr=r: self.sup_set_rank(rr)).pack(side="left", padx=(6, 0))
+        ttk.Button(acts, text="Forget…", style="Small.TButton",
+                   command=self.sup_forget_rank).pack(side="left", padx=(12, 0))
+        self.sup_write_lbl = ttk.Label(acts, text="", style="CardFaint.TLabel")
+        self.sup_write_lbl.pack(side="left", padx=(12, 0))
+
+        ttk.Label(main, style="CardFaint.TLabel", justify="left", wraplength=780,
+                  text="The pair list and each pair's highest rank come from the game data "
+                       "(GameData/Reliance.bin and the 支援会話 flag names); a rank in the "
+                       "“seen” column means this save holds the matching conversation flag. "
+                       "Recording a conversation writes that flag — the same thing the game does "
+                       "when the conversation is seen — so the support should read as available "
+                       "in-game (the level itself is not a number this save exposes). The "
+                       "in-game Support screen also lists partners whose support has no "
+                       "conversation at all; those pairs aren't named in the data, so they "
+                       "can't appear here."
+                  ).pack(anchor="w", padx=(12, 0), pady=(10, 0))
+
+    def _party_pids(self) -> set[str]:
+        try:
+            return {u.pid for u in self._unit_map().values() if getattr(u, "pid", "")}
+        except Exception:  # noqa: BLE001 — never break the page over a bad record
+            return set()
+
+    def _support_flags(self) -> set[int]:
+        if not self.sv:
+            return set()
+        key = (self.sv.path, id(self.sv.payload))
+        cache = getattr(self, "_sup_flag_cache", None)
+        if cache and cache[0] == key:
+            return cache[1]
+        try:
+            f = self.core_of()
+            flags = {x.hash for m in core.flag_maps(f) for x in m.flags}
+        except Exception:  # noqa: BLE001 — the byte scan is only a fallback
+            flags = supports.present_flags(bytes(self.sv.payload))
+        self._sup_flag_cache = (key, flags)
+        return flags
+
+    def refresh_supports(self):
+        self._sup_flag_cache = None
+        self.refresh_support_chars()
+        self.on_support_char()
+
+    def refresh_support_chars(self):
+        if not hasattr(self, "sup_char_tree"):
+            return
+        q = self.sup_search.get_query().strip().lower()
+        party = self._party_pids() if (self.sv and self.sup_party_only.get()) else None
+        self.sup_char_tree.delete(*self.sup_char_tree.get_children())
+        self._sup_rows = {}
+        first = None
+        n = 0
+        for jp, rec in supports.chars():
+            en = rec["en"] or jp
+            if q and q not in en.lower() and q not in jp.lower():
+                continue
+            if party is not None and ("PID_" + jp) not in party:
+                continue
+            iid = self.sup_char_tree.insert("", "end", text=en,
+                                            values=(len(rec["partners"]),))
+            self._sup_rows[iid] = (jp, rec)
+            n += 1
+            first = first or iid
+        self.sup_count.configure(text=f"{n} character{'s' if n != 1 else ''}"
+                                       + (" in this save" if party is not None else ""))
+        if first:
+            self.sup_char_tree.selection_set(first)
+            self.on_support_char()
+        else:
+            self.sup_tree.delete(*self.sup_tree.get_children())
+            self.sup_name.configure(text="Nothing to show")
+            self.sup_sub.configure(text="Open a save, or untick “Only characters in this save”.")
+
+    def on_support_char(self, _e=None):
+        sel = self.sup_char_tree.selection() if hasattr(self, "sup_char_tree") else ()
+        rows = getattr(self, "_sup_rows", {})
+        if not sel or sel[0] not in rows:
+            return
+        jp, rec = rows[sel[0]]
+        en = rec["en"] or jp
+        self.sup_name.configure(text=en)
+        self.sup_avatar.show(en, "PID_" + jp)
+
+        present = self._support_flags()
+        party = self._party_pids()
+        self.sup_tree.delete(*self.sup_tree.get_children())
+        self._sup_pairs = {}
+        seen_pairs = 0
+        best = ""
+        for pa in rec["partners"]:
+            got = [r for r in supports.RANKS if supports.seen(pa, present).get(r)]
+            if got:
+                seen_pairs += 1
+            if pa["max"] in supports.RANKS:
+                if not best or supports.RANKS.index(pa["max"]) > supports.RANKS.index(best):
+                    best = pa["max"]
+            iid = self.sup_tree.insert("", "end", text=pa["en"] or pa["jp"],
+                                       values=(pa["jp"], pa["max"] or "—",
+                                               ", ".join(got) if got else "—",
+                                               "✓" if ("PID_" + pa["jp"]) in party else ""),
+                                       tags=("sup_seen",) if got else ("sup_none",))
+            self._sup_pairs[iid] = ({"a_en": en, "b_en": pa["en"] or pa["jp"]},
+                                    dict(pa.get("flags") or {}))
+        self._paint_support_tags()
+        self.sup_sub.configure(
+            text=f"{len(rec['partners'])} conversation pairs · up to {best or '—'} · "
+                 f"{seen_pairs} recorded in this save")
+
+    def _paint_support_tags(self):
+        p = self.p
+        if hasattr(self, "sup_tree"):
+            self.sup_tree.tag_configure("sup_seen", foreground=p["fg"])
+            self.sup_tree.tag_configure("sup_none", foreground=p["muted"])
+
     def _bind_keys(self):
         self.bind_all("<Control-s>", lambda e: self.save_all())
         self.bind_all("<Control-o>", lambda e: self.open_dialog())
@@ -1152,13 +1356,21 @@ class App(tk.Tk):
                   if e.widget is self else None)
 
     def _focus_search(self, _e=None):
-        page = self.pages.index(self.pages.select())
-        if page == 0:
+        """Ctrl+F jumps to the search box of whatever page is showing."""
+        sel = self.pages.select()
+        target = None
+        if sel == str(self.units_page):
             tab = self.unit_tabs.index(self.unit_tabs.select())
             target = {2: self.inv_picker.search, 3: self.class_search}.get(tab, self.unit_search)
-        elif page == 1:
+        elif sel == str(self.convoy_page):
             target = self.conv_picker.search
-        else:
+        elif sel == str(self.supports_page):
+            target = self.sup_search
+        elif sel == str(self.flags_page):
+            target = self.flag_search
+        elif sel == str(self.classes_page):
+            target = self.cls_search
+        if target is None:
             return
         target.focus_set()
         target.select_range(0, "end")
@@ -1299,8 +1511,10 @@ class App(tk.Tk):
         self.refresh_units(keep=keep)
         self.refresh_convoy()
         self.locate_gold()
+        self.refresh_supports()
+        self.refresh_core_pages()
         self._update_dirty()
-        self.flash(f"Opened {os.path.basename(path)} — {len(self._unit_map())} units.")
+        self.flash(f"Opened {os.path.basename(path)} — {self._visible_units()} units.")
 
     def _update_file_label(self):
         if not self.sv:
