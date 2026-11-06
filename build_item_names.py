@@ -28,7 +28,8 @@ ROM = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("FEFW_ROM", "")
 
 def jp_to_en_all(rom: str) -> dict[str, str]:
     """Japanese -> English from every message file; Item* files win on clashes."""
-    jp_dir, en_dir = os.path.join(rom, "Msg", "JPja"), os.path.join(rom, "Msg", "EUen")
+    jp_dir = os.path.join(rom, "Msg", "JPja")
+    en_dir = msbt.english_dir(os.path.join(rom, "Msg"))
     out: dict[str, str] = {}
     files = sorted(glob.glob(os.path.join(jp_dir, "*.msbt*")),
                    key=lambda p: not os.path.basename(p).lower().startswith("item"))

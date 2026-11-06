@@ -64,3 +64,12 @@ def jp_to_en(jp_path: str, en_path: str, skip=("_H_",)) -> dict[str, str]:
         if jtext and etext:
             out.setdefault(jtext, etext)
     return out
+
+
+def english_dir(msg_dir: str) -> str:
+    """The English message folder: EUen in some dumps, USen in others."""
+    import os
+    for name in ("EUen", "USen"):
+        if os.path.isdir(os.path.join(msg_dir, name)):
+            return os.path.join(msg_dir, name)
+    return os.path.join(msg_dir, "EUen")

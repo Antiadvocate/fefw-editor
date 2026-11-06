@@ -47,7 +47,8 @@ def main() -> int:
     # matched by label, not by position: labels aren't stored in text order
     import msbt
     jp_to_en = msbt.jp_to_en(os.path.join(ROM, "Msg", "JPja", "Skill.msbt.zst"),
-                             os.path.join(ROM, "Msg", "EUen", "Skill.msbt.zst"))
+                             os.path.join(msbt.english_dir(os.path.join(ROM, "Msg")),
+                                          "Skill.msbt.zst"))
     out = {}
     for sid in sid_keys():
         jp = sid[4:]
