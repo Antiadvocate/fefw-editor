@@ -22,17 +22,15 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import fefw_core as core                      # noqa: E402
 
-GAMEDATA = ("C:/Users/unbro/Downloads/Fire-Emblem-Fortunes-Weave-NS2/"
-            "Fire-Emblem-Fortunes-Weave-NS2/FEFW ROM/131072/romfs/GameData")
 
 IDENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]{2,63}$")
 NAMEY = re.compile(r"^[^\s\d][^\s]{2,79}$")
 
 
-def game_strings():
+def game_strings(gamedata: str):
     """Null-terminated names from the game's data files, ASCII or Japanese."""
     out = set()
-    for path in glob.glob(os.path.join(GAMEDATA, "*.bin")):
+    for path in glob.glob(os.path.join(gamedata, "*.bin")):
         data = open(path, "rb").read()
         start = 0
         for m in re.finditer(rb"\x00", data):
@@ -52,6 +50,10 @@ def game_strings():
 
 
 def main() -> int:
+    if len(sys.argv) != 2 or not os.path.isdir(sys.argv[1]):
+        print("usage: python build_flag_names.py <path to your dumped romfs/GameData folder>")
+        return 2
+    gamedata = sys.argv[1]
     names: dict[int, dict] = {}
 
     def add(name: str, label: str | None = None):
@@ -59,7 +61,7 @@ def main() -> int:
         if h not in names:
             names[h] = {"name": name, "label": label or name}
 
-    for s in sorted(game_strings()):
+    for s in sorted(game_strings(gamedata)):
         add(s)
 
     sup = json.load(open(os.path.join(HERE, "supports.json"), encoding="utf8"))

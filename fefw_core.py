@@ -1,4 +1,4 @@
-"""fefw_core.py - the save-format engine (port of the model ReWeaver uses).
+"""fefw_core.py - the save-format engine.
 
 Everything here works on the *decompressed payload* and edits it through the
 save's own object tree, so records can grow or shrink (add a class, an item, a

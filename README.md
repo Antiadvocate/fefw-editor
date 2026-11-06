@@ -27,7 +27,7 @@ Records live in a tree of objects whose pointers are offsets into the save, and
 the editor edits through that tree (`fefw_core.py`): when a list grows or
 shrinks, every pointer after it is rewritten and the result is read back before
 anything is written. That is what makes adding a class, a mastery or a flag
-safe — the same model the ReWeaver tool uses, ported to Python.
+safe.
 
 ### What it doesn't do (yet)
 
@@ -178,7 +178,7 @@ item_ids.json        item id    -> Japanese + English name
 job_ids.json         class id   -> Japanese + English name
 supports.json        support pair -> highest rank + per-rank conversation flag hashes
 flag_names.json      flag hash  -> readable name (supports, recruits, achievements…)
-build_flag_names.py  rebuilds flag_names.json from the game's data files
+build_flag_names.py  rebuilds flag_names.json: python build_flag_names.py <your romfs/GameData folder>
 icons/               optional item / unit images
 requirements.txt     zstandard
 FEFW Save Editor.bat launcher (source install)

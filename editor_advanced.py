@@ -1,7 +1,7 @@
 """editor_advanced.py - Player / Classes / Flags pages for the save editor.
 
-These pages are driven by fefw_core (the same object-tree model ReWeaver
-uses), so they can add and remove records: classes, weapon masteries, named
+These pages are driven by fefw_core (the save's own object tree), so they
+can add and remove records: classes, weapon masteries, named
 flags.  Everything else in the app keeps working on the same payload; after a
 resizing edit the records are re-scanned, so no offsets go stale.
 
@@ -29,7 +29,7 @@ MASTERIES = [
     ("Heavy", "重装"), ("Fly", "飛行"), ("Tactics", "指揮"),
 ]
 RANKS = ["E", "E+", "D", "D+", "C", "C+", "B", "B+", "A", "A+", "S", "S+"]
-RANK_EXP = [0, 20, 35, 80, 220, 440, 690, 910, 1215, 1510, 1960, 2560]
+from fefw_save import SKILL_THRESHOLDS as RANK_EXP  # noqa: E402  (one table for both tabs)
 DIFFICULTIES = ["Normal", "Hard", "Maddening"]
 MODES = ["Casual", "Classic"]
 

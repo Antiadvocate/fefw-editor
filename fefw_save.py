@@ -593,23 +593,17 @@ def is_enemy(rec) -> bool:
 #   +0x04 u8   entry count
 #   +0x08 n x { u8 skill key, u16 value }
 #
-# The value is CUMULATIVE skill experience, and the grade comes from a threshold
-# ladder (not 100 per grade — writing 1100 displays as B+, which rules that out).
-# The thresholds below are the Three Houses ladder, which is what Fortune's Weave
-# reproduces; verified so far: 1100 -> B+ and 1260 -> B+.
+# The value is CUMULATIVE mastery experience, and the grade comes from this
+# threshold ladder (S+ = 2560, confirmed in game).
 GRADES = ["E", "E+", "D", "D+", "C", "C+", "B", "B+", "A", "A+", "S", "S+"]
-SKILL_THRESHOLDS = [0, 40, 100, 180, 300, 460, 680, 960, 1320, 1760, 2520, 3600]
+SKILL_THRESHOLDS = [0, 20, 35, 80, 220, 440, 690, 910, 1215, 1510, 1960, 2560]
 
-# keys 0-6 come from the data (carried weapons / unit type); 7-11 are confirmed
-# by a community cheat table that lists the same struct in memory as a fixed
-# 12-slot u16 array at record+0x36: sword, lance, axe, bow, fist, black, white,
-# infantry, horse, armor, wing, flag.  Key 12 is an extra slot the save holds
-# that the memory array does not have; it stays unnamed.
+# The 13 weapon masteries, by the key the save stores.  (Earlier versions named
+# keys 7-12 one place off: what they called "Riding" is Infantry, and so on.)
 SKILL_NAMES = {
     0: "Swords", 1: "Lances", 2: "Axes", 3: "Bows", 4: "Fists",
-    5: "Black Magic", 6: "White Magic",
-    7: "Infantry", 8: "Riding", 9: "Heavy Armor", 10: "Flying",
-    11: "Authority", 12: "skill 12",
+    5: "Black Magic", 6: "White Magic", 7: "Special",
+    8: "Infantry", 9: "Riding", 10: "Heavy Armor", 11: "Flying", 12: "Tactics",
 }
 
 
@@ -669,7 +663,7 @@ def find_skills(payload: bytes, hp_off: int) -> int | None:
                 break
             k = payload[o]
             v = struct.unpack_from("<H", payload, o + 1)[0]
-            # real values are cumulative exp (S+ starts at 3600); the cap has to
+            # real values are cumulative exp (S+ starts at 2560); the cap has to
             # stay above anything the editor can write or the table stops being
             # recognised after a write and every later edit silently misses.
             if v > 9999 or k > 13 or (keys and k <= keys[-1]):

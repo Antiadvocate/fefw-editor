@@ -36,7 +36,7 @@ import fefw_core as core  # noqa: E402  (save object tree: resizing edits)
 from editor_advanced import AdvancedMixin  # noqa: E402  (Player / Classes / Flags pages)
 
 APP_NAME = "Fortune's Weave Save Editor"
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
 ICON_DIR = os.path.join(USER_DIR, "icons")
 
@@ -991,7 +991,7 @@ class App(AdvancedMixin, tk.Tk):
 
         ttk.Label(tab, style="CardFaint.TLabel", wraplength=700, justify="left",
                   text="The stored number is cumulative rank EXP; the game turns it into a "
-                       "letter (E 0 · D 100 · C 300 · B 680 · A 1320 · S 2520 · S+ 3600). "
+                       "letter (E 0 · D 35 · C 220 · B 690 · A 1215 · S 1960 · S+ 2560). "
                        "A unit only has rows for ranks it already owns — the rest read E in "
                        "game and can't be added from here. Raising a rank here only changes "
                        "the letter: skills and combat arts the game hands out when a rank is "
