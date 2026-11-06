@@ -190,6 +190,7 @@ supports.json        support pair -> highest rank and its conversation flags
 flag_names.json      flag id   -> readable name
 build_skill_ids.py   rebuilds skill_ids.json from a romfs dump
 build_item_names.py  puts the game's official English item names into item_ids.json
+build_unit_names.py  English names for generic units, enemies and NPCs in unit_ids.json
 msbt.py              reads the game's message files (used by the build scripts)
 build_flag_names.py  rebuilds flag_names.json from a romfs dump
 icons/               optional item / unit images
@@ -209,13 +210,18 @@ the game:
 
 ```
 python build_item_names.py <romfs folder>
+python build_unit_names.py <romfs folder>
 python build_skill_ids.py <romfs folder>
 python build_flag_names.py <romfs folder>/GameData
 ```
 
 `build_item_names.py` replaces the English item names (until now translated
 from the Japanese ids, e.g. "Augus' teff") with the game's own English text
-("Orgus Coffee"), matched through the game's message files.
+("Orgus Coffee"), matched through the game's message files. Items the game's
+text never names (cut content, cutscene props) get hand translations.
+`build_unit_names.py` names the generic soldiers, enemies and NPCs whose ids are
+Japanese (`EN_女斧盗賊2` → "Axe Thief (female, 2)") from the class, people and
+place names in the same files.
 
 ## Making a release
 
