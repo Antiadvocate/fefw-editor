@@ -177,8 +177,8 @@ def skill_lists(payload, uid: int) -> list:
     u = unit_in(f, uid)
     if u is None:
         return []
-    n = len(core.sections(f, u)) - 1
-    return [core.skill_list(f, u, i) for i in range(1, max(1, n))]
+    # section 0 is the item list; every section after it is a skill list
+    return [core.skill_list(f, u, i) for i in range(1, len(core.sections(f, u)))]
 
 
 def set_skill_list(payload: bytearray, uid: int, index: int, ids) -> bool:
@@ -244,6 +244,81 @@ def live_convoy(payload) -> "Convoy | None":
     c.problem = None
     c.broken_slot = -1
     return c
+
+
+def damaged_convoy_at(payload) -> int:
+    """Start of a convoy list that is there but can't be read, else -1.
+
+    Older versions of this editor did "Add" by writing a 7-byte item over empty
+    2-byte slots, which knocks every later slot out of line; the game then
+    can't read those items.  Such a list keeps its header (01, slot count).
+    """
+    f = core.SaveFile(bytes(payload))
+    if core.convoy_at(f) >= 0:
+        return -1
+    blk = f.block("Transporter")
+    if not blk:
+        return -1
+    p = f.payload
+    for n in core.SaveTree.read(p).nodes:
+        if blk.start <= n.start and n.end <= blk.end and n.end - n.start > 8 \
+                and p[n.start + 4] == 1 and 1 <= struct.unpack_from("<H", p, n.start + 5)[0] <= 20000:
+            return n.start
+    return -1
+
+
+def salvage_convoy(payload) -> "tuple[int, list] | None":
+    """(slot count, slots) rebuilt from a damaged list, or None.
+
+    Reads the list slot by slot; where a slot can't be read (the list fell out
+    of line), it steps one byte and tries again, which picks the rest of the
+    items back up.  Empty slots are kept where they were found; if that makes
+    the list longer than its slot count, empty slots are dropped from the end
+    so every item survives.
+    """
+    at = damaged_convoy_at(payload)
+    if at < 0:
+        return None
+    f = core.SaveFile(bytes(payload))
+    p = f.payload
+    n = struct.unpack_from("<H", p, at + 5)[0]
+    end = f.ptr(at)
+    ids = item_ids()
+    out, i = [], at + 7
+    while i + 2 <= end:
+        q = struct.unpack_from("<H", p, i)[0]
+        if q == 0:
+            out.append(core.Slot(0, None))
+            i += 2
+            continue
+        tag = p[i + 2] if i + 2 < end else None
+        iid = struct.unpack_from("<I", p, i + 3)[0] if i + 7 <= end else None
+        if tag in (0x41, 0x61) and iid in ids and q <= 999:
+            extra = bytes(p[i + 7:i + 15]) if tag == 0x61 else b""
+            out.append(core.Slot(q, core.Item(iid, extra)))
+            i += 7 + len(extra)
+        else:
+            i += 1                       # out of line: step one byte and resync
+    items = sum(1 for sl in out if sl.item)
+    if items > n:
+        return None
+    while len(out) > n:                  # drop empty slots from the end first
+        k = max(k for k, sl in enumerate(out) if not sl.item)
+        out.pop(k)
+    out += [core.Slot(0, None)] * (n - len(out))
+    return n, out
+
+
+def repair_convoy(payload: bytearray) -> int:
+    """Rewrite a damaged list as a clean one.  Returns the items kept, or -1."""
+    got = salvage_convoy(payload)
+    if got is None:
+        return -1
+    _n, slots = got
+    at = damaged_convoy_at(payload)
+    f = core.SaveFile(bytes(payload))
+    payload[:] = core.convoy_write(f, at, slots)
+    return sum(1 for sl in slots if sl.item)
 
 
 def convoy_rows(payload) -> list:

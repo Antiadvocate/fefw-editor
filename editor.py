@@ -808,7 +808,7 @@ class App(AdvancedMixin, tk.Tk):
         ttk.Button(r1, text="Open folder…", command=self.open_dialog).pack(side="left")
         r2 = ttk.Frame(mid, style="Header.TFrame")
         r2.pack(fill="x", pady=(6, 0))
-        self.mirror_chk = ttk.Checkbutton(r2, text="Apply edits to this route's other saves",
+        self.mirror_chk = ttk.Checkbutton(r2, text="Also edit this route's other saves",
                                           style="Side.TCheckbutton", variable=self.mirror,
                                           command=self._mirror_changed)
         self.mirror_chk.pack(side="left")
@@ -987,8 +987,8 @@ class App(AdvancedMixin, tk.Tk):
             self.stat_bars.append(bar)
 
         ttk.Label(tab, style="CardFaint.TLabel", wraplength=700, justify="left",
-                  text="Changing HP gained moves max HP by the same amount. Changes apply "
-                       "as you type (Enter / Tab) and are written when you Save."
+                  text="Changing HP gained moves max HP with it. Edits apply on Enter / Tab; "
+                       "Save writes them."
                   ).pack(anchor="w", side="bottom")
 
 
@@ -1071,16 +1071,20 @@ class App(AdvancedMixin, tk.Tk):
         self.conv_count.pack(side="right")
         ttk.Label(left, text="Everything in storage, materials included, by slot.",
                   style="CardMuted.TLabel").pack(anchor="w", pady=(2, 6))
-        self.conv_problem = ttk.Label(left, text="", style="CardWarn.TLabel", wraplength=420,
-                                      justify="left")
+        self.conv_problem = ttk.Frame(left, style="Card.TFrame")
+        self.conv_problem_lbl = ttk.Label(self.conv_problem, text="", style="CardWarn.TLabel",
+                                          wraplength=420, justify="left")
+        self.conv_problem_lbl.pack(fill="x")
+        self.conv_repair_btn = ttk.Button(self.conv_problem, text="Repair convoy",
+                                          style="Accent.TButton", command=self.repair_convoy_ui)
         self.conv_filter = SearchEntry(left, "Filter the convoy…", self.refresh_convoy)
         self.conv_filter.pack(fill="x", pady=(0, 6))
         ctl = ttk.Frame(left, style="Card.TFrame")
         ctl.pack(side="bottom", fill="x", pady=(10, 0))
         ttk.Label(left, style="CardFaint.TLabel", wraplength=420, justify="left",
-                  text="To add something new: put any spare item into the convoy in game, "
-                       "save, then replace it here. An empty slot is smaller than a filled "
-                       "one, so filling one directly would shift every slot after it."
+                  text="Add item… puts a new stack into the first empty slot and Remove "
+                       "empties a slot, the way the game does it: the list keeps its slot "
+                       "count and everything after it is moved safely."
                   ).pack(side="bottom", anchor="w", pady=(8, 0))
         self.conv_tree = scrolled_tree(left, columns=("kind", "qty"), show="tree headings",
                                        selectmode="extended", height=6)
@@ -1490,11 +1494,11 @@ class App(AdvancedMixin, tk.Tk):
         self._update_file_label()
         peers = [os.path.basename(p) for p in self._peers()]
         if self._is_checkpoint(path):
-            text = "Apply edits to this route's other saves (off for chapter checkpoints)"
+            text = "Also edit this route's other saves (off in checkpoints)"
         elif peers:
-            text = f"Apply edits to this route's other saves (also {', '.join(peers)})"
+            text = f"Also edit this route's other saves (+ {', '.join(peers)})"
         else:
-            text = "Apply edits to this route's other saves (none — this slot only)"
+            text = "Also edit this route's other saves (none here)"
         self.mirror_chk.configure(text=text)
         self.refresh_units(keep=keep)
         self.refresh_convoy()
@@ -2159,7 +2163,8 @@ class App(AdvancedMixin, tk.Tk):
                                                   if i.isdigit()]
         tree.delete(*tree.get_children())
         conv = live_convoy(bytes(self.sv.payload)) if self.sv else None
-        self._conv_rows = conv.rows if conv else []
+        # live_convoy() returns every slot; only the filled ones are items
+        self._conv_rows = [r for r in (conv.rows if conv else []) if r.qty and r.iid]
         names = item_ids()
         q = self.conv_filter.get_query().lower()
         shown = 0
@@ -2173,18 +2178,26 @@ class App(AdvancedMixin, tk.Tk):
             tree.insert("", "end", iid=str(row.slot), text=f" {row.slot + 1:>4} · {label}",
                         image=self.item_icon(row.iid, meta, kind), values=(kind, row.qty))
             shown += 1
+        salvage = None
+        if conv is None and self.sv:
+            salvage = layer.salvage_convoy(bytes(self.sv.payload))
         if conv is None:
-            tree.insert("", "end", iid="none", text="  No convoy list found in this slot",
-                        tags=("empty",))
+            tree.insert("", "end", iid="none",
+                        text="  This slot's convoy list is damaged — see above" if salvage
+                        else "  No convoy list found in this slot", tags=("empty",))
         total = len(self._conv_rows)
         self.conv_count.configure(text="" if conv is None else
                                   f"{total} items · {conv.slots} slots" if shown == total
                                   else f"{shown} of {total} items")
-        if conv is not None and conv.problem:
-            self.conv_problem.configure(
-                text=f"⚠ This list is damaged: {conv.problem}, so the game can't see "
-                     "those items. That's what the old “Add to convoy” did. Restore the "
-                     "slot's .bak or a backup to get them back.")
+        if salvage:
+            n_items = sum(1 for sl in salvage[1] if sl.item)
+            self.conv_problem_lbl.configure(
+                text="⚠ This convoy list is damaged: an older version's “Add” wrote an item "
+                     "over empty slots and knocked the rest of the list out of line, so the "
+                     f"game can't read it. Repair rebuilds it as a clean {salvage[0]}-slot "
+                     f"list keeping all {n_items} items it can still find. Undo works, and "
+                     "the original stays in the slot's .bak.")
+            self.conv_repair_btn.pack(anchor="w", pady=(6, 0))
             self.conv_problem.pack(fill="x", pady=(0, 6), before=self.conv_filter)
         else:
             self.conv_problem.pack_forget()
@@ -2192,6 +2205,26 @@ class App(AdvancedMixin, tk.Tk):
         if keep:
             tree.selection_set(keep)
             tree.see(keep[-1])
+
+    def repair_convoy_ui(self):
+        got = layer.salvage_convoy(bytes(self.sv.payload)) if self.sv else None
+        if not got:
+            self.flash("This slot's convoy doesn't need repairing.")
+            return
+        n_items = sum(1 for sl in got[1] if sl.item)
+        if not messagebox.askyesno(
+                "Repair convoy",
+                f"Rebuild this slot's convoy as a clean {got[0]}-slot list with the "
+                f"{n_items} items found in it?\n\nNothing is written until you Save, "
+                "Undo can take it back, and the original stays in the slot's .bak.",
+                parent=self):
+            return
+        self.push_undo()
+        if self._core_edit(lambda f: (layer.repair_convoy(f.payload) >= 0 and f.payload) or None,
+                           "Repair convoy"):
+            self.flash(f"Convoy repaired: {n_items} items, {got[0]} slots — Ctrl+S to write it.",
+                       "ok")
+        self.refresh_convoy()
 
     def _conv_row(self, slot: int):
         return next((r for r in self._conv_rows if r.slot == slot), None)
@@ -2311,3 +2344,24 @@ class App(AdvancedMixin, tk.Tk):
     def _set_gold_auto(self):
         self.set_gold()
 
+
+
+def _dpi_aware():
+    if sys.platform == "win32":
+        try:
+            import ctypes
+            ctypes.windll.shcore.SetProcessDpiAwareness(1)
+        except Exception:  # noqa: BLE001
+            pass
+
+
+def main():
+    _dpi_aware()
+    arg = sys.argv[1] if len(sys.argv) > 1 else None
+    if arg and os.path.isfile(arg):
+        arg = os.path.dirname(arg)
+    App(arg).mainloop()
+
+
+if __name__ == "__main__":
+    main()

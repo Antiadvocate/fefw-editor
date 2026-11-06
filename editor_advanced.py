@@ -1203,31 +1203,31 @@ def restore_snapshot(self):
 
 # ------------------------------------------------------------- arts/skills
 def _build_skill_tab(self):
-    """The old “Weapon ranks” tab: the record's skill lists, by section."""
+    """The record's skill lists (all six), each with add / remove."""
     tab = ttk.Frame(self.unit_tabs, style="Card.TFrame", padding=16)
     self.unit_tabs.add(tab, text="Arts & skills")
-    pane = ttk.PanedWindow(tab, orient="horizontal")
-    pane.pack(fill="both", expand=True)
+    grid = ttk.Frame(tab, style="Card.TFrame")
+    grid.pack(fill="both", expand=True)
     self._skill_trees = {}
-    for idx in range(3):
-        box = ttk.Frame(pane, style="Card.TFrame", padding=(0, 0, 10, 0))
-        pane.add(box, weight=1)
+    for idx, name in enumerate(layer.SKILL_LIST_NAMES):
+        box = ttk.Frame(grid, style="Card.TFrame", padding=(0, 0, 10, 10))
+        box.grid(row=idx // 3, column=idx % 3, sticky="nsew")
+        grid.columnconfigure(idx % 3, weight=1, uniform="skills")
+        grid.rowconfigure(idx // 3, weight=1)
         head = ttk.Frame(box, style="Card.TFrame")
         head.pack(fill="x")
-        ttk.Label(head, text=layer.SKILL_LIST_NAMES[idx], style="CardH3.TLabel").pack(side="left")
-        for text, fn in (("Add…", lambda i=idx: self.add_skill(i)),
-                         ("Remove", lambda i=idx: self.remove_skill(i))):
-            ttk.Button(head, text=text, style="Small.TButton", command=fn).pack(side="right",
-                                                                                padx=(6, 0))
-        tree = scrolled_tree(box, show="tree", selectmode="browse", height=10)
-        tree.container.pack(fill="both", expand=True, pady=(6, 0))
+        ttk.Label(head, text=name, style="CardH3.TLabel").pack(side="left")
+        for text, fn in (("Remove", lambda i=idx: self.remove_skill(i)),
+                         ("Add…", lambda i=idx: self.add_skill(i))):
+            ttk.Button(head, text=text, style="Small.TButton", width=7,
+                       command=fn).pack(side="right", padx=(4, 0))
+        tree = scrolled_tree(box, show="tree", selectmode="browse", height=5)
+        tree.container.pack(fill="both", expand=True, pady=(4, 0))
         self._skill_trees[idx] = tree
     ttk.Label(tab, style="CardFaint.TLabel", justify="left", wraplength=820,
-              text="The unit record keeps a chain of lists: items first, then these. "
-                   "Equipped arts and equipped skills are what the unit brings into battle; "
-                   "“Learned” is everything it has ever learned and cannot be taken away in "
-                   "game. Adding or removing an entry rewrites the list and every pointer "
-                   "after it."
+              text="Equipped arts and skills are what the unit takes into battle; "
+                   "“Learned (all)” is everything it has learned. Adding or removing an "
+                   "entry rewrites the list safely."
               ).pack(anchor="w", pady=(8, 0))
 
 
@@ -1247,8 +1247,16 @@ def refresh_skill_lists(self):
 def add_skill(self, index: int):
     if not self.sv or self.uid is None:
         return
-    rows = [(h, layer.item_label(h, m), m.get("jp", "")) for h, m in layer.item_ids().items()]
-    rows.sort(key=lambda r: str(r[1]).lower())
+    # every entry in these lists is a skill / combat art id (SID_…), never an item
+    rows = [(h, m.get("en") or m.get("jp") or m.get("sid"), m.get("sid", ""))
+            for h, m in layer._skills().items()
+            if not (m.get("sid") or "").startswith("SID_>") and (m.get("en") or m.get("jp"))]
+    # skills with an English name first; internal / enemy-only entries after
+    eng = {h for h, m in layer._skills().items() if m.get("en")}
+    rows.sort(key=lambda r: (r[0] not in eng, str(r[1]).lower()))
+    if not rows:
+        self.flash("No skill names available (skill_ids.json is missing).", "warn")
+        return
     sid = self._picker("Add to " + layer.SKILL_LIST_NAMES[index], rows)
     if sid is None:
         return
