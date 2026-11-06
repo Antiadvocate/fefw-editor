@@ -47,6 +47,18 @@ def jp_to_en_all(rom: str) -> dict[str, str]:
     return out
 
 
+def renamed(jp: str) -> list[str]:
+    """Other spellings the game's text may use for an id's Japanese name.
+    Only used when the result matches a message exactly."""
+    out = []
+    if jp.endswith("書") and not jp.endswith("指南書"):
+        stem = jp[:-1]
+        if stem.startswith("秘蔵の"):
+            out.append("上級" + stem[len("秘蔵の"):] + "指南書")
+        out.append(stem + "指南書")
+    return out
+
+
 def main() -> int:
     if not os.path.isdir(os.path.join(ROM, "Msg")):
         print("usage: python build_item_names.py <path to your dumped romfs folder>\n"
@@ -61,6 +73,13 @@ def main() -> int:
         m = re.search(r"\+(\d+)$", jp)
         base = jp[:m.start()] if m else jp
         en = names.get(jp) or names.get(base)
+        if not en:
+            # ids that kept an older working name: skill books are 戦術書 /
+            # 秘蔵の戦術書 in the ids but 戦術指南書 / 上級戦術指南書 in the game
+            for alt in renamed(base):
+                en = names.get(alt)
+                if en:
+                    break
         if not en:
             continue
         matched += 1
