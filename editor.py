@@ -38,7 +38,7 @@ import fefw_core as core  # noqa: E402  (save object tree: resizing edits)
 from editor_advanced import AdvancedMixin  # noqa: E402  (Player / Classes / Flags pages)
 
 APP_NAME = "Fortune's Weave Save Editor"
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
 ICON_DIR = os.path.join(USER_DIR, "icons")
 
@@ -801,7 +801,7 @@ class App(AdvancedMixin, tk.Tk):
         r1.pack(fill="x")
         ttk.Label(r1, text="Slot", style="Side.TLabel").pack(side="left")
         self.slot_var = tk.StringVar()
-        self.slot_box = ttk.Combobox(r1, textvariable=self.slot_var, state="readonly", width=46)
+        self.slot_box = ttk.Combobox(r1, textvariable=self.slot_var, state="readonly", width=52)
         self.slot_box.pack(side="left", padx=(8, 8))
         self.slot_box.bind("<<ComboboxSelected>>", self.on_slot_pick)
         self.register_combo(self.slot_box)
@@ -1460,17 +1460,15 @@ class App(AdvancedMixin, tk.Tk):
 
     def _populate_slot_box(self):
         labels = []
-        newest = self.slot_paths[0] if self.slot_paths else None
         for pth in self.slot_paths:
             sv = self.files.get(pth)
-            n = len({u.uid for u in sv.units if not is_enemy(u)}) if sv else 0
             mark = "● " if pth in self.dirty else ""
             base = os.path.basename(pth)
-            tag = ("   ★ live save" if base == "Auto" else
-                   "   checkpoint" if base.startswith("Chapter_") else
-                   "   newest" if pth == newest and len(self.slot_paths) > 1 else "")
-            labels.append(f"{mark}{os.path.basename(pth)}  ·  {n} units  ·  "
-                          f"{_fmt_time(os.path.getmtime(pth))}{tag}")
+            star = "★ " if base == "Auto" else ""          # the live save
+            # which lord / part / chapter the slot was saved in, read from the save
+            route = layer.route_label(sv.payload) if sv else ""
+            labels.append(f"{mark}{star}{base}  ·  {route + '  ·  ' if route else ''}"
+                          f"{_fmt_time(os.path.getmtime(pth))}")
         self.slot_box.configure(values=labels)
         if self.sv is not None and self.sv.path in self.slot_paths:
             self.slot_box.current(self.slot_paths.index(self.sv.path))
