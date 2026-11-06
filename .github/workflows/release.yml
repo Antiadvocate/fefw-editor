@@ -49,10 +49,14 @@ jobs:
         run: >
           pyinstaller --noconfirm --onefile --windowed --name "FEFW Save Editor"
           --add-data "unit_ids.json;." --add-data "item_ids.json;." --add-data "job_ids.json;."
+          --add-data "supports.json;." --add-data "flag_names.json;."
           editor.py
 
-      - name: Check the id files load
-        run: python -c "import fefw_save as f; assert f.item_ids() and f.unit_ids() and f.job_ids()"
+      - name: Check the data files load
+        run: >-
+          python -c "import fefw_save as f, fefw_core as c, editor_advanced as a, supports;
+          assert f.item_ids() and f.unit_ids() and f.job_ids() and supports.pairs()
+          and a.flag_names() and c.id_hash('支援会話_アレキサンドラ_カイ_C')"
 
       - name: Package
         shell: pwsh
