@@ -1373,7 +1373,11 @@ def assign_battalion(self, clear: bool = False):
     legion = None
     ride = None
     g = layer.unit_gear(self.sv.payload, uid)
-    if g and g.ride:
+    if g is None:
+        self.flash("This unit's record has no battalion slot (the game gives it one when "
+                   "the unit actually joins a battle) — nothing to write.", "warn")
+        return
+    if g.ride:
         ride = g.ride
     if not clear:
         psel = self.pool_tree.selection()
