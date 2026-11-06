@@ -14,13 +14,15 @@ Eden / eglantine Switch emulator. Plain Python + Tkinter, one extra library.
 |---|---|---|
 | **Units** | Stats | Level, EXP into the level, current HP and the points each of the nine stats has gained from level-ups (see below) |
 | | Weapon ranks | Rank EXP for every rank the unit owns, with the letter grade, progress to the next grade and a one-click "set every rank to…" |
-| | Inventory | Swap any carried item for another, picked from a searchable catalogue (known spells are listed too, read-only) |
+| | Inventory | Swap, add or remove a carried item, picked from a searchable catalogue |
+| | Arts & skills | The record's skill lists - equipped arts, equipped skills and everything learned - each with a name (English where the game has one) and add / remove |
 | | Class | Pick any class the game knows (searchable, English + internal name). The class is added to the unit's own class list, the way the game does it |
 | **Convoy** | | Everything in storage, materials included: add an item, swap the item in any row, change its quantity, clear a row |
 | **Gold** | | Set gold. Found automatically in Theodora-route saves; other slots locate it once by the amount the game shows |
 | **Player** | | Gold, **Renown exp**, **Karma Shards**, difficulty / mode and the playthrough number, written into every copy the save keeps |
 | **Classes** | | A unit's whole class list (value + flags per class, ● = the current one): set the current class, add, swap or remove a class — and the **weapon masteries** with their rank letters (E…S+) and exp, which can be added, removed, or set to a rank |
 | **Supports** | | Every support pair the game data defines, its highest rank and which conversations this save records — **Record conversation as seen** (C / B / A) writes that conversation's flag |
+| **Mounts** | | The battalion (and mount) each unit carries, chosen from the save's pool |
 | **Flags** | | Every named variable the save stores: 支援会話_* (support conversations), 加入_* (recruited), 面識_* (met), 実績_* (achievements), 機能開放_* (unlocks), 兵種解放_* (class unlocks). Search, filter, set a value, add, remove |
 
 Records live in a tree of objects whose pointers are offsets into the save, and
@@ -42,9 +44,9 @@ supported:
   known yet.
 * **Weapon-rank rewards.** Raising a rank only changes the letter; skills and
   combat arts granted on reaching a rank in play are not added.
-* **Skills and combat arts.** Equipped and learned lists are stored per unit as
-  hashed ids; they can be read with the game's name table but there is no page
-  for them yet.
+* **Skill effects.** The lists are editable, but what a skill does comes from the
+  game data - adding one doesn't grant its effect if the class or level
+  requirement isn't met.
 * **Support Lv and points.** They are not a plain value anywhere in the save.
   What can be written is the `支援会話_<A>_<B>_<rank>` flag — one per
   conversation, the same flag the game sets when the conversation is seen — so a
@@ -141,6 +143,20 @@ PNGs into `icons/items/` and `icons/units/` to use real images — see
 | Ctrl+F | Jump to the search box on the current page |
 | F5 | Reload every slot from disk (asks first if you have unsaved edits) |
 | Enter / double-click | Use the selected catalogue item |
+
+## Fixes in 1.1.0
+
+* Units come from the save's own unit pool (`fefw_core`), not from pattern
+  matching, so the editor no longer invents "copies" of a unit, mislabels which
+  copy is live, or writes a stat to every look-alike block.
+* Item slots, skill lists, the convoy and gold are read the same way - gold at
+  its fixed address (`GameUserData + 6`) in every slot, so the "locate it once by
+  the amount shown" search and `money_sig.json` are gone.
+* Convoy rows rebuild the list, so adding an item can't knock the rest out of line.
+* Undo / redo (Ctrl+Z, Ctrl+Y) over every edit, and **Snapshot** / **Restore...**
+  copies of the whole slot folder.
+* **Copy unit in...** (from another slot) and **Remove unit** (refused when
+  something else in the save still points at the record).
 
 ## Known limits
 

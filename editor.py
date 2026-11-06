@@ -22,15 +22,17 @@ from tkinter import filedialog, messagebox, ttk
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from fefw_save import USER_DIR, current_gold  # noqa: E402
-from fefw_save import set_gold as write_gold  # noqa: E402
-from fefw_save import (GRADES, ITEM_KINDS, SKILL_NAMES, SKILL_THRESHOLDS,  # noqa: E402
-                       STAT_NAMES, SaveError, SaveFile, live_convoy, set_convoy_item, set_convoy_qty,
-                       default_save_dir, find_money_candidates, grade_label, grade_of,
-                       is_enemy, is_shadow, is_slot_name, item_category, item_ids,
-                       item_kind, item_label, job_ids, job_name, load_money_sig,
-                       locate_money, money_matches, money_signature, next_threshold, pick_live,
-                       save_money_sig)
+# fefw_layer re-exports all of fefw_save and answers the structural questions
+# (units, item slots, skill lists, convoy, gold) from fefw_core, which reads the
+# save's own block table / unit pool / object tree instead of pattern-matching.
+from fefw_layer import USER_DIR, current_gold  # noqa: E402
+from fefw_layer import set_gold as write_gold  # noqa: E402
+from fefw_layer import (GRADES, ITEM_KINDS, SKILL_NAMES, SKILL_THRESHOLDS,  # noqa: E402
+                        STAT_NAMES, SaveError, SaveFile, live_convoy, set_convoy_item,
+                        set_convoy_qty, default_save_dir, grade_label, grade_of,
+                        is_enemy, is_shadow, is_slot_name, item_category, item_ids,
+                        item_kind, item_label, job_ids, job_name, next_threshold, pick_live)
+import fefw_layer as layer  # noqa: E402
 import supports  # noqa: E402  (support pair chart + conversation flags)
 import fefw_core as core  # noqa: E402  (save object tree: resizing edits)
 from editor_advanced import AdvancedMixin  # noqa: E402  (Player / Classes / Flags pages)
@@ -681,7 +683,12 @@ class App(AdvancedMixin, tk.Tk):
         for tree in (self.conv_tree, self.inv_tree):
             tree.tag_configure("empty", foreground=p["faint"])
         self.inv_tree.tag_configure("header", foreground=p["muted"], font=self.f_small)
-        self.gold_tree.tag_configure("ctx", foreground=p["muted"])
+        for tree in (getattr(self, "cls_tree", None), getattr(self, "mas_tree", None),
+                     getattr(self, "flag_tree", None), getattr(self, "mount_tree", None),
+                     getattr(self, "pool_tree", None)):
+            if tree is not None:
+                tree.tag_configure("flag_unknown", foreground=p["muted"])
+                tree.tag_configure("empty", foreground=p["faint"])
 
     def toggle_theme(self):
         self.p = PALETTES["light" if self.theme_name() == "dark" else "dark"]
@@ -785,6 +792,8 @@ class App(AdvancedMixin, tk.Tk):
         self.save_btn.pack(side="right", padx=(8, 0))
         self.revert_btn = ttk.Button(right, text="⟳ Reload", command=self.reload)
         self.revert_btn.pack(side="right")
+        ttk.Button(right, text="Snapshot", command=self.take_snapshot).pack(side="right", padx=(0, 8))
+        ttk.Button(right, text="Restore…", command=self.restore_snapshot).pack(side="right")
 
         mid = ttk.Frame(head, style="Header.TFrame")
         mid.pack(side="left", padx=(32, 0), fill="x", expand=True)
@@ -824,6 +833,7 @@ class App(AdvancedMixin, tk.Tk):
         self.player_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.classes_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.flags_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
+        self.mounts_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.pages.add(self.units_page, text="Units")
         self.pages.add(self.convoy_page, text="Convoy")
         self.pages.add(self.gold_page, text="Gold")
@@ -831,6 +841,7 @@ class App(AdvancedMixin, tk.Tk):
         self.pages.add(self.player_page, text="Player")
         self.pages.add(self.classes_page, text="Classes")
         self.pages.add(self.flags_page, text="Flags")
+        self.pages.add(self.mounts_page, text="Mounts")
 
         self._build_units()
         self._build_convoy()
@@ -839,6 +850,7 @@ class App(AdvancedMixin, tk.Tk):
         self._build_player()
         self._build_classes()
         self._build_flags()
+        self._build_mounts()
         self._style_trees()
         self._update_dirty()
 
@@ -870,6 +882,12 @@ class App(AdvancedMixin, tk.Tk):
         self.unit_tree.column("lv", width=44, minwidth=40, anchor="e", stretch=False)
         self.unit_tree.container.pack(fill="both", expand=True)
         self.unit_tree.bind("<<TreeviewSelect>>", self.on_unit_select)
+        acts = ttk.Frame(side, style="Card.TFrame")
+        acts.pack(fill="x", pady=(8, 0))
+        ttk.Button(acts, text="Copy unit in…", style="Small.TButton",
+                   command=self.copy_unit_in).pack(fill="x")
+        ttk.Button(acts, text="Remove unit", style="Small.TButton",
+                   command=self.remove_current_unit).pack(fill="x", pady=(6, 0))
 
         main = ttk.Frame(pane)
         pane.add(main, weight=1)
@@ -896,7 +914,7 @@ class App(AdvancedMixin, tk.Tk):
         self.unit_tabs = ttk.Notebook(main)
         self.unit_tabs.pack(fill="both", expand=True, padx=(10, 0), pady=(10, 0))
         self._build_stats_tab()
-        self._build_ranks_tab()
+        self._build_skill_tab()
         self._build_inventory_tab()
         self._build_class_tab()
 
@@ -913,7 +931,7 @@ class App(AdvancedMixin, tk.Tk):
         row.pack(fill="x")
         self.lvl_var, self.exp_var = tk.StringVar(), tk.StringVar()
         for label, var, fn, lo, hi in (("Level", self.lvl_var, self.commit_level, 1, 99),
-                                       ("EXP", self.exp_var, self.commit_exp, 0, 255)):
+                                       ("EXP", self.exp_var, self.commit_exp, 0, 99)):
             box = ttk.Frame(row, style="Card.TFrame")
             box.pack(side="left", padx=(0, 28))
             ttk.Label(box, text=label.upper(), style="StatName.TLabel").pack(anchor="w")
@@ -927,7 +945,7 @@ class App(AdvancedMixin, tk.Tk):
         self.exp_bar.pack(side="left", anchor="s", pady=(0, 12))
         hpbox = ttk.Frame(row, style="Card.TFrame")
         hpbox.pack(side="left", padx=(40, 0))
-        ttk.Label(hpbox, text="MAX HP", style="StatName.TLabel").pack(anchor="w")
+        ttk.Label(hpbox, text="HP", style="StatName.TLabel").pack(anchor="w")
         self.maxhp_lbl = ttk.Label(hpbox, text="—", style="CardH1.TLabel")
         self.maxhp_lbl.pack(anchor="w")
 
@@ -973,30 +991,6 @@ class App(AdvancedMixin, tk.Tk):
                        "as you type (Enter / Tab) and are written when you Save."
                   ).pack(anchor="w", side="bottom")
 
-    def _build_ranks_tab(self):
-        tab = ttk.Frame(self.unit_tabs, style="Card.TFrame", padding=18)
-        self.unit_tabs.add(tab, text="Weapon ranks")
-        top = ttk.Frame(tab, style="Card.TFrame")
-        top.pack(fill="x")
-        ttk.Label(top, text="Set every rank to", style="Card.TLabel").pack(side="left")
-        self.all_grade = tk.StringVar(value="A")
-        cb = ttk.Combobox(top, textvariable=self.all_grade, values=GRADES, width=5,
-                          state="readonly")
-        cb.pack(side="left", padx=8)
-        self.register_combo(cb)
-        ttk.Button(top, text="Apply", command=self.apply_all_grades).pack(side="left")
-
-        self.skill_frame = ttk.Frame(tab, style="Card.TFrame")
-        self.skill_frame.pack(fill="x", pady=(16, 0))
-
-        ttk.Label(tab, style="CardFaint.TLabel", wraplength=700, justify="left",
-                  text="The stored number is cumulative rank EXP; the game turns it into a "
-                       "letter (E 0 · D 100 · C 300 · B 680 · A 1320 · S 2520 · S+ 3600). "
-                       "A unit only has rows for ranks it already owns — the rest read E in "
-                       "game and can't be added from here. Raising a rank here only changes "
-                       "the letter: skills and combat arts the game hands out when a rank is "
-                       "reached in play are not granted."
-                  ).pack(anchor="w", side="bottom")
 
     def _build_inventory_tab(self):
         tab = ttk.Frame(self.unit_tabs, style="Card.TFrame", padding=(18, 18, 6, 18))
@@ -1011,6 +1005,12 @@ class App(AdvancedMixin, tk.Tk):
         ttk.Checkbutton(left, text="Allow any item type (can break the game)",
                         style="Card.TCheckbutton", variable=self.allow_any_item,
                         command=self._inv_lock).pack(side="bottom", anchor="w", pady=(8, 0))
+        ib = ttk.Frame(left, style="Card.TFrame")
+        ib.pack(side="bottom", anchor="w", pady=(8, 0))
+        ttk.Button(ib, text="Add item…", style="Small.TButton",
+                   command=self.add_item).pack(side="left")
+        ttk.Button(ib, text="Remove item", style="Small.TButton",
+                   command=self.remove_item).pack(side="left", padx=(6, 0))
         self.inv_tree = scrolled_tree(left, columns=("kind",), show="tree headings",
                                       selectmode="browse", height=6)
         self.inv_tree.heading("#0", text="Item", anchor="w")
@@ -1100,6 +1100,10 @@ class App(AdvancedMixin, tk.Tk):
         qs.pack(side="left", padx=(8, 12))
         qs.bind("<Return>", lambda e: self.set_convoy_qty())
         ttk.Button(ctl, text="Set qty", command=self.set_convoy_qty).pack(side="left")
+        ttk.Button(ctl, text="Add item…", style="Small.TButton",
+                   command=self.add_convoy_item_ui).pack(side="left", padx=(10, 0))
+        ttk.Button(ctl, text="Remove", style="Small.TButton",
+                   command=self.remove_convoy_item_ui).pack(side="left", padx=(6, 0))
 
         right = ttk.Frame(pane, padding=(10, 0, 0, 0))
         pane.add(right, weight=1)
@@ -1131,31 +1135,11 @@ class App(AdvancedMixin, tk.Tk):
                        command=lambda a=amt: (self.gold_new.set(f"{a:,}"), self.set_gold())
                        ).pack(side="left", padx=(8 if amt == 10_000 else 4, 0))
 
-        find = ttk.Frame(wrap, style="Card.TFrame", padding=24)
-        find.pack(fill="both", expand=True, pady=(12, 0))
-        self.gold_find = find
-        ttk.Label(find, text="Locate gold in this slot", style="CardH3.TLabel").pack(anchor="w")
-        ttk.Label(find, style="CardMuted.TLabel", wraplength=760, justify="left",
-                  text="Gold has no fixed address. Type the amount the game is showing right "
-                       "now, pick the match, and the editor remembers where it lives for "
-                       "every later save. Only needed once — and it can't search for 0."
-                  ).pack(anchor="w", pady=(4, 12))
-        r = ttk.Frame(find, style="Card.TFrame")
-        r.pack(anchor="w")
-        ttk.Label(r, text="Gold shown in game", style="Card.TLabel").pack(side="left")
-        self.gold_search = tk.StringVar()
-        ge = ttk.Entry(r, textvariable=self.gold_search, width=14)
-        ge.pack(side="left", padx=8)
-        ge.bind("<Return>", lambda ev: self.find_gold())
-        ttk.Button(r, text="Find", command=self.find_gold).pack(side="left")
-        self.gold_tree = scrolled_tree(find, columns=("ctx",), show="tree headings",
-                                       selectmode="browse", height=4)
-        self.gold_tree.heading("#0", text="Offset", anchor="w")
-        self.gold_tree.heading("ctx", text="Surrounding bytes", anchor="w")
-        self.gold_tree.column("#0", width=120, stretch=False)
-        self.gold_tree.column("ctx", width=500)
-        self.gold_tree.container.pack(fill="both", expand=True, pady=(12, 0))
-        self.gold_tree.bind("<<TreeviewSelect>>", self.on_gold_pick)
+        ttk.Label(wrap, style="CardFaint.TLabel", wraplength=760, justify="left",
+                  text="Gold lives at a fixed place in every slot of this game (GameUserData "
+                       "+ 6), so there is nothing to locate: the amount below is what the game "
+                       "will read. Chapter and battle snapshots keep their own amount."
+                  ).pack(anchor="w", pady=(12, 0))
 
     # --------------------------------------------------------- keys / misc
 
@@ -1352,6 +1336,8 @@ class App(AdvancedMixin, tk.Tk):
         self.bind_all("<Control-o>", lambda e: self.open_dialog())
         self.bind_all("<Control-f>", self._focus_search)
         self.bind_all("<F5>", lambda e: self.reload())
+        self.bind_all("<Control-z>", lambda e: (self.undo(), "break")[1])
+        self.bind_all("<Control-y>", lambda e: (self.redo(), "break")[1])
         self.bind("<FocusIn>", lambda e: self.after_idle(self._check_disk)
                   if e.widget is self else None)
 
@@ -1370,6 +1356,8 @@ class App(AdvancedMixin, tk.Tk):
             target = self.flag_search
         elif sel == str(self.classes_page):
             target = self.cls_search
+        elif sel == str(self.mounts_page):
+            target = None
         if target is None:
             return
         target.focus_set()
@@ -1513,6 +1501,7 @@ class App(AdvancedMixin, tk.Tk):
         self.locate_gold()
         self.refresh_supports()
         self.refresh_core_pages()
+        self.refresh_mounts()
         self._update_dirty()
         self.flash(f"Opened {os.path.basename(path)} — {self._visible_units()} units.")
 
@@ -1725,6 +1714,7 @@ class App(AdvancedMixin, tk.Tk):
         """
         if self._read_only():
             return 0, 0
+        self.push_undo()
         copies, touched = 0, []
         for sv in self._targets():
             hit = 0
@@ -1797,8 +1787,8 @@ class App(AdvancedMixin, tk.Tk):
         self.sync_btn.pack_forget()
         for v in self.stat_vars + [self.lvl_var, self.exp_var]:
             v.set("")
-        for w in self.skill_frame.winfo_children():
-            w.destroy()
+        for tree in getattr(self, "_skill_trees", {}).values():
+            tree.delete(*tree.get_children())
         self.inv_tree.delete(*self.inv_tree.get_children())
         self.class_now.configure(text="—")
 
@@ -1845,25 +1835,17 @@ class App(AdvancedMixin, tk.Tk):
         self.refresh_classes()
 
     def _update_copies_chip(self, u):
-        copies = [r for r in self.sv.units if r.uid == u.uid]
-        variants = {(r.level, r.exp, tuple(r.stats)) for r in copies}
+        """One record per unit now: the chip says what the game will read."""
         self.sync_btn.pack_forget()
         enemy = is_enemy(u)
         for sp in self._stat_spins:
             sp.configure(state="disabled" if enemy else "normal")
         if enemy:
             self.copies_chip.configure(text="🔒 Enemy / NPC — read-only", style="ChipWarn.TLabel")
-        elif len(copies) <= 1:
-            self.copies_chip.configure(text="1 copy in slot", style="Chip.TLabel")
-        elif len(variants) == 1:
-            self.copies_chip.configure(text=f"✓ {len(copies)} copies in sync",
-                                       style="ChipOk.TLabel")
         else:
-            # In Auto the first copy is the chapter-start snapshot and the last is
-            # the live unit, so differing copies are normal — not something to
-            # "fix" (that would overwrite the rewind point).
-            self.copies_chip.configure(text=f"{len(copies)} copies · live + chapter start",
-                                       style="Chip.TLabel")
+            self.copies_chip.configure(
+                text=f"live record · {u.job}", style="Chip.TLabel")
+
 
     def _num(self, var, lo, hi):
         try:
@@ -1880,8 +1862,7 @@ class App(AdvancedMixin, tk.Tk):
         self.commit_exp()
         for i in range(len(STAT_NAMES)):
             self.commit_stat(i)
-        for key, widgets in self._skill_rows:
-            self.apply_skill_value(key, widgets)
+
 
     def _bad_input(self, var, lo, hi, current, label):
         var.set(str(current))
@@ -1914,9 +1895,9 @@ class App(AdvancedMixin, tk.Tk):
         u = self._current()
         if not u or self.exp_var.get() == "":
             return
-        v = self._num(self.exp_var, 0, 255)
+        v = self._num(self.exp_var, 0, 99)
         if v is None:
-            return self._bad_input(self.exp_var, 0, 255, u.exp, "EXP")
+            return self._bad_input(self.exp_var, 0, 99, u.exp, "EXP")
         if v == self._shown.get("exp"):
             return
         self._shown["exp"] = v
@@ -1996,126 +1977,13 @@ class App(AdvancedMixin, tk.Tk):
 
     # ---------------------------------------------------------- ranks
     def refresh_skills(self):
-        for w in self.skill_frame.winfo_children():
-            w.destroy()
-        self._skill_rows = []
-        self._skill_shown = {}
-        u = self._current()
-        if not u:
-            return
-        tab = u.skills(bytes(self.sv.payload))
-        if not tab:
-            ttk.Label(self.skill_frame, text="No weapon-rank table found for this unit.",
-                      style="CardMuted.TLabel").pack(anchor="w")
-            return
-        g = self.skill_frame
-        for c, (txt, w) in enumerate((("RANK", 0), ("GRADE", 0), ("PROGRESS", 0),
-                                      ("EXP", 0), ("SET GRADE", 0))):
-            ttk.Label(g, text=txt, style="CardFaint.TLabel").grid(row=0, column=c, sticky="w",
-                                                                  padx=(0, 16), pady=(0, 6))
-        g.columnconfigure(2, weight=1)
-        vcmd = self._num_vcmd()
-        for row, key in enumerate(sorted(tab), start=1):
-            _off, val = tab[key]
-            ttk.Label(g, text=SKILL_NAMES.get(key, f"skill {key}"), style="CardBold.TLabel",
-                      width=13).grid(row=row, column=0, sticky="w", pady=5)
-            badge = tk.Label(g, text="", width=3, font=self.f_bold, fg="#10131a",
-                             padx=4, pady=1)
-            badge.grid(row=row, column=1, sticky="w", padx=(0, 16))
-            bar = Bar(g, self, width=180, height=8)
-            bar.grid(row=row, column=2, sticky="ew", padx=(0, 16))
-            nxt = ttk.Label(g, text="", style="CardFaint.TLabel", width=12)
-            vvar = tk.StringVar(value=str(val))
-            spin = ttk.Spinbox(g, from_=0, to=SKILL_MAX, width=7, textvariable=vvar,
-                               increment=10, validate="key", validatecommand=vcmd)
-            spin.grid(row=row, column=3, sticky="w", padx=(0, 16))
-            gvar = tk.StringVar(value=grade_label(val))
-            box = ttk.Combobox(g, textvariable=gvar, values=GRADES, width=5, state="readonly")
-            box.grid(row=row, column=4, sticky="w")
-            self.register_combo(box)
-            nxt.grid(row=row, column=5, sticky="w", padx=(12, 0))
-            widgets = (vvar, gvar, badge, bar, nxt)
-            for ev in ("<Return>", "<FocusOut>"):
-                spin.bind(ev, lambda e, k=key, w=widgets: self.apply_skill_value(k, w))
-            spin.configure(command=lambda k=key, w=widgets: self.apply_skill_value(k, w))
-            box.bind("<<ComboboxSelected>>",
-                     lambda e, k=key, w=widgets: self.apply_skill_grade(k, w))
-            self._paint_skill(widgets, val)
-            self._skill_shown[key] = val
-            self._skill_rows.append((key, widgets))
+        self.refresh_skill_lists()
 
-    def _paint_skill(self, widgets, value):
-        vvar, gvar, badge, bar, nxt = widgets
-        idx = grade_of(value)
-        gvar.set(GRADES[idx])
-        badge.configure(text=GRADES[idx], bg=GRADE_COLORS[idx])
-        lo = SKILL_THRESHOLDS[idx]
-        hi = next_threshold(value)
-        if hi is None:
-            bar.set(1.0, GRADE_COLORS[idx])
-            nxt.configure(text="max rank")
-        else:
-            bar.set((value - lo) / (hi - lo), GRADE_COLORS[idx])
-            nxt.configure(text=f"{hi - value} to {GRADES[idx + 1]}")
 
-    def _write_skill(self, key, value):
-        def fn(r, sv):
-            cur = r.skills(bytes(sv.payload)).get(key)
-            if not cur or cur[1] == value:
-                return False
-            return r.set_skill(key, value, sv.payload)
-        return self._edit_units(fn)
 
-    def apply_skill_value(self, key, widgets):
-        u = self._current()
-        vvar = widgets[0]
-        if not u or vvar.get() == "":
-            return
-        v = self._num(vvar, 0, SKILL_MAX)
-        if v is None:
-            cur = u.skills(bytes(self.sv.payload)).get(key, (0, 0))[1]
-            vvar.set(str(cur))
-            self.flash(f"Rank EXP must be 0 – {SKILL_MAX}.", "warn")
-            return
-        if v == self._skill_shown.get(key):
-            return
-        self._skill_shown[key] = v
-        n, s = self._write_skill(key, v)
-        self._paint_skill(widgets, v)
-        if n:
-            self.flash(f"{u.name}: {SKILL_NAMES.get(key, key)} → {grade_label(v)} "
-                       f"(exp {v}, {self._where(n, s)})")
 
-    def apply_skill_grade(self, key, widgets):
-        u = self._current()
-        g = widgets[1].get()
-        if not u or g not in GRADES:
-            return
-        v = SKILL_THRESHOLDS[GRADES.index(g)]
-        widgets[0].set(str(v))
-        self._skill_shown[key] = v
-        n, s = self._write_skill(key, v)
-        self._paint_skill(widgets, v)
-        if n:
-            self.flash(f"{u.name}: {SKILL_NAMES.get(key, key)} → {g} "
-                       f"(exp {v}, {self._where(n, s)})")
 
-    def apply_all_grades(self):
-        u = self._current()
-        g = self.all_grade.get()
-        if not u or g not in GRADES or not self._skill_rows:
-            return
-        v = SKILL_THRESHOLDS[GRADES.index(g)]
-        total, slots = 0, 0
-        for key, widgets in self._skill_rows:
-            widgets[0].set(str(v))
-            self._skill_shown[key] = v
-            n, s = self._write_skill(key, v)
-            total += n
-            slots = max(slots, s)
-            self._paint_skill(widgets, v)
-        self.flash(f"{u.name}: every listed rank → {g}  ({total} values"
-                   + (f" across {slots} slots)" if slots > 1 else ")"))
+
 
     # ------------------------------------------------------- inventory
     def refresh_inventory(self):
@@ -2167,34 +2035,62 @@ class App(AdvancedMixin, tk.Tk):
         self.inv_picker.set_lock(cat, self.allow_any_item.get())
 
     def replace_item(self, new_id: int):
-        u = self._current()
         idx = self._inv_slot()
-        sel = self.inv_tree.selection()
-        if sel and sel[0][:1] == "s":
-            self.flash("Spells are read-only — pick one of the carried items.", "warn")
+        u = self._current()
+        if u is None or idx is None:
+            self.flash("Pick an inventory slot first.", "warn")
             return
-        if not u or idx is None or idx >= len(self._inv_items):
-            self.flash("Select one of the carried items on the left first.", "warn")
-            return
-        old_id = self._inv_items[idx][1]
-        if new_id == old_id:
+        old = self._inv_items[idx][1] if idx < len(self._inv_items) else None
+        if new_id == old:
             self.flash("That slot already holds this item.")
             return
-
-        def fn(r, sv):
-            # each copy is parsed on its own, so a copy laid out a byte
-            # differently is still hit at the right place
-            inv = r.inventory(bytes(sv.payload))
-            if inv is None or idx >= len(inv.items):
-                return False
-            struct.pack_into("<I", sv.payload, inv.items[idx][0], new_id)
-        n, s = self._edit_units(fn)
-        name = item_label(new_id)
-        if n:
-            self.flash(f"{u.name}: slot {idx + 1} → {name}  ({self._where(n, s)})")
-        else:
-            self.flash("Nothing changed — the slot could not be matched in any copy.", "warn")
+        self.push_undo()
+        changed = False
+        for sv in self._targets():
+            if layer.set_item(sv.payload, u.uid, idx, new_id):
+                sv.scan()
+                sv._core_cache = None
+                changed = True
+        if not changed:
+            self.flash("Nothing changed — that unit has no such item slot here.", "warn")
+            return
+        self._touch(self._targets())
         self.refresh_inventory()
+        self.flash(f"{u.name}: slot {idx + 1} → {item_label(new_id)}")
+
+    def add_item(self):
+        u = self._current()
+        if u is None:
+            self.flash("Pick a unit first.", "warn")
+            return
+        new_id = self.inv_picker.selected()
+        if new_id is None:
+            self.flash("Pick an item from the catalogue first.", "warn")
+            return
+        self.push_undo()
+        for sv in self._targets():
+            layer.add_item(sv.payload, u.uid, new_id)
+            sv.scan()
+            sv._core_cache = None
+        self._touch(self._targets())
+        self.refresh_inventory()
+        self.flash(f"{u.name}: added {item_label(new_id)}")
+
+    def remove_item(self):
+        idx = self._inv_slot()
+        u = self._current()
+        if u is None or idx is None:
+            self.flash("Pick an inventory slot first.", "warn")
+            return
+        self.push_undo()
+        for sv in self._targets():
+            layer.remove_item(sv.payload, u.uid, idx)
+            sv.scan()
+            sv._core_cache = None
+        self._touch(self._targets())
+        self.refresh_inventory()
+        self.flash(f"{u.name}: removed the item in slot {idx + 1}")
+
 
     # ----------------------------------------------------------- class
     def refresh_classes(self):
@@ -2322,6 +2218,7 @@ class App(AdvancedMixin, tk.Tk):
         In other saves a slot is only touched when it holds the same item as
         here, so a list that has moved on is left alone.
         """
+        self.push_undo()
         want = {s: self._conv_row(s).iid for s in slots if self._conv_row(s)}
         touched = []
         for sv in self._targets():
@@ -2372,81 +2269,30 @@ class App(AdvancedMixin, tk.Tk):
         self.gold_hint.configure(text=hint)
 
     def locate_gold(self):
-        self.money_off = None
         self.gold_auto = False
-        self.gold_tree.delete(*self.gold_tree.get_children())
-        sig = load_money_sig()
-        self.gold_find.pack(fill="both", expand=True, pady=(12, 0))
+        self.money_off = None
         if not self.sv:
             return self._show_gold(None, "")
         cur = current_gold(bytes(self.sv.payload))
-        if cur is not None:
-            self.gold_auto = True
-            self.gold_find.pack_forget()
-            return self._show_gold(cur[0], "Found automatically in the save's live record. "
-                                           "Chapter and battle snapshots keep their own "
-                                           "amount.")
-        if not sig:
-            return self._show_gold(None, "Not located yet — use the search below once.")
-        hits = money_matches(bytes(self.sv.payload), sig)
-        if len(hits) > 1:
-            return self._show_gold(None, f"The remembered location matches {len(hits)} places "
-                                         "in this slot, so the editor won't guess — search "
-                                         "for the amount below.")
-        off = hits[0] if hits else None
-        if off is None:
-            return self._show_gold(None, "The remembered location isn't in this slot — "
-                                         "search for the amount below.")
-        self.money_off = off
-        val = struct.unpack_from("<I", self.sv.payload, off)[0]
-        self._show_gold(val, "Found automatically from the remembered location.")
+        if cur is None:
+            return self._show_gold(None, "This slot has no GameUserData record.")
+        self.money_off = cur[1]
+        self.gold_auto = True
+        self._show_gold(cur[0], "Read from this slot's own record.")
+
 
     def find_gold(self):
-        if not self.sv:
-            return
-        try:
-            want = int(self.gold_search.get().replace(",", "").strip())
-        except ValueError:
-            self.flash("Type the gold amount as a number.", "warn")
-            return
-        if want <= 0:
-            self.flash("Can't search for 0 — every empty field matches. Earn or spend a "
-                       "little gold in game first.", "warn")
-            return
-        cands = find_money_candidates(bytes(self.sv.payload), want)
-        self._gold_cands = cands
-        self.gold_tree.delete(*self.gold_tree.get_children())
-        for k, off in enumerate(cands[:60]):
-            ctx = bytes(self.sv.payload[max(0, off - 8):off + 12]).hex(" ")
-            self.gold_tree.insert("", "end", iid=str(k), text=f"0x{off:06x}", values=(ctx,),
-                                  tags=("ctx",))
-        if len(cands) == 1:
-            self.gold_tree.selection_set("0")
-        if not cands:
-            self.flash(f"No match for {want:,}. Double-check the amount shown in game for "
-                       "this slot.", "warn")
-        else:
-            self.flash(f"{len(cands)} match(es) for {want:,}"
-                       + (" — pick one, then Set gold." if len(cands) > 1 else "."))
+        """Gone: gold has a fixed address."""
+        self.flash("Gold is read straight from the save — nothing to search for.", "info")
+
 
     def on_gold_pick(self, _e=None):
-        sel = self.gold_tree.selection()
-        if not sel or not self._gold_cands:
-            return
-        self.money_off = self._gold_cands[int(sel[0])]
-        self.gold_auto = False
-        val = struct.unpack_from("<I", self.sv.payload, self.money_off)[0]
-        self._show_gold(val, f"Using the match at 0x{self.money_off:06x}.")
+        return None
+
 
     def set_gold(self):
         if not self.sv:
             return
-        if self.gold_auto:
-            return self._set_gold_auto()
-        if self.money_off is None:
-            self.flash("Locate gold first: type the amount shown in game and press Find.",
-                       "warn")
-            return
         try:
             val = int(self.gold_new.get().replace(",", "").strip())
         except ValueError:
@@ -2455,55 +2301,13 @@ class App(AdvancedMixin, tk.Tk):
         if not 0 <= val <= 0xFFFFFFFF:
             self.flash("Gold must be between 0 and 4,294,967,295.", "warn")
             return
-        sig = money_signature(bytes(self.sv.payload), self.money_off)
-        unique = len(money_matches(bytes(self.sv.payload), sig)) == 1
-        if unique:
-            save_money_sig(sig)
-        touched = []
-        for sv in self._targets():
-            off = self.money_off if sv is self.sv else locate_money(sv.payload, sig)
-            if off is None:
-                continue
-            struct.pack_into("<I", sv.payload, off, val)
-            touched.append(sv)
-        self._touch(touched)
-        self._show_gold(val, "Location remembered for future saves." if unique else
-                        "Set — but the bytes around this spot aren't unique, so it isn't "
-                        "remembered; search again next time.")
-        self.flash(f"Gold → {val:,}" + (f" in {len(touched)} slots" if len(touched) > 1 else ""))
-
-
-    def _set_gold_auto(self):
-        try:
-            val = int(self.gold_new.get().replace(",", "").strip())
-        except ValueError:
-            self.flash("Type the new gold amount as a number.", "warn")
-            return
-        if not 0 <= val <= 0xFFFFFFFF:
-            self.flash("Gold must be between 0 and 4,294,967,295.", "warn")
-            return
+        self.push_undo()
         touched = [sv for sv in self._targets() if write_gold(sv.payload, val)]
         self._touch(touched)
         self.locate_gold()
         self.flash(f"Gold → {val:,}" + (f" in {len(touched)} slots" if len(touched) > 1 else ""))
 
 
-def _dpi_aware():
-    if sys.platform == "win32":
-        try:
-            import ctypes
-            ctypes.windll.shcore.SetProcessDpiAwareness(1)
-        except Exception:  # noqa: BLE001
-            pass
+    def _set_gold_auto(self):
+        self.set_gold()
 
-
-def main():
-    _dpi_aware()
-    arg = sys.argv[1] if len(sys.argv) > 1 else None
-    if arg and os.path.isfile(arg):
-        arg = os.path.dirname(arg)
-    App(arg).mainloop()
-
-
-if __name__ == "__main__":
-    main()
