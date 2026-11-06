@@ -189,6 +189,8 @@ skill_ids.json       skill id  -> Japanese + English name
 supports.json        support pair -> highest rank and its conversation flags
 flag_names.json      flag id   -> readable name
 build_skill_ids.py   rebuilds skill_ids.json from a romfs dump
+build_item_names.py  puts the game's official English item names into item_ids.json
+msbt.py              reads the game's message files (used by the build scripts)
 build_flag_names.py  rebuilds flag_names.json from a romfs dump
 icons/               optional item / unit images
 requirements.txt     zstandard
@@ -206,9 +208,14 @@ different game version, point the scripts at a romfs dump of your own copy of
 the game:
 
 ```
+python build_item_names.py <romfs folder>
 python build_skill_ids.py <romfs folder>
 python build_flag_names.py <romfs folder>/GameData
 ```
+
+`build_item_names.py` replaces the English item names (until now translated
+from the Japanese ids, e.g. "Augus' teff") with the game's own English text
+("Orgus Coffee"), matched through the game's message files.
 
 ## Making a release
 
