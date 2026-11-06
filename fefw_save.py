@@ -593,23 +593,17 @@ def is_enemy(rec) -> bool:
 #   +0x04 u8   entry count
 #   +0x08 n x { u8 skill key, u16 value }
 #
-# The value is CUMULATIVE skill experience, and the grade comes from a threshold
-# ladder (not 100 per grade — writing 1100 displays as B+, which rules that out).
-# The thresholds below are the Three Houses ladder, which is what Fortune's Weave
-# reproduces; verified so far: 1100 -> B+ and 1260 -> B+.
+# The value is CUMULATIVE mastery experience, and the grade comes from this
+# threshold ladder (S+ = 2560, confirmed in game).
 GRADES = ["E", "E+", "D", "D+", "C", "C+", "B", "B+", "A", "A+", "S", "S+"]
-SKILL_THRESHOLDS = [0, 40, 100, 180, 300, 460, 680, 960, 1320, 1760, 2520, 3600]
+SKILL_THRESHOLDS = [0, 20, 35, 80, 220, 440, 690, 910, 1215, 1510, 1960, 2560]
 
-# keys 0-6 come from the data (carried weapons / unit type); 7-11 are confirmed
-# by a community cheat table that lists the same struct in memory as a fixed
-# 12-slot u16 array at record+0x36: sword, lance, axe, bow, fist, black, white,
-# infantry, horse, armor, wing, flag.  Key 12 is an extra slot the save holds
-# that the memory array does not have; it stays unnamed.
+# The 13 weapon masteries, by the key the save stores.  (Earlier versions named
+# keys 7-12 one place off: what they called "Riding" is Infantry, and so on.)
 SKILL_NAMES = {
     0: "Swords", 1: "Lances", 2: "Axes", 3: "Bows", 4: "Fists",
-    5: "Black Magic", 6: "White Magic",
-    7: "Infantry", 8: "Riding", 9: "Heavy Armor", 10: "Flying",
-    11: "Authority", 12: "skill 12",
+    5: "Black Magic", 6: "White Magic", 7: "Special",
+    8: "Infantry", 9: "Riding", 10: "Heavy Armor", 11: "Flying", 12: "Tactics",
 }
 
 
@@ -669,7 +663,7 @@ def find_skills(payload: bytes, hp_off: int) -> int | None:
                 break
             k = payload[o]
             v = struct.unpack_from("<H", payload, o + 1)[0]
-            # real values are cumulative exp (S+ starts at 3600); the cap has to
+            # real values are cumulative exp (S+ starts at 2560); the cap has to
             # stay above anything the editor can write or the table stops being
             # recognised after a write and every later edit silently misses.
             if v > 9999 or k > 13 or (keys and k <= keys[-1]):
@@ -880,43 +874,10 @@ class SaveSet:
 # --------------------------------------------------------------------------
 MONEY_SIG_PATH = os.path.join(USER_DIR, "money_sig.json")
 
-# Gold sits in a fixed record (found from a real Auto whose in-game gold was
-# 1,016,712): `17 00 00 03 01 0c` then u32 gold, then two more u32s (the
-# first grows a little with play; probably renown points, unconfirmed).
-#
-# The first record, near the start of the payload, is the live one: a hub
-# Auto holds only that and the chapter-start snapshot's copy.  A mid-battle
-# Auto also carries copies inside older state blocks (one held 999,012 while
-# the game showed 1,016,712).  Those are snapshots the game can return to, so
-# only the first record is edited.
-GOLD_ANCHOR = b"\x17\x00\x00\x03\x01\x0c"
-
-
-def gold_offsets(payload: bytes) -> list[int]:
-    out, i = [], payload.find(GOLD_ANCHOR)
-    while i >= 0:
-        o = i + len(GOLD_ANCHOR)
-        if o + 4 <= len(payload):
-            out.append(o)
-        i = payload.find(GOLD_ANCHOR, i + 1)
-    return out
-
-
-def current_gold(payload: bytes) -> tuple[int, int] | None:
-    """(gold, offset of the live record), or None when the slot has no record."""
-    offs = gold_offsets(payload)
-    if not offs:
-        return None
-    return struct.unpack_from("<I", payload, offs[0])[0], offs[0]
-
-
-def set_gold(payload: bytearray, value: int) -> bool:
-    """Write gold into the live record only; snapshots keep their own amount."""
-    cur = current_gold(bytes(payload))
-    if cur is None:
-        return False
-    struct.pack_into("<I", payload, cur[1], int(value) & 0xFFFFFFFF)
-    return True
+# Gold is read at a fixed position in the GameUserData block by fefw_layer /
+# fefw_core (GameUserData + 6).  The bytes just before it are the route, part
+# and chapter (e.g. 03 01 0c = Seo, part 1, chapter 12), so they can't be used
+# to find it.  The search helpers below are kept only for old scripts.
 
 
 def find_money_candidates(payload: bytes, value: int) -> list[int]:

@@ -1,7 +1,7 @@
 """editor_advanced.py - Player / Classes / Flags pages for the save editor.
 
-These pages are driven by fefw_core (the same object-tree model ReWeaver
-uses), so they can add and remove records: classes, weapon masteries, named
+These pages are driven by fefw_core (the save's own object tree), so they
+can add and remove records: classes, weapon masteries, named
 flags.  Everything else in the app keeps working on the same payload; after a
 resizing edit the records are re-scanned, so no offsets go stale.
 
@@ -17,9 +17,10 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 
 import fefw_core as core
-from fefw_save import item_label, unit_ids
+from fefw_save import item_ids, item_label, unit_ids
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+APP_NAME = "Fortune's Weave Save Editor"
 
 # the 13 weapon masteries, in the order the save stores them
 MASTERIES = [
@@ -29,7 +30,7 @@ MASTERIES = [
     ("Heavy", "重装"), ("Fly", "飛行"), ("Tactics", "指揮"),
 ]
 RANKS = ["E", "E+", "D", "D+", "C", "C+", "B", "B+", "A", "A+", "S", "S+"]
-RANK_EXP = [0, 20, 35, 80, 220, 440, 690, 910, 1215, 1510, 1960, 2560]
+from fefw_save import SKILL_THRESHOLDS as RANK_EXP  # noqa: E402  (one table for both tabs)
 DIFFICULTIES = ["Normal", "Hard", "Maddening"]
 MODES = ["Casual", "Classic"]
 
@@ -1092,3 +1093,430 @@ def _ask_number(parent, title: str, prompt: str, current: int, limit: int):
     ent.select_range(0, "end")
     parent.wait_window(win)
     return out["v"]
+
+
+
+# ==========================================================================
+# part 2 — the pages that replace the guessing code
+# (appended to editor_advanced.py; every method here uses fefw_layer, which
+#  answers unit / item / skill / convoy / gold questions from fefw_core)
+# ==========================================================================
+import fefw_layer as layer          # noqa: E402
+
+
+def _slot_payload(app):
+    return app.sv.payload if app.sv else None
+
+
+# ---------------------------------------------------------------- undo/redo
+def push_undo(self):
+    """Snapshot the payload before an edit, so Ctrl+Z can take it back."""
+    if not self.sv:
+        return
+    stack = getattr(self, "_undo_stack", None)
+    if stack is None:
+        stack = self._undo_stack = []
+        self._redo_stack = []
+    stack.append(bytes(self.sv.payload))
+    del stack[:-60]
+    self._redo_stack.clear()
+
+
+def undo(self):
+    stack = getattr(self, "_undo_stack", None)
+    if not stack or not self.sv:
+        self.flash("Nothing to undo.", "info")
+        return
+    self._redo_stack.append(bytes(self.sv.payload))
+    self.sv.payload = bytearray(stack.pop())
+    self.sv.scan()
+    self.sv._core_cache = None
+    self._touch([self.sv])
+    self.refresh_after_core()
+    self.flash("Undone — Ctrl+Y puts it back.", "ok")
+
+
+def redo(self):
+    stack = getattr(self, "_redo_stack", None)
+    if not stack or not self.sv:
+        self.flash("Nothing to redo.", "info")
+        return
+    self._undo_stack.append(bytes(self.sv.payload))
+    self.sv.payload = bytearray(stack.pop())
+    self.sv.scan()
+    self.sv._core_cache = None
+    self._touch([self.sv])
+    self.refresh_after_core()
+    self.flash("Redone.", "ok")
+
+
+# --------------------------------------------------------------- snapshots
+def snapshot_root(self) -> str:
+    import os
+    return os.path.join(os.path.dirname(os.path.abspath(self.sv.path)), "_snapshots")
+
+
+def take_snapshot(self, name: str | None = None):
+    import os
+    import shutil
+    import time
+    if not self.folder:
+        return
+    stamp = time.strftime("%Y%m%d_%H%M%S")
+    label = (name or "").strip()
+    safe = "".join(c if c not in '\\/:*?"<>|' else "_" for c in label)
+    dest = os.path.join(self.snapshot_root(), stamp + ((" " + safe) if safe else ""))
+    os.makedirs(dest, exist_ok=True)
+    saved = 0
+    for p in self.slot_paths:
+        if os.path.exists(p):
+            shutil.copy2(p, dest)
+            saved += 1
+    self.flash(f"Snapshot of {saved} slots saved to {os.path.basename(dest)}", "ok")
+
+
+def restore_snapshot(self):
+    import os
+    import shutil
+    from tkinter import filedialog, messagebox
+    root = self.snapshot_root()
+    if not os.path.isdir(root):
+        self.flash("No snapshots yet — press Snapshot first.", "warn")
+        return
+    pick = filedialog.askdirectory(parent=self, initialdir=root,
+                                   title="Pick a snapshot to restore")
+    if not pick:
+        return
+    n = len([f for f in os.listdir(pick) if os.path.isfile(os.path.join(pick, f))])
+    if not messagebox.askyesno(
+            APP_NAME, f"Copy the {n} slot files from\n{pick}\nover the save folder?\n\n"
+                      "Everything in the editor is reloaded from those files.", parent=self):
+        return
+    for name in os.listdir(pick):
+        src = os.path.join(pick, name)
+        if os.path.isfile(src) and is_slot_name(name):
+            shutil.copy2(src, os.path.join(self.folder, name))
+    self.dirty.clear()
+    self.reload()
+    self.flash(f"Restored {n} slots from {os.path.basename(pick)}.", "ok")
+
+
+# ------------------------------------------------------------- arts/skills
+def _build_skill_tab(self):
+    """The record's skill lists (all six), each with add / remove."""
+    tab = ttk.Frame(self.unit_tabs, style="Card.TFrame", padding=16)
+    self.unit_tabs.add(tab, text="Arts & skills")
+    grid = ttk.Frame(tab, style="Card.TFrame")
+    grid.pack(fill="both", expand=True)
+    self._skill_trees = {}
+    for idx, name in enumerate(layer.SKILL_LIST_NAMES):
+        box = ttk.Frame(grid, style="Card.TFrame", padding=(0, 0, 10, 10))
+        box.grid(row=idx // 3, column=idx % 3, sticky="nsew")
+        grid.columnconfigure(idx % 3, weight=1, uniform="skills")
+        grid.rowconfigure(idx // 3, weight=1)
+        head = ttk.Frame(box, style="Card.TFrame")
+        head.pack(fill="x")
+        ttk.Label(head, text=name, style="CardH3.TLabel").pack(side="left")
+        for text, fn in (("Remove", lambda i=idx: self.remove_skill(i)),
+                         ("Add…", lambda i=idx: self.add_skill(i))):
+            ttk.Button(head, text=text, style="Small.TButton", width=7,
+                       command=fn).pack(side="right", padx=(4, 0))
+        tree = scrolled_tree(box, show="tree", selectmode="browse", height=5)
+        tree.container.pack(fill="both", expand=True, pady=(4, 0))
+        self._skill_trees[idx] = tree
+    ttk.Label(tab, style="CardFaint.TLabel", justify="left", wraplength=820,
+              text="Equipped arts and skills are what the unit takes into battle; "
+                   "“Learned (all)” is everything it has learned. Adding or removing an "
+                   "entry rewrites the list safely."
+              ).pack(anchor="w", pady=(8, 0))
+
+
+def refresh_skill_lists(self):
+    if not hasattr(self, "_skill_trees") or not self.sv or self.uid is None:
+        return
+    lists = layer.skill_lists(self.sv.payload, self.uid)
+    for idx, tree in self._skill_trees.items():
+        tree.delete(*tree.get_children())
+        ids = lists[idx] if idx < len(lists) else []
+        for k, sid in enumerate(ids):
+            tree.insert("", "end", iid=str(k), text="  " + layer.skill_label(sid))
+        if not ids:
+            tree.insert("", "end", iid="none", text="  (empty)", tags=("empty",))
+
+
+def add_skill(self, index: int):
+    if not self.sv or self.uid is None:
+        return
+    # every entry in these lists is a skill / combat art id (SID_…), never an item
+    rows = [(h, m.get("en") or m.get("jp") or m.get("sid"), m.get("sid", ""))
+            for h, m in layer._skills().items()
+            if not (m.get("sid") or "").startswith("SID_>") and (m.get("en") or m.get("jp"))]
+    # skills with an English name first; internal / enemy-only entries after
+    eng = {h for h, m in layer._skills().items() if m.get("en")}
+    rows.sort(key=lambda r: (r[0] not in eng, str(r[1]).lower()))
+    if not rows:
+        self.flash("No skill names available (skill_ids.json is missing).", "warn")
+        return
+    sid = self._picker("Add to " + layer.SKILL_LIST_NAMES[index], rows)
+    if sid is None:
+        return
+    self.push_undo()
+
+    def edit(g):
+        u = layer.unit_in(g, self.uid)
+        if u is None:
+            return None
+        try:
+            ids = core.skill_list(g, u, index + 1)
+        except Exception:                     # noqa: BLE001
+            return None
+        if sid in ids:
+            return None
+        return core.with_skill_list(g, u, index + 1, ids + [sid])
+
+    self._core_edit(edit, f"{layer.SKILL_LIST_NAMES[index]}: added {layer.skill_label(sid)}")
+
+
+def remove_skill(self, index: int):
+    tree = getattr(self, "_skill_trees", {}).get(index)
+    sel = tree.selection() if tree else ()
+    if not self.sv or self.uid is None or not sel or sel[0] == "none":
+        return
+    k = int(sel[0])
+
+    def edit(g):
+        u = layer.unit_in(g, self.uid)
+        if u is None:
+            return None
+        try:
+            ids = core.skill_list(g, u, index + 1)
+        except Exception:                     # noqa: BLE001
+            return None
+        if k >= len(ids):
+            return None
+        return core.with_skill_list(g, u, index + 1, [x for i, x in enumerate(ids) if i != k])
+
+    self.push_undo()
+    self._core_edit(edit, f"{layer.SKILL_LIST_NAMES[index]}: removed entry {k + 1}")
+
+
+# ------------------------------------------------------------------ mounts
+def _build_mounts(self):
+    pane = ttk.PanedWindow(self.mounts_page, orient="horizontal")
+    pane.pack(fill="both", expand=True)
+    left = ttk.Frame(pane, style="Card.TFrame", padding=12)
+    pane.add(left, weight=3)
+    ttk.Label(left, text="Battalions & mounts", style="CardH3.TLabel").pack(anchor="w")
+    ttk.Label(left, style="CardMuted.TLabel", wraplength=520, justify="left",
+              text="Each unit carries one battalion (and, for mounted classes, one mount) at "
+                   "the end of its record. Pick from the pool this save holds.").pack(
+        anchor="w", pady=(2, 8))
+    self.mount_tree = scrolled_tree(left, columns=("bat", "mount"), show="tree headings",
+                                    selectmode="browse")
+    self.mount_tree.heading("#0", text="Unit", anchor="w")
+    self.mount_tree.heading("bat", text="Battalion", anchor="w")
+    self.mount_tree.heading("mount", text="Mount", anchor="w")
+    self.mount_tree.column("#0", width=190)
+    self.mount_tree.column("bat", width=230)
+    self.mount_tree.column("mount", width=140)
+    self.mount_tree.container.pack(fill="both", expand=True)
+
+    right = ttk.Frame(pane, style="Card.TFrame", padding=12)
+    pane.add(right, weight=2)
+    ttk.Label(right, text="This save's pool", style="CardH3.TLabel").pack(anchor="w")
+    self.pool_tree = scrolled_tree(right, columns=("kind", "id"), show="tree headings",
+                                   selectmode="browse")
+    self.pool_tree.heading("#0", text="Entry", anchor="w")
+    self.pool_tree.heading("kind", text="Kind", anchor="w")
+    self.pool_tree.heading("id", text="Record id", anchor="w")
+    self.pool_tree.column("#0", width=90)
+    self.pool_tree.column("kind", width=80)
+    self.pool_tree.column("id", width=190)
+    self.pool_tree.container.pack(fill="both", expand=True, pady=(6, 6))
+    row = ttk.Frame(right, style="Card.TFrame")
+    row.pack(fill="x")
+    ttk.Button(row, text="Assign to unit", style="Small.TButton",
+               command=self.assign_battalion).pack(side="left")
+    ttk.Button(row, text="Clear unit's", style="Small.TButton",
+               command=lambda: self.assign_battalion(clear=True)).pack(side="left", padx=(6, 0))
+    ttk.Button(row, text="Remove from pool", style="Small.TButton",
+               command=self.remove_battalion).pack(side="left", padx=(6, 0))
+
+
+def refresh_mounts(self):
+    if not hasattr(self, "mount_tree"):
+        return
+    self.mount_tree.delete(*self.mount_tree.get_children())
+    self.pool_tree.delete(*self.pool_tree.get_children())
+    self._mount_rows, self._pool_rows = {}, {}
+    if not self.sv:
+        return
+    bat_by_unit = {}
+    for l in layer.battalions(self.sv.payload):
+        bat_by_unit.setdefault(l.owner, l)
+    for u in layer.find_units(self.sv.payload):
+        g = layer.unit_gear(self.sv.payload, u.uid)
+        bat = bat_by_unit.get((g.unit_number if g else -1))
+        bat_txt = ("Battalion row %d" % bat.row) if bat else "—"
+        mnt = ("Mount #%d" % g.ride.serial) if (g and g.ride) else "—"
+        iid = self.mount_tree.insert("", "end", text=u.name,
+                                     values=(bat_txt, mnt))
+        self._mount_rows[iid] = u.uid
+    for i, l in enumerate(layer.battalions(self.sv.payload)):
+        iid = self.pool_tree.insert("", "end", text=f"#{i + 1}", values=("Battalion", hex(l.id)),
+                                    iid="b%d" % i)
+        self._pool_rows[iid] = ("battalion", i)
+    for i, r in enumerate(layer.mounts(self.sv.payload)):
+        iid = self.pool_tree.insert("", "end", text=f"#{i + 1}", values=("Mount", hex(r.id)),
+                                    iid="m%d" % i)
+        self._pool_rows[iid] = ("mount", i)
+
+
+def assign_battalion(self, clear: bool = False):
+    sel = self.mount_tree.selection() if hasattr(self, "mount_tree") else ()
+    uid = getattr(self, "_mount_rows", {}).get(sel[0] if sel else None)
+    if uid is None or not self.sv:
+        self.flash("Pick a unit on the Mounts page first.", "info")
+        return
+    legion = None
+    ride = None
+    g = layer.unit_gear(self.sv.payload, uid)
+    if g is None:
+        self.flash("This unit's record has no battalion slot (the game gives it one when "
+                   "the unit actually joins a battle) — nothing to write.", "warn")
+        return
+    if g.ride:
+        ride = g.ride
+    if not clear:
+        psel = self.pool_tree.selection()
+        if not psel:
+            self.flash("Pick a battalion in the pool first.", "info")
+            return
+        kind, idx = self._pool_rows.get(psel[0], (None, None))
+        if kind != "battalion":
+            self.flash("Only battalions can be assigned here.", "warn")
+            return
+        legion = layer.battalions(self.sv.payload)[idx]
+        legion = core.Legion(legion.row, g.unit_number if g else 0, legion.id)
+    self.push_undo()
+
+    def edit(f):
+        u = layer.unit_in(f, uid)
+        gg = core.gear(f, u)
+        if gg is None:
+            return None
+        return core.with_gear(f, u, gg, ride, legion)
+
+    self._core_edit(edit, "Battalion cleared" if clear
+                    else ("Battalion → row %d" % legion.row))
+
+
+def remove_battalion(self):
+    psel = self.pool_tree.selection() if hasattr(self, "pool_tree") else ()
+    if not psel or not self.sv:
+        return
+    kind, idx = self._pool_rows.get(psel[0], (None, None))
+    if kind != "battalion":
+        self.flash("Pick a battalion in the pool first.", "info")
+        return
+    self.push_undo()
+    self._core_edit(lambda f: layer_del_battalion(f, idx), "Removed battalion from the pool")
+
+
+def layer_del_battalion(f, idx: int):
+    st = core.party_store(f)
+    if not st:
+        return None
+    pool = core.legions(f, st[2])
+    if not (0 <= idx < len(pool)):
+        return None
+    return core.with_legions(f, st[2], [l for i, l in enumerate(pool) if i != idx])
+
+
+# ------------------------------------------------------- units: copy / remove
+def copy_unit_in(self):
+    """Bring a unit over from another slot of the same folder."""
+    import os
+    from tkinter import filedialog
+    if not self.sv:
+        return
+    others = [p for p in self.slot_paths if p != self.sv.path]
+    start = self.folder or os.path.dirname(self.sv.path)
+    pick = filedialog.askopenfilename(
+        parent=self, initialdir=start, title="Copy a unit from which save?",
+        filetypes=[("Save slots", "Auto Chapter_* Route_*"), ("All files", "*.*")])
+    if not pick:
+        return
+    try:
+        src = layer.SaveFile(pick)
+    except Exception as exc:                  # noqa: BLE001
+        self.flash(f"Can't read {os.path.basename(pick)}: {exc}", "error")
+        return
+    rows = [(u.uid, u.name, f"Lv {u.level} · {u.job}") for u in src.units]
+    rows.sort(key=lambda r: r[1].lower())
+    uid = self._picker(f"Copy a unit from {os.path.basename(pick)}", rows)
+    if uid is None:
+        return
+    self.push_undo()
+    name = next(r[1] for r in rows if r[0] == uid)
+    self._core_edit(lambda f: (layer.copy_unit_in(f.payload, pick, uid) and f.payload) or None,
+                    f"Copied {name} in")
+
+
+def remove_current_unit(self):
+    if not self.sv or self.uid is None:
+        return
+    from tkinter import messagebox
+    u = self._current()
+    if u is None:
+        return
+    if not messagebox.askyesno(
+            APP_NAME, f"Remove {u.name} from this save?\n\n"
+                      "The game may still refer to them (join flags, battalions, supports), "
+                      "which can confuse it. Undo (Ctrl+Z) brings them back; nothing is "
+                      "written until you save.", parent=self):
+        return
+    self.push_undo()
+    self._core_edit(lambda f: (layer.remove_unit(f.payload, self.uid) and f.payload) or None,
+                    f"Removed {u.name}")
+    self.uid = None
+
+
+# ------------------------------------------------------------ convoy extras
+def add_convoy_item_ui(self):
+    if not self.sv:
+        return
+    rows = [(h, layer.item_label(h, m), m.get("jp", "")) for h, m in layer.item_ids().items()]
+    rows.sort(key=lambda r: str(r[1]).lower())
+    iid = self._picker("Add to the convoy", rows)
+    if iid is None:
+        return
+    qty = _ask_number(self, "Quantity", "How many?", 1, 999)
+    if not qty:
+        return
+    self.push_undo()
+    self._core_edit(lambda f: (layer.add_convoy_slot(f.payload, iid, qty) and f.payload) or None,
+                    f"Convoy: added {layer.item_label(iid)} ×{qty}")
+    self.refresh_convoy()
+
+
+def remove_convoy_item_ui(self):
+    slots = self._conv_selected() if hasattr(self, "_conv_selected") else []
+    if not slots:
+        self.flash("Pick a convoy row first.", "info")
+        return
+    self.push_undo()
+    for slot in sorted(slots, reverse=True):
+        self._core_edit(
+            lambda f, s=slot: (layer.remove_convoy_slot(f.payload, s) and f.payload) or None,
+            f"Convoy: removed slot {slot + 1}")
+    self.refresh_convoy()
+
+
+# everything above is a plain function taking the app; attach it to the mixin
+for _name in ("push_undo", "undo", "redo", "snapshot_root", "take_snapshot",
+              "restore_snapshot", "_build_skill_tab", "refresh_skill_lists",
+              "add_skill", "remove_skill", "_build_mounts", "refresh_mounts",
+              "assign_battalion", "remove_battalion", "copy_unit_in",
+              "remove_current_unit", "add_convoy_item_ui", "remove_convoy_item_ui"):
+    setattr(AdvancedMixin, _name, globals()[_name])

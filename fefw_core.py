@@ -1,4 +1,4 @@
-"""fefw_core.py - the save-format engine (port of the model ReWeaver uses).
+"""fefw_core.py - the save-format engine.
 
 Everything here works on the *decompressed payload* and edits it through the
 save's own object tree, so records can grow or shrink (add a class, an item, a
@@ -1128,3 +1128,187 @@ def pack(original: bytes, payload: bytearray) -> bytes:
     struct.pack_into("<I", out, 272, 3)
     out[292:] = frame
     return bytes(out)
+
+
+# --------------------------------------------------------------------------
+# units: look one up, copy one in, remove one, make a new one
+# --------------------------------------------------------------------------
+def unit_by_person(f: SaveFile, person: int, nth: int = 0) -> "SaveUnit | None":
+    hits = [u for u in f.units() if u.person == (person & 0xFFFFFFFF)]
+    return hits[nth] if nth < len(hits) else None
+
+
+def copy_unit(src: SaveFile, unit: SaveUnit, dst: SaveFile,
+              replace: int | None = None) -> bytearray:
+    """Copy a unit record from one save into another (or over one in place)."""
+    src_tree = SaveTree.read(src.payload)
+    node = src_tree.node_at(unit.start)
+    if node < 0:
+        raise SaveError("the unit isn't an object of its own save")
+    dst_tree = SaveTree.read(dst.payload)
+    pool = dst.block("UnitPool")
+    if pool is None:
+        raise SaveError("no UnitPool in this save")
+    owner = dst_tree.node_at(pool.start)
+    units = dst.units()
+    if replace is not None:
+        if not (0 <= replace < len(units)):
+            raise SaveError("no such unit")
+        at = units[replace].start
+        length = units[replace].end - units[replace].start
+    else:
+        at = units[-1].end if units else pool.start + 8
+        length = 0
+    new = dst_tree.splice(owner, at, length, src_tree.copy_object(node, at))
+    if replace is None:
+        struct.pack_into("<H", new, pool.start + 6, len(units) + 1)
+    got = [x.person for x in SaveFile(new).units()]
+    want = [x.person for x in units]
+    if replace is None:
+        want.append(unit.person)
+    else:
+        want[replace] = unit.person
+    if got != want:
+        raise SaveError("the copied unit didn't read back; nothing was changed")
+    return new
+
+
+def remove_unit(f: SaveFile, index: int) -> bytearray:
+    """Delete a unit record, refusing if anything else still points at it."""
+    tree = SaveTree.read(f.payload)
+    pool = f.block("UnitPool")
+    units = f.units()
+    if pool is None or not (0 <= index < len(units)):
+        raise SaveError("no such unit")
+    u = units[index]
+    for r in tree.refs:
+        if (r.at < u.start or r.at >= u.end) and not r.is_end \
+                and u.start <= r.target < u.end:
+            raise SaveError("something else in the save points at this unit's "
+                            "record (at 0x%X); nothing was removed" % r.at)
+    owner = tree.node_at(pool.start)
+    new = tree.splice(owner, u.start, u.end - u.start, b"")
+    struct.pack_into("<H", new, pool.start + 6, len(units) - 1)
+    if len(SaveFile(new).units()) != len(units) - 1:
+        raise SaveError("the unit list didn't read back; nothing was removed")
+    return new
+
+
+def new_unit(f: SaveFile, template: SaveUnit, person: int, klass: int,
+             level: int, hp: int, items=(), masteries=()) -> bytearray:
+    """Grow a level-1 unit from a template record."""
+    if template.name:
+        raise SaveError("pick a template that isn't the player character")
+    work = SaveFile(copy_unit(f, template, f))
+    u = work.units()[-1]
+    struct.pack_into("<I", work.payload, u.start + 10, person & 0xFFFFFFFF)
+    struct.pack_into("<I", work.payload, u.start + 14, klass & 0xFFFFFFFF)
+    work.payload[u.start + 26:u.start + 35] = bytes(9)
+    work.payload[u.start + 37:u.start + 55] = bytes(18)
+    level = max(1, min(99, int(level)))
+    work.payload[u.start + 59] = level
+    struct.pack_into("<H", work.payload, u.start + 60, (level - 1) * 100)
+    struct.pack_into("<I", work.payload, u.start + 64, max(1, min(999, int(hp))))
+    u = work.units()[-1]
+    new = with_lists(work, u, list(masteries), [(klass & 0xFFFFFFFF, 0, 4)])
+    work = SaveFile(new)
+    u = work.units()[-1]
+    return with_items(work, u, list(items))
+
+
+# --------------------------------------------------------------------------
+# mounts and battalions carried by a unit (its record's tail)
+# --------------------------------------------------------------------------
+@dataclass
+class Gear:
+    unit_number: int
+    ride_at: int
+    ride_len: int
+    ride: "Ride | None"
+    legion_at: int
+    legion_len: int
+    legion: "Legion | None"
+
+
+def legion_ids(f: SaveFile) -> set:
+    ids = set()
+    st = party_store(f)
+    if st:
+        ids.update(l.id for l in legions(f, st[2]))
+    rl = reliquary_store(f)
+    if rl:
+        ids.update(l.id for l in legions(f, rl[2]))
+    return ids
+
+
+def gear(f: SaveFile, u: SaveUnit) -> Gear | None:
+    """The mount / battalion blob at the end of a unit record."""
+    p = f.payload
+    tail = tail_at(p, u.start, u.end)
+    if tail < 0:
+        return None
+    base = tail - 10
+    if base - 19 < u.start:
+        return None
+    legion = None
+    known = legion_ids(f)
+    if p[base - 17] == 1 and struct.unpack_from("<Q", p, base - 8)[0] in known:
+        legion = Legion(p[base - 16], p[base - 15],
+                        struct.unpack_from("<Q", p, base - 8)[0])
+        at = base - 17
+    else:
+        if p[base - 1] != 0:
+            return None
+        at = base - 1
+    number = p[tail - 9]
+    if p[at - 1] == 0 and p[at - 2] == 35:
+        return Gear(number, at - 1, 1, None, at, base - at, legion)
+    i = at - 18
+    while i > u.start and i > at - 400:
+        if p[i] == 6 and p[i - 1] == 35:
+            ride, nxt = Ride.read(p, i, at)
+            if ride is not None and nxt == at:
+                return Gear(number, i, at - i, ride, at, base - at, legion)
+        i -= 1
+    return None
+
+
+def with_gear(f: SaveFile, u: SaveUnit, g: Gear, ride, legion) -> bytearray:
+    p = f.payload
+    body = bytearray(ride.bytes() if ride else b"\x00")
+    body += legion.bytes() if legion else b"\x00"
+    start = g.legion_at + g.legion_len
+    body += p[start:u.end]
+    while ((len(body) - (u.end - g.ride_at)) & 3) != 0:
+        body.append(0)
+    tr = SaveTree.read(p)
+    node = tr.node_at(u.start)
+    if node < 0:
+        raise SaveError("the unit's record wasn't found")
+    return tr.splice(node, g.ride_at, u.end - g.ride_at, bytes(body))
+
+
+def reliquary_store(f: SaveFile):
+    """The party's second store (convoy / rides / legions) inside GameUserData."""
+    blk = f.block("GameUserData")
+    if blk is None:
+        return None
+    outer = _member(f, blk.start, 2782227604)
+    if outer is None:
+        return None
+    inner = _member(f, outer, 4225261395)
+    if inner is None:
+        return None
+    tr = SaveTree.read(f.payload)
+    node = tr.node_at(inner)
+    if node < 0:
+        return None
+    for n in tr.nodes:
+        if not n.struct or n.parent != node:
+            continue
+        c = _member(f, n.start, 4022239793)
+        r = _member(f, n.start, _RIDE_M)
+        l = _member(f, n.start, _LEGION_M)
+        if c is not None and r is not None and l is not None:
+            return (c, r, l)
+    return None
