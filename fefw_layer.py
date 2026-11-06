@@ -362,6 +362,33 @@ def remove_convoy_slot(payload: bytearray, slot: int) -> bool:
 # --------------------------------------------------------------------------
 # gold (fixed address: GameUserData + 6, in every slot)
 # --------------------------------------------------------------------------
+# GameUserData starts with the route, part and chapter the slot was saved in
+# (e.g. 03 01 0c = Theodora's route, part 1, chapter 12).
+ROUTE_LORDS = {1: "Cai", 2: "Dietrich", 3: "Theodora", 4: "Leda", 9: "Eshmel"}
+
+
+def route_info(payload) -> "tuple[str, int, int] | None":
+    """(lord, part, chapter) the slot was saved in, or None."""
+    try:
+        f = core.SaveFile(bytes(payload))
+        ud = core.user_data(f)
+    except Exception:                         # noqa: BLE001 — a label is optional
+        return None
+    if ud < 0:
+        return None
+    p = f.payload
+    code = p[ud + 3]
+    return ROUTE_LORDS.get(code, core.ROUTE_CODES.get(code, f"route {code}")), p[ud + 4], p[ud + 5]
+
+
+def route_label(payload) -> str:
+    info = route_info(payload)
+    if not info:
+        return ""
+    lord, part, chapter = info
+    return f"{lord} P{part} Ch{chapter}"
+
+
 def current_gold(payload) -> "tuple[int, int] | None":
     f = core.SaveFile(bytes(payload))
     ud = core.user_data(f)

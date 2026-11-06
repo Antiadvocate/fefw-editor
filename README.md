@@ -89,7 +89,9 @@ Otherwise use **Open folder…** and pick any slot file inside it.
   played, and it opens first. `Route_<lord>` (e.g. `Route_Ism`) holds that
   lord's route while you play someone else. `Chapter_<lord>_<part>_<chapter>`
   are chapter checkpoints, the points the game's "go back in time" feature
-  returns to. `Global` holds settings only.
+  returns to. `Global` holds settings only. The slot list shows the lord, part
+  and chapter each slot was saved in (e.g. `★ Auto · Theodora P1 Ch12`), read
+  from the save itself; ★ marks `Auto`.
 * **Edit `Auto`.** It's the save the game continues from, so editing it alone is
   enough.
 * **Only the live data is changed.** `Auto` also carries its own copies of
