@@ -38,7 +38,7 @@ import fefw_core as core  # noqa: E402  (save object tree: resizing edits)
 from editor_advanced import AdvancedMixin  # noqa: E402  (Player / Classes / Flags pages)
 
 APP_NAME = "Fortune's Weave Save Editor"
-__version__ = "1.2.3"
+__version__ = "1.2.4"
 SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
 ICON_DIR = os.path.join(USER_DIR, "icons")
 
@@ -386,8 +386,11 @@ class App(AdvancedMixin, tk.Tk):
     def __init__(self, folder: str | None = None):
         super().__init__()
         self.title(APP_NAME)
-        self.geometry("1240x780")
-        self.minsize(1000, 640)
+        self.ui_scale = _install_scaling(self)
+        sw, sh = self.winfo_screenwidth(), self.winfo_screenheight()
+        w, h = min(self.px(1240), sw - 40), min(self.px(780), sh - 80)
+        self.geometry(f"{w}x{h}+{max(0, (sw - w) // 2)}+{max(0, (sh - h) // 3)}")
+        self.minsize(min(self.px(1000), w), min(self.px(640), h))
 
         self.settings = self._load_settings()
         self.p = PALETTES.get(self.settings.get("theme"), PALETTES["dark"])
@@ -459,6 +462,34 @@ class App(AdvancedMixin, tk.Tk):
         return "light" if self.p is PALETTES["light"] else "dark"
 
     # --------------------------------------------------------------- theme
+    # ------------------------------------------------------------ scaling
+    def px(self, n: float) -> int:
+        """A size given in 96-dpi pixels, in this display's pixels."""
+        return int(round(n * self.ui_scale))
+
+    def pad(self, *v):
+        return tuple(self.px(x) for x in v)
+
+    def _row_height(self) -> int:
+        """Treeview rows sized from the font, not a fixed 28 px, so text and the
+        22 px icons aren't clipped when fonts grow with the display's DPI."""
+        line = tkfont.Font(self, font=self.f_body).metrics("linespace")
+        return max(line + self.px(10), self.px(28), 28)
+
+    def place_dialog(self, win, w: int | None = None, h: int | None = None):
+        """Size a dialog for the display's DPI and centre it over the main window
+        (left alone, Windows opens it small in the screen's top-left corner)."""
+        win.update_idletasks()
+        w = self.px(w) if w else win.winfo_reqwidth()
+        h = self.px(h) if h else win.winfo_reqheight()
+        sw, sh = win.winfo_screenwidth(), win.winfo_screenheight()
+        w, h = min(w, sw - 40), min(h, sh - 80)
+        x = self.winfo_rootx() + (self.winfo_width() - w) // 2
+        y = self.winfo_rooty() + (self.winfo_height() - h) // 3
+        x = max(0, min(x, sw - w))
+        y = max(0, min(y, sh - h))
+        win.geometry(f"{w}x{h}+{x}+{y}")
+
     def _fonts(self):
         fam = _pick_family(["Segoe UI Variable Text", "Segoe UI", "Inter", "SF Pro Text",
                             "Helvetica Neue", "Noto Sans", "Cantarell", "DejaVu Sans"],
@@ -588,12 +619,12 @@ class App(AdvancedMixin, tk.Tk):
 
         # lists
         s.configure("Treeview", background=p["card"], fieldbackground=p["card"],
-                    foreground=p["fg"], rowheight=28, borderwidth=0, relief="flat",
+                    foreground=p["fg"], rowheight=self._row_height(), borderwidth=0, relief="flat",
                     font=self.f_body)
         s.map("Treeview", background=[("selected", p["sel"])],
               foreground=[("selected", p["fg"])])
         s.configure("Treeview.Heading", background=p["card"], foreground=p["faint"],
-                    relief="flat", font=self.f_small, padding=(6, 6), borderwidth=0,
+                    relief="flat", font=self.f_small, padding=self.pad(6, 6), borderwidth=0,
                     bordercolor=p["card"], lightcolor=p["card"], darkcolor=p["card"])
         s.map("Treeview.Heading", background=[("active", p["raised"])])
         s.layout("Treeview", [("Treeview.treearea", {"sticky": "nswe"})])
@@ -607,14 +638,14 @@ class App(AdvancedMixin, tk.Tk):
         # tabs
         s.configure("TNotebook", background=p["bg"], borderwidth=0, tabmargins=(0, 4, 0, 0))
         s.configure("TNotebook.Tab", background=p["bg"], foreground=p["muted"],
-                    padding=(16, 8), borderwidth=0, font=self.f_bold,
+                    padding=self.pad(16, 8), borderwidth=0, font=self.f_bold,
                     lightcolor=p["bg"], bordercolor=p["bg"])
         s.map("TNotebook.Tab", background=[("selected", p["card"]), ("active", p["raised"])],
               foreground=[("selected", p["fg"]), ("active", p["fg"])],
               lightcolor=[("selected", p["accent"])],
               expand=[("selected", (0, 0, 0, 0))])
         s.configure("Main.TNotebook", background=p["side"], tabmargins=(12, 0, 0, 0))
-        s.configure("Main.TNotebook.Tab", background=p["side"], padding=(20, 10),
+        s.configure("Main.TNotebook.Tab", background=p["side"], padding=self.pad(20, 10),
                     lightcolor=p["side"], bordercolor=p["side"])
         s.map("Main.TNotebook.Tab", background=[("selected", p["bg"]), ("active", p["raised"])],
               lightcolor=[("selected", p["accent"])])
@@ -2345,12 +2376,43 @@ class App(AdvancedMixin, tk.Tk):
 
 
 def _dpi_aware():
-    if sys.platform == "win32":
+    """Ask Windows for real pixels instead of a blurry bitmap-stretched window:
+    per-monitor (2), else system-wide (1), else the pre-8.1 call."""
+    if sys.platform != "win32":
+        return
+    import ctypes
+    for mode in (2, 1):
         try:
-            import ctypes
-            ctypes.windll.shcore.SetProcessDpiAwareness(1)
+            if ctypes.windll.shcore.SetProcessDpiAwareness(mode) == 0:
+                return
         except Exception:  # noqa: BLE001
-            pass
+            break
+    try:
+        ctypes.windll.user32.SetProcessDPIAware()
+    except Exception:  # noqa: BLE001
+        pass
+
+
+def _install_scaling(root) -> float:
+    """The display's scale against 96 dpi (1.0, 1.25, 1.5, 2.0…).  Treeview
+    column widths are plain pixels while fonts grow with the DPI, so widths
+    set with .column() are scaled to match."""
+    try:
+        scale = max(1.0, root.winfo_fpixels("1i") / 96.0)
+    except tk.TclError:
+        scale = 1.0
+    if scale > 1.0 and not getattr(ttk.Treeview, "_fefw_scaled", False):
+        orig = ttk.Treeview.column
+
+        def column(self, column, option=None, **kw):
+            for k in ("width", "minwidth"):
+                if isinstance(kw.get(k), int):
+                    kw[k] = int(round(kw[k] * scale))
+            return orig(self, column, option, **kw)
+
+        ttk.Treeview.column = column
+        ttk.Treeview._fefw_scaled = True
+    return scale
 
 
 def main():
