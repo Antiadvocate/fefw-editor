@@ -187,7 +187,7 @@ class AdvancedMixin:
         win = tk.Toplevel(self)
         win.title(title)
         win.transient(self)
-        win.geometry("560x460")
+        self.place_dialog(win, 560, 460)
         win.configure(background=self.p["bg"])
         top = ttk.Frame(win, padding=10)
         top.pack(fill="x")
@@ -1089,6 +1089,8 @@ def _ask_number(parent, title: str, prompt: str, current: int, limit: int):
     ttk.Button(bar, text="OK", style="Accent.TButton", command=ok).pack(side="right")
     ttk.Button(bar, text="Cancel", command=win.destroy).pack(side="right", padx=(0, 8))
     ent.bind("<Return>", ok)
+    if hasattr(parent, "place_dialog"):
+        parent.place_dialog(win)
     ent.focus_set()
     ent.select_range(0, "end")
     parent.wait_window(win)
