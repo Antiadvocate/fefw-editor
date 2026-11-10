@@ -41,11 +41,7 @@ plus the HP gained, so changing HP gained moves max HP with it.
 
 ### Not supported (yet)
 
-* **Support levels.** The save stores support *points* (the Supports page reads
-  and writes them), and the game derives the level from them — but only the
-  maximum is known: 3200 points is level 5. The thresholds for the lower levels
-  aren't in the data files or the code path we can reach, so the editor shows
-  points rather than inventing a level number.
+
 * **Total stats and stat-up item bonuses.** See *Stats* above.
 * **Movement.** Units have their own movement values; where they're stored isn't
   known yet.
