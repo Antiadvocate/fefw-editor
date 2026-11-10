@@ -23,7 +23,7 @@ library, or a ready-made Windows `.exe`.
 | **Gold** | | Set gold |
 | **Player** | | Gold, renown exp and Karma Shards; difficulty, mode and playthrough number |
 | **Classes** | | A unit's whole class list (set the current class, add, swap or remove one) and its weapon masteries with their rank (E … S+) and exp |
-| **Supports** | | Every support pair the game defines, its highest rank, and which support conversations this save has recorded. **Record conversation as seen** writes that conversation's flag |
+| **Supports** | | Every character's support partners with the **points** this save holds for the pair, the highest rank the game defines, and which conversations this save has recorded. Set the points (0 … 3200) and the game works the level out from them. **Record conversation as seen** writes that conversation's flag |
 | **Mounts** | | The battalion and mount each unit carries, chosen from the save's pool |
 | **Flags** | | Every named variable the save stores: support conversations, recruited / met, achievements, feature and class unlocks. Search, filter, set, add, remove |
 
@@ -41,9 +41,11 @@ plus the HP gained, so changing HP gained moves max HP with it.
 
 ### Not supported (yet)
 
-* **Support level and points.** They aren't a plain value anywhere in the save.
-  What can be written is a support conversation's "seen" flag, the same flag the
-  game sets.
+* **Support levels.** The save stores support *points* (the Supports page reads
+  and writes them), and the game derives the level from them — but only the
+  maximum is known: 3200 points is level 5. The thresholds for the lower levels
+  aren't in the data files or the code path we can reach, so the editor shows
+  points rather than inventing a level number.
 * **Total stats and stat-up item bonuses.** See *Stats* above.
 * **Movement.** Units have their own movement values; where they're stored isn't
   known yet.
@@ -181,12 +183,13 @@ editor_advanced.py   Arts & skills, Player, Classes, Supports, Flags and Mounts 
 fefw_core.py         the save's record tree: blocks, units, resizing edits, convoy, mounts, flags
 fefw_layer.py        what the GUI uses: units, items, skills, convoy and gold through fefw_core
 fefw_save.py         save container (decompress, checksums, write), ids and labels, small CLI
-supports.py          support pair chart and conversation-flag lookup
+supports.py          support pair chart, conversation-flag and support-point lookup
 unit_ids.json        person id -> name
 item_ids.json        item id   -> Japanese + English name
 job_ids.json         class id  -> Japanese + English name
 skill_ids.json       skill id  -> Japanese + English name
 supports.json        support pair -> highest rank and its conversation flags
+support_points.json  support pair hash -> the two characters it joins (2628 pairs)
 flag_names.json      flag id   -> readable name
 build_skill_ids.py   rebuilds skill_ids.json from a romfs dump
 build_item_names.py  puts the game's official English item names into item_ids.json

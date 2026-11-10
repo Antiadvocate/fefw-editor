@@ -17,6 +17,7 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 
 import fefw_core as core
+import supports
 from fefw_save import item_ids, item_label, unit_ids
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -1027,6 +1028,46 @@ class AdvancedMixin:
         self._core_edit(edit, f"Support {pair['a_en']} – {pair['b_en']} ({rank}) cleared")
         self.refresh_support_chars()
 
+
+    # ====================================================== support points
+    def sup_apply_points(self):
+        """Write the number in the points box onto the selected pair."""
+        raw = (self.sup_pt_var.get() or "").strip().replace(",", "").replace(" ", "")
+        if not raw.isdigit():
+            self.flash(f"Type a support point value between 0 and "
+                       f"{supports.max_points():,}.", "error")
+            return
+        self.sup_set_points(int(raw))
+
+    def sup_set_points(self, value: int):
+        """Set the selected pair's support points (the save's own value)."""
+        sel = self.sup_tree.selection() if hasattr(self, "sup_tree") else ()
+        pt = getattr(self, "_sup_pt", {})
+        if not sel or sel[0] not in pt:
+            self.flash("Pick a support partner on the Supports page first.", "info")
+            return
+        pair_hash, old, _jp = pt[sel[0]]
+        value = max(0, min(int(value), supports.max_points()))
+        a_en = self.sup_name.cget("text")
+        b_en = self.sup_tree.item(sel[0], "text")
+        if old == value:
+            self.flash(f"{a_en} – {b_en} already has {value:,} points.", "info")
+            return
+
+        def edit(g):
+            blk = g.block("GameUserData")
+            if not blk:
+                return None
+            table = supports.find_table(g.payload, blk.start, blk.end)
+            entry = (table or {}).get(pair_hash)
+            if entry is None or entry[0] == value:
+                return None
+            supports.set_points(g.payload, entry[2], value)
+            return g.payload
+
+        # _core_edit re-reads the save and refreshes every page, which rebuilds
+        # this one with the same character and partner still selected.
+        self._core_edit(edit, f"Support points {a_en} – {b_en} → {value:,}")
 
 def settings_offsets(f: core.SaveFile) -> list[int]:
     """Offsets of the difficulty/mode byte pairs, everywhere the save keeps them."""
