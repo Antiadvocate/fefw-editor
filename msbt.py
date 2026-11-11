@@ -18,8 +18,29 @@ def _raw(path: str) -> bytes:
     return data
 
 
+def strip_tags(s: str) -> str:
+    """UTF-16 message text with its control tags removed, text around them kept.
+
+    A tag is \\x0e, group, type, parameter size in bytes, then the parameters;
+    a closing tag is \\x0f, group, type.  Furigana is a tag (group 0, type 0)
+    placed in front of the kanji it reads.
+    """
+    out, i = [], 0
+    while i < len(s):
+        c = s[i]
+        if c == "\x0e" and i + 3 < len(s):
+            i += 4 + ord(s[i + 3]) // 2
+            continue
+        if c == "\x0f":
+            i += 3
+            continue
+        out.append(c)
+        i += 1
+    return "".join(out)
+
+
 def read(path: str) -> dict[str, str]:
-    """{label: text} for one message file.  Control codes (\\x0e…) are cut off."""
+    """{label: text} for one message file, control tags stripped."""
     raw = _raw(path)
     utf16 = raw[0x0C:0x0E] == b"\xff\xfe"
     lbl = raw.find(b"LBL1")
@@ -38,18 +59,22 @@ def read(path: str) -> dict[str, str]:
             at += 1 + ln + 4
     tbody = txt + 16
     count = struct.unpack_from("<I", raw, tbody)[0]
+    offs = [struct.unpack_from("<I", raw, tbody + 4 + 4 * k)[0] for k in range(count)]
+    # A text runs to where the next one starts.  Scanning for 00 00 instead
+    # stops inside the first tag (its group/type are often 0), so a name that
+    # opens with furigana came back empty and never matched.
+    ends = offs[1:] + [struct.unpack_from("<I", raw, txt + 4)[0]]
     texts = []
     for k in range(count):
-        at = tbody + struct.unpack_from("<I", raw, tbody + 4 + 4 * k)[0]
+        at = tbody + offs[k]
         if utf16:
-            end = at
-            while end + 1 < len(raw) and raw[end:end + 2] != b"\x00\x00":
-                end += 2
-            s = raw[at:end].decode("utf-16-le", "replace")
+            s = raw[at:tbody + ends[k]].decode("utf-16-le", "replace")
+            s = strip_tags(s).split("\x00")[0]
         else:
             end = raw.find(b"\x00", at)
             s = raw[at:end if end >= 0 else len(raw)].decode("utf-8", "replace")
-        texts.append(s.split("\x0e")[0].strip())
+            s = s.split("\x0e")[0]
+        texts.append(s.strip())
     return {name: texts[i] for name, i in labels.items() if 0 <= i < len(texts)}
 
 
