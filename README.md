@@ -118,13 +118,19 @@ result is read back before anything is written.
 
 ## The convoy
 
-The convoy is a fixed row of 1329 slots, materials included. **Add item…** puts
-a stack into the first empty slot and **Remove** empties a slot, the way the
-game deposits and withdraws, so the list always keeps its 1329 slots.
+The convoy is a fixed row of 1329 slots, one per item: each item has its own
+slot, and a stack sitting in another item's slot is ignored by the game.
+**Add item…** puts a stack in the item's own slot (adding to what is there) and
+**Remove** empties a slot, so the list always keeps its 1329 slots.
 
 **All materials…** asks for one quantity and stocks all 128 forging and cooking
-materials (ores, meat, fish, plants, leaves, manure) at it: stacks you already
-have are set to that number and the rest go into empty slots. Undo takes it back.
+materials (ores, meat, fish, plants, leaves, manure) at it, each in its own
+slot. Undo takes it back.
+
+**Fixing 1.3.1.** Version 1.3.1's Add item… and All materials… put stacks in the
+first empty slot, so the game never showed them. Running All materials… again
+moves stray materials home, and adding an item again moves its stray copies
+into its own slot.
 
 **Damaged lists.** Versions before 1.2 did "Add" by writing an item over empty
 slots, which knocked the rest of the list out of line so the game couldn't read

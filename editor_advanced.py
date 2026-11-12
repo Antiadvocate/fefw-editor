@@ -1537,6 +1537,16 @@ def add_convoy_item_ui(self):
     qty = _ask_number(self, "Quantity", "How many?", 1, 999)
     if not qty:
         return
+    conv = layer.live_convoy(bytes(self.sv.payload))
+    home = layer.convoy_home(iid, conv.slots) if conv else None
+    if home is None:
+        self.flash(f"{layer.item_label(iid)} has no convoy slot of its own.", "warn")
+        return
+    other = next((r for r in conv.rows if r.slot == home and r.qty and r.iid != iid), None)
+    if other:
+        self.flash(f"Slot {home + 1}, {layer.item_label(iid)}'s own slot, holds "
+                   f"{layer.item_label(other.iid)} — remove that first.", "warn")
+        return
     self.push_undo()
     self._core_edit(lambda f: (layer.add_convoy_slot(f.payload, iid, qty) and f.payload) or None,
                     f"Convoy: added {layer.item_label(iid)} ×{qty}")
@@ -1558,8 +1568,8 @@ def fill_materials_ui(self):
     qty = _ask_number(self, "All materials",
                       f"Quantity for each of the {len(mats)} materials\n"
                       "(ores, meat, fish, plants, leaves, manure).\n"
-                      "Stacks already in the convoy are set to it; the rest\n"
-                      "go into empty slots.", max(1, start), 999)
+                      "Each goes into its own convoy slot; stacks you\n"
+                      "already have are set to it.", max(1, start), 999)
     if not qty:
         return
     self.push_undo()
@@ -1568,14 +1578,16 @@ def fill_materials_ui(self):
     def run(f):
         res = layer.fill_materials(f.payload, qty)
         got.setdefault("r", res)
-        return f.payload if any(res[:2]) else None
+        return f.payload if any(res[:3]) else None
 
     if self._core_edit(run, f"Convoy: all materials ×{qty}"):
-        changed, added, missed = got.get("r", (0, 0, 0))
-        msg = f"Materials ×{qty}: {added} added, {changed} topped to {qty}"
-        if missed:
-            msg += f" — {missed} didn't fit (no empty slots left)"
-        self.flash(msg + " — Ctrl+S to write it.", "warn" if missed else "ok")
+        kept, added, moved, blocked = got.get("r", (0, 0, 0, 0))
+        msg = f"Materials ×{qty}: {added} added, {kept} set"
+        if moved:
+            msg += f", {moved} moved into their own slots"
+        if blocked:
+            msg += f" — {blocked} skipped (their slot holds another item)"
+        self.flash(msg + " — Ctrl+S to write it.", "warn" if blocked else "ok")
     self.refresh_convoy()
 
 
