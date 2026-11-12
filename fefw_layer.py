@@ -345,6 +345,66 @@ def add_convoy_slot(payload: bytearray, item_id: int, qty: int = 1) -> bool:
     return True
 
 
+# Forging/cooking materials sit in one run of Item.bin (and so of
+# item_ids.json): ores from 錬成石 (Smithing Stone), then meat, fish, plants
+# and leaves, ending with バウのフン (Bau Manure).  The two tutorial freebies
+# (試供餌, 試供種) inside that run are left out.
+_MAT_FIRST, _MAT_LAST = "錬成石", "バウのフン"
+_MATERIALS: list | None = None
+
+
+def material_ids() -> list:
+    """Item ids of every forging/cooking material, in the game's order."""
+    global _MATERIALS
+    if _MATERIALS is None:
+        out, inside = [], False
+        for iid, meta in item_ids().items():
+            jp = meta.get("jp") or ""
+            inside = inside or jp == _MAT_FIRST
+            if inside and not jp.startswith("試供"):
+                out.append(iid)
+            if jp == _MAT_LAST:
+                break
+        _MATERIALS = out if inside else []
+    return _MATERIALS
+
+
+def fill_materials(payload: bytearray, qty: int) -> "tuple[int, int, int]":
+    """Every material to `qty`: stacks already in the convoy are set to it,
+    missing ones go into empty slots the way a deposit does.  The slot count
+    stays the same.  Returns (set, added, left out for lack of empty slots)."""
+    f = core.SaveFile(bytes(payload))
+    at = core.convoy_at(f)
+    if at < 0:
+        return 0, 0, 0
+    qty = max(1, min(0xFFFF, int(qty)))
+    slots = core.convoy_read(f, at)
+    want = material_ids()
+    have = {}
+    for k, sl in enumerate(slots):
+        if sl.item and sl.qty and sl.item.id in want:
+            have.setdefault(sl.item.id, []).append(k)
+    changed = 0
+    for ks in have.values():
+        for k in ks:
+            if slots[k].qty != qty:
+                slots[k] = core.Slot(qty, slots[k].item)
+            changed += 1
+    free = (k for k, sl in enumerate(slots) if not (sl.item and sl.qty))
+    added = missed = 0
+    for iid in want:
+        if iid in have:
+            continue
+        k = next(free, None)
+        if k is None:
+            missed += 1
+            continue
+        slots[k] = core.Slot(qty, core.Item(iid))
+        added += 1
+    payload[:] = core.convoy_write(f, at, slots)
+    return changed, added, missed
+
+
 def remove_convoy_slot(payload: bytearray, slot: int) -> bool:
     """Empty one slot; the slots after it stay where they are."""
     f = core.SaveFile(bytes(payload))

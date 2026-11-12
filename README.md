@@ -19,7 +19,7 @@ library, or a ready-made Windows `.exe`.
 | | Arts & skills | All six skill lists in the unit's record (equipped arts, equipped skills, arts known, everything learned…), by name, with add / remove |
 | | Inventory | Swap, add or remove a carried item, picked from a searchable catalogue. Known spells are listed separately |
 | | Class | Pick any class the game knows. It's added to the unit's own class list, the way the game does it |
-| **Convoy** | | Everything in storage, materials included: add a stack, swap the item in any row, change its quantity, remove a row, and repair a list damaged by older versions |
+| **Convoy** | | Everything in storage, materials included: add a stack, stock every material at once, swap the item in any row, change its quantity, remove a row, and repair a list damaged by older versions |
 | **Gold** | | Set gold |
 | **Player** | | Gold, renown exp and Karma Shards; difficulty, mode and playthrough number |
 | **Classes** | | A unit's whole class list (set the current class, add, swap or remove one) and its weapon masteries with their rank (E … S+) and exp |
@@ -121,6 +121,10 @@ result is read back before anything is written.
 The convoy is a fixed row of 1329 slots, materials included. **Add item…** puts
 a stack into the first empty slot and **Remove** empties a slot, the way the
 game deposits and withdraws, so the list always keeps its 1329 slots.
+
+**All materials…** asks for one quantity and stocks all 128 forging and cooking
+materials (ores, meat, fish, plants, leaves, manure) at it: stacks you already
+have are set to that number and the rest go into empty slots. Undo takes it back.
 
 **Damaged lists.** Versions before 1.2 did "Add" by writing an item over empty
 slots, which knocked the rest of the list out of line so the game couldn't read

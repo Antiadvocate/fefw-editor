@@ -1543,6 +1543,42 @@ def add_convoy_item_ui(self):
     self.refresh_convoy()
 
 
+def fill_materials_ui(self):
+    """Put every forging/cooking material in the convoy at one quantity."""
+    if not self.sv:
+        return
+    mats = layer.material_ids()
+    if not mats:
+        self.flash("No materials found in the item list.", "error")
+        return
+    try:
+        start = int(self.qty_var.get())
+    except (AttributeError, ValueError):
+        start = 99
+    qty = _ask_number(self, "All materials",
+                      f"Quantity for each of the {len(mats)} materials\n"
+                      "(ores, meat, fish, plants, leaves, manure).\n"
+                      "Stacks already in the convoy are set to it; the rest\n"
+                      "go into empty slots.", max(1, start), 999)
+    if not qty:
+        return
+    self.push_undo()
+    got = {}
+
+    def run(f):
+        res = layer.fill_materials(f.payload, qty)
+        got.setdefault("r", res)
+        return f.payload if any(res[:2]) else None
+
+    if self._core_edit(run, f"Convoy: all materials ×{qty}"):
+        changed, added, missed = got.get("r", (0, 0, 0))
+        msg = f"Materials ×{qty}: {added} added, {changed} topped to {qty}"
+        if missed:
+            msg += f" — {missed} didn't fit (no empty slots left)"
+        self.flash(msg + " — Ctrl+S to write it.", "warn" if missed else "ok")
+    self.refresh_convoy()
+
+
 def remove_convoy_item_ui(self):
     slots = self._conv_selected() if hasattr(self, "_conv_selected") else []
     if not slots:
@@ -1561,5 +1597,6 @@ for _name in ("push_undo", "undo", "redo", "snapshot_root", "take_snapshot",
               "restore_snapshot", "_build_skill_tab", "refresh_skill_lists",
               "add_skill", "remove_skill", "_build_mounts", "refresh_mounts",
               "assign_battalion", "remove_battalion", "copy_unit_in",
-              "remove_current_unit", "add_convoy_item_ui", "remove_convoy_item_ui"):
+              "remove_current_unit", "add_convoy_item_ui", "remove_convoy_item_ui",
+              "fill_materials_ui"):
     setattr(AdvancedMixin, _name, globals()[_name])
