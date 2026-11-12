@@ -326,21 +326,57 @@ def convoy_rows(payload) -> list:
     return c.rows if c else []
 
 
-# The convoy is a fixed row of slots (1329 in every save seen), and the game
-# keeps that count: a deposit fills an empty slot and a withdrawal empties one.
-# So add and remove do the same, and the list's length never changes.  (The
-# list is rebuilt and its pointers rewritten, so every later slot keeps its item.)
+# The convoy is a fixed row of slots (1329 in every save seen), one per item:
+# slot k belongs to the item in row k - 24 of item_ids.json (Item.bin order;
+# seen on a real Auto save: Smithing Stone in slot 1008, Wolf Meat in 1028,
+# Bakul in 1071).  A stack in another item's slot is ignored by the game, which
+# is why 1.3.1's "Add" and "All materials" (first empty slot) didn't show up.
+# The layout is game data, the same in every save, so the offset is fixed.
+CONVOY_SLOT_OFFSET = 24
+
+
+def convoy_home(iid: int, n_slots: int) -> "int | None":
+    """The slot that belongs to an item, or None if it has none."""
+    pos = _item_rows().get(iid & 0xFFFFFFFF)
+    if pos is None:
+        return None
+    k = pos + CONVOY_SLOT_OFFSET
+    return k if 0 <= k < n_slots else None
+
+
+_ROWS: dict | None = None
+
+
+def _item_rows() -> dict:
+    global _ROWS
+    if _ROWS is None:
+        _ROWS = {iid: i for i, iid in enumerate(item_ids())}
+    return _ROWS
+
+
 def add_convoy_slot(payload: bytearray, item_id: int, qty: int = 1) -> bool:
-    """Put a stack into the first empty slot.  False if there is none."""
+    """Put a stack in the item's own slot (added to what is there, max 999).
+    Copies of it sitting in other items' slots are moved home with it.  False
+    if the item has no slot or its slot holds another item."""
     f = core.SaveFile(bytes(payload))
     at = core.convoy_at(f)
     if at < 0:
         return False
     slots = core.convoy_read(f, at)
-    free = next((k for k, sl in enumerate(slots) if not (sl.item and sl.qty)), None)
-    if free is None:
+    iid = item_id & 0xFFFFFFFF
+    home = convoy_home(iid, len(slots))
+    if home is None:
         return False
-    slots[free] = core.Slot(max(1, int(qty)), core.Item(item_id & 0xFFFFFFFF))
+    cur = slots[home]
+    if cur.item and cur.qty and cur.item.id != iid:
+        return False
+    total = max(1, int(qty)) + (cur.qty if cur.item and cur.qty else 0)
+    item = cur.item if cur.item and cur.qty else core.Item(iid)
+    for k, sl in enumerate(slots):
+        if k != home and sl.item and sl.qty and sl.item.id == iid:
+            total += sl.qty
+            slots[k] = core.Slot(0, None)
+    slots[home] = core.Slot(min(999, total), item)
     payload[:] = core.convoy_write(f, at, slots)
     return True
 
@@ -369,40 +405,44 @@ def material_ids() -> list:
     return _MATERIALS
 
 
-def fill_materials(payload: bytearray, qty: int) -> "tuple[int, int, int]":
-    """Every material to `qty`: stacks already in the convoy are set to it,
-    missing ones go into empty slots the way a deposit does.  The slot count
-    stays the same.  Returns (set, added, left out for lack of empty slots)."""
+def fill_materials(payload: bytearray, qty: int) -> "tuple[int, int, int, int]":
+    """Every material to `qty`, each in its own slot.  Stacks sitting in some
+    other item's slot (1.3.1 put them in the first empty one) are moved home.
+    The slot count stays the same.  Returns (already there and set, added,
+    moved home, blocked because their slot holds something else)."""
     f = core.SaveFile(bytes(payload))
     at = core.convoy_at(f)
     if at < 0:
-        return 0, 0, 0
+        return 0, 0, 0, 0
     qty = max(1, min(0xFFFF, int(qty)))
     slots = core.convoy_read(f, at)
-    want = material_ids()
-    have = {}
+    mats = material_ids()
+    home = {iid: convoy_home(iid, len(slots)) for iid in mats}
+    stray = set()
     for k, sl in enumerate(slots):
-        if sl.item and sl.qty and sl.item.id in want:
-            have.setdefault(sl.item.id, []).append(k)
-    changed = 0
-    for ks in have.values():
-        for k in ks:
-            if slots[k].qty != qty:
-                slots[k] = core.Slot(qty, slots[k].item)
-            changed += 1
-    free = (k for k, sl in enumerate(slots) if not (sl.item and sl.qty))
-    added = missed = 0
-    for iid in want:
-        if iid in have:
-            continue
-        k = next(free, None)
+        if sl.item and sl.qty and sl.item.id in home and home[sl.item.id] != k:
+            stray.add(sl.item.id)
+            slots[k] = core.Slot(0, None)
+    kept = added = moved = blocked = 0
+    for iid in mats:
+        k = home[iid]
         if k is None:
-            missed += 1
+            blocked += 1
             continue
-        slots[k] = core.Slot(qty, core.Item(iid))
-        added += 1
+        sl = slots[k]
+        if sl.item and sl.qty and sl.item.id == iid:
+            slots[k] = core.Slot(qty, sl.item)
+            kept += 1
+        elif sl.item and sl.qty:
+            blocked += 1
+        else:
+            slots[k] = core.Slot(qty, core.Item(iid))
+            if iid in stray:
+                moved += 1
+            else:
+                added += 1
     payload[:] = core.convoy_write(f, at, slots)
-    return changed, added, missed
+    return kept, added, moved, blocked
 
 
 def remove_convoy_slot(payload: bytearray, slot: int) -> bool:

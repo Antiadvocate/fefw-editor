@@ -38,7 +38,7 @@ import fefw_core as core  # noqa: E402  (save object tree: resizing edits)
 from editor_advanced import AdvancedMixin  # noqa: E402  (Player / Classes / Flags pages)
 
 APP_NAME = "Fortune's Weave Save Editor"
-__version__ = "1.3.1"
+__version__ = "1.3.2"
 SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
 ICON_DIR = os.path.join(USER_DIR, "icons")
 
@@ -1113,10 +1113,10 @@ class App(AdvancedMixin, tk.Tk):
         ctl = ttk.Frame(left, style="Card.TFrame")
         ctl.pack(side="bottom", fill="x", pady=(10, 0))
         ttk.Label(left, style="CardFaint.TLabel", wraplength=420, justify="left",
-                  text="Add item… puts a new stack into the first empty slot and Remove "
-                       "empties a slot, the way the game does it: the list keeps its slot "
-                       "count and everything after it is moved safely. All materials… "
-                       "stocks every ore, meat, fish and plant at one quantity."
+                  text="Every item has its own convoy slot. Add item… puts a stack in it and "
+                       "Remove empties a slot; the list keeps its slot count and everything "
+                       "after it is moved safely. All materials… stocks every ore, meat, "
+                       "fish and plant at one quantity."
                   ).pack(side="bottom", anchor="w", pady=(8, 0))
         self.conv_tree = scrolled_tree(left, columns=("kind", "qty"), show="tree headings",
                                        selectmode="extended", height=6)
