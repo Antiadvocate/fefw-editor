@@ -187,9 +187,25 @@ PNGs into `icons/items/` and `icons/units/` to use real images; see
 | Ctrl+O | Open a save folder |
 | Ctrl+F | Jump to the search box on the current page |
 | Ctrl+A | Select every row in the table you last clicked |
-| Shift+click / Shift+drag | Select a range of rows (convoy, classes, masteries, flags…) |
+| Shift+click / Shift+drag | Select a range of rows |
 | F5 | Reload every slot from disk (asks first if you have unsaved edits) |
 | Enter / double-click | Use the selected catalogue item |
+
+**Selecting several rows** works in the tables whose buttons act on all of
+them at once:
+
+* **Convoy:** Set qty, Remove.
+* **Classes:** Set exp…, Remove.
+* **Weapon masteries:** Set rank…, Set exp…, Remove.
+* **Arts & skills lists:** Remove.
+* **Flags:** Set value…, Remove.
+* **Support partners:** Apply / Max / 0 points, C / B / A seen, Forget….
+* **Battalion pool:** Remove from pool.
+
+The other lists (units, inventory slots, the class and item catalogues,
+support characters, mount units) pick the one thing a form edits, so they
+stay single-choice. "Set current" and "Swap" on Classes, and assigning a
+battalion, need exactly one row.
 
 ## Known limits
 

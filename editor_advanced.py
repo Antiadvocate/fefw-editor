@@ -488,7 +488,7 @@ class AdvancedMixin:
             ttk.Button(bar2, text=text, style="Small.TButton", command=cmd).pack(side="right",
                                                                                padx=(6, 0))
         self.mas_tree = ttk.Treeview(mbox, columns=("rank", "exp", "next"),
-                                     show="tree headings", selectmode="browse")
+                                     show="tree headings", selectmode="extended")
         self.mas_tree.heading("#0", text="Weapon", anchor="w")
         self.mas_tree.heading("rank", text="Rank", anchor="center")
         self.mas_tree.heading("exp", text="Exp", anchor="e")
@@ -575,6 +575,13 @@ class AdvancedMixin:
     def on_class_unit(self):
         u = self._cls_unit()
         f = self.core_of()
+        same = u is not None and getattr(self, "_cls_uid", None) == u.start
+        keep_cls = set(self.cls_tree.selection()) if same else set()
+        keep_mas = set(self.mas_tree.selection()) if same else set()
+        if same and len(self.cls_tree.get_children()) != len(u.classes):
+            keep_cls = set()                  # rows were added/removed: indices moved
+        if same and len(self.mas_tree.get_children()) != len(u.masteries):
+            keep_mas = set()
         self.cls_tree.delete(*self.cls_tree.get_children())
         self.mas_tree.delete(*self.mas_tree.get_children())
         if u is None or f is None:
@@ -602,6 +609,10 @@ class AdvancedMixin:
             self.mas_tree.insert("", "end", text=nm,
                                  values=(RANKS[r], exp, nxt if nxt is not None else "max"),
                                  iid=str(i))
+        for tree, keep in ((self.cls_tree, keep_cls), (self.mas_tree, keep_mas)):
+            keep = [i for i in keep if tree.exists(i)]
+            if keep:
+                tree.selection_set(keep)
 
     # -- class actions
     def _class_rows(self):
@@ -625,6 +636,9 @@ class AdvancedMixin:
         u = self._cls_unit()
         sel = self.cls_tree.selection()
         if u is None or not sel:
+            return
+        if len(sel) > 1:
+            self.flash("A unit has one current class: select a single class row.", "warn")
             return
         klass = u.classes[int(sel[0])][0]
         self._set_current(u, klass)
@@ -708,6 +722,9 @@ class AdvancedMixin:
         sel = self.cls_tree.selection()
         if u is None or not sel:
             return
+        if len(sel) > 1:
+            self.flash("Swap replaces one class: select a single class row.", "warn")
+            return
         entry = int(sel[0])
         old = u.classes[entry]
         have = {c[0] for c in u.classes}
@@ -757,14 +774,24 @@ class AdvancedMixin:
         self._core_edit(edit, what)
 
     # -- mastery actions
+    def _mastery_entries(self) -> list[int]:
+        sel = self.mas_tree.selection() if hasattr(self, "mas_tree") else ()
+        return sorted({int(i) for i in sel if str(i).isdigit()})
+
+    def _mastery_names(self, u, entries) -> str:
+        names = [MASTERIES[u.masteries[i][0]][0] for i in entries]
+        return ", ".join(names[:4]) + (f" +{len(names) - 4} more" if len(names) > 4 else "")
+
     def set_mastery_rank(self):
         u = self._cls_unit()
-        sel = self.mas_tree.selection()
-        if u is None or not sel:
+        entries = self._mastery_entries()
+        if u is None or not entries:
+            self.flash("Pick a weapon mastery first.", "info")
             return
-        entry = int(sel[0])
         rows = [(i, RANKS[i], f"{RANK_EXP[i]} exp") for i in range(len(RANKS))]
-        r = self._picker(f"Rank for {MASTERIES[u.masteries[entry][0]][0]}", rows)
+        title = (f"Rank for {MASTERIES[u.masteries[entries[0]][0]][0]}" if len(entries) == 1
+                 else f"Rank for {len(entries)} masteries ({self._mastery_names(u, entries)})")
+        r = self._picker(title, rows)
         if r is None:
             return
         exp = RANK_EXP[r]
@@ -774,11 +801,13 @@ class AdvancedMixin:
             if v is None:
                 return None
             mas = list(v.masteries)
-            mas[entry] = (mas[entry][0], exp)
-            new = core.with_lists(g, v, mas, list(v.classes))
-            return new
+            for i in entries:
+                mas[i] = (mas[i][0], exp)
+            return core.with_lists(g, v, mas, list(v.classes))
 
-        self._core_edit(edit, f"{MASTERIES[u.masteries[entry][0]][0]} → {RANKS[r]}")
+        what = (f"{MASTERIES[u.masteries[entries[0]][0]][0]} → {RANKS[r]}" if len(entries) == 1
+                else f"{len(entries)} masteries → {RANKS[r]}")
+        self._core_edit(edit, what)
 
     def set_mastery_exp(self):
         u = self._cls_unit()
@@ -845,24 +874,27 @@ class AdvancedMixin:
 
     def remove_mastery(self):
         u = self._cls_unit()
-        sel = self.mas_tree.selection()
-        if u is None or not sel:
+        entries = self._mastery_entries()
+        if u is None or not entries:
             return
-        entry = int(sel[0])
-        idx = u.masteries[entry][0]
-        if not messagebox.askyesno("Save editor",
-                                   f"Remove the {MASTERIES[idx][0]} mastery from "
-                                   f"{unit_name(u.person)}?", parent=self):
+        q = (f"Remove the {MASTERIES[u.masteries[entries[0]][0]][0]} mastery from "
+             f"{unit_name(u.person)}?" if len(entries) == 1 else
+             f"Remove {len(entries)} masteries ({self._mastery_names(u, entries)}) from "
+             f"{unit_name(u.person)}?")
+        if not messagebox.askyesno("Save editor", q, parent=self):
             return
+        drop = set(entries)
 
         def edit(g):
             v = next((x for x in g.units() if x.start == u.start), None)
             if v is None:
                 return None
-            mas = [m for i, m in enumerate(v.masteries) if i != entry]
+            mas = [m for i, m in enumerate(v.masteries) if i not in drop]
             return core.with_lists(g, v, mas, list(v.classes))
 
-        self._core_edit(edit, f"Removed mastery {MASTERIES[idx][0]}")
+        what = (f"Removed mastery {MASTERIES[u.masteries[entries[0]][0]][0]}"
+                if len(entries) == 1 else f"Removed {len(entries)} masteries")
+        self._core_edit(edit, what)
 
     # ============================================================== FLAGS
     def _build_flags(self):
@@ -893,7 +925,7 @@ class AdvancedMixin:
                                                                               padx=(0, 6))
         self.flag_filter = ""
         self.flag_tree = scrolled_tree(page, columns=("label", "value", "map"),
-                                       show="tree headings", selectmode="browse")
+                                       show="tree headings", selectmode="extended")
         self.flag_tree.heading("#0", text="Name", anchor="w")
         self.flag_tree.heading("label", text="Reads as", anchor="w")
         self.flag_tree.heading("value", text="Value", anchor="e")
@@ -918,6 +950,7 @@ class AdvancedMixin:
         if not hasattr(self, "flag_tree"):
             return
         f = self.core_of()
+        keep = set(self._flag_keys())
         self.flag_tree.delete(*self.flag_tree.get_children())
         self._flag_rows = {}
         if not f:
@@ -951,70 +984,100 @@ class AdvancedMixin:
                                             values=(sec, fl.value, m.index),
                                             tags=("flag_unknown",) if not meta else ())
                 self._flag_rows[iid] = (m.index, fl.hash)
+                if (m.index, fl.hash) in keep:
+                    self.flag_tree.selection_add(iid)
                 shown += 1
         self.flag_count.configure(text=f"{shown:,} of {total:,} in this file"
                                        + (f" · {self.flag_filter}*" if self.flag_filter else ""))
         p = self.p
         self.flag_tree.tag_configure("flag_unknown", foreground=p["muted"])
 
-    def _flag_sel(self):
-        sel = self.flag_tree.selection() if hasattr(self, "flag_tree") else ()
-        return getattr(self, "_flag_rows", {}).get(sel[0] if sel else None)
+    def _flag_keys(self) -> list[tuple[int, int]]:
+        """(map index, hash) of every selected flag row, in list order."""
+        if not hasattr(self, "flag_tree"):
+            return []
+        rows = getattr(self, "_flag_rows", {})
+        sel = set(self.flag_tree.selection())
+        return [rows[i] for i in self.flag_tree.get_children() if i in sel and i in rows]
+
+    @staticmethod
+    def _flag_label(hash_: int) -> str:
+        return (flag_names().get(hash_) or {}).get("label") or "0x%08x" % hash_
 
     def set_flag_value(self):
-        key = self._flag_sel()
-        if not key:
+        keys = self._flag_keys()
+        if not keys:
             return
         f = self.core_of()
-        map_i, hash_ = key
-        cur = next((fl.value for m in core.flag_maps(f) for fl in m.flags
-                    if m.index == map_i and fl.hash == hash_), 0)
-        val = _ask_number(self, "Flag value", "New value (0 – 2147483647):", cur, 2_147_483_647)
-        if val is None or val == cur:
+        vals = {(m.index, fl.hash): fl.value for m in core.flag_maps(f) for fl in m.flags}
+        cur = vals.get(keys[0], 0)
+        if len(keys) == 1:
+            prompt = "New value (0 – 2147483647):"
+        else:
+            prompt = f"New value for {len(keys)} flags (0 – 2147483647):"
+            if len({vals.get(k, 0) for k in keys}) > 1:
+                cur = 1
+        val = _ask_number(self, "Flag value", prompt, cur, 2_147_483_647)
+        if val is None:
             return
-        self._write_flag(map_i, hash_, val)
+        keys = [k for k in keys if vals.get(k) != val]
+        if not keys:
+            return
+        self._write_flags(keys, val)
 
     def _write_flag(self, map_i: int, hash_: int, value: int):
+        self._write_flags([(map_i, hash_)], value)
+
+    def _write_flags(self, keys: list[tuple[int, int]], value: int):
         def edit(g):
-            maps = core.flag_maps(g)
-            m = next((x for x in maps if x.index == map_i), None)
-            if m is None:
-                return None
-            fl = next((x for x in m.flags if x.hash == hash_), None)
-            if fl is None:
-                return core.flag_add(g, m, hash_, value)
-            start = fl.offset - 5 if fl.wide else fl.offset - 4
-            size = 9 if fl.wide else 5
-            b = bytearray(g.payload[start:start + size])
-            if fl.wide:
-                b[5:9] = core.struct.pack("<i", value)
-            else:
-                b[4] = value & 0xFF
-            return core.replace_content(g, m.start, bytes(b))
-
-        name = (flag_names().get(hash_) or {}).get("label") or "0x%08x" % hash_
-        self._core_edit(edit, f"{name} = {value}")
-
-    def remove_flag(self):
-        key = self._flag_sel()
-        if not key:
-            return
-        map_i, hash_ = key
-        name = (flag_names().get(hash_) or {}).get("label") or "0x%08x" % hash_
-        if not messagebox.askyesno("Save editor", f"Remove the flag {name}?", parent=self):
-            return
-
-        def edit(g):
-            for m in core.flag_maps(g):
-                if m.index != map_i:
+            changed = False
+            for map_i, hash_ in keys:
+                m = next((x for x in core.flag_maps(g) if x.index == map_i), None)
+                if m is None:
                     continue
                 fl = next((x for x in m.flags if x.hash == hash_), None)
                 if fl is None:
-                    return None
-                return core.flag_remove(g, m, fl)
-            return None
+                    g = core.SaveFile(core.flag_add(g, m, hash_, value))
+                elif fl.wide:
+                    # same size: write the int32 in place
+                    core.struct.pack_into("<i", g.payload, fl.offset, value)
+                elif 0 <= value <= 254:
+                    g.payload[fl.offset] = value
+                else:
+                    # a 1-byte flag can't hold this value: re-add it as a wide one
+                    g = core.SaveFile(core.flag_remove(g, m, fl))
+                    m = next(x for x in core.flag_maps(g) if x.index == map_i)
+                    g = core.SaveFile(core.flag_add(g, m, hash_, value))
+                changed = True
+            return g.payload if changed else None
 
-        self._core_edit(edit, f"Removed {name}")
+        what = (f"{self._flag_label(keys[0][1])} = {value}" if len(keys) == 1
+                else f"{len(keys)} flags = {value}")
+        self._core_edit(edit, what)
+
+    def remove_flag(self):
+        keys = self._flag_keys()
+        if not keys:
+            return
+        q = (f"Remove the flag {self._flag_label(keys[0][1])}?" if len(keys) == 1
+             else f"Remove {len(keys)} flags?")
+        if not messagebox.askyesno("Save editor", q, parent=self):
+            return
+
+        def edit(g):
+            changed = False
+            for map_i, hash_ in keys:
+                m = next((x for x in core.flag_maps(g) if x.index == map_i), None)
+                fl = m and next((x for x in m.flags if x.hash == hash_), None)
+                if fl is None:
+                    continue
+                g = core.SaveFile(core.flag_remove(g, m, fl))
+                changed = True
+            return g.payload if changed else None
+
+        what = (f"Removed {self._flag_label(keys[0][1])}" if len(keys) == 1
+                else f"Removed {len(keys)} flags")
+        self._core_edit(edit, what)
 
     def add_flag(self):
         names = flag_names()
@@ -1058,79 +1121,111 @@ class AdvancedMixin:
         maps = core.flag_maps(f)
         return maps[0].index if maps else -1
 
+    def _sup_selected(self) -> list[str]:
+        """Selected support-partner rows, in list order."""
+        if not hasattr(self, "sup_tree"):
+            return []
+        sel = set(self.sup_tree.selection())
+        return [i for i in self.sup_tree.get_children() if i in sel]
+
+    def _sup_what(self, rows: list[str], tail: str) -> str:
+        if len(rows) == 1:
+            pair = self._sup_pairs[rows[0]][0]
+            return f"Support {pair['a_en']} – {pair['b_en']} {tail}"
+        a_en = self._sup_pairs[rows[0]][0]["a_en"]
+        return f"Support {a_en} – {len(rows)} partners {tail}"
+
     def sup_set_rank(self, rank: str):
-        """Mark the selected support pair's <rank> conversation as seen."""
-        sel = self.sup_tree.selection() if hasattr(self, "sup_tree") else ()
-        rows = getattr(self, "_sup_pairs", {})
-        if not sel or sel[0] not in rows:
+        """Mark the selected support pairs' <rank> conversations as seen."""
+        pairs = getattr(self, "_sup_pairs", {})
+        rows = [i for i in self._sup_selected() if i in pairs]
+        if not rows:
             self.flash("Pick a support partner on the Supports page first.", "info")
-            return
-        pair, fl = rows[sel[0]]
-        hash_ = (fl or {}).get(rank)
-        if not hash_:
-            self.flash(f"This pair has no {rank} conversation in the game data.", "error")
             return
         f = self.core_of()
         maps = core.flag_maps(f)
-        have = any(x.hash == hash_ for m in maps for x in m.flags)
-        if have:
-            self.flash(f"Already recorded: {pair['a_en']} – {pair['b_en']} ({rank}).")
+        have = {x.hash for m in maps for x in m.flags}
+        todo, missing = [], 0
+        for i in rows:
+            hash_ = (pairs[i][1] or {}).get(rank)
+            if not hash_:
+                missing += 1
+            elif hash_ not in have:
+                todo.append(hash_)
+        if not todo:
+            if missing == len(rows):
+                self.flash(f"No {rank} conversation in the game data for "
+                           + ("this pair." if len(rows) == 1 else "the selected pairs."),
+                           "error")
+            else:
+                self.flash(f"{rank} already recorded for "
+                           + ("this pair." if len(rows) == 1 else "every selected pair."))
             return
         target = self._map_for_prefix(f, "支援会話_")
 
         def edit(g):
-            ms = core.flag_maps(g)
-            m = next((x for x in ms if x.index == target), ms[0] if ms else None)
-            if m is None:
-                return None
-            return core.flag_add(g, m, hash_, 1)
+            for hash_ in todo:
+                ms = core.flag_maps(g)
+                m = next((x for x in ms if x.index == target), ms[0] if ms else None)
+                if m is None:
+                    return None
+                g = core.SaveFile(core.flag_add(g, m, hash_, 1))
+            return g.payload
 
-        self._core_edit(edit, f"Support {pair['a_en']} – {pair['b_en']} ({rank}) seen")
+        what = self._sup_what(rows, f"({rank}) seen")
+        if len(rows) > 1:
+            what += f" ({len(todo)} new"
+            what += f", {missing} have no {rank})" if missing else ")"
+        self._core_edit(edit, what)
         self.refresh_support_chars()
 
     def sup_forget_rank(self):
-        sel = self.sup_tree.selection() if hasattr(self, "sup_tree") else ()
-        rows = getattr(self, "_sup_pairs", {})
-        if not sel or sel[0] not in rows:
+        pairs = getattr(self, "_sup_pairs", {})
+        rows = [i for i in self._sup_selected() if i in pairs]
+        if not rows:
             self.flash("Pick a support partner on the Supports page first.", "info")
             return
-        pair, fl = rows[sel[0]]
-        ranks = [(r, r, "") for r in ("C", "B", "A") if fl.get(r)]
-        if not ranks:
-            self.flash("This pair has no conversations in the game data.", "error")
+        avail = [r for r in ("C", "B", "A") if any(pairs[i][1].get(r) for i in rows)]
+        if not avail:
+            self.flash("No conversations in the game data for the selection.", "error")
             return
-        rank = self._picker("Forget which conversation?", ranks)
+        rank = self._picker("Forget which conversation?", [(r, r, "") for r in avail])
         if rank:
             self.sup_clear_rank(rank)
 
     def sup_clear_rank(self, rank: str):
-        sel = self.sup_tree.selection() if hasattr(self, "sup_tree") else ()
-        rows = getattr(self, "_sup_pairs", {})
-        if not sel or sel[0] not in rows:
+        pairs = getattr(self, "_sup_pairs", {})
+        rows = [i for i in self._sup_selected() if i in pairs]
+        hashes = {pairs[i][1].get(rank) for i in rows} - {None, 0}
+        if not hashes:
             return
-        pair, fl = rows[sel[0]]
-        hash_ = (fl or {}).get(rank)
-        if not hash_:
-            return
-        if not messagebox.askyesno("Save editor",
-                                   f"Forget the {rank} conversation between "
-                                   f"{pair['a_en']} and {pair['b_en']}?", parent=self):
+        if len(rows) == 1:
+            pair = pairs[rows[0]][0]
+            q = f"Forget the {rank} conversation between {pair['a_en']} and {pair['b_en']}?"
+        else:
+            q = (f"Forget the {rank} conversation for {len(rows)} partners of "
+                 f"{pairs[rows[0]][0]['a_en']}?")
+        if not messagebox.askyesno("Save editor", q, parent=self):
             return
 
         def edit(g):
-            for m in core.flag_maps(g):
-                for x in m.flags:
-                    if x.hash == hash_:
-                        return core.flag_remove(g, m, x)
-            return None
+            changed = False
+            for hash_ in hashes:
+                for m in core.flag_maps(g):
+                    x = next((x for x in m.flags if x.hash == hash_), None)
+                    if x is not None:
+                        g = core.SaveFile(core.flag_remove(g, m, x))
+                        changed = True
+                        break
+            return g.payload if changed else None
 
-        self._core_edit(edit, f"Support {pair['a_en']} – {pair['b_en']} ({rank}) cleared")
+        self._core_edit(edit, self._sup_what(rows, f"({rank}) cleared"))
         self.refresh_support_chars()
 
 
     # ====================================================== support points
     def sup_apply_points(self):
-        """Write the number in the points box onto the selected pair."""
+        """Write the number in the points box onto the selected pairs."""
         raw = (self.sup_pt_var.get() or "").strip().replace(",", "").replace(" ", "")
         if not raw.isdigit():
             self.flash(f"Type a support point value between 0 and "
@@ -1139,34 +1234,48 @@ class AdvancedMixin:
         self.sup_set_points(int(raw))
 
     def sup_set_points(self, value: int):
-        """Set the selected pair's support points (the save's own value)."""
-        sel = self.sup_tree.selection() if hasattr(self, "sup_tree") else ()
+        """Set the selected pairs' support points (the save's own value)."""
         pt = getattr(self, "_sup_pt", {})
-        if not sel or sel[0] not in pt:
-            self.flash("Pick a support partner on the Supports page first.", "info")
+        sel = self._sup_selected()
+        rows = [i for i in sel if i in pt]
+        if not rows:
+            self.flash("Pick a support partner on the Supports page first."
+                       if not sel else "The selected pair has no points entry in this save.",
+                       "info")
             return
-        pair_hash, old, _jp = pt[sel[0]]
         value = max(0, min(int(value), supports.max_points()))
+        todo = [pt[i][0] for i in rows if pt[i][1] != value]
         a_en = self.sup_name.cget("text")
-        b_en = self.sup_tree.item(sel[0], "text")
-        if old == value:
-            self.flash(f"{a_en} – {b_en} already has {value:,} points.", "info")
+        if not todo:
+            self.flash((f"{a_en} – {self.sup_tree.item(rows[0], 'text')} already has"
+                        if len(rows) == 1 else "Every selected partner already has")
+                       + f" {value:,} points.", "info")
             return
 
         def edit(g):
             blk = g.block("GameUserData")
             if not blk:
                 return None
-            table = supports.find_table(g.payload, blk.start, blk.end)
-            entry = (table or {}).get(pair_hash)
-            if entry is None or entry[0] == value:
-                return None
-            supports.set_points(g.payload, entry[2], value)
-            return g.payload
+            table = supports.find_table(g.payload, blk.start, blk.end) or {}
+            changed = False
+            for pair_hash in todo:
+                entry = table.get(pair_hash)
+                if entry is None or entry[0] == value:
+                    continue
+                supports.set_points(g.payload, entry[2], value)
+                changed = True
+            return g.payload if changed else None
 
         # _core_edit re-reads the save and refreshes every page, which rebuilds
-        # this one with the same character and partner still selected.
-        self._core_edit(edit, f"Support points {a_en} – {b_en} → {value:,}")
+        # this one with the same character and partners still selected.
+        if len(rows) == 1:
+            what = f"Support points {a_en} – {self.sup_tree.item(rows[0], 'text')} → {value:,}"
+        else:
+            what = f"Support points {a_en} – {len(todo)} partners → {value:,}"
+            skipped = len(sel) - len(rows)
+            if skipped:
+                what += f" ({skipped} without a points entry skipped)"
+        self._core_edit(edit, what)
 
 def settings_offsets(f: core.SaveFile) -> list[int]:
     """Offsets of the difficulty/mode byte pairs, everywhere the save keeps them."""
@@ -1363,7 +1472,7 @@ def _build_skill_tab(self):
                          ("Add…", lambda i=idx: self.add_skill(i))):
             ttk.Button(head, text=text, style="Small.TButton", width=7,
                        command=fn).pack(side="right", padx=(4, 0))
-        tree = scrolled_tree(box, show="tree", selectmode="browse", height=5)
+        tree = scrolled_tree(box, show="tree", selectmode="extended", height=5)
         tree.container.pack(fill="both", expand=True, pady=(4, 0))
         self._skill_trees[idx] = tree
     ttk.Label(tab, style="CardFaint.TLabel", justify="left", wraplength=820,
@@ -1422,9 +1531,9 @@ def add_skill(self, index: int):
 def remove_skill(self, index: int):
     tree = getattr(self, "_skill_trees", {}).get(index)
     sel = tree.selection() if tree else ()
-    if not self.sv or self.uid is None or not sel or sel[0] == "none":
+    drop = {int(i) for i in sel if str(i).isdigit()}
+    if not self.sv or self.uid is None or not drop:
         return
-    k = int(sel[0])
 
     def edit(g):
         u = layer.unit_in(g, self.uid)
@@ -1434,12 +1543,15 @@ def remove_skill(self, index: int):
             ids = core.skill_list(g, u, index + 1)
         except Exception:                     # noqa: BLE001
             return None
-        if k >= len(ids):
+        if not any(k < len(ids) for k in drop):
             return None
-        return core.with_skill_list(g, u, index + 1, [x for i, x in enumerate(ids) if i != k])
+        return core.with_skill_list(g, u, index + 1,
+                                    [x for i, x in enumerate(ids) if i not in drop])
 
     self.push_undo()
-    self._core_edit(edit, f"{layer.SKILL_LIST_NAMES[index]}: removed entry {k + 1}")
+    what = (f"removed entry {min(drop) + 1}" if len(drop) == 1
+            else f"removed {len(drop)} entries")
+    self._core_edit(edit, f"{layer.SKILL_LIST_NAMES[index]}: {what}")
 
 
 # ------------------------------------------------------------------ mounts
@@ -1467,7 +1579,7 @@ def _build_mounts(self):
     pane.add(right, weight=2)
     ttk.Label(right, text="This save's pool", style="CardH3.TLabel").pack(anchor="w")
     self.pool_tree = scrolled_tree(right, columns=("kind", "id"), show="tree headings",
-                                   selectmode="browse")
+                                   selectmode="extended")
     self.pool_tree.heading("#0", text="Entry", anchor="w")
     self.pool_tree.heading("kind", text="Kind", anchor="w")
     self.pool_tree.heading("id", text="Record id", anchor="w")
@@ -1534,6 +1646,9 @@ def assign_battalion(self, clear: bool = False):
         if not psel:
             self.flash("Pick a battalion in the pool first.", "info")
             return
+        if len(psel) > 1:
+            self.flash("A unit takes one battalion: select a single pool row.", "warn")
+            return
         kind, idx = self._pool_rows.get(psel[0], (None, None))
         if kind != "battalion":
             self.flash("Only battalions can be assigned here.", "warn")
@@ -1557,22 +1672,25 @@ def remove_battalion(self):
     psel = self.pool_tree.selection() if hasattr(self, "pool_tree") else ()
     if not psel or not self.sv:
         return
-    kind, idx = self._pool_rows.get(psel[0], (None, None))
-    if kind != "battalion":
+    rows = [self._pool_rows.get(i, (None, None)) for i in psel]
+    idxs = sorted(i for kind, i in rows if kind == "battalion")
+    if not idxs:
         self.flash("Pick a battalion in the pool first.", "info")
         return
     self.push_undo()
-    self._core_edit(lambda f: layer_del_battalion(f, idx), "Removed battalion from the pool")
+    self._core_edit(lambda f: layer_del_battalions(f, set(idxs)),
+                    "Removed battalion from the pool" if len(idxs) == 1
+                    else f"Removed {len(idxs)} battalions from the pool")
 
 
-def layer_del_battalion(f, idx: int):
+def layer_del_battalions(f, idxs: set[int]):
     st = core.party_store(f)
     if not st:
         return None
     pool = core.legions(f, st[2])
-    if not (0 <= idx < len(pool)):
+    if not any(0 <= i < len(pool) for i in idxs):
         return None
-    return core.with_legions(f, st[2], [l for i, l in enumerate(pool) if i != idx])
+    return core.with_legions(f, st[2], [l for i, l in enumerate(pool) if i not in idxs])
 
 
 # ------------------------------------------------------- units: copy / remove

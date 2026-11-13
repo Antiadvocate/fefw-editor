@@ -39,7 +39,7 @@ from editor_advanced import AdvancedMixin  # noqa: E402  (Player / Classes / Fla
 from ui_util import enable_multi_select, last_tree  # noqa: E402  (Ctrl+A / Shift+drag in tables)
 
 APP_NAME = "Fortune's Weave Save Editor"
-__version__ = "1.3.4"
+__version__ = "1.3.5"
 SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
 ICON_DIR = os.path.join(USER_DIR, "icons")
 
@@ -889,17 +889,17 @@ class App(AdvancedMixin, tk.Tk):
         self._update_dirty()
 
     def _enable_multi_select_all(self):
-        """Ctrl+A / Shift+drag on every list except the two row-pickers.
+        """Ctrl+A / Shift+drag on every multi-select list.
 
-        The unit lists drive the edit form, so they stay single-choice; every
-        other table (convoy, classes, masteries, flags, mounts) takes a range.
+        Only tables whose buttons act on the whole selection are declared
+        selectmode="extended" (convoy, classes, masteries, flags, support
+        partners, skill lists, battalion pool). The rest drive a form or
+        replace one thing, so they stay single-choice; enable_multi_select
+        leaves those alone.
         """
-        skip = {id(getattr(self, "unit_tree", None)),
-                id(getattr(self, "cls_unit_tree", None))}
-
         def walk(w):
             for child in w.winfo_children():
-                if isinstance(child, ttk.Treeview) and id(child) not in skip:
+                if isinstance(child, ttk.Treeview):
                     enable_multi_select(child)
                 walk(child)
 
@@ -1301,7 +1301,7 @@ class App(AdvancedMixin, tk.Tk):
         self.sup_pt_lbl.pack(side="left", padx=(12, 0))
 
         self.sup_tree = scrolled_tree(body, columns=("jp", "points", "max", "seen", "party"),
-                                      show="tree headings", selectmode="browse")
+                                      show="tree headings", selectmode="extended")
         self.sup_tree.heading("#0", text="Support partner", anchor="w")
         self.sup_tree.heading("jp", text="Japanese", anchor="w")
         self.sup_tree.heading("points", text="Points", anchor="e")
@@ -1447,7 +1447,7 @@ class App(AdvancedMixin, tk.Tk):
         jp, rec = rows[sel[0]]
         en = rec["en"] or jp
         if getattr(self, "_sup_char", None) != jp:
-            self._sup_partner = None          # new character: don't keep the old partner
+            self._sup_partner = set()         # new character: don't keep the old partners
         self._sup_char = jp
         self.sup_name.configure(text=en)
         self.sup_avatar.show(en, "PID_" + jp)
@@ -1455,7 +1455,7 @@ class App(AdvancedMixin, tk.Tk):
         present = self._support_flags()
         points = self._support_points()
         party = self._party_pids()
-        keep = getattr(self, "_sup_partner", None)
+        keep = getattr(self, "_sup_partner", None) or set()
         plist = self._sup_partners(jp, rec, points)
         self.sup_tree.delete(*self.sup_tree.get_children())
         self._sup_pairs = {}
@@ -1487,11 +1487,12 @@ class App(AdvancedMixin, tk.Tk):
                  f"{seen_pairs} conversation{'s' if seen_pairs != 1 else ''} recorded "
                  f"in this save")
         if iids:
-            target = iids.get(keep or "") or next(iter(iids.values()))
-            self._sup_partner = next(k for k, v in iids.items() if v == target)
-            self.sup_tree.selection_set(target)
-            self.sup_tree.focus(target)
-            self.sup_tree.see(target)
+            # Keep every partner that was selected (bulk edits refresh the page).
+            targets = [iid for jp_, iid in iids.items() if jp_ in keep] \
+                or [next(iter(iids.values()))]
+            self.sup_tree.selection_set(targets)
+            self.sup_tree.focus(targets[0])
+            self.sup_tree.see(targets[0])
             self.on_support_pair()
 
     def on_support_pair(self, _e=None):
@@ -1499,7 +1500,17 @@ class App(AdvancedMixin, tk.Tk):
         if not hasattr(self, "sup_pt_var"):
             return
         sel = self.sup_tree.selection() if hasattr(self, "sup_tree") else ()
+        # remembered by partner id so a refresh after an edit keeps the selection
+        self._sup_partner = {self.sup_tree.set(i, "jp") for i in sel}
         pt = getattr(self, "_sup_pt", {})
+        if len(sel) > 1:
+            have = [pt[i][1] for i in sel if i in pt and pt[i][1] is not None]
+            same = len(set(have)) == 1 and len(have) == len(sel)
+            self.sup_pt_var.set(str(have[0]) if same else "")
+            self.sup_pt_lbl.configure(
+                text=f"{len(sel)} partners selected: Apply, Max, 0, C / B / A and "
+                     f"Forget act on all of them")
+            return
         if not sel or sel[0] not in pt:
             self.sup_pt_var.set("")
             self.sup_pt_lbl.configure(text="")
@@ -1534,10 +1545,12 @@ class App(AdvancedMixin, tk.Tk):
         if not isinstance(w, ttk.Treeview):
             w = last_tree()
         if isinstance(w, ttk.Treeview):
-            rows = w.get_children("")
-            if rows:
-                w.selection_set(rows)
-                w.focus(rows[-1])
+            # single-choice tables (unit lists, inventory, catalogues) keep one row
+            if str(w.cget("selectmode")) == "extended":
+                rows = w.get_children("")
+                if rows:
+                    w.selection_set(rows)
+                    w.focus(rows[-1])
             return "break"
         return None
 

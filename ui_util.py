@@ -28,12 +28,19 @@ def last_tree() -> "ttk.Treeview | None":
 def enable_multi_select(tree: ttk.Treeview) -> None:
     """Ctrl+A selects every row; Shift+click / Shift+drag extends the selection.
 
+    Does nothing for a table that isn't selectmode="extended".
+
     Tk's Treeview already handles Ctrl+click and Shift+click, but not dragging a
     range, and the app's tables (convoy, classes, masteries, flags) are long
     enough that dragging is worth having.
     """
+    # Only tables declared selectmode="extended" take a range. A "browse" table
+    # (unit pickers, the inventory slot list, catalogues) drives one form or
+    # replaces one thing, so letting it select many would promise edits the
+    # buttons can't make.
     try:
-        tree.configure(selectmode="extended")
+        if str(tree.cget("selectmode")) != "extended":
+            return
     except tk.TclError:
         return
     key = id(tree)
