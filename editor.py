@@ -36,9 +36,10 @@ import fefw_layer as layer  # noqa: E402
 import supports  # noqa: E402  (support pair chart + conversation flags)
 import fefw_core as core  # noqa: E402  (save object tree: resizing edits)
 from editor_advanced import AdvancedMixin  # noqa: E402  (Player / Classes / Flags pages)
+from ui_util import enable_multi_select, last_tree  # noqa: E402  (Ctrl+A / Shift+drag in tables)
 
 APP_NAME = "Fortune's Weave Save Editor"
-__version__ = "1.3.2"
+__version__ = "1.3.3"
 SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
 ICON_DIR = os.path.join(USER_DIR, "icons")
 
@@ -237,6 +238,7 @@ def scrolled_tree(master, **kw) -> ttk.Treeview:
     tree.pack(side="left", fill="both", expand=True)
     sb.pack(side="right", fill="y")
     tree.container = frame
+    enable_multi_select(tree)
     return tree
 
 
@@ -883,7 +885,25 @@ class App(AdvancedMixin, tk.Tk):
         self._build_flags()
         self._build_mounts()
         self._style_trees()
+        self._enable_multi_select_all()
         self._update_dirty()
+
+    def _enable_multi_select_all(self):
+        """Ctrl+A / Shift+drag on every list except the two row-pickers.
+
+        The unit lists drive the edit form, so they stay single-choice; every
+        other table (convoy, classes, masteries, flags, mounts) takes a range.
+        """
+        skip = {id(getattr(self, "unit_tree", None)),
+                id(getattr(self, "cls_unit_tree", None))}
+
+        def walk(w):
+            for child in w.winfo_children():
+                if isinstance(child, ttk.Treeview) and id(child) not in skip:
+                    enable_multi_select(child)
+                walk(child)
+
+        walk(self)
 
     # -------------------------------------------------------- units page
     def _build_units(self):
@@ -1501,11 +1521,25 @@ class App(AdvancedMixin, tk.Tk):
         self.bind_all("<Control-s>", lambda e: self.save_all())
         self.bind_all("<Control-o>", lambda e: self.open_dialog())
         self.bind_all("<Control-f>", self._focus_search)
+        self.bind_all("<Control-a>", self._select_all_focused)
         self.bind_all("<F5>", lambda e: self.reload())
         self.bind_all("<Control-z>", lambda e: (self.undo(), "break")[1])
         self.bind_all("<Control-y>", lambda e: (self.redo(), "break")[1])
         self.bind("<FocusIn>", lambda e: self.after_idle(self._check_disk)
                   if e.widget is self else None)
+
+    def _select_all_focused(self, _e=None):
+        """Ctrl+A in a table selects every row; elsewhere it stays normal."""
+        w = self.focus_get()
+        if not isinstance(w, ttk.Treeview):
+            w = last_tree()
+        if isinstance(w, ttk.Treeview):
+            rows = w.get_children("")
+            if rows:
+                w.selection_set(rows)
+                w.focus(rows[-1])
+            return "break"
+        return None
 
     def _focus_search(self, _e=None):
         """Ctrl+F jumps to the search box of whatever page is showing."""
