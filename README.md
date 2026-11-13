@@ -60,7 +60,19 @@ Get the latest build from the
 * **Windows:** `FEFW-Save-Editor-<version>-windows.zip`. Unzip it anywhere you
   can write to and run `FEFW Save Editor.exe`; no Python needed. The exe isn't
   code-signed, so SmartScreen may ask you to click *More info → Run anyway*.
-* **Anything else:** `…-source.zip`, then see *Running from source*.
+* **Linux (x86-64):** `FEFW-Save-Editor-<version>-linux-x86_64.tar.gz`. No
+  Python or pip needed. Extract it to a folder you can write to and run
+  `./fefw-save-editor`:
+
+  ```
+  tar xzf FEFW-Save-Editor-*-linux-x86_64.tar.gz
+  cd FEFW-Save-Editor-*/
+  ./fefw-save-editor
+  ```
+
+  It needs glibc 2.35 or newer (Arch, Fedora, Debian 12, Ubuntu 22.04, Mint 21
+  and later all qualify). It runs under X11 or XWayland.
+* **Anything else (macOS, ARM):** `…-source.zip`, then see *Running from source*.
 
 ## Running from source
 
@@ -68,6 +80,18 @@ Get the latest build from the
 pip install -r requirements.txt
 python editor.py
 ```
+
+On Arch and other distros that block system-wide `pip install`, install the
+two dependencies from the distro instead and skip pip:
+
+```
+sudo pacman -S tk python-zstandard
+python editor.py
+```
+
+(Debian/Ubuntu: `sudo apt install python3-tk python3-zstandard`.) Or use a
+virtual environment: `python -m venv .venv && .venv/bin/pip install -r
+requirements.txt && .venv/bin/python editor.py`.
 
 or double-click **FEFW Save Editor.bat** on Windows. Python 3.10+. You can also
 pass a save folder (or any slot file in it): `python editor.py "C:\path\to\save"`.
@@ -212,7 +236,7 @@ FEFW Save Editor.bat launcher (source install)
 ```
 
 `editor_settings.json` (theme, last folder, options) is created next to the
-editor, or next to the `.exe`, on first use.
+editor, or next to the `.exe` / Linux binary, on first use.
 
 ### Rebuilding the name tables
 

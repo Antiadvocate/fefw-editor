@@ -1,4 +1,5 @@
-# Builds the Windows .exe and a source zip, then publishes a GitHub release.
+# Builds the Windows .exe, a Linux binary and a source zip, then publishes a
+# GitHub release.
 #
 # Release a new version:
 #   1. bump __version__ in editor.py (e.g. "1.0.1") and commit
@@ -19,7 +20,7 @@ permissions:
   contents: write
 
 jobs:
-  release:
+  windows:
     runs-on: windows-latest
     env:
       TAG: ${{ github.event.inputs.tag || github.ref_name }}
@@ -74,6 +75,77 @@ jobs:
           Compress-Archive -Path "stage/$name" -DestinationPath "out/$name-windows.zip"
           git archive --format zip --prefix "$name-source/" -o "out/$name-source.zip" HEAD
 
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: out/*.zip
+
+  linux:
+    # Built on the oldest supported Ubuntu so the binary's glibc floor (2.35) is
+    # low enough for current Arch, Fedora, Debian 12+, Mint 21+ and so on.
+    runs-on: ubuntu-22.04
+    env:
+      TAG: ${{ github.event.inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tk8.6 libtk8.6
+          pip install -r requirements.txt pyinstaller==6.11.1
+
+      - name: Build binary
+        run: >
+          pyinstaller --noconfirm --onefile --windowed --name fefw-save-editor
+          --add-data "unit_ids.json:." --add-data "item_ids.json:." --add-data "job_ids.json:."
+          --add-data "supports.json:." --add-data "support_points.json:."
+          --add-data "flag_names.json:." --add-data "skill_ids.json:."
+          editor.py
+
+      - name: Check the binary starts
+        run: |
+          sudo apt-get install -y xvfb
+          Xvfb :99 -screen 0 1280x800x24 &
+          sleep 2
+          DISPLAY=:99 timeout 15 ./dist/fefw-save-editor > run.log 2>&1 || code=$?
+          cat run.log
+          # timeout's 124 means the window was still open after 15 s, i.e. it started.
+          test "${code:-0}" = 124
+
+      - name: Package
+        run: |
+          name="FEFW-Save-Editor-$TAG"
+          stage="stage/$name"
+          mkdir -p "$stage/icons/items" "$stage/icons/units" out
+          cp dist/fefw-save-editor README.md "$stage/"
+          cp icons/README.md "$stage/icons/"
+          cp icons/items/.gitkeep "$stage/icons/items/"
+          cp icons/units/.gitkeep "$stage/icons/units/"
+          tar -C stage -czf "out/$name-linux-x86_64.tar.gz" "$name"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: out/*.tar.gz
+
+  publish:
+    needs: [windows, linux]
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
@@ -81,4 +153,6 @@ jobs:
           name: Fortune's Weave Save Editor ${{ env.TAG }}
           body_path: .github/release-notes.md
           generate_release_notes: true
-          files: out/*.zip
+          files: |
+            out/*.zip
+            out/*.tar.gz
