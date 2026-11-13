@@ -753,23 +753,22 @@ def _parse_record(payload: bytes, o: int, uid: int, meta: dict) -> UnitRecord | 
 # --------------------------------------------------------------------------
 # a whole save folder (Auto + every Chapter_* slot)
 # --------------------------------------------------------------------------
-SLOT_PREFIXES = ("Auto", "Chapter_", "Route_")
+SLOT_PREFIXES = ("Auto", "Chapter_", "Route_", "Part_")
 
 
 def is_slot_name(name: str) -> bool:
     """Slot files have no extension and never start with 'Auto.' etc."""
     if "." in name:
         return False
-    return name == "Auto" or name.startswith(("Chapter_", "Route_"))
+    return name == "Auto" or name.startswith(("Chapter_", "Route_", "Part_"))
 
 
 class SaveSet:
     """Every slot in one save folder, edited together.
 
-    Slots: Auto, Chapter_<map>_<x>_<y> (battle state) and Route_<lord> (route /
-    hub progress). The party lives in the Chapter_* and Route_* slots, so all of
-    them have to carry the same edit.
-    """
+    Slots: Auto, Chapter_<map>_<x>_<y> (battle state), Route_<lord> (route /
+    hub progress) and Part_<lord>_<part> (part checkpoint). The party lives in
+    the Chapter_* and Route_* slots, so all of them have to carry the same edit."""
 
     def __init__(self, folder: str):
         self.folder = folder

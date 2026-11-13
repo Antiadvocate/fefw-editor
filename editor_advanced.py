@@ -19,6 +19,7 @@ from tkinter import messagebox, ttk
 import fefw_core as core
 import supports
 from fefw_save import item_ids, item_label, unit_ids
+from ui_util import enable_multi_select
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 APP_NAME = "Fortune's Weave Save Editor"
@@ -272,9 +273,9 @@ class AdvancedMixin:
         card2 = ttk.Frame(page, style="Card.TFrame", padding=(16, 14))
         card2.pack(fill="x", pady=(10, 0))
         ttk.Label(card2, text="Run settings", style="CardH3.TLabel").pack(anchor="w")
-        ttk.Label(card2, text="Written into every copy the save keeps (header, summary and "
-                             "each restart point).", style="CardMuted.TLabel").pack(anchor="w",
-                                                                                    pady=(2, 8))
+        ttk.Label(card2, text="Written into every copy the save keeps, and into every slot in this "
+                             "folder (the run's difficulty is one setting).",
+                  style="CardMuted.TLabel").pack(anchor="w", pady=(2, 8))
         row = ttk.Frame(card2, style="Card.TFrame")
         row.pack(fill="x")
         ttk.Label(row, text="Difficulty", style="Card.TLabel", width=12).pack(side="left")
@@ -313,7 +314,20 @@ class AdvancedMixin:
         if st:
             self.diff_var.set(DIFFICULTIES[st[1]] if st[1] < 3 else str(st[1]))
             self.mode_var.set(MODES[st[2]] if st[2] < 2 else str(st[2]))
-            self.play_lbl.configure(text=f"Playthrough {st[0]}")
+            line = f"Playthrough {st[0]}"
+            counts: dict[tuple[int, int], int] = {}
+            for sv in getattr(self, "files", {}).values():
+                q = sv.payload
+                if len(q) > 15 and q[12] == 15:
+                    counts[(q[14], q[15])] = counts.get((q[14], q[15]), 0) + 1
+            if len(counts) <= 1:
+                line += (f" · every slot: {DIFFICULTIES[st[1]] if st[1] < 3 else st[1]}"
+                         f" / {MODES[st[2]] if st[2] < 2 else st[2]}")
+            else:
+                bits = [f"{DIFFICULTIES[a] if a < 3 else a}/{MODES[b] if b < 2 else b} ×{n}"
+                        for (a, b), n in sorted(counts.items())]
+                line += " · slots disagree — " + " · ".join(bits)
+            self.play_lbl.configure(text=line)
         self.player_note.configure(
             text="Renown exp is the army's total; the level itself follows the game's own "
                  "Reward.bin table, so set a value between two levels to land on a level.")
@@ -352,18 +366,40 @@ class AdvancedMixin:
             m = MODES.index(self.mode_var.get())
         except ValueError:
             return
+        f0 = self.core_of()
+        cur = core.read_settings(f0) if f0 is not None else None
+        if cur and cur[1] == d and cur[2] == m:
+            return
 
-        def edit(g):
-            offs = settings_offsets(g)
-            if not offs:
-                return None
-            for at in offs:
-                g.payload[at] = d & 0xFF
-                g.payload[at + 1] = m & 0xFF
-            core.fix_embedded_hashes(g.payload)
-            return g.payload
-
-        self._core_edit(edit, f"{DIFFICULTIES[d]} / {MODES[m]}")
+        # Difficulty and mode are properties of the run, not of one slot: the
+        # game's save screen shows them for every slot, so write them into the
+        # whole folder (Auto, Chapter_* and Route_*), not only the open one.
+        touched, err = [], None
+        for sv in list(getattr(self, "files", {}).values()):
+            try:
+                g = core.SaveFile(bytes(sv.payload))
+                offs = settings_offsets(g)
+                if not offs:
+                    continue
+                for at in offs:
+                    g.payload[at] = d & 0xFF
+                    g.payload[at + 1] = m & 0xFF
+                core.fix_embedded_hashes(g.payload)
+                if bytes(g.payload) == bytes(sv.payload):
+                    continue
+                sv.payload = bytearray(g.payload)
+                sv.scan()
+                sv._core_cache = None
+                touched.append(sv)
+            except Exception as exc:          # noqa: BLE001 — report, never crash
+                err = exc
+        if not touched:
+            self.flash("Couldn't apply difficulty/mode" + (f": {err}" if err else "."), "error")
+            return
+        self._touch(touched)
+        self.refresh_after_core()
+        where = f"in {len(touched)} slots" if len(touched) > 1 else "in this slot"
+        self.flash(f"{DIFFICULTIES[d]} / {MODES[m]} {where} — Ctrl+S to write it.", "ok")
 
     # ============================================================ CLASSES
     def _build_classes(self):
@@ -420,18 +456,19 @@ class AdvancedMixin:
         bar = ttk.Frame(cbox, style="Card.TFrame")
         bar.pack(fill="x")
         ttk.Label(bar, text="Classes this unit has", style="CardH3.TLabel").pack(side="left")
-        for text, cmd in (("Add…", self.add_class), ("Swap…", self.swap_class),
-                          ("Remove", self.remove_class), ("Set current", self.set_current_class)):
+        for text, cmd in (("Set exp…", self.set_class_exp), ("Add…", self.add_class),
+                          ("Swap…", self.swap_class), ("Remove", self.remove_class),
+                          ("Set current", self.set_current_class)):
             ttk.Button(bar, text=text, style="Small.TButton", command=cmd).pack(side="right",
                                                                                padx=(6, 0))
         self.cls_tree = ttk.Treeview(cbox, columns=("value", "flags", "now"),
-                                     show="tree headings", selectmode="browse")
+                                     show="tree headings", selectmode="extended")
         self.cls_tree.heading("#0", text="Class", anchor="w")
-        self.cls_tree.heading("value", text="Value", anchor="e")
+        self.cls_tree.heading("value", text="Class exp", anchor="e")
         self.cls_tree.heading("flags", text="Flags", anchor="e")
         self.cls_tree.heading("now", text="", anchor="center")
         self.cls_tree.column("#0", width=300)
-        self.cls_tree.column("value", width=70, anchor="e", stretch=False)
+        self.cls_tree.column("value", width=80, anchor="e", stretch=False)
         self.cls_tree.column("flags", width=70, anchor="e", stretch=False)
         self.cls_tree.column("now", width=40, anchor="center", stretch=False)
         cls_sb = ttk.Scrollbar(cbox, orient="vertical", command=self.cls_tree.yview)
@@ -439,6 +476,7 @@ class AdvancedMixin:
         self.cls_tree.pack(side="left", fill="both", expand=True, pady=(6, 0))
         cls_sb.pack(side="left", fill="y", pady=(6, 0))
         self.cls_tree.bind("<Double-1>", lambda e: self.set_current_class())
+        enable_multi_select(self.cls_tree)
 
         mbox = ttk.Frame(body, style="Card.TFrame", padding=(12, 10))
         body.add(mbox, weight=3)
@@ -608,6 +646,45 @@ class AdvancedMixin:
 
         self._core_edit(edit, f"Current class → {class_label(cid)}")
 
+    def _class_entries(self) -> list[int]:
+        """Selected class rows (entry index), in list order."""
+        sel = self.cls_tree.selection() if hasattr(self, "cls_tree") else ()
+        out = sorted({int(i) for i in sel if str(i).isdigit()})
+        return out
+
+    def set_class_exp(self):
+        """Set the class exp ("progress") saved with each selected class."""
+        u = self._cls_unit()
+        entries = self._class_entries()
+        if u is None or not entries:
+            self.flash("Pick a class row first.", "info")
+            return
+        cur = u.classes[entries[0]][1] if len(entries) == 1 else 0
+        many = len(entries) > 1
+        prompt = ("Class exp for the selected classes (0 – 255):" if many
+                  else "Class exp saved with this class (0 – 255):")
+        val = _ask_number(self, "Class exp", prompt, cur, 255)
+        if val is None:
+            return
+
+        def edit(g):
+            v = next((x for x in g.units() if x.start == u.start), None)
+            if v is None:
+                return None
+            classes = list(v.classes)
+            changed = False
+            for i in entries:
+                if classes[i][1] != val:
+                    classes[i] = (classes[i][0], val, classes[i][2])
+                    changed = True
+            if not changed:
+                return None
+            return core.with_lists(g, v, v.masteries, classes)
+
+        what = (f"{class_label(u.classes[entries[0]][0])} class exp → {val}" if not many
+                else f"{len(entries)} classes' exp → {val}")
+        self._core_edit(edit, what)
+
     def add_class(self):
         u = self._cls_unit()
         if u is None:
@@ -657,24 +734,27 @@ class AdvancedMixin:
 
     def remove_class(self):
         u = self._cls_unit()
-        sel = self.cls_tree.selection()
-        if u is None or not sel:
+        entries = self._class_entries()
+        if u is None or not entries:
             return
-        entry = int(sel[0])
-        if u.classes[entry][0] == u.klass:
+        if any(u.classes[i][0] == u.klass for i in entries):
             messagebox.showinfo("Save editor", "That is the unit's current class. Change the "
                                                "current class first, or use Swap.", parent=self)
-            return
-        cid = u.classes[entry][0]
+            entries = [i for i in entries if u.classes[i][0] != u.klass]
+            if not entries:
+                return
+        names = [class_label(u.classes[i][0]) for i in entries]
 
         def edit(g):
             v = next((x for x in g.units() if x.start == u.start), None)
             if v is None:
                 return None
-            classes = [c for i, c in enumerate(v.classes) if i != entry]
+            classes = [c for i, c in enumerate(v.classes) if i not in set(entries)]
             return core.with_lists(g, v, v.masteries, classes)
 
-        self._core_edit(edit, f"Removed class {class_label(cid)}")
+        what = (f"Removed class {names[0]}" if len(names) == 1
+                else f"Removed {len(names)} classes")
+        self._core_edit(edit, what)
 
     # -- mastery actions
     def set_mastery_rank(self):
@@ -705,10 +785,19 @@ class AdvancedMixin:
         sel = self.mas_tree.selection()
         if u is None or not sel:
             return
-        entry = int(sel[0])
-        cur = u.masteries[entry][1]
-        val = _ask_number(self, "Mastery exp", "Exp for this weapon (0 – 65535):", cur, 65535)
-        if val is None or val == cur:
+        entries = sorted({int(i) for i in sel if str(i).isdigit()})
+        if not entries:
+            return
+        cur = u.masteries[entries[0]][1] if len(entries) == 1 else 0
+        if len(entries) == 1:
+            prompt = (f"Exp for {MASTERIES[u.masteries[entries[0]][0]][0]} "
+                      f"(0 – 65535):")
+        else:
+            names = [MASTERIES[u.masteries[i][0]][0] for i in entries]
+            shown = ", ".join(names[:4]) + (f" +{len(names) - 4} more" if len(names) > 4 else "")
+            prompt = f"Exp for {len(entries)} masteries ({shown}) (0 – 65535):"
+        val = _ask_number(self, "Mastery exp", prompt, cur, 65535)
+        if val is None:
             return
 
         def edit(g):
@@ -716,10 +805,20 @@ class AdvancedMixin:
             if v is None:
                 return None
             mas = list(v.masteries)
-            mas[entry] = (mas[entry][0], val)
+            changed = False
+            for i in entries:
+                if mas[i][1] != val:
+                    mas[i] = (mas[i][0], val)
+                    changed = True
+            if not changed:
+                return None
             return core.with_lists(g, v, mas, list(v.classes))
 
-        self._core_edit(edit, f"{MASTERIES[u.masteries[entry][0]][0]} exp → {val}")
+        if len(entries) == 1:
+            what = f"{MASTERIES[u.masteries[entries[0]][0]][0]} exp → {val}"
+        else:
+            what = f"{len(entries)} masteries' exp → {val}"
+        self._core_edit(edit, what)
 
     def add_mastery(self):
         u = self._cls_unit()
