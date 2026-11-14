@@ -319,7 +319,7 @@ class AdvancedMixin:
             for sv in getattr(self, "files", {}).values():
                 q = sv.payload
                 if len(q) > 15 and q[12] == 15:
-                    counts[(q[14], q[15])] = counts.get((q[14], q[15]), 0) + 1
+                    counts[(q[15], q[14])] = counts.get((q[15], q[14]), 0) + 1   # (difficulty, mode)
             if len(counts) <= 1:
                 line += (f" · every slot: {DIFFICULTIES[st[1]] if st[1] < 3 else st[1]}"
                          f" / {MODES[st[2]] if st[2] < 2 else st[2]}")
@@ -382,8 +382,8 @@ class AdvancedMixin:
                 if not offs:
                     continue
                 for at in offs:
-                    g.payload[at] = d & 0xFF
-                    g.payload[at + 1] = m & 0xFF
+                    g.payload[at] = m & 0xFF          # mode comes first
+                    g.payload[at + 1] = d & 0xFF      # then difficulty
                 core.fix_embedded_hashes(g.payload)
                 if bytes(g.payload) == bytes(sv.payload):
                     continue
@@ -1169,7 +1169,7 @@ class AdvancedMixin:
         self._core_edit(edit, f"Support points {a_en} – {b_en} → {value:,}")
 
 def settings_offsets(f: core.SaveFile) -> list[int]:
-    """Offsets of the difficulty/mode byte pairs, everywhere the save keeps them."""
+    """Offsets of the (mode, difficulty) byte pairs, everywhere the save keeps them."""
     out = []
 
     def collect(start: int, length: int, depth: int):

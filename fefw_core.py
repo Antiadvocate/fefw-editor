@@ -603,11 +603,16 @@ def user_data(f: SaveFile) -> int:
 
 
 def read_settings(f: SaveFile):
-    """(playthrough, difficulty, mode) from the Header, or None."""
+    """(playthrough, difficulty, mode) from the Header, or None.
+
+    The save keeps the pair as (mode, difficulty), in that order: the game's
+    own GetMode() reads the byte before GetDifficulty().  Reading them the
+    other way round made "Hard / Casual" land in game as "Normal / Classic".
+    """
     p = f.payload
     if len(p) <= 16 or p[12] != 15:
         return None
-    return (p[13], p[14], p[15])
+    return (p[13], p[15], p[14])
 
 
 # --------------------------------------------------------------------------
@@ -1118,8 +1123,8 @@ def pack(original: bytes, payload: bytearray) -> bytes:
     out[0:256] = original[0:256]
     st = read_settings(SaveFile(payload))
     if st and out[36] == 15:
-        out[38] = st[1] & 0xFF
-        out[39] = st[2] & 0xFF
+        out[38] = st[2] & 0xFF          # mode first
+        out[39] = st[1] & 0xFF          # then difficulty
     struct.pack_into("<I", out, 8, fnv1_32(bytes(out[32:256])))
     struct.pack_into("<I", out, 256, len(out) - 260)
     struct.pack_into("<I", out, 260, MAGIC)
