@@ -39,7 +39,7 @@ from editor_advanced import AdvancedMixin  # noqa: E402  (Player / Classes / Fla
 from ui_util import enable_multi_select, last_tree  # noqa: E402  (Ctrl+A / Shift+drag in tables)
 
 APP_NAME = "Fortune's Weave Save Editor"
-__version__ = "1.3.5"
+__version__ = "1.3.6"
 SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
 ICON_DIR = os.path.join(USER_DIR, "icons")
 
@@ -1460,7 +1460,8 @@ class App(AdvancedMixin, tk.Tk):
         jp, rec = rows[sel[0]]
         en = rec["en"] or jp
         if getattr(self, "_sup_char", None) != jp:
-            self._sup_partner = None          # new character: don't keep the old partner
+            self._sup_partner = None          # new character: don't keep the old partners
+            self._sup_keep = []
         self._sup_char = jp
         self.sup_name.configure(text=en)
         self.sup_avatar.show(en, "PID_" + jp)
@@ -1500,9 +1501,14 @@ class App(AdvancedMixin, tk.Tk):
                  f"{seen_pairs} conversation{'s' if seen_pairs != 1 else ''} recorded "
                  f"in this save")
         if iids:
-            target = iids.get(keep or "") or next(iter(iids.values()))
+            # keep every partner that was selected (an edit rebuilds the list
+            # and re-sorts it by points), else the remembered one, else the top
+            kept = [iids[j] for j in (getattr(self, "_sup_keep", None) or []) if j in iids]
+            if not kept:
+                kept = [iids.get(keep or "") or next(iter(iids.values()))]
+            target = kept[0]
             self._sup_partner = next(k for k, v in iids.items() if v == target)
-            self.sup_tree.selection_set(target)
+            self.sup_tree.selection_set(kept)
             self.sup_tree.focus(target)
             self.sup_tree.see(target)
             self.on_support_pair()
@@ -1513,9 +1519,18 @@ class App(AdvancedMixin, tk.Tk):
             return
         sel = self.sup_tree.selection() if hasattr(self, "sup_tree") else ()
         pt = getattr(self, "_sup_pt", {})
+        if sel:
+            # remember the selection by name so a rebuild can restore it
+            self._sup_keep = [self.sup_tree.item(i, "values")[0] for i in sel]
+            self._sup_partner = self._sup_keep[0]
         if not sel or sel[0] not in pt:
             self.sup_pt_var.set("")
             self.sup_pt_lbl.configure(text="")
+            return
+        if len(sel) > 1:
+            n = sum(1 for i in sel if i in pt)
+            self.sup_pt_lbl.configure(
+                text=f"{len(sel)} partners selected: Apply / Max / 0 set all {n} of them")
             return
         _h, pts, _jp = pt[sel[0]]
         self.sup_pt_var.set("" if pts is None else str(pts))
