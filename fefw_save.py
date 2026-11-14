@@ -257,8 +257,8 @@ class SaveFile:
         except Exception:                     # noqa: BLE001 — keep the header as it was
             st = None
         if st and out[36] == 15:              # the load-screen summary
-            out[38] = st[1] & 0xFF
-            out[39] = st[2] & 0xFF
+            out[38] = st[2] & 0xFF          # mode first
+            out[39] = st[1] & 0xFF          # then difficulty
         struct.pack_into("<I", out, 0x100, len(out) - 0x104)
         struct.pack_into("<I", out, 0x104, MAGIC)
         struct.pack_into("<I", out, 0x108, len(out) - self.zstd_offset)

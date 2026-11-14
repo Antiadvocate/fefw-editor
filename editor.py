@@ -39,7 +39,7 @@ from editor_advanced import AdvancedMixin  # noqa: E402  (Player / Classes / Fla
 from ui_util import enable_multi_select, last_tree  # noqa: E402  (Ctrl+A / Shift+drag in tables)
 
 APP_NAME = "Fortune's Weave Save Editor"
-__version__ = "1.3.4"
+__version__ = "1.3.5"
 SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
 ICON_DIR = os.path.join(USER_DIR, "icons")
 
@@ -131,6 +131,10 @@ class SearchEntry(ttk.Entry):
         self._delay = delay
         self._job = None
         self._showing_ph = False
+        # Showing or hiding the placeholder writes the StringVar but never
+        # changes the query, so it must not fire on_change (#18: on the
+        # Supports page that refresh reselected the first character).
+        self._muted = False
         self._show_ph()
         self.bind("<FocusIn>", self._focus_in)
         self.bind("<FocusOut>", lambda e: self._show_ph())
@@ -140,16 +144,25 @@ class SearchEntry(ttk.Entry):
     def _show_ph(self):
         if not self._var.get():
             self._showing_ph = True
-            self._var.set(self._ph)
+            self._set_quietly(self._ph)
             self.configure(style="Placeholder.TEntry")
 
     def _focus_in(self, _e=None):
         if self._showing_ph:
             self._showing_ph = False
-            self._var.set("")
+            self._set_quietly("")
             self.configure(style="TEntry")
 
+    def _set_quietly(self, text: str):
+        self._muted = True
+        try:
+            self._var.set(text)
+        finally:
+            self._muted = False
+
     def _changed(self, *_a):
+        if self._muted:
+            return
         if self._job:
             self.after_cancel(self._job)
         self._job = self.after(self._delay, self._fire)

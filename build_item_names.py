@@ -126,10 +126,20 @@ def hand_name(jp: str) -> str:
     return HAND_NAMES.get(base, "")
 
 
+# ids whose Japanese name is an older working name the game's text no longer
+# uses: 燧結晶 / FlintCrystal is MIID_FlintCrystal, 熱素鉱 = "Phlogiston" (#16)
+OLD_NAMES = {
+    "燧結晶": "熱素鉱",
+    "FlintCrystal": "熱素鉱",
+}
+
+
 def renamed(jp: str) -> list[str]:
     """Other spellings the game's text may use for an id's Japanese name.
     Only used when the result matches a message exactly."""
     out = []
+    if jp in OLD_NAMES:
+        out.append(OLD_NAMES[jp])
     if jp.endswith("書") and not jp.endswith("指南書"):
         stem = jp[:-1]
         if stem.startswith("秘蔵の"):
