@@ -33,10 +33,20 @@ records. The locator now requires a non-struct direct child and hashes at
 record positions, rather than an arbitrary hash search. A synthetic regression
 covers embedded signatures. This correction is included in the passing run.
 
-The GitHub workflow defines Python 3.10/3.12 on Linux and Windows. Its latest
-run should be inspected for this branch; prior Tutorials CI success is not
-evidence for the new candidate. No packaged executable was produced or tested
-for this milestone.
+GitHub Actions [run 43705609197](https://github.com/Destorino5/fefw-editor/actions/runs/43705609197)
+passed for implementation commit `ec3ce61dc49e9552675dbe1295d12131b49db431`:
+
+| Platform | Python | Result |
+|---|---|---|
+| Ubuntu | 3.10 | PASS |
+| Ubuntu | 3.12 | PASS |
+| Windows | 3.10 | PASS |
+| Windows | 3.12 | PASS |
+
+Each public job runs the suite without the private fixture (31 tests passed,
+2 skipped). This report's CI-result update changes documentation only; the
+archive identifies both its source commit and the tested implementation commit.
+No packaged executable was produced or tested for this milestone.
 
 ## Native GUI smoke check
 
