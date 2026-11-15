@@ -1,53 +1,68 @@
-# Boons of Salvation: reference catalogue and mapping status
+# Boons of Salvation: levels, activation and evidence
 
-**Boons Test 2** supports on/off controls for **already-owned EXP +10%** and
-**already-purchased Weapons Discount 10%**. Select the corresponding tier-1
-row, then **Turn on** or **Turn off**. Only the state-changing button is enabled.
-Save writes the selected slot; Undo/Redo restores the state. Turn off route
-mirroring. Purchases, higher tiers and all other Boons remain read-only.
+**Boons Test 3** makes all **31 Boons / 81 listed tiers** editable in the
+selected save. Select a row and **Set selected tier**, or **Set all to max**
+to grant the maximum tier of every group, including groups hidden by search.
+**Remove Boon** removes its owned level. Tier edits preserve the independent
+On/Off switch; select the currently owned tier to **Turn on / Turn off**.
+Save writes changes. Each action, including the full bulk edit, is one
+Undo/Redo step. Route mirroring must be off. **Flags is the far-right tab.**
 
-The catalogue contains 81 reference tiers in 31 groups, costs and clear-count
-fields. **Increased Exp** and **Weapons Discount** use screenshot-confirmed
-names. Other names remain descriptive translations. English/descriptive and
-original Japanese search remain available. Reads as is the catalogue group
-identifier, not a claimed symbolic save key. Reference values are not decoded
-current bonuses. Only the two observed first-tier state shapes show On/Off.
+The Evidence column distinguishes **Game-tested** tiers (EXP 1 and Weapons
+Discount 1/2) from **Inferred** mappings. Weapons Discount 20% worked and
+persisted before its normal progression requirement: Wooden Sword 240 On /
+300 Off, Bronze Sword 400 On / 500 Off. This supports broad tier editing using
+the shared key pattern; it does not verify every other group's gameplay effect.
+See the [WD20 results and Test 3 validation](test-results-boon-levels-2026-11-15.md)
+and [usage guide](testing-boon-levels.md).
 
-## Editing boundary and byte layout
+**Increased Exp** and **Weapons Discount** have screenshot-confirmed names.
+Other labels are descriptive translations. Reads as keeps the original group
+identifier. Value, Game cost and Required clears come from Reward.bin. These
+purchase requirements are separate from ownership and activation; the save's
+eligibility source has not been decoded, so no Locked/Unlocked value is invented.
+The editor spends no Karma, grants no refund and changes no progression.
 
-The shared-map locator requires known anchors, unique keys and expected
-GameUserData ancestry. No map number or fixed offset is used. The resource
-header must also be recognised. Each control requires its ownership record
-to be exactly 1 and its own disable marker to be absent or 1:
+## Save mapping and editing boundary
 
-| Control | Required ownership/purchase record | Disable marker | Game acceptance |
-|---|---|---|---|
-| Increased Exp 10% | `3b6429de = 1` | `6447f467` | Editor control accepted |
-| Weapons Discount 10% | `5bfcaa34 = 1` | `ddb8d06b` | Editor control accepted; Off/On persistence verified in returned saves |
+The shared-map locator requires unchanged anchors, unique keys, expected
+GameUserData ancestry and a recognized resource header. No fixed map index or
+save offset is used. Groups are allowlisted from the catalogue.
 
-* **Off:** add only the selected disable marker with compact value 1.
-* **On:** remove only that marker; never replace it with zero.
-* Already at the requested state: preserve every byte and add no undo entry.
-* Missing/zero/unknown ownership or other disable values keep that control
-  read-only. Stored zero is not absence. One control never changes the other.
-* Preserve ownership, currency, claims, other flags and their byte encodings.
-  No tier, eligibility, global-file or other-slot write is made.
+| Field | Mapping | Evidence |
+|---|---|---|
+| Owned level | low 32 bits of FNV-1 64 of UTF-8 `因果報酬_レベル_` + group name | Names reproduce EXP `3b6429de` and Weapons `5bfcaa34`; Weapons 1 → 2 gives 10% → 20% in game |
+| Disable marker | Continue low-32-bit FNV-1 state `a21ab2b4` over the UTF-8 group name | Independently reproduces EXP `6447f467` and Weapons `ddb8d06b`; original prefix text is unknown |
+| On | Disable marker absent | Captured EXP tier 1 and Weapons tiers 1/2 |
+| Off | Disable marker 1 | Captured EXP tier 1 and Weapons tiers 1/2 |
 
-The object-tree writer relocates pointers when the map resizes; serialization
-updates checksums. The UI refuses mirroring, validates the current payload
-before adding undo history, and refreshes states after edits and Undo/Redo.
+The same level prefix and disable hash-state are **extrapolated** to the other
+29 groups. All 62 generated keys are distinct. These are inferred mappings,
+not recovered executable logic. Lower rows say Below tier N; only the owned
+row displays On/Off. There is one owned level per group, not independent
+ownership of each displayed row.
 
-The existing EXP +10% toggle is **accepted on the reported Leda Chapter 9
-setup**: editor-generated Off/On states persist and the one-kill comparison
-records +16 EXP Off / +17 On. This is not a universal rounding rule.
-Weapons Discount has a separate captured Off/On marker and screenshots showing
-300 → 270, 500 → 450, 1,500 → 1,350 and 2,000 → 1,800 with the in-game toggle.
-Test 2 is now accepted: all [WEDIT checks](testing-weapon-boon.md) passed by
-player report, and four returned saves verify editor-produced Off/On states
-and persistence. The player reports prices matching the earlier screenshots;
-no new price screenshots were supplied. The [acceptance report](test-results-weapon-boon-2026-11-15.md)
-separates reported gameplay results from verified save contents, including
-exact reproduction of both edited payloads and preservation checks.
+* Valid levels are absent/0 (not owned), or 1 through that group's listed maximum.
+  Level 0 requests remove an owned record; already-absent or stored-zero no-ops
+  preserve their original bytes. Out-of-range levels are preserved and refused.
+* Off writes only disable value 1; On removes that marker. Unknown disable
+  values are preserved and prevent edits to that group. A switch requires an
+  owned tier, including when level and activation are requested atomically.
+* Tier changes and removal preserve On/Off markers. Re-adding a previously Off
+  Boon therefore keeps it Off. Set all to max preserves all switches, too.
+* Every requested group is validated before mutation. One unknown group aborts
+  a bulk edit; unrelated valid groups can still be edited individually.
+* Unselected records, compact/wide encodings, currency, claims and progression
+  are preserved. No-op requests preserve every byte and add no undo entry.
+* A changed map is rebuilt once, with pointer relocation and serialization
+  checksums handled by the existing object-tree writer. The UI revalidates the
+  current payload, refuses mirroring, and refreshes after edits and Undo/Redo.
+
+The earlier first-tier helper functions remain for reproducing historical tests;
+the new UI uses the catalogue-scoped writer. The accepted EXP battle comparison
+remains +16 Off / +17 On, without establishing a universal rounding formula.
+The [Test 2 report](test-results-weapon-boon-2026-11-15.md) retains the earlier
+10% editor acceptance and numbered-backup evidence.
 
 ## What was known when Research 1 shipped
 
@@ -128,32 +143,19 @@ unverified interpretation is not turned into an effective current bonus.
 
 ## Remaining research
 
-The EXP disable marker has an isolated off/on comparison, but EXP purchase
-semantics, higher tiers, stacking and cross-file synchronization remain unknown.
-BEDIT-06 now supplies an independent Weapons Discount disable candidate:
-`ddb8d06b = 1` in Off, absent in On, while `5bfcaa34 = 1` and Karma 410 remain
-unchanged. Its W06-before file is unpurchased (Karma 710), so the 300-Karma
-decrease is the purchase. The original shop-price test was blocked by Armorer
-access. A later On/Off/On comparison at the accessible shop shows 10% lower
-listed prices in both On states: 300 → 270, 500 → 450, 1,500 → 1,350 and
-2,000 → 1,800. One final On save preserves the purchase marker and Karma 410
-with no disable marker; the two intermediate states have screenshots only.
-See the [price follow-up](test-results-boon-editing-2026-11-15.md#shop-price-follow-up).
-Test 2's isolated Weapons Discount toggle passed WEDIT-01–07 and is accepted
-on the reported setup. Its exact symbolic key, later tiers and fractional-price rounding
-remain unknown. Do not generalise either toggle to other Boons.
+[WD20-01–03](testing-weapon-discount-20.md) passed with screenshots and two
+returned game saves. The 20% owned status and prices persist while the next
+30% offer remains Locked. Only the intended level and activation records differ
+from the accepted baseline's parsed flags. The test changes no progression.
 
-The next [Weapons Discount 20% experiment](testing-weapon-discount-20.md)
-changes the known level/purchase-associated value from 1 to 2 while preserving
-progression and Karma. Its gameplay result is pending. Hash matching now
-identifies candidate names `因果報酬_レベル_経験値` and
-`因果報酬_レベル_武器割引` for the two observed ownership records; these share
-the same level prefix, but were not recovered from executable code. This
-supports testing a tier index; it does not yet validate higher-tier editing
-or decode the save's purchase eligibility. Disable-record names remain unknown.
+General editing is now implemented at the user's request. Effects, stacking,
+later tiers outside those listed as Game-tested, fractional-price rounding and
+full-folder synchronization remain unverified. Normal purchase accounting and
+the save-side source of clear-count eligibility remain outside this feature.
+Unknown observed values are never normalized automatically.
 
 The requested return to the 15 read-only Deeds counters is tracked in
-[deeds-follow-up.md](deeds-follow-up.md), starting with the three enemy counters.
+[deeds-follow-up.md](deeds-follow-up.md).
 
 ## Catalogue
 

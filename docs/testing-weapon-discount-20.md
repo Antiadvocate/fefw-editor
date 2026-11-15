@@ -1,8 +1,11 @@
 # Weapons Discount 20%: locked-tier experiment
 
-Status: prepared on 2026-11-15; gameplay result pending. The accepted 10% EXP
-and Weapons Discount controls remain unchanged. This is a disposable save
-experiment, not a new editor build or an accepted baseline replacement.
+**Accepted on 2026-11-15.** WD20-01–03 passed. Screenshots show owned 20% On
+and Wooden/Bronze Sword prices 240/400, 300/500 Off, and 240/400 again On.
+The two returned saves retain level 2 and the expected activation marker,
+Karma 410 and other parsed flags. See the [results](test-results-boon-levels-2026-11-15.md).
+The procedure below records the completed experiment; no repeat is requested.
+The accepted baseline remains the supplied B0-01 Auto.
 
 ## Question and candidate
 
@@ -36,8 +39,8 @@ group, or the save field that controls purchase eligibility.
    **B0-01-Unit-Selection-Test-1.zip**, with Gold 1,523, Renown 6,640, Karma 410
    and EXP 10% On.
 2. Check the three cases below. Use the **in-game** Boon switch for Off/On.
-   The current Test 2 editor deliberately treats this untested level as
-   **Unknown / read-only**; that message does not mean the game rejected it.
+   The Test 2 editor used for this experiment treated level 2 as
+   **Unknown / read-only**; Test 3 now supports it. That old message did not mean the game rejected it.
 3. Return the two named game-saved files and the results. Screenshots of the
    Boon status and shop prices are useful because this is a new tier. Avoid
    buying an upgrade or weapon during the comparison.
@@ -90,17 +93,11 @@ The private ZIP contains Auto, this guide and a generated changes.json with
 the output fingerprint and validation results. Personal save bytes are not
 published to GitHub.
 
-## How the result guides editing
+## Implementation after this result
 
-A pass would support direct tier editing for Weapons Discount and show that
-its normal purchase restriction does not prevent the edited effect in this
-setup. The two matching level-key names provide a starting point for broader
-Boon editing; one group alone does not prove every group's encoding or effect.
-A failure must be diagnosed from the returned state before attributing it to
-the lock: an incorrect tier hypothesis or game normalization is also possible.
-
-Purchase eligibility is separate from ownership and On/Off. A future lock
-column should use verified save-derived eligibility and distinguish **Unknown**
-from Locked/Unlocked; the catalogue's clear-count requirement alone does not
-decode a save's lock state. No eligibility or general tier writer is added in
-this research step. The result will guide that implementation.
+The pass supports Weapons Discount tier 2 without changing its normal purchase
+eligibility. Boons Test 3 now exposes catalogue-bounded levels and switches for
+all groups using the shared hash pattern, with the untested mappings labelled
+Inferred. The game's eligibility source remains unknown; no Locked/Unlocked
+column is inferred from a stored level or catalogue clear requirement. See
+[the current format](boons.md) and [usage guide](testing-boon-levels.md).

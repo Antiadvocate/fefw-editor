@@ -830,7 +830,7 @@ class App(AdvancedMixin, tk.Tk):
         brand = ttk.Frame(actions, style="Header.TFrame")
         brand.pack(side="left")
         ttk.Label(brand, text="Fortune's Weave", style="Title.TLabel").pack(anchor="w")
-        ttk.Label(brand, text=f"SAVE EDITOR  ·  v{__version__}  ·  Boons Test 2",
+        ttk.Label(brand, text=f"SAVE EDITOR  ·  v{__version__}  ·  Boons Test 3",
                   style="Subtitle.TLabel").pack(anchor="w")
 
         right = ttk.Frame(actions, style="Header.TFrame")
@@ -898,7 +898,6 @@ class App(AdvancedMixin, tk.Tk):
         self.pages.add(self.supports_page, text="Supports")
         self.pages.add(self.player_page, text="Player")
         self.pages.add(self.classes_page, text="Classes")
-        self.pages.add(self.flags_page, text="Flags")
         self.pages.add(self.mounts_page, text="Mounts")
         self.pages.add(self.world_page, text="World map")
         self.pages.add(self.tutorials_page, text="Tutorials")
@@ -906,6 +905,7 @@ class App(AdvancedMixin, tk.Tk):
         self.pages.add(self.fast_travel_page, text="Fast travel")
         self.pages.add(self.deeds_page, text="Notable Deeds")
         self.pages.add(self.boons_page, text="Boons")
+        self.pages.add(self.flags_page, text="Flags")
 
         self._build_units()
         self._build_convoy()

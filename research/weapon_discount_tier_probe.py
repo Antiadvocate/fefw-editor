@@ -1,7 +1,7 @@
 """Build one disposable Weapons Discount tier-2 probe from the accepted baseline.
 
 This is a research generator, not a general Boon editor. Value 2 is a tier
-hypothesis awaiting gameplay. Only the exact accepted B0-01 Auto is supported;
+hypothesis accepted by WD20 gameplay. Only the exact accepted B0-01 Auto is supported;
 the input and any existing output directory are never overwritten.
 """
 from __future__ import annotations
@@ -66,9 +66,9 @@ def build_probe(source: Path, output: Path) -> dict:
     core.SaveTree(edited.payload)
     require(boons.read_observation(edited)['weapons_purchase'] == 2,
             'The candidate level did not read back as 2.')
-    # Existing accepted GUI remains conservative until this experiment returns.
+    # The historical first-tier helper remains scoped for earlier reproductions.
     require(bool(boons.weapons_edit_reason(boons.read_observation(edited))),
-            'The current first-tier control must refuse this unaccepted state.')
+            'The historical first-tier helper must retain its original boundary.')
 
     expected = bytearray(payload)
     core.fix_embedded_hashes(expected)
@@ -117,7 +117,7 @@ def build_probe(source: Path, output: Path) -> dict:
     require(source.read_bytes() == original, 'The accepted baseline changed.')
 
     report = {
-        'status': 'Experimental; 20% effect, eligibility behavior and persistence await gameplay',
+        'status': 'Reproduction of the accepted WD20 candidate; baseline adoption is separate',
         'source': 'Auto from the accepted B0-01-Unit-Selection-Test-1.zip',
         'source_sha256': BASELINE_SHA256,
         'output': 'Auto', 'bytes': len(serialized),
@@ -136,7 +136,7 @@ def build_probe(source: Path, output: Path) -> dict:
             'Nine distinct unit numbers and all parsed unit data preserved',
             'EXP On, currency, Deeds, tutorials, travel and blessings preserved',
             'Serialized payload equals intended edit plus checksum refresh',
-            'Current first-tier editor control correctly refuses the candidate state',
+            'Historical first-tier helper retains its original scope',
             'Accepted baseline unchanged',
         ],
     }

@@ -23,9 +23,11 @@ passed except DEED-06: the game cleared a claim after a decrease. Test 2 adds
 a targeted OK/Cancel warning; [DEED-11–14](testing-notable-deeds.md) all passed.
 The Notable Deeds milestone is accepted on the reported setup. Accepted audience/travel
 controls lose Experimental labels; the three hidden destinations say Effect unknown.
-**Boons Test 2** is accepted: EXP +10% and Weapons Discount 10% both have
-tested on/off controls. WEDIT-01–07 passed; returned saves confirm the discount
-states persist and the player reports numbered backups through `.bak4`.
+**Boons Test 3** exposes all 31 Boons / 81 tiers after WD20 passed. EXP tier 1
+and Weapons Discount tiers 1/2 are game-tested; remaining level and activation
+mappings are inferred. Tier/remove/On/Off, bulk max and selected-save Undo/Redo
+are implemented. Flags is the rightmost tab. See the
+[Test 3 report](test-results-boon-levels-2026-11-15.md).
 Other sections below
 are research notes and acceptance gates, not working UI features or
 instructions to apply unverified offsets.
@@ -46,7 +48,7 @@ The game data version was not separately reported.
 | 2 | Blessings | All seven EXP fields; six data-derived level previews; Fortuna special | [BLESS-01–11](testing-blessings.md) passed; see coverage limits in the report |
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
-| 5 | Boons | EXP +10% and Weapons Discount 10% editor toggles accepted; other Boons/tiers read-only | [BEDIT results](test-results-boon-editing-2026-11-15.md): +16 EXP Off / +17 On. [WEDIT-01–07 passed](test-results-weapon-boon-2026-11-15.md): discount Off/On persists in returned saves; player reports earlier 10% prices reproduced and backups through .bak4 |
+| 5 | Boons | All 31 groups / 81 tiers editable; broader mappings labelled Inferred | [BEDIT results](test-results-boon-editing-2026-11-15.md): +16 EXP Off / +17 On. [WEDIT-01–07 passed](test-results-weapon-boon-2026-11-15.md): discount Off/On persists in returned saves; player reports earlier 10% prices reproduced and backups through .bak4 |
 | 6 | Story | Read-only summary first; narrowly validated Leda transitions only | Load scene, advance to battle, finish/save/reload with no missing facilities |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
@@ -209,13 +211,14 @@ remains the supplied B0-01 package's Auto. Exact symbolic identity, higher
 tiers and fractional-price rounding remain unknown. See the
 [Test 2 acceptance report](test-results-weapon-boon-2026-11-15.md).
 
-Next is the player's requested [locked Weapons Discount 20% experiment](testing-weapon-discount-20.md).
-A hash-matching level-name pattern fits both observed ownership records. A
-disposable candidate changes the weapon record from 1 to 2 without changing
-progression or currency. Its 20% effect, On/Off behavior and reload persistence
-await game testing. General Boon editing and a save-derived eligibility column
-will be designed from the result; a failed candidate alone would not prove
-that a progression lock caused the failure.
+The [locked Weapons Discount 20% experiment](testing-weapon-discount-20.md)
+passed with screenshots and returned saves: level 2 persists, prices are
+240/400 On and 300/500 Off, and Karma remains 410. Progression was unchanged.
+The next 30% offer still shows Locked. General tier and activation editing is
+now implemented at the user's request using the shared hash pattern. The
+remaining groups are labelled Inferred; this does not claim every effect is
+game-tested or that save-side purchase eligibility has been decoded. See the
+[Test 3 results and limits](test-results-boon-levels-2026-11-15.md).
 
 The Test 1 acceptance report records incidental baseline progression observations
 that constrain the B05/B06 tests. The known feast unlock flag was already 1

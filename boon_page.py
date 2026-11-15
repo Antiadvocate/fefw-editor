@@ -1,18 +1,8 @@
-"""Single-save EXP/Weapons Discount controls and the wider Boon catalogue."""
+"""Selected-save Boon tier and activation controls."""
 from tkinter import ttk
 
 import boons
 import fefw_core as core
-
-
-CONTROLS = {
-    '経験値': ('Increased Exp 10%', boons.exp_edit_reason, boons.exp_state_label, boons.edited_exp_active),
-    '武器割引': ('Weapons Discount 10%', boons.weapons_edit_reason, boons.weapons_state_label, boons.edited_weapons_active),
-}
-
-
-def control_for(group, tier):
-    return CONTROLS.get(group['name']) if tier['tier'] == 1 else None
 
 
 class BoonPageMixin:
@@ -28,11 +18,9 @@ class BoonPageMixin:
         self.boon_search = ttk.Entry(top)
         self.boon_search.pack(fill="x", pady=(8, 0))
         self.boon_search.bind("<KeyRelease>", lambda e: self.refresh_boons())
-
         ttk.Label(page, style="CardFaint.TLabel", justify="left", wraplength=900, text=(
-            "Already-owned EXP +10% and Weapons Discount 10% can be switched on/off. "
-            "Purchases, tiers and other Boons remain read-only.\n"
-            "Turn off ‘Also edit this route’s other saves’. Ctrl+S saves, Ctrl+Z undoes, Ctrl+Y redoes."
+            "Tier edits preserve Karma and progression. Set all to max preserves each On/Off switch.\n"
+            "Selected save only: turn off route mirroring. Ctrl+S saves, Ctrl+Z undoes, Ctrl+Y redoes."
         )).pack(side="bottom", anchor="w", pady=(8, 0))
         form = ttk.Frame(page, style="Card.TFrame", padding=(14, 10))
         form.pack(side="bottom", fill="x", pady=(8, 0))
@@ -40,23 +28,26 @@ class BoonPageMixin:
         self.boon_detail.pack(anchor="w")
         actions = ttk.Frame(form, style="Card.TFrame")
         actions.pack(fill="x", pady=(8, 0))
-        self.boon_on = ttk.Button(actions, text="Turn on", style="Small.TButton",
-                                  command=lambda: self.set_boon_active(True), state="disabled")
-        self.boon_on.pack(side="left", padx=(0, 8))
-        self.boon_off = ttk.Button(actions, text="Turn off", style="Small.TButton",
-                                   command=lambda: self.set_boon_active(False), state="disabled")
-        self.boon_off.pack(side="left")
-        ttk.Label(actions, text="Existing first-tier Boons only · Save to write changes",
-                  style="CardMuted.TLabel").pack(side="left", padx=(14, 0))
-
+        buttons = (
+            ('boon_set', 'Set selected tier', self.set_boon_tier),
+            ('boon_remove', 'Remove Boon', lambda: self.set_boon_tier(remove=True)),
+            ('boon_on', 'Turn on', lambda: self.set_boon_active(True)),
+            ('boon_off', 'Turn off', lambda: self.set_boon_active(False)),
+            ('boon_max', 'Set all to max', self.max_boons),
+        )
+        for name, label, action in buttons:
+            button = ttk.Button(actions, text=label, style="Small.TButton", command=action, state="disabled")
+            button.pack(side="left", padx=(0, 8))
+            setattr(self, name, button)
         frame = ttk.Frame(page, style="Card.TFrame")
         frame.pack(fill="both", expand=True, pady=(8, 0))
-        tree = self.boon_tree = ttk.Treeview(frame, columns=("tier", "state", "value", "cost", "clears", "jp"),
-                                             show="tree headings", selectmode="browse")
-        for col, label, width in (("#0", "Effect", 260), ("tier", "Tier", 50),
-                                  ("state", "Saved state", 170), ("value", "Value (data)", 90),
-                                  ("cost", "Listed cost", 95), ("clears", "Clear count (data)", 135),
-                                  ("jp", "Reads as", 230)):
+        tree = self.boon_tree = ttk.Treeview(frame,
+            columns=("tier", "state", "value", "evidence", "cost", "clears", "jp"),
+            show="tree headings", selectmode="browse")
+        for col, label, width in (("#0", "Effect", 240), ("tier", "Tier", 45),
+                ("state", "Saved state", 145), ("value", "Value", 65),
+                ("evidence", "Evidence", 105), ("cost", "Game cost", 85),
+                ("clears", "Required clears", 115), ("jp", "Reads as", 230)):
             tree.heading(col, text=label, anchor="w")
             tree.column(col, width=width, minwidth=width, stretch=col in ("#0", "jp"))
         tree.grid(row=0, column=0, sticky="nsew")
@@ -69,7 +60,7 @@ class BoonPageMixin:
         frame.columnconfigure(0, weight=1)
         tree.bind("<<TreeviewSelect>>", lambda e: self._select_boon())
         self._boon_rows = {}
-        self._boon_observed = None
+        self._boon_state = None
         self._boon_error = "Open a save first."
         self._select_boon()
 
@@ -80,7 +71,7 @@ class BoonPageMixin:
         keep = tree.selection()
         tree.delete(*tree.get_children())
         self._boon_rows = {}
-        self._boon_observed = None
+        self._boon_state = None
         self._boon_error = "Open a save first."
         self.boon_observation.configure(text="Open a save to inspect its Boons.")
         self._select_boon()
@@ -90,58 +81,68 @@ class BoonPageMixin:
         except core.SaveError as exc:
             self.boon_count.configure(text=str(exc))
             return
-        summary = f"{len(rows)} of {sum(len(g['tiers']) for g in groups)} reference tiers · {len(groups)} groups"
+        summary = f"{len(rows)} of {sum(len(g['tiers']) for g in groups)} tiers · {len(groups)} Boons"
         try:
             f = self.core_of()
             if f is not None:
-                self._boon_observed = observation = boons.read_observation(f)
-                summary += f" · Karma Shards: {observation['karma_shards']:,}"
+                self._boon_state = state = boons.read_state(f)
+                summary += f" · Karma Shards: {state['karma_shards']:,}"
+                owned = sum(not boons.group_edit_reason(g, state['groups'][g['name']])
+                            and (state['groups'][g['name']]['level'] or 0) > 0 for g in groups)
                 self.boon_observation.configure(text=(
-                    "Increased Exp 10%: " + boons.exp_state_label(observation)
-                    + " · Weapons Discount 10%: " + boons.weapons_state_label(observation)))
+                    f"{owned} of {len(groups)} owned · Game-tested: EXP tier 1; Weapons Discount tiers 1–2. "
+                    "Other tiers use inferred mappings."))
         except core.SaveError as exc:
             self._boon_error = str(exc)
             self.boon_observation.configure(text=str(exc))
         for iid, group, tier in rows:
             self._boon_rows[iid] = (group, tier)
-            state = "Not mapped"
-            control = control_for(group, tier)
-            if control:
-                state = control[2](self._boon_observed) if self._boon_observed else "Unavailable"
+            saved = boons.row_state(group, tier, self._boon_state['groups'][group['name']]) if self._boon_state else 'Unavailable'
+            evidence = 'Game-tested' if (group['name'], tier['tier']) in boons.GAME_TESTED_TIERS else 'Inferred'
             tree.insert("", "end", iid=iid, text=boons.display_name(group), values=(
-                tier['tier'], state, tier['value'], tier['cost'], tier['clear_count'], group['name']))
+                tier['tier'], saved, tier['value'], evidence, tier['cost'], tier['clear_count'], group['name']))
         self.boon_count.configure(text=summary)
         tree.selection_set([i for i in keep if tree.exists(i)])
         self._select_boon()
 
-    def _select_boon(self):
-        self.boon_on.configure(state="disabled")
-        self.boon_off.configure(state="disabled")
-        picked = self.boon_tree.selection()
-        if len(picked) != 1 or picked[0] not in self._boon_rows:
-            self.boon_detail.configure(text="Select Increased Exp or Weapons Discount, tier 1, to switch an owned Boon on/off.\n"
-                                            "Other rows show reference values; they do not indicate a current bonus.")
-            return
-        group, tier = self._boon_rows[picked[0]]
-        note = "Read-only: ownership, activation and stacking are not mapped for this tier."
-        control = control_for(group, tier)
-        if control:
-            label, edit_reason, state_label, _ = control
-            observation = self._boon_observed
-            reason = edit_reason(observation) if observation else self._boon_error
-            if reason:
-                note = "Read-only: " + reason
-            else:
-                state = state_label(observation)
-                note = f"Existing {label}: {state}. Switching preserves ownership and Karma Shards."
-                self.boon_on.configure(state="normal" if state == "Off" else "disabled")
-                self.boon_off.configure(state="normal" if state == "On" else "disabled")
-        self.boon_detail.configure(text=(
-            f"{boons.display_name(group)} · tier {tier['tier']} · {group['name']}\n"
-            f"Reference value: {tier['value']}; listed cost: {tier['cost']} Karma Shards; "
-            f"clear-count field: {tier['clear_count']}. These are catalogue data.\n" + note))
+    def _selected_boon(self):
+        selected = self.boon_tree.selection()
+        return self._boon_rows.get(selected[0]) if len(selected) == 1 else None
 
-    def set_boon_active(self, active):
+    def _select_boon(self):
+        for button in (self.boon_set, self.boon_remove, self.boon_on, self.boon_off, self.boon_max):
+            button.configure(state="disabled")
+        if self._boon_state:
+            states = self._boon_state['groups']
+            valid = all(not boons.group_edit_reason(g, states[g['name']]) for g in boons.catalog())
+            already_max = all(states[g['name']]['level'] == len(g['tiers']) for g in boons.catalog())
+            if valid and not already_max:
+                self.boon_max.configure(state="normal")
+        row = self._selected_boon()
+        if not row:
+            self.boon_detail.configure(text="Select a tier, then Set selected tier. Each Boon has one owned tier and an independent On/Off switch.\n"
+                "Set all to max affects all 31 Boons, including rows hidden by search. Undo restores the whole edit.")
+            return
+        group, tier = row
+        state = self._boon_state['groups'][group['name']] if self._boon_state else None
+        reason = boons.group_edit_reason(group, state) if state else self._boon_error
+        if reason:
+            note = 'Read-only: ' + reason
+        else:
+            level = state['level'] or 0
+            self.boon_set.configure(state='normal' if level != tier['tier'] else 'disabled')
+            self.boon_remove.configure(state='normal' if level else 'disabled')
+            if level == tier['tier']:
+                self.boon_on.configure(state='normal' if state['disabled'] == 1 else 'disabled')
+                self.boon_off.configure(state='normal' if state['disabled'] is None else 'disabled')
+            note = (f"Owned tier: {level} of {len(group['tiers'])}. Tier edits keep the current On/Off switch. "
+                    "Select the owned tier to use Turn on/off.")
+        self.boon_detail.configure(text=(
+            f"{boons.display_name(group)} · selected tier {tier['tier']} · value {tier['value']}\n"
+            f"Normal purchase: {tier['cost']} Karma, {tier['clear_count']} required clears (game data). "
+            "Editing does not spend Karma or change clears.\n" + note))
+
+    def _change_boons(self, edit, label):
         if not self.sv:
             self._select_boon()
             return
@@ -149,26 +150,44 @@ class BoonPageMixin:
             self.flash("Turn off ‘Also edit this route’s other saves’ for Boon edits.", "warn")
             self._select_boon()
             return
-        selected = self.boon_tree.selection()
-        row = self._boon_rows.get(selected[0]) if len(selected) == 1 else None
-        control = control_for(*row) if row else None
-        if not control:
-            self.flash("Select Increased Exp or Weapons Discount, tier 1; other rows are read-only.", "info")
-            self._select_boon()
-            return
         self._commit_form()
-        label, _, _, edit = control
         try:
             before = self.core_of()
-            after = edit(before, active)
+            after = edit(before)
         except core.SaveError as exc:
             self.flash(str(exc), "error")
             self.refresh_boons()
             return
         if after == before.payload:
-            self.flash("This Boon already has the requested state.", "info")
+            self.flash("These Boons already have the requested state.", "info")
             self.refresh_boons()
             return
         self.push_undo()
-        self._core_edit(lambda f: edit(f, active),
-                        f"{label} → {'On' if active else 'Off'}")
+        self._core_edit(edit, label)
+
+    def set_boon_tier(self, remove=False):
+        row = self._selected_boon()
+        if not row:
+            self.flash('Select a Boon tier first.', 'info')
+            return
+        group, tier = row
+        level = 0 if remove else tier['tier']
+        self._change_boons(lambda f: boons.edited_groups(f, levels={group['name']: level}),
+                           f"{boons.display_name(group)} → {'Not owned' if remove else 'tier ' + str(level)}")
+
+    def max_boons(self):
+        self._change_boons(lambda f: boons.edited_groups(f, levels=boons.max_levels()),
+                           'All 31 Boons → maximum tiers (On/Off preserved)')
+
+    def set_boon_active(self, active):
+        row = self._selected_boon()
+        if not row:
+            self.flash('Select the owned Boon tier first.', 'info')
+            return
+        group, tier = row
+        def edit(f):
+            state = boons.read_state(f)['groups'][group['name']]
+            if state['level'] != tier['tier']:
+                raise boons.BoonError('Select the currently owned tier to switch this Boon On or Off.')
+            return boons.edited_groups(f, active={group['name']: active})
+        self._change_boons(edit, f"{boons.display_name(group)} → {'On' if active else 'Off'}")

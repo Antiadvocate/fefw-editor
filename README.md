@@ -33,19 +33,22 @@ library, or a ready-made Windows `.exe`.
 | **Tutorials** | | 115 identified help entries; make selected tutorials available or remove them from the selected save. English names, original Japanese keys, explicit raw states and undo/redo. See [tutorials.md](docs/tutorials.md) |
 | **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Six level previews tested in Leda Chapter 9; Fortuna's EXP effect remains unknown. Selection and Divine Sand are read-only. Six tested first-audience toggles; Fortuna has no audience condition. See [blessings.md](docs/blessings.md) |
 | **Fast travel** | | Add/remove 20 identified Dagsion destination flags in the selected save, with original keys and undo/redo. The original 16 have screenshot-confirmed English names. Four additional flags persisted in Chapter 9 tests; only Yu Phas Temple appeared and allowed travel, while walking back in stayed blocked. See [fast-travel.md](docs/fast-travel.md) |
-| **Boons** | | Accepted EXP +10% and Weapons Discount 10% on/off controls for already-owned Boons. Preserves ownership and Karma; undo/redo and selected-save editing. Other tiers/Boons remain read-only. See [boons.md](docs/boons.md) |
+| **Boons** | | All 31 Boons / 81 tiers: set a tier, remove ownership, switch On/Off or set all to max. Karma and progression preserved; undo/redo. Game-tested and inferred mappings labelled. See [boons.md](docs/boons.md) |
 | **Notable Deeds** | | 350 milestones; 32 editable activity totals and 15 read-only counters. Targets/rewards and stored claim states shown separately; no currency or claim writes. See [notable-deeds.md](docs/notable-deeds.md) |
 
-**Current build: Boons Test 2 · upstream v1.3.9 — accepted on the reported Leda
-Chapter 9 setup.** All [WEDIT-01–07](docs/testing-weapon-boon.md) passed.
-Returned saves confirm editor-produced **Weapons Discount 10%** Off/On states
-persist; the player reports prices matching the earlier 10% comparison and
-numbered backups through `.bak4`. No new price screenshots were supplied.
-The EXP +10% control remains accepted, including persistence and +16 EXP Off /
-+17 On in the prior comparison. Purchases, tier changes and other Boons remain
-read-only. See the [acceptance report](docs/test-results-weapon-boon-2026-11-15.md),
-[earlier acceptance report](docs/test-results-boon-editing-2026-11-15.md) and
-[Boons format](docs/boons.md).
+**Current build: Boons Test 3 · upstream v1.3.9.** All 31 Boons are editable.
+Select a row and **Set selected tier**, **Remove Boon**, or use **Set all to max**.
+Select the owned tier to switch it On/Off. Bulk max includes groups hidden by
+search and preserves existing Off states. Save writes the selected slot;
+Undo/Redo restores the entire action. **Flags is now the far-right tab.**
+
+The locked **Weapons Discount 20%** test passed: 240/400 prices On, 300/500
+Off, with level and activation persisting after reload. EXP tier 1 and Weapons
+tiers 1/2 have game evidence; other tiers are explicitly marked **Inferred**.
+The broader editor is structurally tested, without claiming every Boon's effect
+has been verified in game. See the [usage guide](docs/testing-boon-levels.md),
+[results and validation](docs/test-results-boon-levels-2026-11-15.md) and
+[Boons format](docs/boons.md). Karma and progression are preserved.
 
 This build merges upstream `7157e6c`: numbered `.bak`, `.bak1`, `.bak2` backups
 and the preceding weapon-mastery multi-selection fix. The original `.bak` is
@@ -157,7 +160,9 @@ Unknown records and values are preserved; sparse/ambiguous layouts refuse edits.
 * [Milestone 5: Boons Test 1 acceptance and validation](docs/test-results-boon-editing-2026-11-15.md)
 * [Milestone 5: Boons Test 2 Weapons Discount acceptance](docs/test-results-weapon-boon-2026-11-15.md)
 * [Milestone 5: Boons Test 2 reproduction guide](docs/testing-weapon-boon.md)
-* [Next Boon research: locked Weapons Discount 20% experiment](docs/testing-weapon-discount-20.md)
+* [Boons Test 3: all tiers usage guide](docs/testing-boon-levels.md)
+* [Boons Test 3: WD20 acceptance and validation](docs/test-results-boon-levels-2026-11-15.md)
+* [Accepted locked Weapons Discount 20% experiment](docs/testing-weapon-discount-20.md)
 * [Deeds follow-up: 15 read-only counters queued for testing](docs/deeds-follow-up.md)
 * [Milestone 4: Notable Deeds testing guide](docs/testing-notable-deeds.md)
 * [Notable Deeds feature, full catalogue and binary format](docs/notable-deeds.md)

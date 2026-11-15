@@ -1,12 +1,14 @@
-"""Reference data and isolated disable markers for two existing first-tier Boons.
+"""Catalogue-scoped Boon levels and independent On/Off markers.
 
-Only the observed ownership=1, disable=absent/1 state is editable. Purchase,
-higher tiers and other Boon activation keys are not inferred from these hashes.
+EXP tier 1 and Weapons Discount tiers 1/2 have game evidence. Remaining keys
+and tiers extrapolate the common hash pattern; see docs/boons.md. The original
+first-tier helpers remain available for reproducing the earlier experiments.
 """
 from __future__ import annotations
 
 from functools import lru_cache
 import json
+import struct
 from pathlib import Path
 
 import audiences
@@ -17,6 +19,11 @@ EXP_CANDIDATE = 0x3b6429de
 EXP_DISABLED = 0x6447f467
 WEAPONS_PURCHASE = 0x5bfcaa34
 WEAPONS_DISABLED = 0xddb8d06b
+LEVEL_PREFIX = '因果報酬_レベル_'
+# Low 32-bit FNV-1 state before the UTF-8 group name. Independently reproduces
+# both captured disable keys; the original prefix text is not yet recovered.
+DISABLED_PREFIX_STATE = 0xa21ab2b4
+GAME_TESTED_TIERS = {('経験値', 1), ('武器割引', 1), ('武器割引', 2)}
 
 
 class BoonError(core.SaveError):
@@ -148,3 +155,112 @@ def matching_rows(query: str = "") -> list[tuple[str, dict, dict]]:
 
 def display_name(group: dict) -> str:
     return group.get('game_label') or group['label']
+
+
+def group_keys(name: str) -> tuple[int, int]:
+    if name not in {g['name'] for g in catalog()}:
+        raise BoonError('Choose a Boon from the catalogue.')
+    disabled = DISABLED_PREFIX_STATE
+    for byte in name.encode('utf8'):
+        disabled = ((disabled * 0x1b3) & 0xffffffff) ^ byte
+    return core.id_hash(LEVEL_PREFIX + name), disabled
+
+
+def read_state(f: core.SaveFile) -> dict:
+    observation = read_observation(f)  # Validates the shared map and resource header.
+    values = audiences.read(f)
+    groups = {}
+    seen = set()
+    for group in catalog():
+        name = group['name']
+        level, disabled = group_keys(name)
+        if level == disabled or level in seen or disabled in seen:
+            raise BoonError('Ambiguous Boon key mapping; editing is disabled.')
+        seen.update((level, disabled))
+        groups[name] = {'level': values.get(level), 'disabled': values.get(disabled)}
+    return {'karma_shards': observation['karma_shards'], 'groups': groups}
+
+
+def group_edit_reason(group: dict, state: dict) -> str:
+    level, disabled = state['level'], state['disabled']
+    if level is not None and (type(level) is not int or not 0 <= level <= len(group['tiers'])):
+        return f'Unknown stored tier ({level}); preserved.'
+    if disabled is not None and (type(disabled) is not int or disabled != 1):
+        return f'Unknown On/Off value ({disabled}); preserved.'
+    return ''
+
+
+def row_state(group: dict, tier: dict, state: dict) -> str:
+    if group_edit_reason(group, state):
+        return 'Unknown / read-only'
+    level = state['level'] or 0
+    if tier['tier'] > level:
+        return 'Not owned'
+    if tier['tier'] < level:
+        return f'Below tier {level}'
+    return 'Off' if state['disabled'] == 1 else 'On'
+
+
+def edited_groups(f: core.SaveFile, *, levels: dict | None = None,
+                  active: dict | None = None) -> bytearray:
+    """Atomically edit allowlisted levels/switches; never charge Karma or set clears.
+
+    Level 0 removes ownership. Tier changes preserve activation; active requests
+    require ownership after the requested level changes. Unknown states fail
+    before writing, including in a bulk request. Untouched record encodings and
+    noncanonical-but-known zero/wide no-op states remain byte-identical.
+    """
+    levels = {} if levels is None else levels
+    active = {} if active is None else active
+    if not isinstance(levels, dict) or not isinstance(active, dict):
+        raise BoonError('Boon edits must identify catalogue groups.')
+    groups = {g['name']: g for g in catalog()}
+    for name, value in levels.items():
+        if name not in groups or type(value) is not int or not 0 <= value <= len(groups[name]['tiers']):
+            raise BoonError('Choose a listed tier, or remove ownership.')
+    for name, value in active.items():
+        if name not in groups or type(value) is not bool:
+            raise BoonError('Choose On or Off for a catalogue Boon.')
+    observed = read_state(f)['groups']
+    requested = {}
+    for name in levels.keys() | active.keys():
+        state = observed[name]
+        reason = group_edit_reason(groups[name], state)
+        if reason:
+            raise BoonError(f'{display_name(groups[name])}: {reason}')
+        level_hash, disabled_hash = group_keys(name)
+        level = levels.get(name, state['level'] or 0)
+        if name in levels and level != (state['level'] or 0):
+            requested[level_hash] = level or None
+        if name in active:
+            if level == 0:
+                raise BoonError('Set an owned tier before switching a Boon On or Off.')
+            requested[disabled_hash] = None if active[name] else 1
+    fm = audiences.locate(f)
+    present = {fl.hash: fl.value for fl in fm.flags}
+    effective = {h: v for h, v in requested.items() if present.get(h) != v}
+    if not effective:
+        return bytearray(f.payload)
+    records = []
+    for fl in fm.flags:
+        if fl.hash in effective and effective[fl.hash] is None:
+            continue
+        start = fl.offset - (5 if fl.wide else 4)
+        raw = bytes(f.payload[start:fl.offset + (4 if fl.wide else 1)])
+        if fl.hash in effective:
+            value = effective[fl.hash]
+            raw = (struct.pack('<IBi', fl.hash, 255, value) if fl.wide
+                   else struct.pack('<IB', fl.hash, value))
+        records.append(raw)
+    # Stable catalogue/hash order makes output independent of request ordering.
+    for h in sorted(effective):
+        if h not in present and effective[h] is not None:
+            records.append(struct.pack('<IB', h, effective[h]))
+    if len(records) > 65535:
+        raise BoonError('The shared flag map is full.')
+    body = bytes([f.payload[fm.start + 4]]) + struct.pack('<H', len(records)) + b''.join(records)
+    return core.replace_content(f, fm.start, body)
+
+
+def max_levels() -> dict[str, int]:
+    return {g['name']: len(g['tiers']) for g in catalog()}

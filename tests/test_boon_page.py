@@ -16,6 +16,9 @@ class BoonHarness(PageHarness):
         self.selected = (boons.matching_rows('経験値')[0][0],)
         self.boon_tree = SimpleNamespace(selection=lambda: self.selected)
         self.buttons = {}
+        self.actions = {}
+        for key in ('set', 'remove', 'max'):
+            setattr(self, 'boon_' + key, SimpleNamespace(configure=lambda key=key, **kw: self.actions.update({key: kw['state']})))
         self.detail = ''
         self.boon_on = SimpleNamespace(configure=lambda **kw: self.buttons.update(on=kw['state']))
         self.boon_off = SimpleNamespace(configure=lambda **kw: self.buttons.update(off=kw['state']))
@@ -24,7 +27,7 @@ class BoonHarness(PageHarness):
         self.refresh_boons()
 
     def refresh_boons(self):
-        self._boon_observed = boons.read_observation(self.core_of()) if self.sv else None
+        self._boon_state = boons.read_state(self.core_of()) if self.sv else None
         self._select_boon()
 
     def refresh_after_core(self):
@@ -61,7 +64,7 @@ class BoonPageTest(unittest.TestCase):
         self.assertEqual(app.messages[-1][1], 'warn')
         self.assertEqual(bytes(app.sv.payload), original)
         app.mirrored = False
-        for f in (weapon_save(owner=2), weapon_save(disabled=0)):
+        for f in (weapon_save(owner=99), weapon_save(disabled=0)):
             app.sv.payload = f.payload; app.refresh_boons()
             self.assertEqual(app.buttons, dict(on='disabled', off='disabled'))
             app.set_boon_active(False)
@@ -83,7 +86,7 @@ class BoonPageTest(unittest.TestCase):
         app.redo(); self.assertEqual(bytes(app.sv.payload), after)
         self.assertEqual(app.buttons, dict(on='normal', off='disabled'))
         # An out-of-band slot refresh must not use the earlier valid cached state.
-        app.sv.payload = test_boons.BoonEditingTest.save(owner=2).payload
+        app.sv.payload = test_boons.BoonEditingTest.save(owner=99).payload
         before = bytes(app.sv.payload); undo_count = len(app._undo_stack)
         app.set_boon_active(True)
         self.assertEqual(bytes(app.sv.payload), before)
