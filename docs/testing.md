@@ -109,10 +109,13 @@ single-slot edit/undo/redo/cache wiring through a display-free harness. They do
 not render Tk widgets or run the game. CI defines Python 3.10/3.12 runs on Linux
 and Windows; a defined workflow is not evidence those jobs have run.
 
-An optional private-save test runs with `FEFW_TEST_SAVE` set to a local slot
+Optional private-save tests run with `FEFW_TEST_SAVE` set to a local slot
 path. It reads that file, writes only into a temporary directory, checks
 compression/checksums after edits, and checks that all non-tutorial bytes are
-unchanged after pointer relocation is accounted for. Never commit the fixture.
+unchanged after pointer relocation is accounted for. The Blessings regression
+also edits all seven EXP fields, checks exact two-byte write boundaries and
+reloads each serialized result. Never commit the fixture. Blessings game tests
+have a [separate guide](testing-blessings.md).
 
 Before merging, review the diff, run the automated checks, render the GUI,
 execute TUT-01 through TUT-07 on the supported game build and record results.

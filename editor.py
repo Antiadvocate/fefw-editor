@@ -883,6 +883,7 @@ class App(AdvancedMixin, tk.Tk):
         self.mounts_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.world_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.tutorials_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
+        self.blessings_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.pages.add(self.units_page, text="Units")
         self.pages.add(self.convoy_page, text="Convoy")
         self.pages.add(self.gold_page, text="Gold")
@@ -893,6 +894,7 @@ class App(AdvancedMixin, tk.Tk):
         self.pages.add(self.mounts_page, text="Mounts")
         self.pages.add(self.world_page, text="World map")
         self.pages.add(self.tutorials_page, text="Tutorials")
+        self.pages.add(self.blessings_page, text="Blessings")
 
         self._build_units()
         self._build_convoy()
@@ -904,18 +906,20 @@ class App(AdvancedMixin, tk.Tk):
         self._build_mounts()
         self._build_world_map()
         self._build_tutorials()
+        self._build_blessings()
         self._style_trees()
         self._enable_multi_select_all()
         self._update_dirty()
 
     def _enable_multi_select_all(self):
-        """Ctrl+A / Shift+drag on every list except the two row-pickers.
+        """Ctrl+A / Shift+drag on every list except the three row-pickers.
 
-        The unit lists drive the edit form, so they stay single-choice; every
+        Unit and blessing lists drive edit forms, so stay single-choice; every
         other table (convoy, classes, masteries, flags, mounts) takes a range.
         """
         skip = {id(getattr(self, "unit_tree", None)),
-                id(getattr(self, "cls_unit_tree", None))}
+                id(getattr(self, "cls_unit_tree", None)),
+                id(getattr(self, "blessing_tree", None))}
 
         def walk(w):
             for child in w.winfo_children():

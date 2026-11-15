@@ -28,6 +28,7 @@ library, or a ready-made Windows `.exe`.
 | **World map** | | Which of the map's places, junctions and road points the save has **shown** or hides, and which places are marked **visited** (white versus dark icon). Show or hide a selection, a whole road, or every place / road at once. See *World map* below |
 | **Flags** | | Every named variable the save stores: support conversations, recruited / met, achievements, feature and class unlocks. Search, filter, set, add, remove |
 | **Tutorials** | | 115 identified help entries; make selected tutorials available or remove them from the selected save. English names, original Japanese keys, explicit raw states and undo/redo. See [tutorials.md](docs/tutorials.md) |
+| **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Data-derived level previews for six gods; Photon's EXP effect is unverified. Selection and Divine Sand are read-only. See [blessings.md](docs/blessings.md) |
 
 Units can also be **copied in** from another slot or **removed**. Every edit can
 be undone (Ctrl+Z / Ctrl+Y), and **Snapshot** / **Restore…** keep copies of the
@@ -84,7 +85,8 @@ If you know where any of these live, contributions are welcome.
 
 ### Contribution test candidate
 
-This branch adds a **Tutorials** page with 115 identified English names and
+This branch adds **Blessings EXP** editing for all seven gods and retains the
+tested **Tutorials** page with 115 identified English names and
 the original Japanese keys. Search, select, **Make available** or **Remove
 selected**, then Ctrl+S. Ctrl+Z/Ctrl+Y undo/redo. Turn off route mirroring for
 these edits; unknown records and unrelated progress are preserved.
@@ -93,6 +95,15 @@ The same labels appear in **Flags**, with the Japanese key in **Reads as**.
 Adding a tutorial does not unlock the feature it describes. This is a source
 test candidate; the upstream release link below does not contain this branch.
 
+In **Blessings**, select a god, enter **New EXP**, click **Apply EXP**, then
+Ctrl+S. Level buttons fill the input only. Turn off **Also edit this route's
+other saves**. Photon accepts raw EXP but has no established level thresholds;
+the other six previews come from game data and await this milestone's game
+tests. EXP alone does not grant a first audience or unlock a temple.
+
+* [Blessings feature, thresholds and binary-format documentation](docs/blessings.md)
+* [Milestone 2: all seven gods test guide](docs/testing-blessings.md)
+* [Milestone 2: automated and GUI test report](docs/test-results-blessings-2026-11-15.md)
 * [Tutorial feature and binary-format documentation](docs/tutorials.md)
 * [Repeatable game-testing guide and result template](docs/testing.md)
 * [Blessings, fast travel, deeds, Boons and story research/roadmap](docs/research-status.md)
@@ -291,6 +302,8 @@ map_page.py          the World map page
 tutorials.py         tutorial catalogue, list recognition and preserving edits
 tutorial_page.py     the single-slot Tutorials page
 tutorial_names.json  identified tutorial keys and official English names
+blessings.py         seven-god identity/layout checks and EXP-only writes
+blessing_page.py     the single-slot Blessings page
 tests/               synthetic tests and opt-in private-save regression check
 build_map_spots.py   rebuilds map_spots.json from a romfs dump
 build_skill_ids.py   rebuilds skill_ids.json from a romfs dump

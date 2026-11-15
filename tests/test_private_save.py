@@ -8,6 +8,7 @@ import unittest
 import fefw_core as core
 import fefw_save as container
 import tutorials
+import blessings
 from test_tutorials import FORESIGHT, RELIQUARY, THIRD_EYE, raw_map
 
 
@@ -25,6 +26,39 @@ def outside_tutorials(f):
 
 @unittest.skipUnless(os.environ.get('FEFW_TEST_SAVE'), 'No private fixture supplied')
 class PrivateSaveTest(unittest.TestCase):
+    def test_all_seven_blessing_exp_fields_roundtrip(self):
+        source = Path(os.environ['FEFW_TEST_SAVE'])
+        original = source.read_bytes()
+        save = container.SaveFile(str(source))
+        self.assertEqual(save.verify(), [])
+        initial = core.SaveFile(save.payload)
+        initial_table = blessings.read(initial)
+        initial_tutorials = tutorials.read(initial)
+        with tempfile.TemporaryDirectory() as tmp:
+            for god in blessings.GODS:
+                before = core.SaveFile(save.payload)
+                record = next(r for r in blessings.read(before).records if r.hash == god.hash)
+                value = god.thresholds[1] if god.thresholds else 1
+                expected = bytearray(before.payload)
+                struct.pack_into('<H', expected, record.exp_offset, value)
+                save.payload = blessings.edited(before, {god.hash: value})
+                self.assertEqual(save.payload, expected)
+                path = Path(tmp) / 'Auto'
+                path.write_bytes(save.to_bytes())
+                reread = container.SaveFile(str(path))
+                self.assertEqual(reread.verify(), [])
+                self.assertEqual(reread.payload, save.payload)
+                after = core.SaveFile(reread.payload)
+                actual = next(r for r in blessings.read(after).records if r.hash == god.hash)
+                self.assertEqual(actual.exp, value)
+                self.assertEqual(actual.selected, record.selected)
+                self.assertEqual(tutorials.read(after), initial_tutorials)
+                save = reread
+            restored = core.SaveFile(blessings.edited(core.SaveFile(save.payload),
+                                    {r.hash: r.exp for r in initial_table.records}))
+            self.assertEqual(blessings.read(restored), initial_table)
+        self.assertEqual(source.read_bytes(), original)
+
     def test_edits_roundtrip_and_preserve_other_content(self):
         source = Path(os.environ['FEFW_TEST_SAVE'])
         original = source.read_bytes()

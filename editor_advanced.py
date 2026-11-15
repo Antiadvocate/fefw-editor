@@ -21,6 +21,7 @@ import supports
 from fefw_save import item_ids, item_label, unit_ids
 from map_page import MapPageMixin
 from tutorial_page import TutorialPageMixin
+from blessing_page import BlessingPageMixin
 import tutorials
 from ui_util import enable_multi_select
 
@@ -129,7 +130,7 @@ def rank_of(exp: int) -> int:
     return r
 
 
-class AdvancedMixin(MapPageMixin, TutorialPageMixin):
+class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin):
     # ------------------------------------------------------------- helpers
     def core_of(self, sv=None):
         """fefw_core.SaveFile for a slot (cached on the payload object)."""
@@ -186,6 +187,7 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin):
         self.refresh_supports()
         self.refresh_world_map()
         self.refresh_tutorials()
+        self.refresh_blessings()
 
     def refresh_core_pages(self):
         self.refresh_player()
@@ -193,6 +195,7 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin):
         self.refresh_flags()
         self.refresh_world_map()
         self.refresh_tutorials()
+        self.refresh_blessings()
 
     # -------------------------------------------------------- pick a value
     def _picker(self, title: str, rows, current: int | None = None):

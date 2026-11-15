@@ -1,14 +1,18 @@
 # Source test candidate setup
 
-Use this guide for `FEFW-Tutorials-Test-1.zip` and the
-`feature/verified-tutorials` branch. Updating these instructions does not change
-the editor code or invalidate existing gameplay test results. There is no need
-to download the original source archive again to follow this guide.
+Use this guide for `FEFW-Tutorials-Test-1.zip` / `feature/verified-tutorials`
+and `FEFW-Blessings-Test-1.zip` / `feature/blessings-exp`.
+The Blessings candidate includes the tested Tutorials changes. If Tutorials
+already launches, reuse that Python environment: no new dependencies are
+needed. Extract the new archive into its own directory and launch its
+`editor.py`, rather than the old Tutorials copy. The window still shows the
+upstream version number; identify the candidate by its `BUILD.txt` or commit.
 
 ## Python version and the reported installation failure
 
-Python 3.12 is the recommended test interpreter. Automated tests have passed
-on Python 3.10 and 3.12 on Linux and Windows. Python 3.15 is not validated.
+Python 3.12 is the recommended test interpreter. Tutorials automated tests have
+passed on Python 3.10 and 3.12 on Linux and Windows. See each milestone's report
+for its own validation. Python 3.15 is not validated.
 
 The reported installation used CPython 3.15 and downloaded
 `zstandard-0.25.0.tar.gz`, then failed with `Python.h: No such file or directory`.
@@ -52,7 +56,7 @@ accessible. This is dependency isolation, not a sandbox for untrusted code.
    `editor.py` (replace the example path with yours), then start the editor.
 
    ```sh
-   cd "/path/to/FEFW-Tutorials-Test-1"
+   cd "/path/to/extracted-editor"
    /usr/bin/python3 -s editor.py
    ```
 
@@ -93,7 +97,8 @@ Record setup as **SETUP-01: PASS / FAIL / BLOCKED**, along with the interpreter
 and dependency versions printed above and any error output. The Distrobox
 instructions use officially supported components but have not yet been run on
 the tester's Bazzite machine. Once the GUI opens, continue with
-[TUT-01 through TUT-07](testing.md).
+[the Tutorials guide](testing.md) or, for the new candidate,
+[the Blessings guide](testing-blessings.md).
 
 References checked 2026-11-15:
 

@@ -1,9 +1,12 @@
 # Save-editing contribution roadmap and evidence
 
 This records a staged contribution based on a Leda Part I Chapter 9 restoration.
-Only **Tutorials and its English flag labels** are implemented by this branch.
-Other sections below are research notes and acceptance gates, not working UI
-features or instructions to apply unverified offsets.
+**Tutorials and its English flag labels** are implemented and player-tested.
+**Blessings EXP for all seven gods** is now implemented for game testing; see
+[the feature documentation](blessings.md), [test guide](testing-blessings.md)
+and [test report](test-results-blessings-2026-11-15.md). Other sections below
+are research notes and acceptance gates, not working UI features or
+instructions to apply unverified offsets.
 
 Evidence levels: **player-confirmed** means the observed restored save worked in
 game; **structural** means supported by parsed data or a save comparison;
@@ -18,7 +21,7 @@ The game data version was not separately reported.
 | Stage | Feature | Implementation boundary | Game acceptance test |
 |---|---|---|---|
 | 1 | Tutorials and known English names | Selected save only; preserve Japanese keys and unknown records | [TUT-01–07](testing.md) |
-| 2 | Blessings | EXP first; show derived level only for verified thresholds | Change one blessing, reload, inspect EXP/level and other blessings |
+| 2 | Blessings | All seven EXP fields; six data-derived level previews; Photon special | [BLESS-01–11](testing-blessings.md), each god separately |
 | 3 | Fast travel | Named destination flags, separate from map visibility | Add/remove one destination, travel, save/reload; check gates/map unchanged |
 | 4 | Notable deeds | Separate counter, completion and claim state | One incomplete, one complete-unclaimed and one claimed deed; verify rewards once |
 | 5 | Boons | Confirm ownership and activation storage before enabling writes | Controlled purchase/activation diff, effect check and persistence |
@@ -44,9 +47,11 @@ It was child 6 in the reference file; **child number is not a stable locator**.
 
 Observed order: Photon, Mars, Credna, Kalla, Jurah, Smyrnos, Aurora. Preserve
 selection and sand unless explicitly edited by a future separately validated
-control. Mars thresholds observed in data are 25/60/120; Kalla 20/50/100.
-The reference used Mars EXP 25 and Kalla EXP 100. Other gods' level thresholds
-need checking before a derived level is presented as authoritative.
+control. Mars, Jurah and Smyrnos thresholds in data are 25/60/120; Kalla and
+Aurora 20/50/100; Credna 15/40/80. Photon has zero-valued threshold fields and
+no established EXP progression. The reference used Mars EXP 25 and Kalla EXP
+100. All seven are editable in this candidate. The six level previews are
+explicitly data-derived; broader in-game confirmation remains pending.
 
 Audience/access flags, including `初めてマーズと話した` and
 `初めてカーラと話した`, are separate from blessing EXP. Increasing EXP alone is

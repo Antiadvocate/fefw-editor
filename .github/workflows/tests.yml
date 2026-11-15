@@ -6,7 +6,7 @@ permissions:
   contents: read
 
 jobs:
-  tutorials:
+  save-editor:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
