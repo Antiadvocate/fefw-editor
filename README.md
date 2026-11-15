@@ -38,8 +38,10 @@ library, or a ready-made Windows `.exe`.
 
 **Current build: Boons Test 4 · upstream v1.3.9.** Corrects the eight skill-EXP
 key mappings that made Test 3's Set all to max only partly work in game.
-Brawling and Black-Magic level/Off keys now match isolated game captures;
-the six other skill aliases follow that pattern and await in-game acceptance.
+Brawling and Black-Magic level/Off keys match isolated game captures. The player
+has confirmed **all Boons are On and maximum, and save/load retains them**.
+Test 4's bulk-max game test is accepted on the reported setup; individual
+gameplay effects and every intermediate tier are not all verified.
 No general hash truncation is applied. Earlier incorrect records are preserved
 but ignored when showing ownership. See [the findings](docs/boon-key-investigation.md)
 and [Test 4 validation](docs/test-results-boon-skill-keys-2026-11-15.md).

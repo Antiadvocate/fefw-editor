@@ -1,12 +1,18 @@
 # Boons Test 4: corrected skill keys
 
+**Completed — 2026-11-15:** the player confirms everything is On and maximum,
+then explicitly confirms save/load works. The procedure below is retained for
+reproduction; no repeat or additional save upload is required to close this
+test. See the [acceptance report](test-results-boon-skill-keys-2026-11-15.md).
+
 Extract FEFW-Boons-Test-4.zip into a fresh folder and launch its editor.py with
 the working Python environment. No new dependencies. The header says
 **v1.3.9 · Boons Test 4** and **Flags remains the far-right tab**.
 
 Test 3 partly failed because eight skill-EXP groups used full catalogue names.
-Brawling and Black-Magic keys now match independent captures of abbreviated
-names. The other six aliases follow that pattern and need this game check.
+Brawling and Black-Magic keys match independent captures of abbreviated names.
+The other six aliases follow that pattern; their maximum-tier On result and
+save/load persistence now have player acceptance.
 See [the evidence](boon-key-investigation.md).
 
 ## Focused game check
@@ -38,8 +44,9 @@ Weapons Discount price or earlier EXP battle tests is requested.
 
 **Game-tested** labels accepted EXP/Weapons effects. **Save-verified** labels
 Brawling/Black-Magic tier 1 purchase/toggle records captured from the game;
-it does not assert that this build has passed a game retest. **Inferred**
-labels other mappings/tiers. Game cost and Required clears are reference
+these labels describe the evidence available when the package shipped.
+**Inferred** labels other mappings/tiers. The later all-group maximum/On and
+save/load acceptance is recorded in the report; it does not measure every effect. Game cost and Required clears are reference
 purchase requirements, not a decoded save-side lock status.
 
 For a Test 3 edited save, incorrect full-name skill records are preserved but

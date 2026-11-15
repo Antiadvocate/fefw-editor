@@ -1,8 +1,27 @@
 # Boons Test 4: skill-key correction and capture evidence
 
-Date: 2026-11-15. **Capture comparison passed; in-game bulk retest pending.**
+Date: 2026-11-15. **Test 4 bulk-max game acceptance passed.**
 This supersedes Test 3's inferred full-name mappings for eight skill groups.
 The original failed bulk test remains a failure, not retrospective acceptance.
+
+## Player acceptance
+
+The player reports “Everything is on and max!” and then confirms “Save/load
+worked too”. This accepts the Test 4 bulk action on the tested setup: all
+31 catalogue Boons display their maximum owned tier and On, and those states
+persist through save/load, including the eight previously missing skill groups.
+
+| Check | Result | Evidence |
+|---|---|---|
+| All Boons at maximum and On in game | Pass | Player report after Test 4 bulk max |
+| States persist after save/load | Pass | Explicit player confirmation |
+
+No new screenshots or game-resaved slot accompanied these confirmations, so
+this is player-reported acceptance, not a new independent save comparison.
+The earlier Brawling/Black-Magic captures remain the byte-level evidence.
+This does not establish every gameplay effect, each intermediate tier, or
+independent Off-toggle behavior for every group. The accepted baseline remains
+Auto from B0-01-Unit-Selection-Test-1.zip; the all-max test is not promoted to it.
 
 ## Independent evidence
 
@@ -37,11 +56,13 @@ intended edits. No raw saves or game binaries are published.
 
 ## Implementation and limits
 
-Test 4 uses eight explicit skill aliases. Brawling/Black-Magic tier 1 are
-Save-verified; six other aliases and higher tiers are inferred. Other group
-names and the general identifier hash remain unchanged. These captures do not
-establish a universal length cutoff or verify blessing-cost names. The next
-game check must inspect the remaining menu entries as well.
+Test 4 uses eight explicit skill aliases. Its shipped labels mark
+Brawling/Black-Magic tier 1 Save-verified and other aliases/higher tiers Inferred.
+The later player acceptance confirms the maximum-tier On result for all groups;
+it does not add independent key captures for each group or validate every effect.
+Other group names and the general identifier hash remain unchanged. The two
+purchase captures do not establish a universal length cutoff. The all-group
+menu/persistence report also covers groups outside the original failure images.
 
 Incorrect Test 3 full-name records are ignored for ownership and preserved
 byte-for-byte. They are not silently migrated, and removing a corrected record
@@ -72,5 +93,6 @@ named captures, along with existing private-fixture environment variables
 listed in the [Test 3 report](test-results-boon-levels-2026-11-15.md), and run
 python -m unittest discover -s tests -v. Private tests skip without their inputs.
 
-The [focused Test 4 game check](testing-boon-levels.md) is the remaining
-acceptance step. Automated round trips are not a substitute for that check.
+The [focused Test 4 game check](testing-boon-levels.md) is now complete on
+the reported setup. Automated checks and player acceptance remain distinct
+evidence; neither establishes every unmeasured gameplay effect.

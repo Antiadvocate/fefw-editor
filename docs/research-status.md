@@ -25,11 +25,13 @@ The Notable Deeds milestone is accepted on the reported setup. Accepted audience
 controls lose Experimental labels; the three hidden destinations say Effect unknown.
 **Boons Test 4** corrects eight skill-EXP save-key aliases after Test 3's
 bulk unlock partly failed in game. Brawling and Black-Magic purchase/Off keys
-are independently captured; six other aliases remain inferred. See the
+are independently captured. The player now confirms all Boons are maximum
+and On, with save/load persistence. See the
 [investigation](boon-key-investigation.md) and [Test 4 report](test-results-boon-skill-keys-2026-11-15.md).
 All 31 Boons / 81 tiers remain editable; EXP tier 1 and Weapons Discount tiers
-1/2 have accepted game-effect evidence. Bulk acceptance still needs a game
-retest. Flags remains the rightmost tab.
+1/2 have accepted game-effect evidence. **Bulk-max menu state and save/load
+acceptance passed**; other gameplay effects and intermediate tiers remain
+unmeasured. The B0-01 baseline is unchanged. Flags remains the rightmost tab.
 Other sections below
 are research notes and acceptance gates, not working UI features or
 instructions to apply unverified offsets.

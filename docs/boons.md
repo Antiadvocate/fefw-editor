@@ -2,8 +2,9 @@
 
 **Boons Test 4** corrects the eight skill-EXP aliases implicated in Test 3's
 partial bulk-unlock failure. Brawling and Black-Magic tier 1 level/Off keys
-match isolated game captures; six other aliases are inferred and await a game
-retest. The [investigation](boon-key-investigation.md) records the evidence and
+match isolated game captures. The player now confirms **all Boons are maximum
+and On, with save/load persistence**. Bulk-max game acceptance has passed on
+the reported setup; this does not verify every intermediate tier or effect. The [investigation](boon-key-investigation.md) records the evidence and
 why no general string-length limit is applied.
 
 All **31 Boons / 81 listed tiers** remain editable in the
@@ -46,7 +47,8 @@ save offset is used. Groups are allowlisted from the catalogue.
 
 Eight skill groups use explicit save-key aliases: 格闘→格, 黒魔法→黒,
 白魔法→白, 歩兵→歩, 騎兵→騎, 重装→重, 飛行→飛 and 指揮→指,
-after 技能経験. The first two are capture-verified; the other six are inferred.
+after 技能経験. The first two are capture-verified; the other six were inferred
+and now have player acceptance for maximum-tier On state and persistence.
 Other groups retain their full catalogue names. A general truncation rule has
 not been established, including for blessing-cost Boons.
 
