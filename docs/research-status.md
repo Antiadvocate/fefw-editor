@@ -43,7 +43,7 @@ The game data version was not separately reported.
 | 2 | Blessings | All seven EXP fields; six data-derived level previews; Fortuna special | [BLESS-01–11](testing-blessings.md) passed; see coverage limits in the report |
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
-| 5 | Boons | EXP +10% on/off trial implemented; other Boons/tiers read-only; no purchase writes | [BOON-01–04 evidence](test-results-boons-2026-11-15.md#player-results-and-controlled-save-comparisons) returned as six individual containers; [BEDIT-01–07](testing-boon-editing.md) tests edited-state persistence and actual effects |
+| 5 | Boons | Existing EXP +10% toggle accepted; other Boons/tiers read-only; no purchase writes | [BEDIT results](test-results-boon-editing-2026-11-15.md): editor/game persistence and +16 Off / +17 On; Weapons Discount mapping captured, price effect blocked |
 | 6 | Story | Read-only summary first; narrowly validated Leda transitions only | Load scene, advance to battle, finish/save/reload with no missing facilities |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
@@ -164,7 +164,7 @@ player's working save gained `3b6429de = 1` in the shared flag map (then map 6).
 That is a **candidate**, since several actions occurred between the two saves.
 Its symbolic name and ownership-versus-activation semantics remain unknown.
 
-Data lists the EXP +10% reward at a cost of 500. Before implementing writes,
+Data lists the EXP +10% reward at a cost of 500. Before implementing purchase writes,
 obtain a disposable save immediately before purchase, one immediately after
 purchase, and one after any separate activation action, with no other claims
 or changes between them. Confirm the effect in a repeatable EXP comparison and
@@ -181,20 +181,29 @@ supersedes the earlier uncertainty about the EXP toggle:
   the older candidate alone; EXP purchase/higher-tier semantics remain untested.
 * Purchasing **Weapons Discount 10%** adds `5bfcaa34 = 1`, spends exactly 300
   Karma (710 → 410) and activates immediately. The record and balance persist
-  on reload. Its independent disable state has not been captured.
+  on reload. BEDIT-06 subsequently isolated a separate disable candidate,
+  `ddb8d06b = 1` Off / absent On, with the purchase record and Karma unchanged.
 * All six containers pass checksum checks. Known tutorials, travel, audiences,
   blessing values and Deeds records match the baseline. Reload also adds an
   unidentified `75060745 = 1` in another map; no dependency is inferred.
 
 Only individual containers were supplied, so full-folder synchronization is
-unverified. Actual EXP and shop-price effects also remain untested. **Boons Test 1** now edits the identified disable marker for an already-owned
-EXP +10% Boon, with selected-slot guard and undo/redo. The
-[BEDIT-01–07 guide](testing-boon-editing.md) covers in-game persistence and
-actual effects; this milestone remains in progress pending those results.
+unverified. **Boons Test 1's existing EXP +10% toggle is now accepted** on the
+reported setup. BEDIT-01–04/07 have reported passes and the returned saves
+verify persistence. BEDIT-05 has matched starting states and Leda gains 16 EXP
+Off versus 17 On after one reported kill and retreat; this does not establish
+a general rounding formula. BEDIT-06's before file is unpurchased, followed by
+purchased On/Off captures. The price effect is blocked by the baseline Armorer.
+See the [acceptance report](test-results-boon-editing-2026-11-15.md).
+
+The acceptance report records incidental baseline progression observations
+that constrain the B05/B06 tests. The known feast unlock flag was already 1
+in B0 and all four B05 captures. Personal save-restoration repair work is
+tracked separately; these observations are not registered as editor defects.
 
 ## Deeds: second pass requested
 
-Return after the Boons milestone to test the **15 read-only counters**, starting
+The queued editor follow-up covers the **15 read-only counters**, starting
 with livestock, golden/silver mummies and the provisional giant-enemy category.
 The [DEED-R01–15 register](deeds-follow-up.md) specifies counter-specific questions
 and the evidence gate for enabling each field. The accepted Deeds behavior

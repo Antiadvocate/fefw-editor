@@ -1,5 +1,12 @@
 # Boons Test 1: existing EXP +10% on/off
 
+**Results received 2026-11-15:** the existing EXP toggle is accepted on the
+reported setup. BEDIT-05 supplied +16 EXP Off / +17 On. BEDIT-06 supplied an
+unpurchased-before and purchased-On/Off triplet; actual shop-price testing is
+blocked by baseline Armorer access. See the [acceptance report](test-results-boon-editing-2026-11-15.md).
+The procedure below is retained for reproducibility, not a request to repeat
+the completed round.
+
 This is the first **editable** Boons build. It switches the already-owned
 **Increased Exp 10%** Boon on/off. It does not purchase Boons, change tiers,
 refund/spend Karma, or edit other Boons. Research 1's BOON-01–04 results remain

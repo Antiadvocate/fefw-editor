@@ -1,6 +1,7 @@
 # Follow-up: test the 15 read-only Notable Deeds counters
 
-**Queued at the player's request, after the Boons milestone.** This is a
+**Queued at the player's request, after the Boons milestone.** The existing
+EXP Boon toggle is now accepted. This is a
 separate second Deeds pass; the accepted 32-counter workflow stays accepted.
 No controls are enabled by this plan. Do not run these cases yet: each needs
 a specific disposable baseline and an individually reviewed test build.

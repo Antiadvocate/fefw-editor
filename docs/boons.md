@@ -35,10 +35,12 @@ encodings are preserved. The UI refuses actions with route mirroring enabled,
 validates the current payload before adding undo history, and refreshes status
 and buttons after edits, Undo/Redo and reload.
 
-This implementation is a **gameplay test candidate**. Automated byte and
-round-trip checks passed; edited in-game persistence and actual EXP effects
-await [BEDIT-01–07](testing-boon-editing.md). See the
-[implementation report](test-results-boon-editing-2026-11-15.md).
+The existing EXP +10% toggle is **accepted on the reported Leda Chapter 9
+setup**. Editor-generated Off/On states persist in game, and a one-kill/retreat
+comparison gives Leda +16 EXP Off versus +17 On. The sample supports an effect
+but does not establish a universal rounding rule. See the
+[acceptance report](test-results-boon-editing-2026-11-15.md) for controlled
+starting states, incidental gameplay changes and coverage limits.
 
 ## What was known when Research 1 shipped
 
@@ -76,7 +78,8 @@ The six supplied individual save containers establish:
 Thus EXP has a separate disable marker; its older candidate record is not
 sufficient to indicate whether the effect is active. Exact symbolic keys,
 higher-tier encodings, weapon-discount disable state, cross-file propagation
-and measured gameplay effects remain unknown. These results do not establish
+and measured gameplay effects were still unknown at this Research 1 stage.
+BEDIT results below supersede the EXP-effect and discount-disable gaps. These results do not establish
 EXP purchase semantics. The Weapons Discount capture combines purchase and
 automatic activation, so its added record is described as purchase-associated.
 
@@ -120,10 +123,13 @@ unverified interpretation is not turned into an effective current bonus.
 
 The EXP disable marker has an isolated off/on comparison, but EXP purchase
 semantics, higher tiers, stacking and cross-file synchronization remain unknown.
-The first Weapons Discount purchase has an isolated candidate record, cost and
-persistence result. Its independent off/on key and actual shop-price effect
-still need the separate capture in BEDIT-06. Do not generalise a successful
-EXP toggle to other Boons, or infer eligibility from the listed clear count.
+BEDIT-06 now supplies an independent Weapons Discount disable candidate:
+`ddb8d06b = 1` in Off, absent in On, while `5bfcaa34 = 1` and Karma 410 remain
+unchanged. Its W06-before file is unpurchased (Karma 710), so the 300-Karma
+decrease is the purchase. No shop-price comparison was possible because the
+baseline Armorer is unavailable. Keep Weapons Discount read-only pending its
+own implementation and effect validation; its exact symbolic key and later
+tiers remain unknown. Do not generalise the EXP toggle to other Boons.
 
 The requested return to the 15 read-only Deeds counters is tracked in
 [deeds-follow-up.md](deeds-follow-up.md), starting with the three enemy counters.

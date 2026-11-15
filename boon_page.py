@@ -1,4 +1,4 @@
-"""Single-save EXP activation trial and the wider read-only Boon catalogue."""
+"""Single-save EXP activation control and the wider read-only Boon catalogue."""
 from tkinter import ttk
 
 import boons
@@ -20,7 +20,7 @@ class BoonPageMixin:
         self.boon_search.bind("<KeyRelease>", lambda e: self.refresh_boons())
 
         ttk.Label(page, style="CardFaint.TLabel", justify="left", wraplength=900, text=(
-            "Test build: only the already-owned EXP +10% Boon can be switched on/off. "
+            "The already-owned EXP +10% Boon can be switched on/off. "
             "Purchases, tiers and other Boons remain read-only.\n"
             "Turn off ‘Also edit this route’s other saves’. Ctrl+S saves, Ctrl+Z undoes, Ctrl+Y redoes."
         )).pack(side="bottom", anchor="w", pady=(8, 0))
@@ -89,7 +89,7 @@ class BoonPageMixin:
                 reason = boons.exp_edit_reason(observation)
                 self.boon_observation.configure(text=(
                     "Increased Exp 10%: " + boons.exp_state_label(observation)
-                    + (f" · {reason}" if reason else " · Gameplay verification pending")))
+                    + (f" · {reason}" if reason else "")))
         except core.SaveError as exc:
             self._boon_error = str(exc)
             self.boon_observation.configure(text=str(exc))
@@ -128,7 +128,7 @@ class BoonPageMixin:
                 self.boon_on.configure(state="normal" if state == "Off" else "disabled")
                 self.boon_off.configure(state="normal" if state == "On" else "disabled")
         elif group['name'] == '武器割引' and tier['tier'] == 1:
-            note = "Read-only: first purchase record identified; independent off/on and actual shop-price effect need testing."
+            note = "Read-only: purchase and off/on captures recorded; shop-price effect unverified and editor control unavailable."
         self.boon_detail.configure(text=(
             f"{boons.display_name(group)} · tier {tier['tier']} · {group['name']}\n"
             f"Reference value: {tier['value']}; listed cost: {tier['cost']} Karma Shards; "
