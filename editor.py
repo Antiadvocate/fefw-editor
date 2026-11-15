@@ -882,6 +882,7 @@ class App(AdvancedMixin, tk.Tk):
         self.flags_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.mounts_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.world_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
+        self.tutorials_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.pages.add(self.units_page, text="Units")
         self.pages.add(self.convoy_page, text="Convoy")
         self.pages.add(self.gold_page, text="Gold")
@@ -891,6 +892,7 @@ class App(AdvancedMixin, tk.Tk):
         self.pages.add(self.flags_page, text="Flags")
         self.pages.add(self.mounts_page, text="Mounts")
         self.pages.add(self.world_page, text="World map")
+        self.pages.add(self.tutorials_page, text="Tutorials")
 
         self._build_units()
         self._build_convoy()
@@ -901,6 +903,7 @@ class App(AdvancedMixin, tk.Tk):
         self._build_flags()
         self._build_mounts()
         self._build_world_map()
+        self._build_tutorials()
         self._style_trees()
         self._enable_multi_select_all()
         self._update_dirty()
@@ -1592,6 +1595,8 @@ class App(AdvancedMixin, tk.Tk):
             target = None
         elif sel == str(self.world_page):
             target = self.map_search
+        elif sel == str(self.tutorials_page):
+            target = self.tutorial_search
         if target is None:
             return
         target.focus_set()

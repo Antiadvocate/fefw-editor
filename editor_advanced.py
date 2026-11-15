@@ -20,6 +20,8 @@ import fefw_core as core
 import supports
 from fefw_save import item_ids, item_label, unit_ids
 from map_page import MapPageMixin
+from tutorial_page import TutorialPageMixin
+import tutorials
 from ui_util import enable_multi_select
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -97,6 +99,10 @@ def flag_names() -> dict:
             _FLAG_NAMES = {int(k, 16): v for k, v in raw.items()}
         except Exception:                     # noqa: BLE001 — the page still works
             _FLAG_NAMES = {}
+        try:
+            tutorials.apply_labels(_FLAG_NAMES)
+        except tutorials.TutorialError:
+            pass  # Tutorial page reports catalogue errors; raw flags still work.
     return _FLAG_NAMES
 
 
@@ -123,7 +129,7 @@ def rank_of(exp: int) -> int:
     return r
 
 
-class AdvancedMixin(MapPageMixin):
+class AdvancedMixin(MapPageMixin, TutorialPageMixin):
     # ------------------------------------------------------------- helpers
     def core_of(self, sv=None):
         """fefw_core.SaveFile for a slot (cached on the payload object)."""
@@ -179,12 +185,14 @@ class AdvancedMixin(MapPageMixin):
         self.refresh_flags()
         self.refresh_supports()
         self.refresh_world_map()
+        self.refresh_tutorials()
 
     def refresh_core_pages(self):
         self.refresh_player()
         self.refresh_classes_page()
         self.refresh_flags()
         self.refresh_world_map()
+        self.refresh_tutorials()
 
     # -------------------------------------------------------- pick a value
     def _picker(self, title: str, rows, current: int | None = None):
@@ -890,6 +898,7 @@ class AdvancedMixin(MapPageMixin):
         quick.pack(fill="x")
         for text, prefix in (("All", ""), ("Supports", "支援会話_"), ("Recruited", "加入_"),
                              ("Met", "面識_"), ("Achievements", "実績_"),
+                             ("Tutorials", "TUTO_"),
                              ("Expansion classes", "兵種解放_")):
             ttk.Button(quick, text=text, style="Small.TButton",
                        command=lambda p=prefix: self.set_flag_filter(p)).pack(side="left",

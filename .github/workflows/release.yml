@@ -52,6 +52,7 @@ jobs:
           --add-data "unit_ids.json;." --add-data "item_ids.json;." --add-data "job_ids.json;."
           --add-data "supports.json;." --add-data "support_points.json;."
           --add-data "flag_names.json;." --add-data "skill_ids.json;." --add-data "map_spots.json;."
+          --add-data "tutorial_names.json;."
           editor.py
 
       - name: Check the data files load
@@ -60,7 +61,8 @@ jobs:
           assert lay.item_ids() and lay.unit_ids() and lay.job_ids() and supports.pairs()
           and a.flag_names() and c.id_hash('支援会話_アレキサンドラ_カイ_C')
           and len(supports.point_pairs()) == 2628 and supports.max_points() == 3200
-          and len(__import__('worldmap').catalog().spots) == 864"
+          and len(__import__('worldmap').catalog().spots) == 864
+          and len(__import__('tutorials').catalog()) == 115"
 
       - name: Package
         shell: pwsh
@@ -69,6 +71,7 @@ jobs:
           $stage = "stage/$name"
           New-Item -ItemType Directory -Force "$stage/icons/items", "$stage/icons/units" | Out-Null
           Copy-Item "dist/FEFW Save Editor.exe", README.md -Destination $stage
+          Copy-Item docs -Destination $stage -Recurse
           Copy-Item icons/README.md -Destination "$stage/icons"
           Copy-Item icons/items/.gitkeep -Destination "$stage/icons/items"
           Copy-Item icons/units/.gitkeep -Destination "$stage/icons/units"
@@ -106,6 +109,7 @@ jobs:
           --add-data "unit_ids.json:." --add-data "item_ids.json:." --add-data "job_ids.json:."
           --add-data "supports.json:." --add-data "support_points.json:."
           --add-data "flag_names.json:." --add-data "skill_ids.json:." --add-data "map_spots.json:."
+          --add-data "tutorial_names.json:."
           editor.py
 
       - name: Check the binary starts
@@ -124,6 +128,7 @@ jobs:
           stage="stage/$name"
           mkdir -p "$stage/icons/items" "$stage/icons/units" out
           cp dist/fefw-save-editor README.md "$stage/"
+          cp -R docs "$stage/"
           cp icons/README.md "$stage/icons/"
           cp icons/items/.gitkeep "$stage/icons/items/"
           cp icons/units/.gitkeep "$stage/icons/units/"

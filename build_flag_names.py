@@ -21,6 +21,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import fefw_core as core                      # noqa: E402
+from tutorials import apply_labels           # noqa: E402
 
 
 IDENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]{2,63}$")
@@ -87,6 +88,7 @@ def main() -> int:
         add("加入_" + key, "Recruited: %s" % label)
         add("面識_" + key, "Met: %s" % label)
 
+    apply_labels(names)
     path = os.path.join(HERE, "flag_names.json")
     out = {"%08x" % h: v for h, v in names.items()}
     with open(path, "w", encoding="utf8") as fh:
