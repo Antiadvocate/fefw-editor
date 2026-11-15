@@ -126,10 +126,15 @@ semantics, higher tiers, stacking and cross-file synchronization remain unknown.
 BEDIT-06 now supplies an independent Weapons Discount disable candidate:
 `ddb8d06b = 1` in Off, absent in On, while `5bfcaa34 = 1` and Karma 410 remain
 unchanged. Its W06-before file is unpurchased (Karma 710), so the 300-Karma
-decrease is the purchase. No shop-price comparison was possible because the
-baseline Armorer is unavailable. Keep Weapons Discount read-only pending its
-own implementation and effect validation; its exact symbolic key and later
-tiers remain unknown. Do not generalise the EXP toggle to other Boons.
+decrease is the purchase. The original shop-price test was blocked by Armorer
+access. A later On/Off/On comparison at the accessible shop shows 10% lower
+listed prices in both On states: 300 → 270, 500 → 450, 1,500 → 1,350 and
+2,000 → 1,800. One final On save preserves the purchase marker and Karma 410
+with no disable marker; the two intermediate states have screenshots only.
+See the [price follow-up](test-results-boon-editing-2026-11-15.md#shop-price-follow-up).
+Keep Weapons Discount read-only pending its own implementation and editor
+acceptance. Its exact symbolic key, later tiers and fractional-price rounding
+remain unknown. Do not generalise the EXP toggle to other Boons.
 
 The requested return to the 15 read-only Deeds counters is tracked in
 [deeds-follow-up.md](deeds-follow-up.md), starting with the three enemy counters.

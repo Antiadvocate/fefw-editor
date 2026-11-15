@@ -6,8 +6,9 @@ reported Leda Part I Chapter 9 / fefw-recomp-0.1.5 setup**. BEDIT-01–04 and
 and BEDIT-05 records Leda gaining 16 EXP Off versus 17 On. This is one tested
 action, not a general proof of the rounding formula or other tiers.
 
-**BEDIT-06 is research captured / shop-price effect blocked** by the baseline
-Armorer access issue. Weapons Discount remains read-only. The player also
+**BEDIT-06 has captured toggle mapping and a confirmed 10% listed-price
+reduction in the follow-up On/Off/On shop comparison.** Weapons Discount
+remains read-only; no discount editor control was tested. The player also
 reported problems with the separately reconstructed B0 save.
 Those restoration problems are not established editor defects, and their repair
 notes are kept outside this repository. Relevant test conditions are recorded below.
@@ -190,10 +191,46 @@ Weapons Discount disable candidate; exact symbolic identity and higher tiers
 remain unknown. Dedicated W06 On/Off screenshots were not included in this return;
 state association comes from the player's named captures and report.
 
-The Armorer was inaccessible in the baseline, so no actual weapon-price effect
-was measured. Record that as **BLOCKED**, not a failure or a full effect pass.
-Weapons Discount editing remains unavailable. A later same-weapon comparison
-at an accessible Armorer is still needed to establish the price effect.
+The Armorer was inaccessible in the original baseline, so the original
+weapon-price comparison was blocked. The following return resolves that
+specific evidence gap. Weapons Discount editing remains unavailable.
+
+### Shop-price follow-up
+
+Later on 2026-11-15, after separate personal-save restoration made the Armorer
+accessible, the player completed the three On/Off/On price checks. Screenshots
+`B0-02-on1.png`, `B0-02-off.png` and `B0-02-on2.png` show:
+
+| Weapon | On 1 | Off | On 2 |
+|---|---:|---:|---:|
+| Wooden Sword | 270 | 300 | 270 |
+| Bronze Sword | 450 | 500 | 450 |
+| Iron Sword | 1,350 | 1,500 | 1,350 |
+| Iron Sword+1 | 1,800 | 2,000 | 1,800 |
+| Wooden Spear | 270 | 300 | 270 |
+| Bronze Spear | 450 | 500 | 450 |
+| Iron Spear | 1,350 | 1,500 | 1,350 |
+| Iron Spear+1 | 1,800 | 2,000 | 1,800 |
+| Javelin | 1,350 | 1,500 | 1,350 |
+| Javelin+1 | 1,800 | 2,000 | 1,800 |
+| Wooden Axe | 270 | 300 | 270 |
+
+Every displayed On price is exactly 90% of the matching Off price, and both
+On captures agree. This verifies the listed-price effect of the purchased
+10% Boon on this setup. These prices do not exercise fractional rounding;
+no completed purchase or transaction deduction was tested.
+
+The player returned **one save after all three tests**, `After-02-tests`.
+Its container checksums are valid, `5bfcaa34 = 1`, `ddb8d06b` is absent, and
+Karma remains 410. This is the expected final On shape. There are no separate
+intermediate saves from this round, so intermediate save/reload persistence
+is not independently established by it. The earlier W06 triplet remains the
+evidence for the stored Off/On marker association.
+
+The accepted private baseline and remaining restoration work are tracked
+outside this repository. Neither this price evidence nor that baseline
+acceptance establishes a defect in the editor or validates an unimplemented
+Weapons Discount editing control.
 
 ## Acceptance cleanup validation
 
@@ -235,3 +272,4 @@ SHA-256 identifies the exact returned containers without publishing their bytes.
 | W06-before | 41052 | `1f2823df224b4f27d416951ff3b386c8760649243e99d306276f46cc9c009d7c` |
 | W06-off | 45532 | `c11ea633c23f5d089dc15f308ef54c5a102d3f5a45994c9cdffe958852b415aa` |
 | W06-on | 45626 | `6a24805d24373b550162d133675bcda445287ea9b26fdc9374eb0627450c708d` |
+| After-02-tests | 47342 | `fdfee0c4ef5a30fbb3f9370d3d89805d38152a1ee4e3a7db5bd293bed9f2681f` |

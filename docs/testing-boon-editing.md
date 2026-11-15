@@ -2,8 +2,9 @@
 
 **Results received 2026-11-15:** the existing EXP toggle is accepted on the
 reported setup. BEDIT-05 supplied +16 EXP Off / +17 On. BEDIT-06 supplied an
-unpurchased-before and purchased-On/Off triplet; actual shop-price testing is
-blocked by baseline Armorer access. See the [acceptance report](test-results-boon-editing-2026-11-15.md).
+unpurchased-before and purchased-On/Off triplet. A later On/Off/On shop comparison
+confirms 10% lower listed weapon prices; Weapons Discount editing remains
+unavailable. See the [acceptance report](test-results-boon-editing-2026-11-15.md).
 The procedure below is retained for reproducibility, not a request to repeat
 the completed round.
 

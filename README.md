@@ -38,8 +38,9 @@ EXP +10% Boon, using the disable marker isolated in the player's captures.
 The existing EXP toggle is accepted on the reported Leda Chapter 9 setup:
 edited states persist in game and Leda gained 16 EXP Off / 17 On in the supplied
 comparison. Purchases, tier changes and other Boons stay read-only. Weapons
-Discount On/Off captures are documented; its price effect remains blocked by
-baseline Armorer access. See the [acceptance report](docs/test-results-boon-editing-2026-11-15.md)
+Discount On/Off captures are documented, and a follow-up On/Off/On comparison
+confirms 10% lower listed weapon prices on this setup. Discount editing remains
+unavailable. See the [acceptance report](docs/test-results-boon-editing-2026-11-15.md)
 and [Boons format](docs/boons.md).
 
 **Accepted milestone: Notable Deeds Test 2.** Adds 350 mapped milestones with

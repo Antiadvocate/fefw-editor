@@ -128,7 +128,7 @@ class BoonPageMixin:
                 self.boon_on.configure(state="normal" if state == "Off" else "disabled")
                 self.boon_off.configure(state="normal" if state == "On" else "disabled")
         elif group['name'] == '武器割引' and tier['tier'] == 1:
-            note = "Read-only: purchase and off/on captures recorded; shop-price effect unverified and editor control unavailable."
+            note = "Read-only: purchase and off/on captures recorded; 10% lower listed weapon prices confirmed in game. Editor control unavailable."
         self.boon_detail.configure(text=(
             f"{boons.display_name(group)} · tier {tier['tier']} · {group['name']}\n"
             f"Reference value: {tier['value']}; listed cost: {tier['cost']} Karma Shards; "
