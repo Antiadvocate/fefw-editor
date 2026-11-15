@@ -10,6 +10,8 @@ import fefw_save as container
 import tutorials
 import blessings
 import fast_travel
+import audiences
+from test_audiences import outside_map as outside_audience_map
 from test_fast_travel import outside_list
 from test_tutorials import FORESIGHT, RELIQUARY, THIRD_EYE, raw_map
 
@@ -38,9 +40,9 @@ class PrivateSaveTest(unittest.TestCase):
         all_records = raw_map(initial, fast_travel.locate(initial))
         with tempfile.TemporaryDirectory() as tmp:
             for h in fast_travel.catalog():
-                self.assertEqual(values.get(h), 1, 'This test uses the known full-list B0 fixture')
+                self.assertIn(values.get(h), (None, 1), 'Fixture must use known availability states')
                 box = container.SaveFile(str(source))
-                for edit in (None, 1):
+                for edit in ((None, 1) if h in values else (1, None)):
                     outside = outside_list(core.SaveFile(box.payload))
                     box.payload = fast_travel.edited(core.SaveFile(box.payload), {h: edit})
                     self.assertEqual(outside_list(core.SaveFile(box.payload)), outside)
@@ -56,6 +58,38 @@ class PrivateSaveTest(unittest.TestCase):
                     for other in all_records.keys() - {h}:
                         self.assertEqual(records[other], all_records[other])
                 self.assertEqual(fast_travel.read(core.SaveFile(box.payload)), values)
+        self.assertEqual(source.read_bytes(), original)
+
+    def test_all_six_audiences_preserve_every_other_record_and_game_system(self):
+        source = Path(os.environ['FEFW_TEST_SAVE']); original = source.read_bytes()
+        initial_box = container.SaveFile(str(source))
+        self.assertEqual(initial_box.verify(), [])
+        initial = core.SaveFile(initial_box.payload)
+        initial_values = audiences.read(initial)
+        initial_records = raw_map(initial, audiences.locate(initial))
+        initial_blessings = blessings.read(initial)
+        with tempfile.TemporaryDirectory() as tmp:
+            for god, h in audiences.HASHES.items():
+                box = container.SaveFile(str(source))
+                for value in ((None, 1) if h in initial_values else (1, None)):
+                    before = core.SaveFile(box.payload)
+                    box.payload = audiences.edited(before, {god: value})
+                    self.assertEqual(outside_audience_map(core.SaveFile(box.payload)),
+                                     outside_audience_map(before))
+                    path = Path(tmp) / 'Auto'; path.write_bytes(box.to_bytes())
+                    box = container.SaveFile(str(path)); self.assertEqual(box.verify(), [])
+                    after = core.SaveFile(box.payload)
+                    self.assertEqual(audiences.read(after).get(h), value)
+                    records = raw_map(after, audiences.locate(after))
+                    for other in initial_records.keys() - {h}:
+                        self.assertEqual(records[other], initial_records[other])
+                    self.assertEqual(fast_travel.read(after), fast_travel.read(initial))
+                    self.assertEqual(tutorials.read(after), tutorials.read(initial))
+                    old, new = initial_blessings, blessings.read(after)
+                    self.assertEqual(old.divine_sand, new.divine_sand)
+                    self.assertEqual([(r.hash, r.exp, r.selected) for r in old.records],
+                                     [(r.hash, r.exp, r.selected) for r in new.records])
+                self.assertEqual(audiences.read(core.SaveFile(box.payload)), initial_values)
         self.assertEqual(source.read_bytes(), original)
 
     def test_all_seven_blessing_exp_fields_roundtrip(self):

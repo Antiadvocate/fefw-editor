@@ -25,18 +25,20 @@ class FastTravelPageMixin:
         self.fast_travel_search.pack(fill="x", pady=(8, 0))
         self.fast_travel_search.bind("<KeyRelease>", lambda e: self.refresh_fast_travel())
         ttk.Label(page, style="CardFaint.TLabel", wraplength=980, justify="left", text=(
-            "Search by English name, Japanese key or hash. "
+            "Experimental destinations may be blocked by the current chapter; their English names are provisional. "
+            "Search by name, Japanese key or hash. "
             "Edits affect the selected save's destination list. Travel still depends on game conditions; "
-            "the Stables destination does not unlock the stable facility. Keep at least three known destinations.\n"
+            "the Stables destination does not unlock the stable facility. Keep at least three original destinations.\n"
             "Turn off ‘Also edit this route’s other saves’. Ctrl+Z undoes; Ctrl+S saves."
         )).pack(side="bottom", anchor="w", pady=(8, 0))
         frame = ttk.Frame(page, style="Card.TFrame")
         frame.pack(fill="both", expand=True, pady=(8, 0))
         frame.rowconfigure(0, weight=1)
         frame.columnconfigure(0, weight=1)
-        tree = self.fast_travel_tree = ttk.Treeview(frame, columns=("state", "jp", "hash"),
+        tree = self.fast_travel_tree = ttk.Treeview(frame, columns=("state", "evidence", "jp", "hash"),
                                                    show="tree headings", selectmode="extended")
         for col, label, width in (("#0", "Destination", 220), ("state", "State", 175),
+                                  ("evidence", "Coverage", 150),
                                   ("jp", "Reads as", 570), ("hash", "Hash", 95)):
             tree.heading(col, text=label, anchor="w")
             tree.column(col, width=width, minwidth=width, stretch=col == "jp")
@@ -70,12 +72,15 @@ class FastTravelPageMixin:
             if q and q not in f"{row['label']} {row['name']} {h:08x}".casefold():
                 continue
             tree.insert("", "end", iid=f"{h:08x}", text=row["label"], values=(
-                fast_travel.state_label(values.get(h)), row["name"], f"{h:08x}"))
+                fast_travel.state_label(values.get(h)),
+                "Experimental" if row.get("experimental") else "Confirmed list",
+                row["name"], f"{h:08x}"))
         tree.selection_set([i for i in keep if tree.exists(i)])
         available = sum(values.get(h) == fast_travel.AVAILABLE for h in cat)
         unlisted = len(values.keys() - cat.keys())
         self.fast_travel_count.configure(text=(
             f"{available} of {len(cat)} known destinations available · "
+            f"{sum(bool(row.get('experimental')) for row in cat.values())} experimental · "
             f"{unlisted} other list records preserved"))
         for button in self.fast_travel_buttons:
             button.state(["!disabled"])

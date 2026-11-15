@@ -1,6 +1,8 @@
-"""Single-god EXP controls, using the editor's selected-slot undo history."""
+"""Single-god EXP and experimental audience controls with selected-slot undo."""
+import tkinter as tk
 from tkinter import ttk
 
+import audiences
 import blessings
 import fefw_core as core
 
@@ -17,18 +19,23 @@ class BlessingPageMixin:
         frame = ttk.Frame(page, style="Card.TFrame")
         frame.pack(fill="both", expand=True, pady=(8, 0))
         tree = self.blessing_tree = ttk.Treeview(
-            frame, columns=("exp", "level", "selected", "key"),
+            frame, columns=("exp", "level", "selected", "audience", "key"),
             show="tree headings", selectmode="browse", height=7)
-        for col, title, width in (("#0", "God", 150), ("exp", "Stored EXP", 100),
-                                  ("level", "Level preview", 160),
-                                  ("selected", "Selected (stored)", 145),
+        for col, title, width in (("#0", "God", 125), ("exp", "Stored EXP", 90),
+                                  ("level", "Level preview", 140),
+                                  ("selected", "Selected (stored)", 125),
+                                  ("audience", "First audience", 175),
                                   ("key", "Reads as", 235)):
             tree.heading(col, text=title, anchor="w")
-            tree.column(col, width=width, stretch=col in ("#0", "key"))
+            tree.column(col, width=width, minwidth=width, stretch=col == "key")
         sb = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
-        tree.configure(yscrollcommand=sb.set)
-        tree.pack(side="left", fill="both", expand=True)
-        sb.pack(side="right", fill="y")
+        hs = ttk.Scrollbar(frame, orient="horizontal", command=tree.xview)
+        tree.configure(yscrollcommand=sb.set, xscrollcommand=hs.set)
+        frame.rowconfigure(0, weight=1)
+        frame.columnconfigure(0, weight=1)
+        tree.grid(row=0, column=0, sticky="nsew")
+        sb.grid(row=0, column=1, sticky="ns")
+        hs.grid(row=1, column=0, sticky="ew")
         tree.bind("<<TreeviewSelect>>", self._blessing_selected)
 
         form = ttk.Frame(page, style="Card.TFrame", padding=(14, 12))
@@ -49,10 +56,21 @@ class BlessingPageMixin:
                                 command=lambda i=level: self._blessing_preset(i))
             button.pack(side="left", padx=(0, 6))
             self.blessing_presets.append(button)
+        audience_row = ttk.Frame(form, style="Card.TFrame")
+        audience_row.pack(fill="x", pady=(12, 0))
+        self.blessing_audience = tk.BooleanVar(value=False)
+        self.blessing_audience_toggle = ttk.Checkbutton(
+            audience_row, text="First audience recorded (experimental)",
+            variable=self.blessing_audience, command=self.toggle_blessing_audience)
+        self.blessing_audience_toggle.pack(anchor="w")
+        self.blessing_audience_detail = ttk.Label(
+            audience_row, style="CardMuted.TLabel", wraplength=950, justify="left")
+        self.blessing_audience_detail.pack(anchor="w", pady=(5, 0))
         ttk.Label(page, style="CardFaint.TLabel", wraplength=980, justify="left", text=(
             "Edit one god at a time. Level previews use game-data thresholds; Fortuna is special. "
-            "EXP alone does not grant an audience or unlock a temple. Selection and Divine Sand stay as stored.\n"
-            "Turn off ‘Also edit this route’s other saves’. Apply EXP changes memory; "
+            "The audience toggle changes only the first-talk flag; game effects need testing. "
+            "It does not grant EXP or change a travel destination. Selection and Divine Sand stay as stored.\n"
+            "Turn off ‘Also edit this route’s other saves’. Apply EXP and the toggle change memory; "
             "Ctrl+S saves, Ctrl+Z undoes, Ctrl+Y redoes."
         )).pack(anchor="w", pady=(8, 0))
         self._blessing_selected()
@@ -64,6 +82,8 @@ class BlessingPageMixin:
         keep = tree.selection()
         tree.delete(*tree.get_children())
         self._blessing_records = {}
+        self._audience_values = None
+        self._audience_error = "Open a save first."
         try:
             f = self.core_of()
             if f is None:
@@ -71,6 +91,10 @@ class BlessingPageMixin:
                 return
             table = blessings.read(f)
             self._blessing_records = {r.hash: r for r in table.records}
+            try:
+                self._audience_values = audiences.read(f)
+            except core.SaveError as exc:
+                self._audience_error = str(exc)
             for god in blessings.GODS:
                 record = self._blessing_records[god.hash]
                 level = blessings.level_preview(god.hash, record.exp)
@@ -78,11 +102,15 @@ class BlessingPageMixin:
                     record.selected, f"Unknown ({record.selected})")
                 tree.insert("", "end", iid=f"{god.hash:016x}", text=god.name,
                             values=(record.exp, "Special / unknown" if level is None else level,
-                                    selected, god.key))
+                                    selected,
+                                    audiences.state_label(god.hash, self._audience_values or {})
+                                    if self._audience_values is not None or god.hash not in audiences.KEYS
+                                    else "Unavailable",
+                                    god.key))
             tree.selection_set([i for i in keep if tree.exists(i)])
             self.blessing_summary.configure(text=(
                 f"All 7 gods · Divine Sand: {table.divine_sand:,} (read-only) · "
-                "Level previews are derived from stored EXP."))
+                "First audience: experimental · Fortuna: not required."))
         except core.SaveError as exc:
             self.blessing_summary.configure(text=str(exc))
         finally:
@@ -91,6 +119,9 @@ class BlessingPageMixin:
     def _blessing_selected(self, _event=None):
         selected = self.blessing_tree.selection()
         self.blessing_apply.state(["disabled"])
+        self.blessing_audience_toggle.state(["disabled"])
+        self.blessing_audience.set(False)
+        self.blessing_audience_detail.configure(text="Select a god to inspect its first-audience condition.")
         self.blessing_exp.state(["!disabled"])
         self.blessing_exp.delete(0, "end")
         for i, button in enumerate(self.blessing_presets):
@@ -103,6 +134,20 @@ class BlessingPageMixin:
             return
         h = int(selected[0], 16)
         god, record = blessings.BY_HASH[h], records[h]
+        values = getattr(self, "_audience_values", None)
+        if h not in audiences.KEYS:
+            audience_detail = "Fortuna has no first-audience condition in the game data; no flag is written."
+        elif values is None:
+            audience_detail = getattr(self, "_audience_error", "Audience data is unavailable.")
+        else:
+            value = values.get(audiences.HASHES[h])
+            self.blessing_audience.set(value == 1)
+            if value in (None, 1):
+                self.blessing_audience_toggle.state(["!disabled"])
+            audience_detail = (f"{audiences.state_label(h, values)} · Reads as: {audiences.KEYS[h]} "
+                               f"· {audiences.HASHES[h]:08x}\n"
+                               "On records the first audience; off removes that record. Save to write the change.")
+        self.blessing_audience_detail.configure(text=audience_detail)
         self.blessing_exp.insert(0, str(record.exp))
         self.blessing_apply.state(["!disabled"])
         if god.thresholds:
@@ -155,3 +200,35 @@ class BlessingPageMixin:
         self.push_undo()
         self._core_edit(lambda f: blessings.edited(f, {h: value}),
                         f"{blessings.BY_HASH[h].name} EXP → {value}")
+
+    def toggle_blessing_audience(self):
+        """Checkbox applies immediately in memory, like other page actions."""
+        if not self.sv:
+            self._blessing_selected()
+            return
+        if self.mirror.get():
+            self.flash("Turn off ‘Also edit this route’s other saves’ for audience edits.", "warn")
+            self._blessing_selected()
+            return
+        selected = self.blessing_tree.selection()
+        if len(selected) != 1:
+            self.flash("Select one god first.", "info")
+            self._blessing_selected()
+            return
+        h = int(selected[0], 16)
+        value = 1 if self.blessing_audience.get() else None
+        self._commit_form()
+        try:
+            before = self.core_of()
+            after = audiences.edited(before, {h: value})
+        except core.SaveError as exc:
+            self.flash(str(exc), "error")
+            self._blessing_selected()
+            return
+        if after == before.payload:
+            self.flash("This audience already has the requested state.", "info")
+            self._blessing_selected()
+            return
+        self.push_undo()
+        self._core_edit(lambda f: audiences.edited(f, {h: value}),
+                        f"{blessings.BY_HASH[h].name} first audience → {'recorded' if value else 'not recorded'}")

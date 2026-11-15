@@ -1,6 +1,7 @@
 """Blessing EXP only; seven full-width identities and fixed-size writes.
 
 No selection, Divine Sand, audience, deed or story flags are changed here.
+The separate audiences module implements experimental first-audience edits.
 The level preview is derived from data thresholds, not a stored level field.
 See docs/blessings.md for evidence, Fortuna and game-validation limits.
 """

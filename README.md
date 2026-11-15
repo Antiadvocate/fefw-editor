@@ -28,8 +28,13 @@ library, or a ready-made Windows `.exe`.
 | **World map** | | Which of the map's places, junctions and road points the save has **shown** or hides, and which places are marked **visited** (white versus dark icon). Show or hide a selection, a whole road, or every place / road at once. See *World map* below |
 | **Flags** | | Every named variable the save stores: support conversations, recruited / met, achievements, feature and class unlocks. Search, filter, set, add, remove |
 | **Tutorials** | | 115 identified help entries; make selected tutorials available or remove them from the selected save. English names, original Japanese keys, explicit raw states and undo/redo. See [tutorials.md](docs/tutorials.md) |
-| **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Six level previews tested in Leda Chapter 9; Fortuna's EXP effect remains unknown. Selection and Divine Sand are read-only. See [blessings.md](docs/blessings.md) |
-| **Fast travel** | | Add/remove 16 identified Dagsion destination flags in the selected save, with screenshot-confirmed English names, original keys and undo/redo. Independent of world-map and facility unlocks; milestone acceptance passed on Leda Chapter 9. See [fast-travel.md](docs/fast-travel.md) |
+| **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Six level previews tested in Leda Chapter 9; Fortuna's EXP effect remains unknown. Selection and Divine Sand are read-only. Six experimental first-audience toggles; Fortuna has no audience condition. See [blessings.md](docs/blessings.md) |
+| **Fast travel** | | Add/remove 20 identified Dagsion destination flags in the selected save, with original keys and undo/redo. The original 16 have screenshot-confirmed English names and passed milestone acceptance on Leda Chapter 9. Four experimental early-access entries have provisional names and await testing. See [fast-travel.md](docs/fast-travel.md) |
+
+**Current test build: Polish Test 1.** The [numbered guide](docs/testing-polish.md)
+covers four early-access destinations, first-audience conditions and UI checks.
+See [audience documentation](docs/audiences.md) and
+[implementation validation](docs/test-results-polish-2026-11-15.md).
 
 Units can also be **copied in** from another slot or **removed**. Every edit can
 be undone (Ctrl+Z / Ctrl+Y), and **Snapshot** / **Restore…** keep copies of the

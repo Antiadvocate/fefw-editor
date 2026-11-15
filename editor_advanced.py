@@ -24,6 +24,7 @@ from tutorial_page import TutorialPageMixin
 from blessing_page import BlessingPageMixin
 from fast_travel_page import FastTravelPageMixin
 import fast_travel
+import audiences
 import tutorials
 from ui_util import enable_multi_select
 
@@ -110,6 +111,10 @@ def flag_names() -> dict:
             fast_travel.apply_labels(_FLAG_NAMES)
         except fast_travel.FastTravelError:
             pass  # Fast travel page reports errors; raw flags remain usable.
+        try:
+            audiences.apply_labels(_FLAG_NAMES)
+        except audiences.AudienceError:
+            pass  # Audience controls report unsupported layouts.
     return _FLAG_NAMES
 
 

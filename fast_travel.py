@@ -49,8 +49,14 @@ def apply_labels(names: dict[int, dict]) -> None:
             raise FastTravelError(f"Conflicting flag name for {h:08x}")
     for h, row in entries.items():
         names[h] = {**names.get(h, {}), "name": row["name"],
-                    "label": f"Fast travel: {row['label']}",
+                    "label": f"Fast travel: {row['label']}" +
+                             (" (experimental)" if row.get("experimental") else ""),
                     "kind": "fast_travel"}
+
+
+def identifying_hashes() -> set[int]:
+    """New experimental entries cannot replace the accepted locator anchors."""
+    return {h for h, row in catalog().items() if not row.get("experimental")}
 
 
 def locate(f: core.SaveFile) -> core.FlagMap:
@@ -64,8 +70,8 @@ def locate(f: core.SaveFile) -> core.FlagMap:
     if len(candidates) != 1:
         raise FastTravelError("No unique fast-travel list found; this save is read-only here.")
     fm = candidates[0]
-    if len({fl.hash for fl in fm.flags} & hashes) < MIN_ANCHORS:
-        raise FastTravelError("At least three known destinations must be present to identify this list.")
+    if len({fl.hash for fl in fm.flags} & identifying_hashes()) < MIN_ANCHORS:
+        raise FastTravelError("At least three original destinations must be present to identify this list.")
     if len({fl.hash for fl in fm.flags}) != len(fm.flags):
         raise FastTravelError("Duplicate fast-travel-list keys; editing is disabled.")
     tree = core.SaveTree(f.payload)
@@ -107,8 +113,8 @@ def edited(f: core.SaveFile, edits: dict[int, int | None]) -> bytearray:
     if not effective:
         return bytearray(f.payload)
     remaining = (present.keys() - effective.keys()) | {h for h, v in effective.items() if v is not None}
-    if len(remaining & cat.keys()) < MIN_ANCHORS:
-        raise FastTravelError("Keep at least three known destinations so the list remains identifiable.")
+    if len(remaining & identifying_hashes()) < MIN_ANCHORS:
+        raise FastTravelError("Keep at least three original destinations so the list remains identifiable.")
     records = []
     for fl in fm.flags:
         if fl.hash in effective and effective[fl.hash] is None:

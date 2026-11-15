@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "scope": "16 Dagsion destinations from the confirmed Leda Chapter 9 restoration. English labels confirmed in player screenshots on 2026-11-15. Not an exhaustive catalogue.",
+  "scope": "20 Dagsion destinations: 16 screenshot-confirmed labels plus four experimental early-access candidates from Timeline_Com.bin and Hub data. Not an exhaustive catalogue.",
   "entries": {
     "5a48ce35": {
       "name": "拠点_FT_Hub_000_A1_ファストトラベル_闘技場前",
@@ -113,6 +113,38 @@
       "area": "Dagsion",
       "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
       "evidence": "player-confirmed list and label; individual add/remove not tested for this entry"
+    },
+    "38574e83": {
+      "name": "拠点_FT_Hub_000_A100_ファストトラベル_アウロラの私室",
+      "label": "Aurora's private room",
+      "area": "Dagsion",
+      "experimental": true,
+      "label_source": "Provisional translation of the Japanese game key; English menu label not confirmed",
+      "evidence": "Exact scoped flag in Timeline_Com.bin; destination and locator names in Hub/HubDispos data; absent in private FT-04; early access and persistence pending in-game testing"
+    },
+    "1e4d4a23": {
+      "name": "拠点_FT_Hub_000_A101_ファストトラベル_アウロラの庭園",
+      "label": "Aurora's garden",
+      "area": "Dagsion",
+      "experimental": true,
+      "label_source": "Provisional translation of the Japanese game key; English menu label not confirmed",
+      "evidence": "Exact scoped flag in Timeline_Com.bin; destination and locator names in Hub/HubDispos data; absent in private FT-04; early access and persistence pending in-game testing"
+    },
+    "efb57d93": {
+      "name": "拠点_FT_Hub_000_A9_ファストトラベル_サラミス迎賓館",
+      "label": "Salamis Guesthouse",
+      "area": "Dagsion",
+      "experimental": true,
+      "label_source": "Provisional translation of the Japanese game key; English menu label not confirmed",
+      "evidence": "Exact scoped flag in Timeline_Com.bin; destination and locator names in Hub/HubDispos data; absent in private FT-04; early access and persistence pending in-game testing"
+    },
+    "65411bed": {
+      "name": "拠点_FT_Hub_000_A141_ファストトラベル_ユ・ファス神殿",
+      "label": "Yu-Fas Temple",
+      "area": "Dagsion",
+      "experimental": true,
+      "label_source": "Provisional translation of the Japanese game key; English menu label not confirmed",
+      "evidence": "Exact scoped flag in Timeline_Com.bin; destination and locator names in Hub/HubDispos data; absent in private FT-04; early access and persistence pending in-game testing"
     }
   }
 }

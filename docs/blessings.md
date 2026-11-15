@@ -1,4 +1,4 @@
-# Blessings: EXP for all seven gods
+# Blessings: EXP and first audiences
 
 Milestone 2 exposes each god's **stored EXP** in the selected save. It does not
 write a level field. Six level previews use thresholds found in the game's
@@ -14,6 +14,12 @@ player's screenshots identify its effect as **Fortuna's Blessing**. The current
 English display name is Fortuna; the Japanese key, full hash, save layout and
 editing behavior are unchanged. Historical BLESS-09 references to Photon mean
 this same record.
+
+**Polish Test 1** also adds a separate experimental first-audience checkbox
+for six gods. Fortuna has no audience condition and shows Not required with a
+disabled checkbox. These new controls are pending gameplay tests; the EXP
+acceptance above does not validate them. See [first audiences](audiences.md)
+for usage, exact keys, scope and preservation, and [the new guide](testing-polish.md).
 
 ## Using the page
 
@@ -129,7 +135,8 @@ format locator:
   `0x28a608`, `0x28a6b8`, `0x28a768`, `0x28a818` respectively.
 * `謁見条件` is a separate field at row +48. Ordinary gods refer to first-talk
   flags such as `共有_行動_初めてマーズと話した`; Fortuna has an empty value.
-  The editor does not infer or write these flags from the EXP amount.
+  EXP edits do not infer or write these flags. The separate experimental
+  [audience control](audiences.md) edits only the explicitly selected condition.
 
 For a different dump version, find the MIR rows and named field descriptors
 again, then compare their values. Do not reuse these file offsets blindly.

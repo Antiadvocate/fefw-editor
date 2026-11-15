@@ -10,6 +10,9 @@ and [test report](test-results-blessings-2026-11-15.md).
 its [game acceptance tests](testing-fast-travel.md) passed on the reported
 Leda Chapter 9 setup. English names now match the supplied menu screenshots;
 see the [evidence and coverage limits](test-results-fast-travel-2026-11-15.md).
+**Polish Test 1** adds four experimental early-access destinations and six
+first-audience controls. Fortuna has no audience condition. These additions
+are structurally tested but pending [POL/FTX/AUD game acceptance](testing-polish.md).
 Other sections below
 are research notes and acceptance gates, not working UI features or
 instructions to apply unverified offsets.
@@ -67,9 +70,11 @@ checked from a supplied save. Full
 threshold-boundary sweeps, other routes/versions and Fortuna's field semantics
 remain unverified; these results do not establish that every EXP value is safe.
 
-Audience/access flags, including `初めてマーズと話した` and
-`初めてカーラと話した`, are separate from blessing EXP. Increasing EXP alone is
-not evidence that a god has been met or its menu unlocked.
+Audience/access flags are separate from blessing EXP. The exact keys include
+`共有_行動_初めてマーズと話した` and `共有_行動_初めてカーラと話した`.
+The six MIR audience-condition fields identify the new [audience controls](audiences.md).
+Fortuna has an empty condition. Increasing EXP alone does not establish that a
+god has been met or its menu unlocked; audience edits are also awaiting game tests.
 
 ## Fast travel and facilities
 
@@ -77,16 +82,21 @@ The restored destination list was player-confirmed. World map shown/visited
 bytes do not determine fast travel availability. Reconstruct the destination
 catalogue from the recorded destination flags and verify each against the
 in-game list; similarly named NPC/location flags are not interchangeable.
-The new [Fast travel page](fast-travel.md) implements those 16 exact scoped keys,
+The [Fast travel page](fast-travel.md) implements those 16 exact scoped keys
+plus four experimental ones from the game data,
 value 1 or record removal. It identifies the live flag-group map structurally,
-preserves other records and refuses sparse/ambiguous saves. All English labels
+preserves other records and refuses sparse/ambiguous saves. The original 16 English labels
 are confirmed against the player's game-menu screenshots. Automated
 remove/restore round-trips pass for all 16 in the private B0 reference.
 The player reported OPEN-01–02 and FT-01–08 passed: individual game removal,
 restoration, travel and persistence covered Port, Kalla's Temple and Stables.
 The private FT-03/04 files independently confirm Port absent then restored,
 all other destination records preserved, and stable-facility unlock absent.
-The other 13 entries have no isolated game edit/arrival test yet.
+The other 13 original entries have no isolated game edit/arrival test yet.
+Four absent destinations (Aurora's private room/garden, Salamis Guesthouse and
+Yu-Fas Temple; provisional names) have exact keys and a separate experimental
+coverage label in Polish Test 1. Their early access, arrival/exit and persistence
+await FTX-01–04. The original 16 remain the only map-identification anchors.
 
 The exam proctor, drinks vendor and Perform quest tab also worked after the
 restoration. These could become small facility controls once their precise

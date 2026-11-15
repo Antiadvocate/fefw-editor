@@ -828,7 +828,7 @@ class App(AdvancedMixin, tk.Tk):
         brand = ttk.Frame(actions, style="Header.TFrame")
         brand.pack(side="left")
         ttk.Label(brand, text="Fortune's Weave", style="Title.TLabel").pack(anchor="w")
-        ttk.Label(brand, text=f"SAVE EDITOR  ·  v{__version__}",
+        ttk.Label(brand, text=f"SAVE EDITOR  ·  v{__version__}  ·  Polish Test 1",
                   style="Subtitle.TLabel").pack(anchor="w")
 
         right = ttk.Frame(actions, style="Header.TFrame")

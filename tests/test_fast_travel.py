@@ -66,7 +66,8 @@ def outside_list(f):
 class FastTravelTest(unittest.TestCase):
     def test_catalog_uses_full_scoped_names_and_flags_labels(self):
         cat = ft.catalog()
-        self.assertEqual(len(cat), 16)
+        self.assertEqual(len(cat), 20)
+        self.assertEqual(len(ft.identifying_hashes()), 16)
         self.assertEqual(cat[STABLES]['name'], '拠点_FT_Hub_000_A1_ファストトラベル_厩舎前')
         self.assertEqual(cat[STABLES]['label'], 'Stables')
         self.assertNotIn(core.id_hash('ファストトラベル_厩舎前'), cat)
@@ -138,3 +139,19 @@ class FastTravelTest(unittest.TestCase):
         self.assertEqual(ft.state_label(None), 'Absent')
         self.assertEqual(ft.state_label(1), 'Available (1)')
         self.assertIn('Unknown', ft.state_label(0))
+
+    def test_four_experimental_destinations_roundtrip_without_changing_old_list(self):
+        expected = {0x38574e83, 0x1e4d4a23, 0xefb57d93, 0x65411bed}
+        self.assertEqual({h for h, r in ft.catalog().items() if r.get('experimental')}, expected)
+        f = fixture([rows()]); original = raw_map(f, ft.locate(f)); outside = outside_list(f)
+        for h in expected:
+            added = core.SaveFile(ft.edited(f, {h: 1}))
+            self.assertEqual(ft.read(added)[h], 1)
+            self.assertEqual(outside_list(added), outside)
+            restored = core.SaveFile(ft.edited(added, {h: None}))
+            self.assertEqual(raw_map(restored, ft.locate(restored)), original)
+        # New experimental rows cannot replace the three established anchors.
+        extra = [(h, 1, False) for h in expected]
+        with self.assertRaises(ft.FastTravelError): ft.read(fixture([rows()[:2] + extra]))
+        with self.assertRaises(ft.FastTravelError):
+            ft.edited(fixture([rows() + extra]), {ARENA: None, STABLES: None})

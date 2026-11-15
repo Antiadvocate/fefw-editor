@@ -1,11 +1,11 @@
 # Fast travel: destination availability
 
-The **Fast travel** tab edits 16 identified Dagsion destination flags in the
-selected save. Milestone 3's [numbered acceptance tests](testing-fast-travel.md)
+The **Fast travel** tab edits 20 identified Dagsion destination flags in the
+selected save: the original 16 plus four experimental early-access candidates. Milestone 3's [numbered acceptance tests](testing-fast-travel.md)
 passed on the reported Leda Part I Chapter 9 / `fefw-recomp-0.1.5` setup.
 Port, Kalla's Temple and Stables were tested for removal, restoration, travel
 and persistence. The full destination list and all English names were confirmed
-with player screenshots; the other 13 destinations have not each had isolated
+with player screenshots; the other 13 original destinations have not each had isolated
 in-game add/remove tests. See the [validation report](test-results-fast-travel-2026-11-15.md).
 
 ## Using the page
@@ -25,10 +25,11 @@ means the record is missing, not value zero. Other values display as
 **Unknown (value); preserved** and cannot be changed by this page. The summary
 counts all known destinations, including rows hidden by search.
 
-English labels match the **in-game Base Map menu**, confirmed in the player's
+The original 16 English labels match the **in-game Base Map menu**, confirmed in the player's
 2026-11-15 screenshots. Test 1 used provisional translations; the report records
 the eight corrections, including Harbor → Port and Slums → Lowtown.
-The same labels appear in **Flags**, prefixed by `Fast travel:`;
+The same labels appear in **Flags**, prefixed by `Fast travel:`; experimental
+ones also carry an experimental suffix.
 **Reads as** retains the full original key. A hash is the stable identity.
 
 ## Catalogue
@@ -56,6 +57,25 @@ evidence notes; `catalog()` verifies each identity against its hash.
 | Lowtown | `e86370a7` | `A1_ファストトラベル_貧民街` |
 | Tavern | `c1c872f8` | `A70_ファストトラベル_酒場` |
 
+## Four experimental additions (Polish Test 1)
+
+These exact scoped keys occur in `GameData/Timeline_Com.bin`; corresponding
+names and locators are in Hub/HubDispos data. All four are absent from the
+private FT-04 save. **English names are provisional translations, and early
+access is untested.** They may be subject to chapter, route or scene conditions.
+The Coverage column distinguishes them from the original confirmed list.
+Test them one per copied save using [FTX-01–04](testing-polish.md), without
+changing first-audience or chapter flags at the same time.
+
+Use the same `拠点_FT_Hub_000_` prefix for each suffix below.
+
+| Provisional label | Hash | Exact suffix |
+|---|---|---|
+| Aurora's private room | `38574e83` | `A100_ファストトラベル_アウロラの私室` |
+| Aurora's garden | `1e4d4a23` | `A101_ファストトラベル_アウロラの庭園` |
+| Salamis Guesthouse | `efb57d93` | `A9_ファストトラベル_サラミス迎賓館` |
+| Yu-Fas Temple | `65411bed` | `A141_ファストトラベル_ユ・ファス神殿` |
+
 ## Format and locator
 
 These are hashed-key records in a `GameUserData` flag map. Their key is the
@@ -68,7 +88,8 @@ The successful reference's list happened to be enumerated as map 3. Enumeration
 and absolute offsets are not stable. `fast_travel.locate()` instead requires:
 
 * Exactly one `GameUserData` block and one candidate map containing known keys.
-* At least three distinct known destination keys and no duplicate keys.
+* At least three distinct original destination keys and no duplicate keys.
+  Experimental additions do not count toward these identifying anchors.
 * A non-struct map node with no child objects, inside a struct group whose
   parent is the live `GameUserData` node. Embedded or unexpected layouts fail.
 
@@ -81,10 +102,12 @@ restores its meaning but is not promised to restore its original byte position.
 
 `core.replace_content()` handles alignment and pointer relocation; container
 serialization updates checksums. Unknown records remain untouched. The B0
-reference has the 16 known flags at 1 plus 14 other list records.
+reference has the original 16 flags at 1, four experimental flags absent, and
+14 other list records. Thirteen other records match support-conversation keys;
+one remains unidentified. They are not a catalogue of 14 more destinations.
 The edit is validated as a whole before it changes memory. No-op requests
 are byte-identical and create no undo entry. Invalid or unknown-state requests
-reject the entire batch. At least three known keys must remain, to preserve
+reject the entire batch. At least three original keys must remain, to preserve
 reliable future identification. Sparse or ambiguous saves are read-only here;
 the page does not invent identifying entries or guess a map.
 
