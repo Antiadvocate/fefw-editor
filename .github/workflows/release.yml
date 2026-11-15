@@ -55,6 +55,7 @@ jobs:
           --add-data "tutorial_names.json;."
           --add-data "fast_travel_names.json;."
           --add-data "deed_names.json;."
+          --add-data "boon_catalog.json;."
           editor.py
 
       - name: Check the data files load
@@ -66,7 +67,8 @@ jobs:
           and len(__import__('worldmap').catalog().spots) == 864
           and len(__import__('tutorials').catalog()) == 115
           and len(__import__('blessings').GODS) == 7
-          and len(__import__('fast_travel').catalog()) == 16"
+          and len(__import__('fast_travel').catalog()) == 20
+          and len(__import__('boons').catalog()) == 31"
 
       - name: Package
         shell: pwsh
@@ -116,6 +118,7 @@ jobs:
           --add-data "tutorial_names.json:."
           --add-data "fast_travel_names.json:."
           --add-data "deed_names.json:."
+          --add-data "boon_catalog.json:."
           editor.py
 
       - name: Check the binary starts

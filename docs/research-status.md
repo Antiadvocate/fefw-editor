@@ -43,7 +43,7 @@ The game data version was not separately reported.
 | 2 | Blessings | All seven EXP fields; six data-derived level previews; Fortuna special | [BLESS-01–11](testing-blessings.md) passed; see coverage limits in the report |
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
-| 5 | Boons | Confirm ownership and activation storage before enabling writes | Controlled purchase/activation diff, effect check and persistence |
+| 5 | Boons | Read-only 81-tier reference catalogue; purchase/activation writes await controlled evidence | [BOON-01–04](testing-boons.md): inspector and isolated full-folder captures; effect testing follows |
 | 6 | Story | Read-only summary first; narrowly validated Leda transitions only | Load scene, advance to battle, finish/save/reload with no missing facilities |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
@@ -170,6 +170,18 @@ purchase, and one after any separate activation action, with no other claims
 or changes between them. Confirm the effect in a repeatable EXP comparison and
 save/reload. Preserve the already working reference boon; do not repeat the
 failed attempt on it. Other tiers need separate evidence.
+
+The **Boons Research 1** tab and [reference documentation](boons.md) are now
+implemented. [BOON-01–04](testing-boons.md) requests the controlled captures;
+this milestone is in progress and no Boon write is enabled.
+
+## Deeds: second pass requested
+
+Return after the Boons milestone to test the **15 read-only counters**, starting
+with livestock, golden/silver mummies and the provisional giant-enemy category.
+The [DEED-R01–15 register](deeds-follow-up.md) specifies counter-specific questions
+and the evidence gate for enabling each field. The accepted Deeds behavior
+and unclaim warning remain in place. This is queued work, not current acceptance.
 
 ## Story progress
 

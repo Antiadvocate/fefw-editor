@@ -15,7 +15,7 @@ TAVERN = 0xc1c872f8
 UNKNOWN = 0xdeadbeef
 
 
-def fixture(maps):
+def fixture(maps, *, user_body=b''):
     """Maps live inside a struct group directly below GameUserData."""
     p = bytearray(4)
 
@@ -26,7 +26,7 @@ def fixture(maps):
         struct.pack_into('<I', p, at, len(p) + 32)
         return at
 
-    user = len(p); p.extend(bytes(4))
+    user = len(p); p.extend(bytes(4) + user_body)
     group = len(p); p.extend(bytes(4))
     members = [obj(b'\xee' * 4)]
     for entries in maps:

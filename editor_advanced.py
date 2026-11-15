@@ -26,6 +26,7 @@ from fast_travel_page import FastTravelPageMixin
 import fast_travel
 import deeds
 from deed_page import DeedPageMixin
+from boon_page import BoonPageMixin
 import audiences
 import tutorials
 from ui_util import enable_multi_select
@@ -147,7 +148,7 @@ def rank_of(exp: int) -> int:
     return r
 
 
-class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTravelPageMixin, DeedPageMixin):
+class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTravelPageMixin, DeedPageMixin, BoonPageMixin):
     # ------------------------------------------------------------- helpers
     def core_of(self, sv=None):
         """fefw_core.SaveFile for a slot (cached on the payload object)."""
@@ -207,6 +208,7 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
         self.refresh_blessings()
         self.refresh_fast_travel()
         self.refresh_deeds()
+        self.refresh_boons()
 
     def refresh_core_pages(self):
         self.refresh_player()
@@ -217,6 +219,7 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
         self.refresh_blessings()
         self.refresh_fast_travel()
         self.refresh_deeds()
+        self.refresh_boons()
 
     # -------------------------------------------------------- pick a value
     def _picker(self, title: str, rows, current: int | None = None):

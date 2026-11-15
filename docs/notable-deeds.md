@@ -70,6 +70,13 @@ Undo/Redo restore the approved editor state; they do not undo game actions.
 Do not use the generic Flags tab
 to substitute guessed completion/visibility edits for this workflow.
 
+## Planned second pass
+
+At the player's request, [DEED-R01–15](deeds-follow-up.md) queues controlled tests
+for every read-only counter after the Boons milestone, starting with the three
+enemy counters. These fields stay read-only until their individual results
+support enabling them.
+
 ## Coverage and limits
 
 Editable counters cover base activities, spending, ordinary/undead/beast

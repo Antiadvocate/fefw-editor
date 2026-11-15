@@ -830,7 +830,7 @@ class App(AdvancedMixin, tk.Tk):
         brand = ttk.Frame(actions, style="Header.TFrame")
         brand.pack(side="left")
         ttk.Label(brand, text="Fortune's Weave", style="Title.TLabel").pack(anchor="w")
-        ttk.Label(brand, text=f"SAVE EDITOR  ·  v{__version__}  ·  Notable Deeds Test 2",
+        ttk.Label(brand, text=f"SAVE EDITOR  ·  v{__version__}  ·  Boons Research 1",
                   style="Subtitle.TLabel").pack(anchor="w")
 
         right = ttk.Frame(actions, style="Header.TFrame")
@@ -891,6 +891,7 @@ class App(AdvancedMixin, tk.Tk):
         self.blessings_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.fast_travel_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.deeds_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
+        self.boons_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.pages.add(self.units_page, text="Units")
         self.pages.add(self.convoy_page, text="Convoy")
         self.pages.add(self.gold_page, text="Gold")
@@ -904,6 +905,7 @@ class App(AdvancedMixin, tk.Tk):
         self.pages.add(self.blessings_page, text="Blessings")
         self.pages.add(self.fast_travel_page, text="Fast travel")
         self.pages.add(self.deeds_page, text="Notable Deeds")
+        self.pages.add(self.boons_page, text="Boons")
 
         self._build_units()
         self._build_convoy()
@@ -918,6 +920,7 @@ class App(AdvancedMixin, tk.Tk):
         self._build_blessings()
         self._build_fast_travel()
         self._build_deeds()
+        self._build_boons()
         self._style_trees()
         self._enable_multi_select_all()
         self._update_dirty()
@@ -931,7 +934,8 @@ class App(AdvancedMixin, tk.Tk):
         skip = {id(getattr(self, "unit_tree", None)),
                 id(getattr(self, "cls_unit_tree", None)),
                 id(getattr(self, "blessing_tree", None)),
-                id(getattr(self, "deed_tree", None))}
+                id(getattr(self, "deed_tree", None)),
+                id(getattr(self, "boon_tree", None))}
 
         def walk(w):
             for child in w.winfo_children():
@@ -1617,6 +1621,8 @@ class App(AdvancedMixin, tk.Tk):
             target = self.fast_travel_search
         elif sel == str(self.deeds_page):
             target = self.deed_search
+        elif sel == str(self.boons_page):
+            target = self.boon_search
         if target is None:
             return
         target.focus_set()
