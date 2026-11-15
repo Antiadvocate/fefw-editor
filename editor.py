@@ -39,7 +39,7 @@ from editor_advanced import AdvancedMixin  # noqa: E402  (Player / Classes / Fla
 from ui_util import enable_multi_select, last_tree  # noqa: E402  (Ctrl+A / Shift+drag in tables)
 
 APP_NAME = "Fortune's Weave Save Editor"
-__version__ = "1.3.8"
+__version__ = "1.3.9"
 SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
 ICON_DIR = os.path.join(USER_DIR, "icons")
 
@@ -1845,8 +1845,8 @@ class App(AdvancedMixin, tk.Tk):
             messagebox.showerror(APP_NAME, "Some slots could not be written:\n\n"
                                  + "\n".join(failed) + "\n\nIs the game still running?")
             return False
-        self.flash(f"Saved {', '.join(written)}. Originals kept as .bak next to each slot.",
-                   "ok")
+        self.flash(f"Saved {', '.join(written)}. The copy each save replaced is kept next "
+                   "to it as a numbered .bak.", "ok")
         return True
 
     def on_close(self):
