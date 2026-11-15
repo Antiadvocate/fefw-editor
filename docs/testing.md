@@ -29,13 +29,46 @@ edit. Keep **Also edit this route's other saves** off except in TUT-06.
 | TUT-03 | Fresh B0: remove Foresight; Ctrl+S; close/reopen editor. Load this test save in game, inspect Tutorials, save in game, close game and reopen editor. | Foresight is absent after export and after the game saves. Other entries remain. | Screenshot in game and post-game state. |
 | TUT-04 | Continue with the TUT-03 copy: make Foresight available, save, reopen, load in game, save and reopen again. | Foresight returns and persists. Boon and deed claim state remain as B0. | Screenshot of Foresight and post-game state. |
 | TUT-05 | Fresh B0: make Drifting Reliquary and Third Eye (Cai) available, save and reopen editor. Select both and remove them; save/reopen. Load only this final corrected copy in game. | Both added rows show 2 before removal, then Absent. Foresight remains 2 and Obelisk remains 1. Final in-game list matches B0. | Screenshot of final list. |
-| TUT-06 | Fresh B0: turn mirroring on and attempt to remove Foresight. Turn mirroring off, clear selection and click Remove. Then select Foresight and Make available. | Mirroring warns and makes no tutorial edit. Empty selection and an already-available row make no change or extra undo entry. | PASS/FAIL; other slots unchanged. |
+| TUT-06 | Fresh B0: check **Also edit this route's other saves**, directly below the Slot selector, and attempt to remove Foresight. Uncheck it, clear selection and click Remove selected. Then select Foresight and Make available. Detailed steps below. | The first action warns and makes no tutorial edit. Empty selection and an already-available row make no change or extra undo entry. | PASS/FAIL for each subcheck; other slots unchanged, or no other slots available. |
 | TUT-07 | On the TUT-04 or final TUT-05 result, inspect current chapter/location, blessings, inventory/gold, support progress, fast travel, claimed deeds and EXP +10% Boon. Compare with B0. | No regression caused by these edits. Ordinary play or saving may change time/location; record actions taken. | List any differences; screenshot failures. |
 
 If the game fails to load, crashes, loses progress or rewrites an unexpected
 value, stop that case. Preserve the failing copy, restore B0, and report it.
 Do not compensate by changing additional flags: that makes the cause harder to
 identify. Success in the editor alone is not a game-validation pass.
+
+## TUT-06: checkbox and no-change checks
+
+**Mirroring** is the editor's **Also edit this route's other saves** checkbox,
+directly below the **Slot** selector at the top of the window. It normally
+copies supported edits to other saves on the same route. The Tutorials page
+deliberately refuses edits while it is checked, because its undo history covers
+only the selected slot. It is unrelated to display or monitor mirroring.
+
+Close the editor, start it again and open a fresh disposable copy of B0. Keep
+the game closed. Do not make unrelated edits during this case.
+
+1. **TUT-06a — edit blocked:** In Tutorials, search for and select **Foresight**.
+   Check **Also edit this route's other saves** and click **Remove selected**.
+   The status bar at the bottom should say
+   **Turn off 'Also edit this route's other saves' for tutorial edits.**
+   Foresight must remain **Available (2)**. This warning is a status message,
+   not a pop-up. The checkbox may end with **(none here)** when no other live
+   slot exists; the warning should still appear.
+2. **TUT-06b — empty selection:** Uncheck the checkbox. Ctrl-click the selected
+   Foresight row to deselect it, then click **Remove selected**. Expect
+   **Select one or more tutorials first.** Nothing should change.
+3. **TUT-06c — already available:** Select Foresight and click **Make available**.
+   Expect **Selected tutorials already have the requested state.** Foresight
+   must remain **Available (2)**.
+4. Click the Foresight row and press **Ctrl+Z**. Expect **Nothing to undo.**
+   No slot should have an unsaved-change marker from these actions. If there
+   are other slots in the test folder, check that none gained that marker.
+
+Leave the checkbox **unchecked** afterwards; its setting is remembered. These
+checks should not require saving or loading the game. Report a/b/c and the
+undo check separately if any differ. With only one slot, report the other-slot
+check as **not applicable** rather than claiming multiple slots were tested.
 
 ## Return results
 

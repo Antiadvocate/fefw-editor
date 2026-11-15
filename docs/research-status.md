@@ -8,8 +8,10 @@ features or instructions to apply unverified offsets.
 Evidence levels: **player-confirmed** means the observed restored save worked in
 game; **structural** means supported by parsed data or a save comparison;
 **candidate** means correlated but not isolated. A passing byte test does not
-turn a candidate into a confirmed game feature. The reference game's exact
-version and runtime should be recorded with the next testing report.
+turn a candidate into a confirmed game feature. The tutorial acceptance run
+passed on Bazzite 45 with `fefw-recomp-0.1.5`, Leda Chapter 9; see
+[the test report](test-results-2026-11-15.md) for evidence and coverage limits.
+The game data version was not separately reported.
 
 ## Delivery order
 
