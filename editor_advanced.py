@@ -24,6 +24,8 @@ from tutorial_page import TutorialPageMixin
 from blessing_page import BlessingPageMixin
 from fast_travel_page import FastTravelPageMixin
 import fast_travel
+import deeds
+from deed_page import DeedPageMixin
 import audiences
 import tutorials
 from ui_util import enable_multi_select
@@ -115,6 +117,10 @@ def flag_names() -> dict:
             audiences.apply_labels(_FLAG_NAMES)
         except audiences.AudienceError:
             pass  # Audience controls report unsupported layouts.
+        try:
+            deeds.apply_labels(_FLAG_NAMES)
+        except deeds.DeedError:
+            pass  # Deeds page reports catalogue errors; raw flags still work.
     return _FLAG_NAMES
 
 
@@ -141,7 +147,7 @@ def rank_of(exp: int) -> int:
     return r
 
 
-class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTravelPageMixin):
+class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTravelPageMixin, DeedPageMixin):
     # ------------------------------------------------------------- helpers
     def core_of(self, sv=None):
         """fefw_core.SaveFile for a slot (cached on the payload object)."""
@@ -200,6 +206,7 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
         self.refresh_tutorials()
         self.refresh_blessings()
         self.refresh_fast_travel()
+        self.refresh_deeds()
 
     def refresh_core_pages(self):
         self.refresh_player()
@@ -209,6 +216,7 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
         self.refresh_tutorials()
         self.refresh_blessings()
         self.refresh_fast_travel()
+        self.refresh_deeds()
 
     # -------------------------------------------------------- pick a value
     def _picker(self, title: str, rows, current: int | None = None):

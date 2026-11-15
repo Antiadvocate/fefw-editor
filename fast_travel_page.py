@@ -25,7 +25,7 @@ class FastTravelPageMixin:
         self.fast_travel_search.pack(fill="x", pady=(8, 0))
         self.fast_travel_search.bind("<KeyRelease>", lambda e: self.refresh_fast_travel())
         ttk.Label(page, style="CardFaint.TLabel", wraplength=980, justify="left", text=(
-            "Experimental destinations may stay hidden or restricted by the current chapter; some names are provisional. "
+            "Three destinations have unknown effects; their flags persist but did not reveal Chapter 9 travel entries. Yu Phas Temple allows travel and exit; walking in is still restricted at Chapter 9. "
             "Search by name, Japanese key or hash. "
             "Edits affect the selected save's destination list. Travel still depends on game conditions; "
             "the Stables destination does not unlock the stable facility. Keep at least three original destinations.\n"
@@ -73,14 +73,14 @@ class FastTravelPageMixin:
                 continue
             tree.insert("", "end", iid=f"{h:08x}", text=row["label"], values=(
                 fast_travel.state_label(values.get(h)),
-                "Experimental" if row.get("experimental") else "Confirmed list",
+                row["coverage"],
                 row["name"], f"{h:08x}"))
         tree.selection_set([i for i in keep if tree.exists(i)])
         available = sum(values.get(h) == fast_travel.AVAILABLE for h in cat)
         unlisted = len(values.keys() - cat.keys())
         self.fast_travel_count.configure(text=(
             f"{available} of {len(cat)} known destinations available · "
-            f"{sum(bool(row.get('experimental')) for row in cat.values())} experimental · "
+            f"{sum(row['coverage'] == 'Effect unknown' for row in cat.values())} effects unknown · "
             f"{unlisted} other list records preserved"))
         for button in self.fast_travel_buttons:
             button.state(["!disabled"])

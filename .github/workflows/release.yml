@@ -54,6 +54,7 @@ jobs:
           --add-data "flag_names.json;." --add-data "skill_ids.json;." --add-data "map_spots.json;."
           --add-data "tutorial_names.json;."
           --add-data "fast_travel_names.json;."
+          --add-data "deed_names.json;."
           editor.py
 
       - name: Check the data files load
@@ -114,6 +115,7 @@ jobs:
           --add-data "flag_names.json:." --add-data "skill_ids.json:." --add-data "map_spots.json:."
           --add-data "tutorial_names.json:."
           --add-data "fast_travel_names.json:."
+          --add-data "deed_names.json:."
           editor.py
 
       - name: Check the binary starts

@@ -32,7 +32,8 @@ def catalog() -> dict[int, dict]:
             if (not row["name"].startswith("拠点_FT_Hub_000_") or
                     "_ファストトラベル_" not in row["name"] or
                     core.id_hash(row["name"]) != h or not row["label"] or
-                    row["area"] != "Dagsion"):
+                    row["area"] != "Dagsion" or type(row["locator_anchor"]) is not bool or
+                    row["coverage"] not in ("Confirmed list", "Travel tested", "Effect unknown")):
                 raise ValueError("invalid destination identity")
         if len(entries) < MIN_ANCHORS:
             raise ValueError("too few catalogue entries")
@@ -49,14 +50,13 @@ def apply_labels(names: dict[int, dict]) -> None:
             raise FastTravelError(f"Conflicting flag name for {h:08x}")
     for h, row in entries.items():
         names[h] = {**names.get(h, {}), "name": row["name"],
-                    "label": f"Fast travel: {row['label']}" +
-                             (" (experimental)" if row.get("experimental") else ""),
+                    "label": f"Fast travel: {row['label']}",
                     "kind": "fast_travel"}
 
 
 def identifying_hashes() -> set[int]:
-    """New experimental entries cannot replace the accepted locator anchors."""
-    return {h for h, row in catalog().items() if not row.get("experimental")}
+    """Only the original 16 destinations are accepted locator anchors."""
+    return {h for h, row in catalog().items() if row["locator_anchor"]}
 
 
 def locate(f: core.SaveFile) -> core.FlagMap:

@@ -1,4 +1,4 @@
-"""Experimental first-audience flags, separate from blessing EXP and travel.
+"""First-audience flags, separate from blessing EXP and travel.
 
 Six exact keys are referenced by the MIR audience-condition fields. Fortuna's
 condition is empty. Leda Chapter 9 acceptance and its limits are in docs/audiences.md.
@@ -41,7 +41,7 @@ def apply_labels(names: dict[int, dict]) -> None:
     for god, key in KEYS.items():
         h = HASHES[god]
         names[h] = {**names.get(h, {}), "name": key, "kind": "audience",
-                    "label": f"First audience: {blessings.BY_HASH[god].name} (experimental)"}
+                    "label": f"First audience: {blessings.BY_HASH[god].name}"}
 
 
 def locate(f: core.SaveFile) -> core.FlagMap:

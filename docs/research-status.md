@@ -15,8 +15,11 @@ first-audience controls. Fortuna has no audience condition. The player has
 completed POL/FTX/AUD testing: audience controls have reported passes, all four
 travel flags persist, and only Yu Phas Temple appeared at Chapter 9. See the
 [evidence and limits](test-results-polish-2026-11-15.md#player-acceptance-and-supplied-saves).
-**Polish Test 2** corrects that name and themes horizontal scrollbars; only
-[POL-04–05](testing-polish.md) need a short follow-up check.
+**Polish Test 2** corrects that name and themes horizontal scrollbars; [POL-04–05](testing-polish.md) have now both passed.
+**Notable Deeds Test 1** adds 350 mapped milestones, 32 editable activity
+counters and 15 read-only counters. Claims and Karma Shards remain read-only;
+[DEED-01–10](testing-notable-deeds.md) are pending. Accepted audience/travel
+controls lose Experimental labels; the three hidden destinations say Effect unknown.
 Other sections below
 are research notes and acceptance gates, not working UI features or
 instructions to apply unverified offsets.
@@ -36,7 +39,7 @@ The game data version was not separately reported.
 | 1 | Tutorials and known English names | Selected save only; preserve Japanese keys and unknown records | [TUT-01–07](testing.md) |
 | 2 | Blessings | All seven EXP fields; six data-derived level previews; Fortuna special | [BLESS-01–11](testing-blessings.md) passed; see coverage limits in the report |
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
-| 4 | Notable deeds | Separate counter, completion and claim state | One incomplete, one complete-unclaimed and one claimed deed; verify rewards once |
+| 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | [DEED-01–10](testing-notable-deeds.md) pending, including completion refresh and one in-game reward claim |
 | 5 | Boons | Confirm ownership and activation storage before enabling writes | Controlled purchase/activation diff, effect check and persistence |
 | 6 | Story | Read-only summary first; narrowly validated Leda transitions only | Load scene, advance to battle, finish/save/reload with no missing facilities |
 
@@ -92,7 +95,7 @@ bytes do not determine fast travel availability. Reconstruct the destination
 catalogue from the recorded destination flags and verify each against the
 in-game list; similarly named NPC/location flags are not interchangeable.
 The [Fast travel page](fast-travel.md) implements those 16 exact scoped keys
-plus four experimental ones from the game data,
+plus four additional ones from the game data,
 value 1 or record removal. It identifies the live flag-group map structurally,
 preserves other records and refuses sparse/ambiguous saves. The original 16 English labels
 are confirmed against the player's game-menu screenshots. Automated
@@ -135,8 +138,7 @@ display flags were discarded by the game; they should not be recreated merely
 because their names look plausible.
 
 A claim-state edit is not proven to award currency or update every dependency.
-The future UI must separate “complete but unclaimed” from “claimed”, and must
-not silently grant Karma Shards twice. In this combined reference sequence,
+The [Notable Deeds UI](notable-deeds.md) separates “complete but unclaimed” from “claimed” and preserves all claim states and Karma Shards. In this combined reference sequence,
 390 + 820 deed rewards − 500 for EXP +10% = 710 Karma Shards. That arithmetic
 supports the observation but is not an isolated reward-system test.
 

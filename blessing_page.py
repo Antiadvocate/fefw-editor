@@ -1,4 +1,4 @@
-"""Single-god EXP and experimental audience controls with selected-slot undo."""
+"""Single-god EXP and first-audience controls with selected-slot undo."""
 import tkinter as tk
 from tkinter import ttk
 
@@ -60,7 +60,7 @@ class BlessingPageMixin:
         audience_row.pack(fill="x", pady=(12, 0))
         self.blessing_audience = tk.BooleanVar(value=False)
         self.blessing_audience_toggle = ttk.Checkbutton(
-            audience_row, text="First audience recorded (experimental)",
+            audience_row, text="First audience recorded",
             variable=self.blessing_audience, command=self.toggle_blessing_audience)
         self.blessing_audience_toggle.pack(anchor="w")
         self.blessing_audience_detail = ttk.Label(
@@ -110,7 +110,7 @@ class BlessingPageMixin:
             tree.selection_set([i for i in keep if tree.exists(i)])
             self.blessing_summary.configure(text=(
                 f"All 7 gods · Divine Sand: {table.divine_sand:,} (read-only) · "
-                "First audience: experimental · Fortuna: not required."))
+                "First audience: tested at Leda Chapter 9 · Fortuna: not required."))
         except core.SaveError as exc:
             self.blessing_summary.configure(text=str(exc))
         finally:

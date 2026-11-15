@@ -140,9 +140,11 @@ class FastTravelTest(unittest.TestCase):
         self.assertEqual(ft.state_label(1), 'Available (1)')
         self.assertIn('Unknown', ft.state_label(0))
 
-    def test_four_experimental_destinations_roundtrip_without_changing_old_list(self):
+    def test_four_additional_destinations_roundtrip_without_changing_old_list(self):
         expected = {0x38574e83, 0x1e4d4a23, 0xefb57d93, 0x65411bed}
-        self.assertEqual({h for h, r in ft.catalog().items() if r.get('experimental')}, expected)
+        self.assertEqual({h for h, r in ft.catalog().items() if not r['locator_anchor']}, expected)
+        self.assertEqual(sum(r['coverage'] == 'Effect unknown' for r in ft.catalog().values()), 3)
+        self.assertEqual(ft.catalog()[0x65411bed]['coverage'], 'Travel tested')
         f = fixture([rows()]); original = raw_map(f, ft.locate(f)); outside = outside_list(f)
         for h in expected:
             added = core.SaveFile(ft.edited(f, {h: 1}))
@@ -150,7 +152,7 @@ class FastTravelTest(unittest.TestCase):
             self.assertEqual(outside_list(added), outside)
             restored = core.SaveFile(ft.edited(added, {h: None}))
             self.assertEqual(raw_map(restored, ft.locate(restored)), original)
-        # New experimental rows cannot replace the three established anchors.
+        # Additional rows cannot replace the three established anchors.
         extra = [(h, 1, False) for h in expected]
         with self.assertRaises(ft.FastTravelError): ft.read(fixture([rows()[:2] + extra]))
         with self.assertRaises(ft.FastTravelError):

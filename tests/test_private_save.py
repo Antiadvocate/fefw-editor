@@ -11,6 +11,8 @@ import tutorials
 import blessings
 import fast_travel
 import audiences
+import deeds
+from test_deeds import outside_map as outside_deed_map
 from test_audiences import outside_map as outside_audience_map
 from test_fast_travel import outside_list
 from test_tutorials import FORESIGHT, RELIQUARY, THIRD_EYE, raw_map
@@ -30,6 +32,34 @@ def outside_tutorials(f):
 
 @unittest.skipUnless(os.environ.get('FEFW_TEST_SAVE'), 'No private fixture supplied')
 class PrivateSaveTest(unittest.TestCase):
+    def test_all_editable_deed_counters_preserve_claims_and_other_systems(self):
+        source = Path(os.environ['FEFW_TEST_SAVE']); original = source.read_bytes()
+        initial_box = container.SaveFile(str(source))
+        initial = core.SaveFile(initial_box.payload)
+        records = raw_map(initial, deeds.locate(initial))
+        with tempfile.TemporaryDirectory() as tmp:
+            for h, row in deeds.catalog().items():
+                if not row['editable']:
+                    continue
+                box = container.SaveFile(str(source))
+                value = row['milestones'][-1]['target']
+                box.payload = deeds.edited(core.SaveFile(box.payload), h, value)
+                changed = core.SaveFile(box.payload)
+                self.assertEqual(outside_deed_map(initial), outside_deed_map(changed))
+                path = Path(tmp) / 'Auto'; path.write_bytes(box.to_bytes())
+                loaded = container.SaveFile(str(path)); self.assertEqual(loaded.verify(), [])
+                after = core.SaveFile(loaded.payload)
+                self.assertEqual(deeds.read(after)[h], value)
+                actual = raw_map(after, deeds.locate(after))
+                for other in records.keys() - {h}: self.assertEqual(actual[other], records[other])
+                self.assertEqual(fast_travel.read(after), fast_travel.read(initial))
+                self.assertEqual(tutorials.read(after), tutorials.read(initial))
+                self.assertEqual(audiences.read(after), audiences.read(initial))
+                self.assertEqual([(r.hash, r.exp, r.selected) for r in blessings.read(after).records],
+                                 [(r.hash, r.exp, r.selected) for r in blessings.read(initial).records])
+                self.assertEqual(blessings.read(after).divine_sand, blessings.read(initial).divine_sand)
+        self.assertEqual(source.read_bytes(), original)
+
     def test_fast_travel_remove_restore_roundtrip_all_destinations(self):
         source = Path(os.environ['FEFW_TEST_SAVE'])
         original = source.read_bytes()

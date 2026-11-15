@@ -1,10 +1,11 @@
-# First audiences: experimental controls
+# First audiences
 
-**Polish Test 1** adds a **First audience** column and a selected-god checkbox
+First introduced in **Polish Test 1**, this feature adds a **First audience** column and a selected-god checkbox
 to Blessings. The six ordinary gods have exact first-talk conditions in the
 game data. Fortuna's condition is empty: she displays **Not required**, and
 her checkbox is disabled. There is no invented Fortuna flag.
 
+The Experimental label is removed in Notable Deeds Test 1 after acceptance.
 The player reported **AUD-01–08 passed** on Leda Part I Chapter 9 /
 `fefw-recomp-0.1.5`. Supplied Mars Off/On screenshots show his portrait obscured
 when Off and visible when On, while Bless Lv remains 1. His four before/after

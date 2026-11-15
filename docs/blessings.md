@@ -15,7 +15,7 @@ English display name is Fortuna; the Japanese key, full hash, save layout and
 editing behavior are unchanged. Historical BLESS-09 references to Photon mean
 this same record.
 
-**Polish Test 1** also adds a separate experimental first-audience checkbox
+**Polish Test 1** also adds a separate first-audience checkbox
 for six gods. Fortuna has no audience condition and shows Not required with a
 disabled checkbox. The player subsequently reported AUD-01–08 passed on the
 same Chapter 9 setup; supplied Mars files and screenshots confirm flag
@@ -137,7 +137,7 @@ format locator:
   `0x28a608`, `0x28a6b8`, `0x28a768`, `0x28a818` respectively.
 * `謁見条件` is a separate field at row +48. Ordinary gods refer to first-talk
   flags such as `共有_行動_初めてマーズと話した`; Fortuna has an empty value.
-  EXP edits do not infer or write these flags. The separate experimental
+  EXP edits do not infer or write these flags. The separate
   [audience control](audiences.md) edits only the explicitly selected condition.
 
 For a different dump version, find the MIR rows and named field descriptors

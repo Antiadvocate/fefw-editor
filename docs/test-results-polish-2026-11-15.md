@@ -143,3 +143,12 @@ Player-side appearance remains POL-04 because platform rendering can differ.
 All 13 newly supplied saves passed checksum verification during read-only
 analysis. Previous private mutation round-trip results remain as recorded above;
 they were not rerun for this theme/label-only update.
+
+## Accepted follow-up and next-build labels
+
+The player subsequently reported **POL-04 and POL-05 both pass**. Notable Deeds
+Test 1 removes Experimental wording from accepted audience and travel controls.
+Aurora's private room/garden and Salamis Guesthouse are labelled **Effect unknown**;
+only their persistence, not access, was observed. Yu Phas Temple retains the
+Chapter 9 travel/exit success and blocked walking-entry caveat. Historical
+Test 1/2 descriptions above describe their original labels, not current status.

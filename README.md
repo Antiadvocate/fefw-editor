@@ -28,14 +28,17 @@ library, or a ready-made Windows `.exe`.
 | **World map** | | Which of the map's places, junctions and road points the save has **shown** or hides, and which places are marked **visited** (white versus dark icon). Show or hide a selection, a whole road, or every place / road at once. See *World map* below |
 | **Flags** | | Every named variable the save stores: support conversations, recruited / met, achievements, feature and class unlocks. Search, filter, set, add, remove |
 | **Tutorials** | | 115 identified help entries; make selected tutorials available or remove them from the selected save. English names, original Japanese keys, explicit raw states and undo/redo. See [tutorials.md](docs/tutorials.md) |
-| **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Six level previews tested in Leda Chapter 9; Fortuna's EXP effect remains unknown. Selection and Divine Sand are read-only. Six experimental first-audience toggles; Fortuna has no audience condition. See [blessings.md](docs/blessings.md) |
-| **Fast travel** | | Add/remove 20 identified Dagsion destination flags in the selected save, with original keys and undo/redo. The original 16 have screenshot-confirmed English names. Four experimental flags persisted in Chapter 9 tests; only Yu Phas Temple appeared and allowed travel, while walking back in stayed blocked. See [fast-travel.md](docs/fast-travel.md) |
+| **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Six level previews tested in Leda Chapter 9; Fortuna's EXP effect remains unknown. Selection and Divine Sand are read-only. Six tested first-audience toggles; Fortuna has no audience condition. See [blessings.md](docs/blessings.md) |
+| **Fast travel** | | Add/remove 20 identified Dagsion destination flags in the selected save, with original keys and undo/redo. The original 16 have screenshot-confirmed English names. Four additional flags persisted in Chapter 9 tests; only Yu Phas Temple appeared and allowed travel, while walking back in stayed blocked. See [fast-travel.md](docs/fast-travel.md) |
+| **Notable Deeds** | | 350 milestones; 32 editable activity totals and 15 read-only counters. Targets/rewards and stored claim states shown separately; no currency or claim writes. See [notable-deeds.md](docs/notable-deeds.md) |
 
-**Current test build: Polish Test 2.** Themes horizontal scrollbars and corrects
-Yu Phas Temple's name. The [numbered guide](docs/testing-polish.md) starts with
-two short follow-up checks; the original isolated cases are retained for reference.
-See [audience documentation](docs/audiences.md) and
-[implementation validation](docs/test-results-polish-2026-11-15.md).
+**Current test build: Notable Deeds Test 1.** Adds 350 mapped milestones with
+32 editable activity counters and 15 read-only counters. Claim states and Karma
+Shards are preserved; claim rewards in game. See the [numbered test guide](docs/testing-notable-deeds.md)
+and [feature/format documentation](docs/notable-deeds.md). Counter-only completion
+refresh is awaiting game tests. The accepted audience controls no longer say
+Experimental. Three hidden travel entries say **Effect unknown**; Yu Phas Temple
+retains its Chapter 9 entry restriction. POL-04/05 both passed.
 
 Units can also be **copied in** from another slot or **removed**. Every edit can
 be undone (Ctrl+Z / Ctrl+Y), and **Snapshot** / **Restore…** keep copies of the
@@ -92,7 +95,7 @@ If you know where any of these live, contributions are welcome.
 
 ### Contribution test candidate
 
-This branch adds **Fast travel** destination editing and a visible **Open…**
+This branch adds **Notable Deeds** progress editing, **Fast travel** destination editing and a visible **Open…**
 button in the top action bar. The slot selector now has its own row so it cannot
 squeeze the button off-screen. Open selects a save file and loads its folder;
 Ctrl+O and the existing unsaved-change prompt still work. This candidate retains
@@ -125,6 +128,9 @@ Kalla's Temple and Stables. All 16 English labels match the supplied game
 screenshots. The Stables destination does not unlock the stable facility.
 Unknown records and values are preserved; sparse/ambiguous layouts refuse edits.
 
+* [Milestone 4: Notable Deeds testing guide](docs/testing-notable-deeds.md)
+* [Notable Deeds feature, full catalogue and binary format](docs/notable-deeds.md)
+* [Milestone 4: implementation validation](docs/test-results-deeds-2026-11-15.md)
 * [Milestone 3: Fast travel and Open button testing guide](docs/testing-fast-travel.md)
 * [Fast travel feature, catalogue and binary-format documentation](docs/fast-travel.md)
 * [Milestone 3: validation report](docs/test-results-fast-travel-2026-11-15.md)
@@ -331,6 +337,9 @@ tutorial_page.py     the single-slot Tutorials page
 tutorial_names.json  identified tutorial keys and official English names
 blessings.py         seven-god identity/layout checks and EXP-only writes
 blessing_page.py     the single-slot Blessings page
+deed_names.json     mapped deed counter/milestone identities, targets and rewards
+deeds.py            Notable Deeds locator and bounded counter-only edits
+deed_page.py        the single-slot Notable Deeds page
 tests/               synthetic tests and opt-in private-save regression check
 build_map_spots.py   rebuilds map_spots.json from a romfs dump
 build_skill_ids.py   rebuilds skill_ids.json from a romfs dump

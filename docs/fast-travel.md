@@ -1,7 +1,7 @@
 # Fast travel: destination availability
 
 The **Fast travel** tab edits 20 identified Dagsion destination flags in the
-selected save: the original 16 plus four experimental early-access candidates. Milestone 3's [numbered acceptance tests](testing-fast-travel.md)
+selected save: the original 16 plus four additional destinations. Milestone 3's [numbered acceptance tests](testing-fast-travel.md)
 passed on the reported Leda Part I Chapter 9 / `fefw-recomp-0.1.5` setup.
 Port, Kalla's Temple and Stables were tested for removal, restoration, travel
 and persistence. The full destination list and all English names were confirmed
@@ -28,8 +28,7 @@ counts all known destinations, including rows hidden by search.
 The original 16 English labels match the **in-game Base Map menu**, confirmed in the player's
 2026-11-15 screenshots. Test 1 used provisional translations; the report records
 the eight corrections, including Harbor → Port and Slums → Lowtown.
-The same labels appear in **Flags**, prefixed by `Fast travel:`; experimental
-ones also carry an experimental suffix.
+The same labels appear in **Flags**, prefixed by `Fast travel:`.
 **Reads as** retains the full original key. A hash is the stable identity.
 
 ## Catalogue
@@ -57,7 +56,7 @@ evidence notes; `catalog()` verifies each identity against its hash.
 | Lowtown | `e86370a7` | `A1_ファストトラベル_貧民街` |
 | Tavern | `c1c872f8` | `A70_ファストトラベル_酒場` |
 
-## Four experimental additions
+## Four additional destinations
 
 These exact scoped keys occur in `GameData/Timeline_Com.bin`; corresponding
 names and locators are in Hub/HubDispos data. All four are absent from the
@@ -69,8 +68,9 @@ story/entry restriction. Aurora's two locations and Salamis Guesthouse stayed
 hidden; their additional visibility conditions remain unidentified.
 
 Yu Phas Temple is the player's confirmed English name; the other three labels
-remain provisional. All four retain experimental coverage, and none becomes a
-map-identification anchor. See the [acceptance evidence and limits](test-results-polish-2026-11-15.md#player-acceptance-and-supplied-saves).
+remain provisional. Notable Deeds Test 1 removes Experimental labels: the three
+hidden destinations show **Effect unknown**, and Yu Phas Temple shows **Travel tested**.
+None becomes a map-identification anchor. See the [acceptance evidence and limits](test-results-polish-2026-11-15.md#player-acceptance-and-supplied-saves).
 The isolated [FTX-01–04 procedure](testing-polish.md) remains available for later
 chapters or versions; do not add guessed gate or story flags to force visibility.
 
@@ -96,9 +96,12 @@ and absolute offsets are not stable. `fast_travel.locate()` instead requires:
 
 * Exactly one `GameUserData` block and one candidate map containing known keys.
 * At least three distinct original destination keys and no duplicate keys.
-  Experimental additions do not count toward these identifying anchors.
+  The four additional destinations do not count toward these identifying anchors.
 * A non-struct map node with no child objects, inside a struct group whose
   parent is the live `GameUserData` node. Embedded or unexpected layouts fail.
+
+The explicit `locator_anchor` metadata keeps these original 16 anchors separate
+from display coverage; changing a label cannot broaden map identification.
 
 The format uses an end pointer, version byte 0, u16 count, then records:
 u32 hash followed by a one-byte value, or `ff` plus a signed i32. Newly added
@@ -109,7 +112,7 @@ restores its meaning but is not promised to restore its original byte position.
 
 `core.replace_content()` handles alignment and pointer relocation; container
 serialization updates checksums. Unknown records remain untouched. The B0
-reference has the original 16 flags at 1, four experimental flags absent, and
+reference has the original 16 flags at 1, four additional flags absent, and
 14 other list records. Thirteen other records match support-conversation keys;
 one remains unidentified. They are not a catalogue of 14 more destinations.
 The edit is validated as a whole before it changes memory. No-op requests

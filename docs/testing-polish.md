@@ -1,5 +1,9 @@
 # Polish tests: early travel, first audiences and follow-up polish
 
+**Archived procedure:** POL-04/05 subsequently passed. Current testing is in
+[Notable Deeds Test 1](testing-notable-deeds.md). Historical Experimental labels
+below describe Polish Test 1/2 and have since been replaced.
+
 Current build: **FEFW-Polish-Test-2**, branch `feature/polish-audiences`.
 The header says **Polish Test 2**; `BUILD.txt` identifies the exact source
 commit and CI run. No new Python dependencies. Extract to a fresh directory
