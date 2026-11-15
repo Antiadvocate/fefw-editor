@@ -28,7 +28,7 @@ library, or a ready-made Windows `.exe`.
 | **World map** | | Which of the map's places, junctions and road points the save has **shown** or hides, and which places are marked **visited** (white versus dark icon). Show or hide a selection, a whole road, or every place / road at once. See *World map* below |
 | **Flags** | | Every named variable the save stores: support conversations, recruited / met, achievements, feature and class unlocks. Search, filter, set, add, remove |
 | **Tutorials** | | 115 identified help entries; make selected tutorials available or remove them from the selected save. English names, original Japanese keys, explicit raw states and undo/redo. See [tutorials.md](docs/tutorials.md) |
-| **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Data-derived level previews for six gods; Photon's EXP effect is unverified. Selection and Divine Sand are read-only. See [blessings.md](docs/blessings.md) |
+| **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Six level previews tested in Leda Chapter 9; Fortuna's EXP effect remains unknown. Selection and Divine Sand are read-only. See [blessings.md](docs/blessings.md) |
 
 Units can also be **copied in** from another slot or **removed**. Every edit can
 be undone (Ctrl+Z / Ctrl+Y), and **Snapshot** / **Restore…** keep copies of the
@@ -97,9 +97,14 @@ test candidate; the upstream release link below does not contain this branch.
 
 In **Blessings**, select a god, enter **New EXP**, click **Apply EXP**, then
 Ctrl+S. Level buttons fill the input only. Turn off **Also edit this route's
-other saves**. Photon accepts raw EXP but has no established level thresholds;
-the other six previews come from game data and await this milestone's game
-tests. EXP alone does not grant a first audience or unlock a temple.
+other saves**. Fortuna (labelled Photon in Test 1) accepts raw EXP but has no
+established level thresholds. All BLESS-01–11 acceptance cases passed on the
+reported Leda Chapter 9 / `fefw-recomp-0.1.5` setup; six gods displayed the
+tested level 2, including Kalla's decrease from level 3. Fortuna retained EXP 1;
+the player also reported no noticeable Blessings-screen change at maximum
+stored EXP (65535). Its gameplay effect remains unknown. EXP alone does not
+establish first-audience or temple-access flags. See the report for the exact
+values and coverage limits.
 
 * [Blessings feature, thresholds and binary-format documentation](docs/blessings.md)
 * [Milestone 2: all seven gods test guide](docs/testing-blessings.md)

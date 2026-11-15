@@ -50,7 +50,7 @@ class BlessingPageMixin:
             button.pack(side="left", padx=(0, 6))
             self.blessing_presets.append(button)
         ttk.Label(page, style="CardFaint.TLabel", wraplength=980, justify="left", text=(
-            "Edit one god at a time. Level previews use game-data thresholds; Photon is special. "
+            "Edit one god at a time. Level previews use game-data thresholds; Fortuna is special. "
             "EXP alone does not grant an audience or unlock a temple. Selection and Divine Sand stay as stored.\n"
             "Turn off ‘Also edit this route’s other saves’. Apply EXP changes memory; "
             "Ctrl+S saves, Ctrl+Z undoes, Ctrl+Y redoes."
@@ -82,7 +82,7 @@ class BlessingPageMixin:
             tree.selection_set([i for i in keep if tree.exists(i)])
             self.blessing_summary.configure(text=(
                 f"All 7 gods · Divine Sand: {table.divine_sand:,} (read-only) · "
-                "Level previews need confirmation in game."))
+                "Level previews are derived from stored EXP."))
         except core.SaveError as exc:
             self.blessing_summary.configure(text=str(exc))
         finally:
@@ -111,7 +111,7 @@ class BlessingPageMixin:
                 button.configure(text=f"Level {i + 1}: {value}")
                 button.state(["!disabled"])
         else:
-            detail = "Photon has zero-valued threshold fields; its EXP effect is unverified."
+            detail = "EXP effect unknown; no Blessings-screen change reported at EXP 1 or 65535."
         self.blessing_detail.configure(text=f"{god.name} · EXP range 0–65535. {detail}")
 
     def _blessing_preset(self, index):

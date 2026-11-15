@@ -2,7 +2,7 @@
 
 No selection, Divine Sand, audience, deed or story flags are changed here.
 The level preview is derived from data thresholds, not a stored level field.
-See docs/blessings.md for evidence, Photon and game-validation limits.
+See docs/blessings.md for evidence, Fortuna and game-validation limits.
 """
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ class God:
 
 
 GODS = (
-    God("Photon", "MIR_フォトナ", None),
+    God("Fortuna", "MIR_フォトナ", None),
     God("Mars", "MIR_マーズ", (25, 60, 120)),
     God("Credna", "MIR_クレール", (15, 40, 80)),
     God("Kalla", "MIR_カーラ", (20, 50, 100)),
@@ -99,7 +99,7 @@ def read(f: core.SaveFile) -> Table:
 
 
 def level_preview(h: int, exp: int) -> int | None:
-    """Data-derived level 0–3; Photon has no established EXP progression."""
+    """Data-derived level 0–3; Fortuna has no established EXP progression."""
     thresholds = BY_HASH[h].thresholds
     return sum(exp >= threshold for threshold in thresholds) if thresholds else None
 

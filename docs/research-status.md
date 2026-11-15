@@ -2,7 +2,8 @@
 
 This records a staged contribution based on a Leda Part I Chapter 9 restoration.
 **Tutorials and its English flag labels** are implemented and player-tested.
-**Blessings EXP for all seven gods** is now implemented for game testing; see
+**Blessings EXP for all seven gods** is implemented and the BLESS-01–11
+acceptance run passed on the reported Leda Chapter 9 setup; see
 [the feature documentation](blessings.md), [test guide](testing-blessings.md)
 and [test report](test-results-blessings-2026-11-15.md). Other sections below
 are research notes and acceptance gates, not working UI features or
@@ -21,7 +22,7 @@ The game data version was not separately reported.
 | Stage | Feature | Implementation boundary | Game acceptance test |
 |---|---|---|---|
 | 1 | Tutorials and known English names | Selected save only; preserve Japanese keys and unknown records | [TUT-01–07](testing.md) |
-| 2 | Blessings | All seven EXP fields; six data-derived level previews; Photon special | [BLESS-01–11](testing-blessings.md), each god separately |
+| 2 | Blessings | All seven EXP fields; six data-derived level previews; Fortuna special | [BLESS-01–11](testing-blessings.md) passed; see coverage limits in the report |
 | 3 | Fast travel | Named destination flags, separate from map visibility | Add/remove one destination, travel, save/reload; check gates/map unchanged |
 | 4 | Notable deeds | Separate counter, completion and claim state | One incomplete, one complete-unclaimed and one claimed deed; verify rewards once |
 | 5 | Boons | Confirm ownership and activation storage before enabling writes | Controlled purchase/activation diff, effect check and persistence |
@@ -45,13 +46,21 @@ It was child 6 in the reference file; **child number is not a stable locator**.
 | +9 | Record count 7 |
 | +10 | Seven 11-byte records: u64 MIR hash, u8 selected, u16 EXP |
 
-Observed order: Photon, Mars, Credna, Kalla, Jurah, Smyrnos, Aurora. Preserve
+Observed order: Fortuna (labelled Photon in Test 1), Mars, Credna, Kalla, Jurah,
+Smyrnos, Aurora. Preserve
 selection and sand unless explicitly edited by a future separately validated
 control. Mars, Jurah and Smyrnos thresholds in data are 25/60/120; Kalla and
-Aurora 20/50/100; Credna 15/40/80. Photon has zero-valued threshold fields and
+Aurora 20/50/100; Credna 15/40/80. Fortuna has zero-valued threshold fields and
 no established EXP progression. The reference used Mars EXP 25 and Kalla EXP
-100. All seven are editable in this candidate. The six level previews are
-explicitly data-derived; broader in-game confirmation remains pending.
+100. All seven are editable. The six ordinary gods each displayed level 2 at
+the tested EXP (Mars/Jurah/Smyrnos 61, Credna 41, Kalla/Aurora 51); the supplied
+case files retain those values. Kalla's decrease from level 3 also worked.
+Fortuna EXP 1 persisted, with no noticeable in-game change reported. The player
+also reported no noticeable Blessings-screen change at maximum stored EXP
+(65535); that follow-up value and its persistence have not been independently
+checked from a supplied save. Full
+threshold-boundary sweeps, other routes/versions and Fortuna's field semantics
+remain unverified; these results do not establish that every EXP value is safe.
 
 Audience/access flags, including `初めてマーズと話した` and
 `初めてカーラと話した`, are separate from blessing EXP. Increasing EXP alone is

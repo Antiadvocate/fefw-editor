@@ -1,6 +1,10 @@
 # Milestone 2 test guide: Blessings EXP
 
 Candidate: **FEFW-Blessings-Test-1**, branch `feature/blessings-exp`.
+The initial run passed on 2026-11-15; see the [results](test-results-blessings-2026-11-15.md).
+This guide retains the tested build's **Photon** label for reproducibility;
+the current editor calls the same special record **Fortuna**, matching the
+in-game blessing name. This label correction does not require repeating the run.
 Use the commit in the archive's `BUILD.txt` when reporting. This candidate
 retains the accepted Tutorials changes and adds EXP editing for all seven gods.
 No new dependency is needed: reuse your working Tutorials Python environment,

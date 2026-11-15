@@ -2,10 +2,18 @@
 
 Milestone 2 exposes each god's **stored EXP** in the selected save. It does not
 write a level field. Six level previews use thresholds found in the game's
-data; Photon has special handling. The new controls await the
-[all-god game acceptance run](testing-blessings.md). Prior restoration of Mars
-level 1 and Kalla level 3 was player-confirmed; that does not validate every
-god or every EXP value.
+data; Fortuna has special handling. The [all-god acceptance run](testing-blessings.md)
+passed on Leda Part I Chapter 9 / `fefw-recomp-0.1.5`: all six ordinary gods
+displayed the tested level 2, including a reduction of Kalla from level 3.
+The seven supplied case saves retained their requested EXP. This validates the
+tested values and workflow, not every boundary or game version. See the
+[results](test-results-blessings-2026-11-15.md).
+
+**Naming correction:** Test 1 called the `MIR_フォトナ` record Photon. The
+player's screenshots identify its effect as **Fortuna's Blessing**. The current
+English display name is Fortuna; the Japanese key, full hash, save layout and
+editing behavior are unchanged. Historical BLESS-09 references to Photon mean
+this same record.
 
 ## Using the page
 
@@ -19,7 +27,7 @@ god or every EXP value.
 
 The input accepts 0–65535, the unsigned 16-bit storage range. This is **not** a
 recommendation to use extreme values in game. Initial gameplay tests use
-values within the six gods' data thresholds, and Photon 1 only as a controlled
+values within the six gods' data thresholds, and Fortuna 1 only as a controlled
 persistence experiment. Zero EXP remains editable even if the god has not yet
 been met.
 
@@ -39,7 +47,7 @@ They are not the truncated 32-bit keys used by some flag maps.
 
 | English name | Reads as | Full hash | Level 1 EXP | Level 2 EXP | Level 3 EXP |
 |---|---|---|---:|---:|---:|
-| Photon | `MIR_フォトナ` | `d2fdff3fa4a597ed` | Special | Special | Special |
+| Fortuna | `MIR_フォトナ` | `d2fdff3fa4a597ed` | Special | Special | Special |
 | Mars | `MIR_マーズ` | `a1e2e07e81a0a45b` | 25 | 60 | 120 |
 | Credna | `MIR_クレール` | `976774b9a9818925` | 15 | 40 | 80 |
 | Kalla | `MIR_カーラ` | `f4fe5a5c9aab9f81` | 20 | 50 | 100 |
@@ -53,11 +61,17 @@ fits the confirmed Mars 25 / level 1 and Kalla 100 / level 3 reference. The
 editor shows stored total EXP; a game progress bar might instead show progress
 within a level. Do not assume the displayed numbers must be identical.
 
-Photon's three threshold fields are all zero. Treating them as ordinary
+Fortuna's three threshold fields are all zero. Treating them as ordinary
 thresholds would misleadingly display level 3 at zero EXP. Its preview is
 therefore **Special / unknown**, and its level buttons are disabled. Raw EXP
-is editable as requested, but whether the game uses, ignores or resets it is
-unverified. No Photon level or gameplay effect is promised.
+is editable as requested. In BLESS-09, EXP 1 persisted on editor reload and in
+the supplied case save; the player saw no noticeable in-game change. In a
+follow-up, the player also set the maximum stored EXP (65535) and reported
+nothing easily noticeable on the Blessings screen. No follow-up save was
+supplied to independently check that maximum value or its persistence.
+These observations establish EXP 1 persistence and the reported screen
+behavior, not the meaning of the field or an absence of all possible effects.
+No Fortuna level or gameplay effect is promised.
 
 ## Technical layout and preservation
 
@@ -111,10 +125,10 @@ format locator:
 * `経験１`, `経験２`, `経験３` are unsigned two-byte fields at row offsets
   120, 144 and 168. Their field descriptors are at `0x28a2a8`, `0x28a2e8`
   and `0x28a328` in the inspected file.
-* Photon through Aurora row starts are `0x28a3f8`, `0x28a4a8`, `0x28a558`,
+* Fortuna through Aurora row starts are `0x28a3f8`, `0x28a4a8`, `0x28a558`,
   `0x28a608`, `0x28a6b8`, `0x28a768`, `0x28a818` respectively.
 * `謁見条件` is a separate field at row +48. Ordinary gods refer to first-talk
-  flags such as `共有_行動_初めてマーズと話した`; Photon has an empty value.
+  flags such as `共有_行動_初めてマーズと話した`; Fortuna has an empty value.
   The editor does not infer or write these flags from the EXP amount.
 
 For a different dump version, find the MIR rows and named field descriptors
