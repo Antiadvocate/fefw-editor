@@ -7,7 +7,8 @@
 | FEFW-Save-Editor-…-source.zip | macOS / anyone with Python 3.10+: `pip install -r requirements.txt`, then `python editor.py`. |
 
 **Close the game and back up your save folder first.** The first save next to
-each slot also keeps the untouched original as `<slot>.bak`.
+each slot also keeps the untouched original as `<slot>.bak`, and every save
+after that keeps the copy it replaced as `<slot>.bak1`, `.bak2` and so on.
 
 The `.exe` isn't code-signed, so Windows SmartScreen may say "Windows protected
 your PC" — click *More info → Run anyway*. Some antivirus tools also flag
