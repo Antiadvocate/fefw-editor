@@ -4,8 +4,10 @@
 47 mapped counters**. **32 activity counters** retain their existing editing
 controls. **Hours Played is now experimentally editable** on the Deeds Hours
 Test 1 branch; the other 14 remain read-only. See the [controlled Hours test](testing-deed-hours.md).
-The experiment changes its stored Deed total only; game recalculation and
-reward behavior are not yet established. The player completed the first [DEED acceptance
+The experiment changes its stored Deed total only. **HOURS-01–03 passed**:
+20 hours persisted, the game created completion, and the claim granted exactly
+20 Karma. Later real-hour updates and higher tiers remain untested; Test 1's
+Experimental label is retained in the supplied build. The player completed the first [DEED acceptance
 run](test-results-deeds-2026-11-15.md#player-acceptance-and-supplied-saves). Training
 completion and a +10-shard claim worked. Lowering training below a claimed tier
 caused the game to remove that claim, so **Test 2 adds an OK/Cancel warning**.
@@ -77,9 +79,9 @@ to substitute guessed completion/visibility edits for this workflow.
 
 At the player's request, [DEED-R01–15](deeds-follow-up.md) queues controlled tests
 for the remaining counters. The player has now selected Hours Played first.
-Only that counter is enabled experimentally for [HOURS-01–03](testing-deed-hours.md).
-A positive result can support a labelled assumption for a later group of
-game-wide counters; it will not establish every counter's dependencies.
+Only that counter is enabled experimentally, and [HOURS-01–03](testing-deed-hours.md)
+has passed. This supports a labelled assumption for a later group of game-wide
+counters; it does not establish every counter's dependencies.
 
 ## Coverage and limits
 
@@ -91,8 +93,9 @@ local performances and ore. The complete catalogue below specifies each one.
 Read-only: paralogues, three support conversation ranks, five skill growth
 ranks, two blessing growth counters and three insufficiently confirmed enemy
 categories. Story, conversation, skill and blessing totals may depend on
-underlying progress. Hours Played is experimental because it may be recalculated
-from elapsed time. The giant-enemy label remains provisional; livestock and golden/silver mummy
+underlying progress. Hours Played passed its short-session completion/claim
+test; recalculation at a later real hour boundary remains untested. The
+giant-enemy label remains provisional; livestock and golden/silver mummy
 names are confirmed by the DEED-08 screenshot, but their editing is untested. Raw EXP edits elsewhere do not
 prove that a growth deed counter can independently reproduce those changes.
 

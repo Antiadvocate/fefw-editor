@@ -2,12 +2,14 @@
 
 This records a staged contribution based on a Leda Part I Chapter 9 restoration.
 
-**Current experiment: Hours Played (DEED-R14), before the other remaining
-Deeds counters.** The user selected a controlled counter-only test, followed
+**Hours Played (DEED-R14) accepted for the 20-hour test**, before the other
+remaining Deeds counters. The user selected a controlled counter-only test, followed
 by consideration of other game-wide counters using its result as a working
 assumption. The [test guide](testing-deed-hours.md) and
-[probe report](test-results-deed-hours-2026-11-15.md) distinguish the experimental
-33rd editable counter from the accepted 32. No game pass is claimed yet.
+[acceptance report](test-results-deed-hours-2026-11-15.md) record HOURS-01–03
+passed: both game saves retain 20, the reward moves from ready (2) to claimed
+(4), and Karma rises exactly 410 → 430. The supplied build still labels the
+33rd counter Experimental; later real-hour updates remain untested.
 
 **Tutorials and its English flag labels** are implemented and player-tested.
 **Blessings EXP for all seven gods** is implemented and the BLESS-01–11
@@ -240,12 +242,13 @@ tracked separately; these observations are not registered as editor defects.
 ## Deeds: second pass requested
 
 The follow-up covers the **15 formerly read-only counters**, with Hours Played
-now first at the user's request. Only Hours is experimentally enabled; the
-remaining 14 wait for the result and an explicitly scoped follow-up.
+now passed at the user's request. Only Hours is newly enabled; the remaining
+14 await an explicitly scoped follow-up informed by that result.
 The [DEED-R01–15 register](deeds-follow-up.md) specifies counter-specific questions
 and the evidence gate for enabling each field. The accepted Deeds behavior
-and unclaim warning remain in place. Hours is an active experiment; the rest
-are queued work, not current acceptance.
+and unclaim warning remain in place. The three enemy counters are recommended
+next, followed by growth/support totals, with paralogues last. Extrapolated
+behavior must be labelled inferred; the rest are queued work, not acceptance.
 
 ## Story progress
 

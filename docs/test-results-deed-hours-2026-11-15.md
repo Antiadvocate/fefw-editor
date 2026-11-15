@@ -1,11 +1,47 @@
-# Hours Played Test 1 — preparation and validation
+# Hours Played Test 1 — accepted game result and validation
 
-Date: 2026-11-15. **Game result pending.**
+Date: 2026-11-15. **HOURS-01–03 passed by player report.** Both returned game
+saves corroborate the edited total, completion, claim and exact reward.
 
 The user requested Hours Played first, then consideration of other game-wide
 counter Deeds using the result as a working assumption. This branch adds one
 experimental editable counter to the accepted 32; the other 14 remain read-only.
 It does not modify the already merged main branch.
+
+## Player acceptance and returned saves
+
+| Field | Prepared Auto | Hours-before-claim | Hours-after-claim |
+|---|---:|---:|---:|
+| Hours Played counter eb92a0f6 | 20 | 20 | 20 |
+| 10-hour claim e0de8be2 | 4 | 4 | 4 |
+| 20-hour claim 71725a0a | Absent | 2 — complete, unclaimed | 4 — claimed |
+| Karma Shards | 410 | 410 | 430 |
+| Gold / Renown | 1523 / 6640 | 1523 / 6640 | 1523 / 6640 |
+
+The game creates the completion state itself after the counter-only edit,
+then records the claim and grants exactly 20 Karma. The player reports the
+brief-play, save/quit/reload and no-repeat-claim checks all passed. No new
+screenshots were supplied. The stored totals/states and currency are directly
+verified from the returns; the act of restarting and the menu's refusal to
+offer a second claim remain player-reported.
+
+Both returned containers have valid checksums and object trees. All parsed
+flag maps match the accepted baseline except Hours 17 → 20 and the new
+20-hour state. This preserves other Deeds/claims, Boon flags, shop restrictions,
+the Kalla gate, tutorials, travel and audiences. Blessing EXP, selections and
+Divine Sand match. Parsed unit values match after excluding structural offsets;
+the added claim record moves subsequent objects by eight bytes. All nine
+repaired live unit numbers remain distinct and unchanged. The files were
+read without modification. Game-resaved payloads are not byte-identical to
+the editor-generated probe.
+
+| Capture | Bytes | SHA-256 |
+|---|---:|---|
+| Hours-before-claim | 48,555 | `f9e46675094eae692e9d14dedf9e0ed77bf40638e6ae27cc90a4d9824eac51ef` |
+| Hours-after-claim | 48,555 | `6e5d791a0fd8fcdb98fe8dd5912fb9d14263a6ce7832c918df91cc8f4f634bf2` |
+
+These are acceptance captures. The accepted baseline remains the supplied
+Auto from B0-01-Unit-Selection-Test-1.zip; neither return replaces it.
 
 ## Exact prepared probe
 
@@ -38,7 +74,7 @@ The source is byte-identical after generation.
 
 ## Scope and checks
 
-The UI marks Hours **Experimental**, including a note that the game may
+The supplied Test 1 UI marks Hours **Experimental**, including a note that the game may
 recalculate it. Existing bounds, unknown-state refusal, claims-at-risk warning,
 mirroring guard and Undo/Redo remain applicable. Only Hours is newly enabled.
 
@@ -65,10 +101,19 @@ python research/deed_hours_probe.py --source /path/to/accepted/Auto --output /ne
 Private saves, screenshots and game binaries are not in GitHub or the editor
 source archive. The separately supplied probe archive is private test evidence.
 
+The opt-in returned-save regression is enabled by FEFW_HOURS_CAPTURE_DIR,
+alongside FEFW_WEAPONS_TEST_SAVE. It checks the exact captures, game-created
+completion, 2 → 4 claim transition, 20-Karma reward, preserved progress and
+unchanged input files. Private capture files remain excluded from public CI.
+All **19 focused Deeds tests passed** with the returned-save check enabled.
+This acceptance update changes documentation and adds that private regression;
+it does not alter editor behavior or require another download.
+
 ## Acceptance boundary
 
-Use [HOURS-01–03](testing-deed-hours.md). Game display, completion, recalculation,
-reward accounting and game reload are unverified until returned evidence or
-player results establish them. A short reload test cannot prove behavior at
-every future hour boundary. Any later generalization to other counter groups
-will be explicit inference, not retroactive acceptance of those fields.
+[HOURS-01–03](testing-deed-hours.md) establishes the 17 → 20 counter-only edit,
+game completion, reward accounting and short-session persistence on the tested
+Leda Chapter 9 setup. No immediate recalculation overwrote the edited total.
+A later natural hour boundary, higher Hours tiers and every other counter
+remain untested. The next game-wide counter group may use this result as a
+labelled working assumption; that is inference, not individual acceptance.

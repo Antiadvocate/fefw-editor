@@ -1,34 +1,39 @@
-# Follow-up: test the 15 read-only Notable Deeds counters
+# Follow-up: the 15 originally read-only Notable Deeds counters
 
-**Active: Hours Played first**, at the player's request after completion of
-Boons. [HOURS-01–03](testing-deed-hours.md) tests DEED-R14 using a disposable
-17 → 20-hour counter edit. The test branch enables only Hours as Experimental;
-the accepted 32-counter workflow and claimed-reward warning remain intact.
+**Hours Played passed**, following the player's requested first experiment
+after Boons. [HOURS-01–03](testing-deed-hours.md) tested DEED-R14 using a
+17 → 20-hour counter edit. Both returned saves confirm persistence, completion
+and the 20-Karma claim; see the [evidence](test-results-deed-hours-2026-11-15.md).
+The supplied Test 1 build still labels Hours Experimental. The other 14 remain
+read-only, and the accepted claimed-reward warning remains intact.
 
 The user then wants to consider other game-wide counter Deeds using the Hours
-result as a working assumption. A successful Hours test can inform the next
+result as a working assumption. The successful Hours test informs the next
 experimental group, but is not proof that event totals, ranks, conversations,
 blessings and story-derived totals share an updater. Label such extrapolation
 as inferred and confirm representative game behavior before broad acceptance.
 
-No result for the Hours test is claimed yet. Do not run the other listed edits
-in the current build; 14 remain read-only. The earlier instruction to wait for
-a dedicated build is now satisfied for Hours only.
+Recommended next group: the three enemy totals, which can build on the
+existing ordinary/undead/beast counter workflow and this Hours result. Mark
+newly exposed counters as inferred until their own evidence is available.
+Then consider skill/blessing growth and support conversation totals, with
+paralogues last because of their story relationship. Do not request individual
+natural captures for all fields as a prerequisite to a labelled experiment.
 
 ## Order and case register
 
 | ID | Counter | Initial question |
 |---|---|---|
-| DEED-R14 | Hours played | Determine whether the game derives this from its underlying play-time fields |
+| DEED-R14 | Hours played | Passed: 17 → 20 persists across short play and reload; completion/claim and +20 Karma verified. Later real-hour updates untested. |
 | DEED-R01 | Livestock defeated in battle | Does an isolated counter edit persist, show the right category and refresh completion? |
 | DEED-R02 | Golden or silver mummies defeated | Same test, independently from livestock; English name is already confirmed |
 | DEED-R03 | Giant foes defeated (provisional translation) | Confirm the English enemy category first, then test its counter |
 | DEED-R04 | Blessings raised to level 2 | Is this a recorded event total or recomputed from current blessing EXP? |
 | DEED-R05 | Blessings raised to maximum | Same distinction at maximum level; avoid changing audience flags |
 | DEED-R06 | Skill levels raised to C | Does a counter-only edit survive reload and a normal rank-up? |
-| DEED-R07 | Skill levels raised to B | Verify separately; do not infer from C |
-| DEED-R08 | Skill levels raised to A | Verify separately |
-| DEED-R09 | Skill levels raised to S | Verify separately |
+| DEED-R07 | Skill levels raised to B | Check whether the growth-counter assumption holds at B |
+| DEED-R08 | Skill levels raised to A | Same question at A; label extrapolation as inferred |
+| DEED-R09 | Skill levels raised to S | Same question at S; label extrapolation as inferred |
 | DEED-R10 | Skill levels raised to maximum | Verify separately; confirm the in-game rank wording |
 | DEED-R11 | C support conversations viewed | Distinguish event count from individual viewed-conversation flags |
 | DEED-R12 | B support conversations viewed | Verify separately from C |
@@ -56,6 +61,7 @@ so the first experiment does not reset an already claimed reward.
    a way to identify game recalculation or missing completion. Keep known
    derived totals read-only when their underlying progress must be changed.
 
-The accepted unclaim warning must apply to any newly editable counter. No
-bulk unlock of these 15 counters, direct claim writes, or story/support flag
-changes are part of this follow-up without separate evidence.
+The accepted unclaim warning must apply to any newly editable counter. The
+next build may expose an explicitly scoped inferred group; this acceptance
+update enables no further fields. Direct claim writes and changes to the
+underlying story/support progression are outside this counter-only workflow.

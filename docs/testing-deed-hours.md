@@ -1,7 +1,9 @@
 # Hours Played experiment — Test 1
 
-Status: prepared, game result pending. This is DEED-R14, moved ahead of the
-other read-only Deeds at the player's request.
+Status: **HOURS-01–03 passed by player report**, corroborated by both returned
+saves. See the [acceptance report](test-results-deed-hours-2026-11-15.md).
+The procedure below records the completed DEED-R14 experiment; no repeat is
+requested. The other 14 counters await the next scoped build.
 
 ## Prepared inputs
 
@@ -64,4 +66,6 @@ baseline, turn off route mirroring, set Hours played to 20 and save.
   later group of game-wide counters. It does not prove that ranks, conversations,
   blessings, paralogues or every other counter shares the same behavior.
 
-No game pass or broader counter unlock is claimed before the return is reviewed.
+The returned files now establish 20 hours, complete/unclaimed state 2 followed
+by claimed state 4, and exactly 20 Karma gained. Broader counter behavior is
+still an inference to test, not an observed result of this Hours experiment.
