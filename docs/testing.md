@@ -1,5 +1,8 @@
 # Milestone 1 test guide: Tutorials and names
 
+Complete [source setup](source-setup.md) first. Python 3.12 is recommended;
+record installation or launch problems as SETUP-01 before starting game tests.
+
 ## Record the environment
 
 Use a disposable copy of a known working save folder. Close the game and editor
@@ -47,6 +50,7 @@ Game version:
 Emulator/recomp version or hardware:
 Route / part / chapter:
 B0 file:
+SETUP-01 (setup / launch):
 TUT-01:
 TUT-02:
 TUT-03:

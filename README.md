@@ -124,9 +124,21 @@ Get the latest build from the
 
 ## Running from source
 
-```
-pip install -r requirements.txt
-python editor.py
+For the tutorial test candidate, **Python 3.12 is recommended**. The automated
+checks have passed on Python 3.10 and 3.12, on Linux and Windows. The code's
+minimum syntax version is 3.10; this does not mean dependencies have been
+validated on every newer Python release. Python 3.15 is not validated.
+
+Follow [the source setup guide](docs/source-setup.md) before the gameplay tests.
+It includes a Bazzite/Distrobox route with packaged dependencies and a virtual
+environment route for an existing Python 3.12 installation.
+
+With Python 3.12 and Tkinter already installed (Linux/macOS):
+
+```sh
+python3.12 -m venv .venv-fefw312
+.venv-fefw312/bin/python -m pip install --only-binary=:all: -r requirements.txt
+.venv-fefw312/bin/python editor.py
 ```
 
 On Arch and other distros that block system-wide `pip install`, install the
@@ -137,11 +149,12 @@ sudo pacman -S tk python-zstandard
 python editor.py
 ```
 
-(Debian/Ubuntu: `sudo apt install python3-tk python3-zstandard`.) Or use a
-virtual environment: `python -m venv .venv && .venv/bin/pip install -r
-requirements.txt && .venv/bin/python editor.py`.
+(Debian/Ubuntu: `sudo apt install python3-tk python3-zstandard`, then use
+`/usr/bin/python3 -s editor.py`.) For a virtual environment, use the explicit
+Python 3.12 commands above rather than an unqualified `python` command.
 
-or double-click **FEFW Save Editor.bat** on Windows. Python 3.10+. You can also
+or double-click **FEFW Save Editor.bat** on Windows once its Python interpreter
+has the dependencies installed. You can also
 pass a save folder (or any slot file in it): `python editor.py "C:\path\to\save"`.
 
 ## Finding your save
