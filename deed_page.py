@@ -97,12 +97,15 @@ class DeedPageMixin:
                 progress = f"{min(value, tier['target']):,}/{tier['target']:,}{reached}"
                 tree.insert("", "end", iid=iid, text=f"{row['label']} · {tier['target']:,}", values=(
                     progress, tier["reward"], deeds.claim_label(state),
-                    "Read-only" if reason else "Editable", tier["name"], tier["hash"]))
+                    deeds.editing_label(h, values), tier["name"], tier["hash"]))
         tree.selection_set([i for i in keep if tree.exists(i)])
         if view:
             tree.yview_moveto(view[0])
         editable = sum(not deeds.read_only_reason(h, values) for h in cat)
+        experimental = sum(not deeds.read_only_reason(h, values) and bool(row.get('experimental_note'))
+                           for h, row in cat.items())
         self.deed_count.configure(text=(f"{len(self._deed_rows)} of {total} milestones · {editable} of {len(cat)} counters editable · "
+                                        f"{experimental} experimental · "
                                         f"{claimed} claimed · {unclaimed} complete, unclaimed (stored)"))
         self._deed_selected()
 
@@ -127,6 +130,8 @@ class DeedPageMixin:
         value = values.get(h, 0)
         stored = f"{value:,}" if h in values else "0 (not stored)"
         note = reason or f"Allowed total: 0–{deeds.maximum(h, values):,}. Updates all {len(row['milestones'])} milestones' progress. The game may clear claims below target."
+        if not reason and row.get('experimental_note'):
+            note = row['experimental_note'] + '\n' + note
         self.deed_detail.configure(text=f"{row['label']} · current total: {stored}\n{row['name']} · {h:08x}\n{note}")
         self.deed_value.state(["!disabled"])
         self.deed_value.delete(0, "end")

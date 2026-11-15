@@ -1,6 +1,14 @@
 # Save-editing contribution roadmap and evidence
 
 This records a staged contribution based on a Leda Part I Chapter 9 restoration.
+
+**Current experiment: Hours Played (DEED-R14), before the other remaining
+Deeds counters.** The user selected a controlled counter-only test, followed
+by consideration of other game-wide counters using its result as a working
+assumption. The [test guide](testing-deed-hours.md) and
+[probe report](test-results-deed-hours-2026-11-15.md) distinguish the experimental
+33rd editable counter from the accepted 32. No game pass is claimed yet.
+
 **Tutorials and its English flag labels** are implemented and player-tested.
 **Blessings EXP for all seven gods** is implemented and the BLESS-01–11
 acceptance run passed on the reported Leda Chapter 9 setup; see
@@ -231,11 +239,13 @@ tracked separately; these observations are not registered as editor defects.
 
 ## Deeds: second pass requested
 
-The queued editor follow-up covers the **15 read-only counters**, starting
-with livestock, golden/silver mummies and the provisional giant-enemy category.
+The follow-up covers the **15 formerly read-only counters**, with Hours Played
+now first at the user's request. Only Hours is experimentally enabled; the
+remaining 14 wait for the result and an explicitly scoped follow-up.
 The [DEED-R01–15 register](deeds-follow-up.md) specifies counter-specific questions
 and the evidence gate for enabling each field. The accepted Deeds behavior
-and unclaim warning remain in place. This is queued work, not current acceptance.
+and unclaim warning remain in place. Hours is an active experiment; the rest
+are queued work, not current acceptance.
 
 ## Story progress
 
@@ -264,3 +274,12 @@ Do not present an arbitrary skip as safe merely because the container parses.
 No personal save, screenshots containing personal data, or game binary belongs
 in the public test fixtures. Use small synthetic payloads for CI and record
 private game-test outcomes separately.
+
+## Newly requested Facilities scope
+
+Facility locking/unlocking is queued after the current Deeds investigation.
+Start with independently verified shop restrictions and distinguish service
+availability, physical-entry conditions and fast-travel registration. The
+previous shop and Gate of the Gods Kalla's Temple repairs motivate these
+controls; those baseline repairs remain resolved, not new editor defects.
+Preserve unrelated facilities, including the intentionally locked Stables.

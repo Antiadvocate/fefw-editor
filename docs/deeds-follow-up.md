@@ -1,22 +1,25 @@
 # Follow-up: test the 15 read-only Notable Deeds counters
 
-**Queued at the player's request, after the Boons milestone.** The existing
-EXP Boon toggle is now accepted. This is a
-separate second Deeds pass; the accepted 32-counter workflow stays accepted.
-No controls are enabled by this plan. Do not run these cases yet: each needs
-a specific disposable baseline and an individually reviewed test build.
+**Active: Hours Played first**, at the player's request after completion of
+Boons. [HOURS-01–03](testing-deed-hours.md) tests DEED-R14 using a disposable
+17 → 20-hour counter edit. The test branch enables only Hours as Experimental;
+the accepted 32-counter workflow and claimed-reward warning remain intact.
 
-**Player clarification (2026-11-15):** wait for that build before testing
-counter edits. This register is the development backlog, not a checklist
-to complete in the current read-only UI. Natural before/after gameplay
-captures are optional research; none are requested during the Boons round.
-The first dedicated build will expose the selected counters and provide
-numbered instructions, then later batches will cover the remaining fields.
+The user then wants to consider other game-wide counter Deeds using the Hours
+result as a working assumption. A successful Hours test can inform the next
+experimental group, but is not proof that event totals, ranks, conversations,
+blessings and story-derived totals share an updater. Label such extrapolation
+as inferred and confirm representative game behavior before broad acceptance.
+
+No result for the Hours test is claimed yet. Do not run the other listed edits
+in the current build; 14 remain read-only. The earlier instruction to wait for
+a dedicated build is now satisfied for Hours only.
 
 ## Order and case register
 
 | ID | Counter | Initial question |
 |---|---|---|
+| DEED-R14 | Hours played | Determine whether the game derives this from its underlying play-time fields |
 | DEED-R01 | Livestock defeated in battle | Does an isolated counter edit persist, show the right category and refresh completion? |
 | DEED-R02 | Golden or silver mummies defeated | Same test, independently from livestock; English name is already confirmed |
 | DEED-R03 | Giant foes defeated (provisional translation) | Confirm the English enemy category first, then test its counter |
@@ -30,10 +33,9 @@ numbered instructions, then later batches will cover the remaining fields.
 | DEED-R11 | C support conversations viewed | Distinguish event count from individual viewed-conversation flags |
 | DEED-R12 | B support conversations viewed | Verify separately from C |
 | DEED-R13 | A support conversations viewed | Verify separately from C and B |
-| DEED-R14 | Hours played | Determine whether the game derives this from its underlying play-time fields |
 | DEED-R15 | Paralogues cleared | Determine whether the game derives this from quest/story completion |
 
-## Evidence required before enabling each counter
+## Evidence and later experimental groups
 
 Use a fresh copy for one counter at a time. Record the original total,
 milestone claim states and Karma balance. Prefer an unclaimed next milestone
@@ -49,9 +51,10 @@ so the first experiment does not reset an already claimed reward.
 4. Test one offered reward independently: record its amount, accept it once,
    save/reload and verify no second claim. Preserve other claims and currency
    except that exact intended reward.
-5. Document the counter-specific result, dependencies and limits. Enable only
-   counters whose evidence supports an independent edit. Keep derived totals
-   read-only when changing their source progress is required.
+5. Document the tested result and its limits. If extending that result to a
+   group of similar counters, mark the extension as an assumption and retain
+   a way to identify game recalculation or missing completion. Keep known
+   derived totals read-only when their underlying progress must be changed.
 
 The accepted unclaim warning must apply to any newly editable counter. No
 bulk unlock of these 15 counters, direct claim writes, or story/support flag

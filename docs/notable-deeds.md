@@ -1,8 +1,11 @@
 # Notable Deeds: progress and claim states
 
 **Notable Deeds** provides a searchable table of **350 milestones across
-47 mapped counters**. **32 activity counters** can be edited, one at a time.
-The other 15 are read-only. The player completed the first [DEED acceptance
+47 mapped counters**. **32 activity counters** retain their existing editing
+controls. **Hours Played is now experimentally editable** on the Deeds Hours
+Test 1 branch; the other 14 remain read-only. See the [controlled Hours test](testing-deed-hours.md).
+The experiment changes its stored Deed total only; game recalculation and
+reward behavior are not yet established. The player completed the first [DEED acceptance
 run](test-results-deeds-2026-11-15.md#player-acceptance-and-supplied-saves). Training
 completion and a +10-shard claim worked. Lowering training below a claimed tier
 caused the game to remove that claim, so **Test 2 adds an OK/Cancel warning**.
@@ -43,7 +46,7 @@ normal and a zero-to-zero action does not manufacture a record.
 | Progress | Counter compared with this tier's target; may differ from the game's currently refreshed display |
 | Karma Shards | Reward amount from the mapped data; not currency granted by the editor |
 | Claim state (stored) | The actual milestone flag, independent of the displayed progress |
-| Counter editing | Editable or Read-only; select the row for the reason |
+| Counter editing | Editable, Experimental or Read-only; select the row for the note/reason |
 | Reads as · milestone key | Original Japanese milestone key, preserved exactly |
 | Milestone hash | Stable low-32-bit hashed identity |
 
@@ -73,9 +76,10 @@ to substitute guessed completion/visibility edits for this workflow.
 ## Planned second pass
 
 At the player's request, [DEED-R01–15](deeds-follow-up.md) queues controlled tests
-for every read-only counter after the Boons milestone, starting with the three
-enemy counters. These fields stay read-only until their individual results
-support enabling them.
+for the remaining counters. The player has now selected Hours Played first.
+Only that counter is enabled experimentally for [HOURS-01–03](testing-deed-hours.md).
+A positive result can support a labelled assumption for a later group of
+game-wide counters; it will not establish every counter's dependencies.
 
 ## Coverage and limits
 
@@ -85,9 +89,10 @@ Salvation, skirmishes, clashes, links, searches, rare search materials, feasts,
 local performances and ore. The complete catalogue below specifies each one.
 
 Read-only: paralogues, three support conversation ranks, five skill growth
-ranks, two blessing growth counters, play time, and three insufficiently
-confirmed enemy categories. The first eleven may depend on underlying
-progress. Play time may be recalculated from elapsed time. The giant-enemy label remains provisional; livestock and golden/silver mummy
+ranks, two blessing growth counters and three insufficiently confirmed enemy
+categories. Story, conversation, skill and blessing totals may depend on
+underlying progress. Hours Played is experimental because it may be recalculated
+from elapsed time. The giant-enemy label remains provisional; livestock and golden/silver mummy
 names are confirmed by the DEED-08 screenshot, but their editing is untested. Raw EXP edits elsewhere do not
 prove that a growth deed counter can independently reproduce those changes.
 
@@ -158,7 +163,7 @@ any hashed key.
 | C support conversations viewed | `実績_支援会話C再生数` | `6e05ea11` | Read-only | 5, 10, 15, 20, 25, 30, 35, 40, 45, 50 | 10, 10, 15, 20, 25, 30, 35, 40, 45, 50 |
 | B support conversations viewed | `実績_支援会話B再生数` | `cc4a3b3a` | Read-only | 5, 10, 15, 20, 25, 30, 35, 40, 45, 50 | 10, 10, 15, 20, 25, 30, 35, 40, 45, 50 |
 | A support conversations viewed | `実績_支援会話A再生数` | `01aca43b` | Read-only | 5, 10, 15, 20, 25, 30, 35, 40, 45, 50 | 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 |
-| Hours played | `実績_プレイ時間` | `eb92a0f6` | Read-only | 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 250, 300 | 10, 20, 30, 40, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50 |
+| Hours played | `実績_プレイ時間` | `eb92a0f6` | Experimental | 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 250, 300 | 10, 20, 30, 40, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50 |
 | Skill levels raised to C | `実績_技能レベルC成長数` | `c6f4cfe6` | Read-only | 3 | 10 |
 | Skill levels raised to B | `実績_技能レベルB成長数` | `05413e55` | Read-only | 3 | 20 |
 | Skill levels raised to A | `実績_技能レベルA成長数` | `69c3bd94` | Read-only | 3 | 30 |

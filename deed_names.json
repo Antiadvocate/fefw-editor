@@ -276,8 +276,8 @@
       "name": "実績_プレイ時間",
       "label": "Hours played",
       "category": "Time",
-      "editable": false,
-      "read_only_reason": "The game may recalculate this counter from elapsed play time.",
+      "editable": true,
+      "read_only_reason": "",
       "milestones": [
         {
           "name": "実績状態_合計時間プレイ",
@@ -363,7 +363,8 @@
           "target": 300,
           "reward": 50
         }
-      ]
+      ],
+      "experimental_note": "Hours Played experiment: edits the Deed counter only. The game may recalculate it; check completion and save/load before relying on it."
     },
     "c6f4cfe6": {
       "name": "実績_技能レベルC成長数",

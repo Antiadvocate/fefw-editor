@@ -13,6 +13,7 @@ FOES = core.id_hash('実績_敵撃破数')
 GIFTS = core.id_hash('実績_贈り物回数')
 GAMBITS = core.id_hash('実績_計略回数')
 TIME = core.id_hash('実績_プレイ時間')
+PARALOGUES = core.id_hash('実績_外伝クリア数')
 CLAIM = core.id_hash('実績状態_訓練を実行')
 READY = core.id_hash('実績状態_訓練を実行_1')
 BOON = 0x3b6429de
@@ -50,7 +51,8 @@ class DeedTest(unittest.TestCase):
     def test_catalog_and_english_flag_labels(self):
         cat = deeds.catalog()
         self.assertEqual(len(cat), 47)
-        self.assertEqual(sum(r['editable'] for r in cat.values()), 32)
+        self.assertEqual(sum(r['editable'] for r in cat.values()), 33)
+        self.assertEqual([h for h, r in cat.items() if r.get('experimental_note')], [TIME])
         self.assertEqual(sum(len(r['milestones']) for r in cat.values()), 350)
         self.assertEqual([(t['target'], t['reward']) for t in cat[TRAIN]['milestones']],
                          [(n, 10) for n in (10, 20, 30, 40, 50, 75, 100)])
@@ -97,7 +99,7 @@ class DeedTest(unittest.TestCase):
     def test_invalid_readonly_unknown_claim_and_negative_progress_fail_atomically(self):
         f = fixture([rows()]); before = bytes(f.payload)
         for h, value in ((TRAIN, -1), (TRAIN, 101), (TRAIN, True), (TRAIN, 1.5),
-                         (TRAIN, '75'), (TIME, 18), (CLAIM, 2), (0xdeadbeef, 1)):
+                         (TRAIN, '75'), (PARALOGUES, 18), (CLAIM, 2), (0xdeadbeef, 1)):
             with self.subTest(h=h, value=value), self.assertRaises(deeds.DeedError):
                 deeds.edited(f, h, value)
         self.assertEqual(bytes(f.payload), before)

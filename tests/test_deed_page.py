@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 import deeds
 import fefw_core as core
-from test_deeds import TRAIN, TIME, rows
+from test_deeds import TRAIN, PARALOGUES, rows
 from test_fast_travel import fixture
 from test_tutorial_page import PageHarness
 
@@ -81,7 +81,7 @@ class DeedPageTest(unittest.TestCase):
         app.mirrored = False
         for value in ('bad', '1.5', '-1', '101', '65'):
             app.input = value; app.set_deed()
-        app._deed_rows['milestone'] = (TIME, deeds.catalog()[TIME]['milestones'][0])
+        app._deed_rows['milestone'] = (PARALOGUES, deeds.catalog()[PARALOGUES]['milestones'][0])
         app.input = '20'; app.set_deed()
         self.assertEqual(app.messages[-1][1], 'error')
         app.selected = (); app.set_deed()

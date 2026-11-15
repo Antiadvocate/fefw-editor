@@ -30,6 +30,10 @@ def catalog() -> dict[int, dict]:
                     or not row["milestones"] or not row["category"]
                     or (not row["editable"] and not row["read_only_reason"])):
                 raise ValueError("invalid counter identity")
+            if 'experimental_note' in row and (not row['editable']
+                    or not isinstance(row['experimental_note'], str)
+                    or not row['experimental_note'].strip()):
+                raise ValueError('invalid experimental counter note')
             last = 0
             for tier in row["milestones"]:
                 sh = int(tier["hash"], 16)
@@ -116,6 +120,12 @@ def read_only_reason(h: int, values: dict[int, int]) -> str:
 def maximum(h: int, values: dict[int, int]) -> int:
     """Allow up to the final mapped target, or retain/reduce a higher existing total."""
     return max(catalog()[h]["milestones"][-1]["target"], values.get(h, 0))
+
+
+def editing_label(h: int, values: dict[int, int]) -> str:
+    if read_only_reason(h, values):
+        return 'Read-only'
+    return 'Experimental' if catalog()[h].get('experimental_note') else 'Editable'
 
 
 def claims_at_risk(h: int, value: int, values: dict[int, int]) -> list[dict]:
