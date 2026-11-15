@@ -11,7 +11,7 @@ available or active state from the catalogue, the player's balance, a clear
 count, or the presence of one candidate flag. There are no write controls.
 Browsing does not create undo entries or change the save.
 
-## What is known
+## What was known when Research 1 shipped
 
 * The user manually claimed rewards and purchased/activated EXP +10%. The
   working save contains shared-map hash `3b6429de` with raw value **1**.
@@ -31,6 +31,36 @@ The first [numbered capture guide](testing-boons.md) isolates an existing EXP
 activation control, if one exists, and one weapon-discount purchase on a
 separate baseline copy. A missing control must be recorded rather than assumed.
 Effects and stacking need a subsequent round after the save mapping is known.
+
+## Research 1 capture results — 2026-11-15
+
+The player has completed the [first capture round](test-results-boons-2026-11-15.md#player-results-and-controlled-save-comparisons).
+The six supplied individual save containers establish:
+
+| Observed operation | Live shared-map change | Karma |
+|---|---|---|
+| Existing Increased Exp 10% off | Add `6447f467 = 1`; `3b6429de` remains 1 | 710 unchanged |
+| Existing Increased Exp 10% on | Remove `6447f467`; `3b6429de` remains 1 | 710 unchanged |
+| Buy Weapons Discount 10%, immediately active | Add `5bfcaa34 = 1` | 710 → 410 |
+| Reload after purchase | `5bfcaa34 = 1` persists | 410 unchanged |
+
+Thus EXP has a separate disable marker; its older candidate record is not
+sufficient to indicate whether the effect is active. Exact symbolic keys,
+higher-tier encodings, weapon-discount disable state, cross-file propagation
+and measured gameplay effects remain unknown. These results do not establish
+EXP purchase semantics. The Weapons Discount capture combines purchase and
+automatic activation, so its added record is described as purchase-associated.
+
+Screenshots confirm **Increased Exp** and **Weapons Discount** as group
+wording. The left-hand 20% locked rows show the next tier; the right-hand
+10% status is the owned tier. Keep those separate when designing the UI.
+Research 1's published catalogue labels and conservative inspector are
+unchanged by this documentation update.
+
+All six containers pass checksum checks and preserve the other parsed
+feature data recorded in the report. A separate unidentified map-4 flag
+appears on the post-purchase reload; do not treat it as a Boon flag. Full
+folder synchronization and actual EXP/shop-price effects were not tested.
 
 ## Reference format
 
@@ -73,9 +103,12 @@ English name for `3b6429de` to Flags.
 
 ## Next implementation gate
 
-Compare the controlled full-folder snapshots, identify every changed field,
-and document purchase/activation semantics before adding writes. Then test a
-single identified effect with undo, persistence and an actual effect check.
+Use the controlled captures above to implement a narrowly scoped trial of
+the identified EXP disable marker on an already-owned +10% Boon, with undo,
+persistence and an actual effect check. Ownership and Karma must stay intact;
+unknown state values must remain untouched. Any additional purchase or
+activation control needs its own mapping and test evidence. Full-folder
+propagation is unresolved because individual containers were returned.
 Do not generalise one successful Boon to every tier or bypass story/clear
 requirements without separate evidence. Existing working Boons are preserved.
 

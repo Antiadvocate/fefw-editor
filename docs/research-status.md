@@ -43,7 +43,7 @@ The game data version was not separately reported.
 | 2 | Blessings | All seven EXP fields; six data-derived level previews; Fortuna special | [BLESS-01–11](testing-blessings.md) passed; see coverage limits in the report |
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
-| 5 | Boons | Read-only 81-tier reference catalogue; purchase/activation writes await controlled evidence | [BOON-01–04](testing-boons.md): inspector and isolated full-folder captures; effect testing follows |
+| 5 | Boons | Read-only 81-tier catalogue; EXP disable marker and first Weapons Discount purchase-associated record now isolated; no write controls yet | [BOON-01–04 evidence](test-results-boons-2026-11-15.md#player-results-and-controlled-save-comparisons) returned as six individual containers; editable-state and actual-effect tests follow |
 | 6 | Story | Read-only summary first; narrowly validated Leda transitions only | Load scene, advance to battle, finish/save/reload with no missing facilities |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
@@ -172,8 +172,24 @@ save/reload. Preserve the already working reference boon; do not repeat the
 failed attempt on it. Other tiers need separate evidence.
 
 The **Boons Research 1** tab and [reference documentation](boons.md) are now
-implemented. [BOON-01–04](testing-boons.md) requests the controlled captures;
-this milestone is in progress and no Boon write is enabled.
+implemented. [BOON-01–04](testing-boons.md) captures have now been returned;
+the [comparison report](test-results-boons-2026-11-15.md#player-results-and-controlled-save-comparisons)
+supersedes the earlier uncertainty about the EXP toggle:
+
+* EXP off adds `6447f467 = 1`; on removes it. `3b6429de = 1` and Karma 710
+  persist in both states. Ownership and activation cannot be represented by
+  the older candidate alone; EXP purchase/higher-tier semantics remain untested.
+* Purchasing **Weapons Discount 10%** adds `5bfcaa34 = 1`, spends exactly 300
+  Karma (710 → 410) and activates immediately. The record and balance persist
+  on reload. Its independent disable state has not been captured.
+* All six containers pass checksum checks. Known tutorials, travel, audiences,
+  blessing values and Deeds records match the baseline. Reload also adds an
+  unidentified `75060745 = 1` in another map; no dependency is inferred.
+
+Only individual containers were supplied, so full-folder synchronization is
+unverified. Actual EXP and shop-price effects also remain untested. The next
+editable trial is the identified disable marker for an already-owned EXP
++10% Boon. This milestone is in progress and no Boon write is enabled yet.
 
 ## Deeds: second pass requested
 

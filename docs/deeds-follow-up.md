@@ -5,6 +5,13 @@ separate second Deeds pass; the accepted 32-counter workflow stays accepted.
 No controls are enabled by this plan. Do not run these cases yet: each needs
 a specific disposable baseline and an individually reviewed test build.
 
+**Player clarification (2026-11-15):** wait for that build before testing
+counter edits. This register is the development backlog, not a checklist
+to complete in the current read-only UI. Natural before/after gameplay
+captures are optional research; none are requested during the Boons round.
+The first dedicated build will expose the selected counters and provide
+numbered instructions, then later batches will cover the remaining fields.
+
 ## Order and case register
 
 | ID | Counter | Initial question |
