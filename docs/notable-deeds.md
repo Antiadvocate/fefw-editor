@@ -6,6 +6,9 @@ The other 15 are read-only. The player completed the first [DEED acceptance
 run](test-results-deeds-2026-11-15.md#player-acceptance-and-supplied-saves). Training
 completion and a +10-shard claim worked. Lowering training below a claimed tier
 caused the game to remove that claim, so **Test 2 adds an OK/Cancel warning**.
+The player subsequently reported **DEED-11–14 all passed** on 2026-11-15,
+completing acceptance of this milestone on the reported Leda Chapter 9 setup.
+This does not expand the tested counters, routes or versions.
 
 ## Use
 

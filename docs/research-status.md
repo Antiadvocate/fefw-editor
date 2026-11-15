@@ -20,7 +20,8 @@ travel flags persist, and only Yu Phas Temple appeared at Chapter 9. See the
 counters and 15 read-only counters. Claims and Karma Shards remain read-only;
 [DEED-01–10](test-results-deeds-2026-11-15.md#player-acceptance-and-supplied-saves)
 passed except DEED-06: the game cleared a claim after a decrease. Test 2 adds
-a targeted OK/Cancel warning; [DEED-11–14](testing-notable-deeds.md) are pending. Accepted audience/travel
+a targeted OK/Cancel warning; [DEED-11–14](testing-notable-deeds.md) all passed.
+The Notable Deeds milestone is accepted on the reported setup. Accepted audience/travel
 controls lose Experimental labels; the three hidden destinations say Effect unknown.
 Other sections below
 are research notes and acceptance gates, not working UI features or
@@ -41,7 +42,7 @@ The game data version was not separately reported.
 | 1 | Tutorials and known English names | Selected save only; preserve Japanese keys and unknown records | [TUT-01–07](testing.md) |
 | 2 | Blessings | All seven EXP fields; six data-derived level previews; Fortuna special | [BLESS-01–11](testing-blessings.md) passed; see coverage limits in the report |
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
-| 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) check the new warning |
+| 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
 | 5 | Boons | Confirm ownership and activation storage before enabling writes | Controlled purchase/activation diff, effect check and persistence |
 | 6 | Story | Read-only summary first; narrowly validated Leda transitions only | Load scene, advance to battle, finish/save/reload with no missing facilities |
 

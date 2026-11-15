@@ -3,8 +3,10 @@
 Branch: `feature/notable-deeds`, based on accepted Polish Test 2 commit
 `61334982534ed962bb10ff50f72f9580b08c59fc`. The delivered archive's `BUILD.txt`
 records its exact source commit and CI run. **The first player acceptance run
-is complete; DEED-06 required the Test 2 confirmation.** Only [DEED-11–14](testing-notable-deeds.md)
-remain pending. The Test 1 implementation checks below are retained as history.
+is complete; DEED-06 required the Test 2 confirmation.** The player subsequently
+reported [DEED-11–14](testing-notable-deeds.md) all passed. The Notable Deeds
+milestone is accepted on the reported setup. The Test 1 implementation checks
+below are retained as history.
 
 ## Scope
 
@@ -154,4 +156,27 @@ left training 65 and the save clean. OK changed the total to 40 while the
 50-tier still displayed Claimed (4); Undo restored 65. Automated tests
 separately check no history entry on Cancel and Redo of the approved edit.
 
-Only [DEED-11–14](testing-notable-deeds.md) are requested for this follow-up.
+## Test 2 player acceptance — 2026-11-15
+
+The player reported “All tests pass” for the requested **DEED-11–14** follow-up
+on Notable Deeds Test 2, source commit
+`a109f6d563d4d2fd4c2b3d1d285237b67d9cd517`.
+
+| Case | Result | Coverage |
+|---|---|---|
+| DEED-11 | Pass — player reported | Cancel, Escape/close, unchanged progress and no undo entry |
+| DEED-12 | Pass — player reported | OK, Undo/Redo and Save/Reload |
+| DEED-13 | Pass — player reported | Safe edits without warning; affected-tier boundaries; no-op/invalid input |
+| DEED-14 | Pass — player reported | Confirmed English labels, read-only limits and dialog usability |
+
+No additional saves or screenshots accompanied this follow-up; these are
+player-reported results, supported by the independent Test 2 automated and
+native UI checks documented above. The reported environment remains Leda
+Part I Chapter 9, fefw-recomp-0.1.5, Bazzite 45 KDE/Wayland.
+
+**Milestone 4 is accepted.** The original DEED-06 result remains a game-side
+claim reset, not a preservation pass; the accepted warning addresses that
+behavior. All existing coverage limits remain: no direct claim/currency
+editing, 15 read-only counters, no blanket validation of all 350 milestones
+or other routes/chapters/versions, and no tested re-claim of a reset reward.
+No further Notable Deeds retest is requested for this build.

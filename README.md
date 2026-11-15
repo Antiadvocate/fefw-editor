@@ -32,13 +32,14 @@ library, or a ready-made Windows `.exe`.
 | **Fast travel** | | Add/remove 20 identified Dagsion destination flags in the selected save, with original keys and undo/redo. The original 16 have screenshot-confirmed English names. Four additional flags persisted in Chapter 9 tests; only Yu Phas Temple appeared and allowed travel, while walking back in stayed blocked. See [fast-travel.md](docs/fast-travel.md) |
 | **Notable Deeds** | | 350 milestones; 32 editable activity totals and 15 read-only counters. Targets/rewards and stored claim states shown separately; no currency or claim writes. See [notable-deeds.md](docs/notable-deeds.md) |
 
-**Current test build: Notable Deeds Test 2.** Adds 350 mapped milestones with
+**Accepted build: Notable Deeds Test 2.** Adds 350 mapped milestones with
 32 editable activity counters and 15 read-only counters. Claim states and Karma
 Shards are preserved by the editor; claim rewards in game. See the [numbered test guide](docs/testing-notable-deeds.md)
 and [feature/format documentation](docs/notable-deeds.md). The training completion
 and claim tests passed. Lowering progress below a
 claimed tier made the game clear its claim; Test 2 therefore adds an OK/Cancel
-warning listing affected targets. Only DEED-11–14 need follow-up checks.
+warning listing affected targets. DEED-11–14 now all passed; the Notable Deeds
+milestone is accepted on the reported Leda Chapter 9 setup.
 The accepted audience controls no longer say
 Experimental. Three hidden travel entries say **Effect unknown**; Yu Phas Temple
 retains its Chapter 9 entry restriction. POL-04/05 both passed.

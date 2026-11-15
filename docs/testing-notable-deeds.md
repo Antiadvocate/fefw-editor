@@ -4,7 +4,12 @@ The current header must say **Notable Deeds Test 2**. `BUILD.txt` identifies the
 commit and CI run. Extract to a fresh folder and launch its `editor.py` using
 your already-working environment; there are no new dependencies.
 
-## Test 2: only DEED-11–14 need checking
+## Test 2: DEED-11–14 passed
+
+The player reported **all four follow-up cases passed** on 2026-11-15, using
+Notable Deeds Test 2 (`a109f6d563d4d2fd4c2b3d1d285237b67d9cd517`).
+No further retest is requested. The steps below are retained for regression
+testing and reproduction.
 
 Test 1 passed except DEED-06, which established that the game removes a claim
 when its counter falls below the target. The [evidence report](test-results-deeds-2026-11-15.md#player-acceptance-and-supplied-saves)
