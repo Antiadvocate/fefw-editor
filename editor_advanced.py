@@ -19,6 +19,7 @@ from tkinter import messagebox, ttk
 import fefw_core as core
 import supports
 from fefw_save import item_ids, item_label, unit_ids
+from map_page import MapPageMixin
 from ui_util import enable_multi_select
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -122,7 +123,7 @@ def rank_of(exp: int) -> int:
     return r
 
 
-class AdvancedMixin:
+class AdvancedMixin(MapPageMixin):
     # ------------------------------------------------------------- helpers
     def core_of(self, sv=None):
         """fefw_core.SaveFile for a slot (cached on the payload object)."""
@@ -177,11 +178,13 @@ class AdvancedMixin:
         self.refresh_classes_page()
         self.refresh_flags()
         self.refresh_supports()
+        self.refresh_world_map()
 
     def refresh_core_pages(self):
         self.refresh_player()
         self.refresh_classes_page()
         self.refresh_flags()
+        self.refresh_world_map()
 
     # -------------------------------------------------------- pick a value
     def _picker(self, title: str, rows, current: int | None = None):

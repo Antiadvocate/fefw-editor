@@ -25,6 +25,7 @@ library, or a ready-made Windows `.exe`.
 | **Classes** | | A unit's whole class list (set the current class, add, swap or remove one, set its exp) and its weapon masteries with their rank (E … S+) and exp — a range of masteries can be given the same exp at once |
 | **Supports** | | Every character's support partners with the **points** this save holds for the pair, the highest rank the game defines, and which conversations this save has recorded. Set the points (0 … 3200) and the game works the level out from them. **Record conversation as seen** writes that conversation's flag |
 | **Mounts** | | The battalion and mount each unit carries, chosen from the save's pool |
+| **World map** | | Which of the map's places, junctions and road points the save has **shown** or hides, and which places are marked **visited** (white versus dark icon). Show or hide a selection, a whole road, or every place / road at once. See *World map* below |
 | **Flags** | | Every named variable the save stores: support conversations, recruited / met, achievements, feature and class unlocks. Search, filter, set, add, remove |
 
 Units can also be **copied in** from another slot or **removed**. Every edit can
@@ -38,6 +39,32 @@ adds the class and personal bases (and stat-up items) on top, so the editor's
 numbers are lower than the unit screen; raising one raises the in-game stat by
 the same amount. Max HP is stored separately and always equals a fixed base
 plus the HP gained, so changing HP gained moves max HP with it.
+
+### World map
+
+The save keeps one small record for each of the map's 864 points: 310 places
+(towns, forts, temples, caves…) and 554 invisible junctions and road points
+that the 717 roads are drawn through. The page lists them by their English
+name, with the game's own name beside it, and writes two bytes per point:
+**shown / hidden** and **visited**. Nothing else in the record is touched and
+no record changes size.
+
+* **Show / Hide** on places affects the places only. On a *road*, **Show**
+  shows every point of the road (including the places and junctions it
+  joins); **Hide** hides only the points that belong to that road, never a town
+  or a junction other roads share.
+* **Show all places** and **Show all roads** are the quick unlock; a road
+  you haven't earned yet will then be drawn. Ctrl+Z undoes either.
+* Showing a place does not open what is behind it. Gates, battles, rewards,
+  quests and fast travel have their own conditions in the save and are not
+  touched. The game may also recalculate map state as the story advances.
+* State `2` on some road points isn't understood yet, so the page shows it as
+  it is and only changes it when you pick that row.
+
+The byte layout and the behaviour of the two bytes were worked out by
+[@Destorino5](https://github.com/Destorino5) in
+[#27](https://github.com/Antiadvocate/fefw-editor/issues/27); see
+[`docs/world-map.md`](docs/world-map.md).
 
 ### Not supported (yet)
 
@@ -224,6 +251,10 @@ skill_ids.json       skill id  -> Japanese + English name
 supports.json        support pair -> highest rank and its conversation flags
 support_points.json  support pair hash -> the two characters it joins (2628 pairs)
 flag_names.json      flag id   -> readable name
+map_spots.json       map point hash -> name, kind, position; the road chains
+worldmap.py          reads and edits the save's map points (GmapSpotMgr)
+map_page.py          the World map page
+build_map_spots.py   rebuilds map_spots.json from a romfs dump
 build_skill_ids.py   rebuilds skill_ids.json from a romfs dump
 build_item_names.py  puts the game's official English item names into item_ids.json
 build_unit_names.py  English names for generic units, enemies and NPCs in unit_ids.json
@@ -249,6 +280,7 @@ python build_item_names.py <romfs folder>
 python build_unit_names.py <romfs folder>
 python build_skill_ids.py <romfs folder>
 python build_flag_names.py <romfs folder>/GameData
+python build_map_spots.py <romfs folder>
 ```
 
 `build_item_names.py` replaces the English item names (until now translated
