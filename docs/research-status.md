@@ -43,7 +43,7 @@ The game data version was not separately reported.
 | 2 | Blessings | All seven EXP fields; six data-derived level previews; Fortuna special | [BLESS-01–11](testing-blessings.md) passed; see coverage limits in the report |
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
-| 5 | Boons | Read-only 81-tier catalogue; EXP disable marker and first Weapons Discount purchase-associated record now isolated; no write controls yet | [BOON-01–04 evidence](test-results-boons-2026-11-15.md#player-results-and-controlled-save-comparisons) returned as six individual containers; editable-state and actual-effect tests follow |
+| 5 | Boons | EXP +10% on/off trial implemented; other Boons/tiers read-only; no purchase writes | [BOON-01–04 evidence](test-results-boons-2026-11-15.md#player-results-and-controlled-save-comparisons) returned as six individual containers; [BEDIT-01–07](testing-boon-editing.md) tests edited-state persistence and actual effects |
 | 6 | Story | Read-only summary first; narrowly validated Leda transitions only | Load scene, advance to battle, finish/save/reload with no missing facilities |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
@@ -187,9 +187,10 @@ supersedes the earlier uncertainty about the EXP toggle:
   unidentified `75060745 = 1` in another map; no dependency is inferred.
 
 Only individual containers were supplied, so full-folder synchronization is
-unverified. Actual EXP and shop-price effects also remain untested. The next
-editable trial is the identified disable marker for an already-owned EXP
-+10% Boon. This milestone is in progress and no Boon write is enabled yet.
+unverified. Actual EXP and shop-price effects also remain untested. **Boons Test 1** now edits the identified disable marker for an already-owned
+EXP +10% Boon, with selected-slot guard and undo/redo. The
+[BEDIT-01–07 guide](testing-boon-editing.md) covers in-game persistence and
+actual effects; this milestone remains in progress pending those results.
 
 ## Deeds: second pass requested
 

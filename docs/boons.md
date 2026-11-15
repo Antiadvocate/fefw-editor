@@ -1,15 +1,44 @@
 # Boons of Salvation: reference catalogue and mapping status
 
-**Boons Research 1** starts the next milestone with a read-only tab. It shows
-81 reference tiers in 31 effect groups, listed Karma costs and the data's
-clear-count field. English labels are descriptive translations; they are not
-presented as screenshot-confirmed official names. Search accepts English and
-the original Japanese group identifier in **Reads as**.
+**Boons Test 1** adds a narrowly scoped on/off control for an **already-owned
+EXP +10% Boon**. Select **Increased Exp, tier 1**, then **Turn on** or **Turn
+off**. Only the state-changing button is enabled. These actions change memory;
+Save writes the selected slot, Undo/Redo restores the state. Turn off route
+mirroring. Other tiers and Boons remain read-only.
 
-Selecting a row displays its evidence limits. The tab does not infer owned,
-available or active state from the catalogue, the player's balance, a clear
-count, or the presence of one candidate flag. There are no write controls.
-Browsing does not create undo entries or change the save.
+The catalogue contains 81 reference tiers in 31 groups, costs and clear-count
+fields. **Increased Exp** and **Weapons Discount** now use screenshot-confirmed
+wording. Other names are descriptive translations. English/descriptive and
+original Japanese search all remain available. Reads as is the catalogue group
+identifier, not a claimed symbolic save key. Reference values are not current
+bonuses. Weapons Discount's first-tier row reports its purchase-associated raw
+record; it does not infer activation or a working price reduction.
+
+## Editing boundary and byte layout
+
+The live shared-map locator requires two known anchors, unique keys and
+expected GameUserData ancestry. No map number or fixed save offset is used.
+The player resource header must also be recognised. EXP editing is available
+only when `3b6429de = 1` and `6447f467` is absent or 1; absent/zero/unknown
+ownership and other disable values remain read-only. This state shape matches
+the captured +10% Boon; it does not decode later tiers.
+
+* **Off:** add `6447f467 = 1` with the map's compact encoding.
+* **On:** remove `6447f467`; do not replace it with zero.
+* Already at the requested state: preserve all bytes and do not add an undo entry.
+* Every other record, including `3b6429de` and `5bfcaa34`, remains unchanged.
+  No Karma, claim, tier, eligibility, global-file or other-slot write is made.
+
+The existing object-tree replacement relocates pointers when the map resizes;
+serialization updates checksums. Unknown records and their compact/wide
+encodings are preserved. The UI refuses actions with route mirroring enabled,
+validates the current payload before adding undo history, and refreshes status
+and buttons after edits, Undo/Redo and reload.
+
+This implementation is a **gameplay test candidate**. Automated byte and
+round-trip checks passed; edited in-game persistence and actual EXP effects
+await [BEDIT-01–07](testing-boon-editing.md). See the
+[implementation report](test-results-boon-editing-2026-11-15.md).
 
 ## What was known when Research 1 shipped
 
@@ -87,30 +116,14 @@ presentation indexes within each group, not decoded save values. Operation
 codes are retained for research; the UI shows the raw reference value so an
 unverified interpretation is not turned into an effective current bonus.
 
-## Save observation and boundaries
+## Remaining research
 
-The observed candidate is read through the existing shared-map locator used
-by audience inspection. It requires a unique map with at least two unchanged
-anchors, unique keys and the expected live GameUserData ancestry. Map number
-6 is historical evidence only; no numeric map index is hard-coded. Sparse,
-duplicate or ambiguous maps report unavailable rather than an absent Boon.
-The player resource header is validated before reading Karma Shards.
-
-Absent and stored zero are displayed differently. Every other raw value is
-shown verbatim with its meaning unconfirmed. The implementation writes no
-candidate, claim, currency, story or activation field and adds no guessed
-English name for `3b6429de` to Flags.
-
-## Next implementation gate
-
-Use the controlled captures above to implement a narrowly scoped trial of
-the identified EXP disable marker on an already-owned +10% Boon, with undo,
-persistence and an actual effect check. Ownership and Karma must stay intact;
-unknown state values must remain untouched. Any additional purchase or
-activation control needs its own mapping and test evidence. Full-folder
-propagation is unresolved because individual containers were returned.
-Do not generalise one successful Boon to every tier or bypass story/clear
-requirements without separate evidence. Existing working Boons are preserved.
+The EXP disable marker has an isolated off/on comparison, but EXP purchase
+semantics, higher tiers, stacking and cross-file synchronization remain unknown.
+The first Weapons Discount purchase has an isolated candidate record, cost and
+persistence result. Its independent off/on key and actual shop-price effect
+still need the separate capture in BEDIT-06. Do not generalise a successful
+EXP toggle to other Boons, or infer eligibility from the listed clear count.
 
 The requested return to the 15 read-only Deeds counters is tracked in
 [deeds-follow-up.md](deeds-follow-up.md), starting with the three enemy counters.

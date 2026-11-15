@@ -38,7 +38,8 @@
           "clear_count": 3,
           "cost": 1000
         }
-      ]
+      ],
+      "game_label": "Increased Exp"
     },
     {
       "name": "兵種経験",
@@ -396,7 +397,8 @@
           "clear_count": 2,
           "cost": 300
         }
-      ]
+      ],
+      "game_label": "Weapons Discount"
     },
     {
       "name": "道具割引",

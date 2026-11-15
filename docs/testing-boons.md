@@ -4,7 +4,7 @@
 BOON-03 immediate purchase activation and BOON-04 persistence were returned.
 See the [comparison report](test-results-boons-2026-11-15.md#player-results-and-controlled-save-comparisons).
 The original instructions below are retained for reproducibility. No repeat
-of BOON-01–04 is requested. Wait for the next editable build and its guide.
+of BOON-01–04 is requested. Continue with **Boons Test 1** and [BEDIT-01–07](testing-boon-editing.md).
 
 This build adds a **read-only Boons tab**. It does not yet unlock, purchase,
 activate or remove Boons. The purpose of this round is to identify those save

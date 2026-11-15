@@ -1,7 +1,7 @@
-"""Read-only Boon reference data and the observed EXP-associated record.
+"""Reference data and the isolated disable marker for the existing EXP +10% Boon.
 
-No save writes: purchase and activation storage require controlled game tests.
-The candidate hash is an observation, not a decoded Boon identity.
+Only the observed ownership=1, disable=absent/1 state is editable. Purchase,
+higher tiers and other Boon activation keys are not inferred from these hashes.
 """
 from __future__ import annotations
 
@@ -14,6 +14,8 @@ import fefw_core as core
 
 HERE = Path(__file__).resolve().parent
 EXP_CANDIDATE = 0x3b6429de
+EXP_DISABLED = 0x6447f467
+WEAPONS_PURCHASE = 0x5bfcaa34
 
 
 class BoonError(core.SaveError):
@@ -51,7 +53,7 @@ def catalog() -> list[dict]:
 
 
 def read_observation(f: core.SaveFile) -> dict:
-    """Return raw evidence only, never infer ownership or activation."""
+    """Read the observed records; unknown/absent values remain distinct."""
     try:
         values = audiences.read(f)
     except core.SaveError as exc:
@@ -60,16 +62,55 @@ def read_observation(f: core.SaveFile) -> dict:
     if user < 0:
         raise BoonError("Player resource header is not recognised; observation unavailable.")
     return {"karma_shards": f.u32(user + core.KARMA_AT),
-            "exp_candidate": values.get(EXP_CANDIDATE)}
+            "exp_candidate": values.get(EXP_CANDIDATE),
+            "exp_disabled": values.get(EXP_DISABLED),
+            "weapons_purchase": values.get(WEAPONS_PURCHASE)}
 
 
 def observation_label(value: int | None) -> str:
     stored = "Not stored" if value is None else f"Stored value {value}"
-    return f"{stored}; purchase and activation meaning unconfirmed"
+    return f"{stored}; other tiers and purchase editing unconfirmed"
+
+
+def exp_edit_reason(observation: dict) -> str:
+    """An empty reason permits only the already-observed first-tier toggle."""
+    if observation['exp_candidate'] != 1:
+        return "Requires the observed, already-owned EXP +10% state (stored record 1)."
+    if observation['exp_disabled'] not in (None, 1):
+        return f"Unknown EXP disable value ({observation['exp_disabled']}); preserved."
+    return ""
+
+
+def exp_state_label(observation: dict) -> str:
+    if exp_edit_reason(observation):
+        return "Unknown / read-only"
+    return "Off" if observation['exp_disabled'] == 1 else "On"
+
+
+def edited_exp_active(f: core.SaveFile, active: bool) -> bytearray:
+    """Add/remove only the EXP disable record; never buy, refund or change tiers."""
+    if type(active) is not bool:
+        raise BoonError("Choose On or Off for the existing EXP +10% Boon.")
+    observation = read_observation(f)
+    reason = exp_edit_reason(observation)
+    if reason:
+        raise BoonError(reason)
+    disabled = observation['exp_disabled']
+    if (active and disabled is None) or (not active and disabled == 1):
+        return bytearray(f.payload)
+    fm = audiences.locate(f)
+    if active:
+        flag = next(fl for fl in fm.flags if fl.hash == EXP_DISABLED)
+        return core.flag_remove(f, fm, flag)
+    return core.flag_add(f, fm, EXP_DISABLED, 1)
 
 
 def matching_rows(query: str = "") -> list[tuple[str, dict, dict]]:
     query = query.strip().casefold()
     return [(f"{i}:{tier['tier']}", group, tier)
             for i, group in enumerate(catalog()) for tier in group["tiers"]
-            if not query or query in f"{group['label']} {group['name']}".casefold()]
+            if not query or query in f"{group['label']} {group['name']} {group.get('game_label', '')}".casefold()]
+
+
+def display_name(group: dict) -> str:
+    return group.get('game_label') or group['label']

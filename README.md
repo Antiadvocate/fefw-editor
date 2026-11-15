@@ -30,13 +30,15 @@ library, or a ready-made Windows `.exe`.
 | **Tutorials** | | 115 identified help entries; make selected tutorials available or remove them from the selected save. English names, original Japanese keys, explicit raw states and undo/redo. See [tutorials.md](docs/tutorials.md) |
 | **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Six level previews tested in Leda Chapter 9; Fortuna's EXP effect remains unknown. Selection and Divine Sand are read-only. Six tested first-audience toggles; Fortuna has no audience condition. See [blessings.md](docs/blessings.md) |
 | **Fast travel** | | Add/remove 20 identified Dagsion destination flags in the selected save, with original keys and undo/redo. The original 16 have screenshot-confirmed English names. Four additional flags persisted in Chapter 9 tests; only Yu Phas Temple appeared and allowed travel, while walking back in stayed blocked. See [fast-travel.md](docs/fast-travel.md) |
-| **Boons** | | Read-only reference catalogue, listed costs/clear requirements and the observed EXP-associated raw record. Ownership and activation are not inferred. See [boons.md](docs/boons.md) |
+| **Boons** | | On/off trial for an already-owned EXP +10% Boon, preserving ownership and Karma; undo/redo and selected-save editing. Other tiers and Boons remain a read-only reference catalogue. See [boons.md](docs/boons.md) |
 | **Notable Deeds** | | 350 milestones; 32 editable activity totals and 15 read-only counters. Targets/rewards and stored claim states shown separately; no currency or claim writes. See [notable-deeds.md](docs/notable-deeds.md) |
 
-**Current build: Boons Research 1.** Adds a read-only Boons reference tab with
-81 tiers across 31 groups. Purchase and activation storage remain unconfirmed;
-follow [BOON-01–04](docs/testing-boons.md) for controlled save captures before
-editing is enabled. See [Boons evidence and format](docs/boons.md).
+**Current build: Boons Test 1.** Adds **Turn on / Turn off** for the existing
+EXP +10% Boon, using the disable marker isolated in the player's captures.
+Purchases, tier changes and other Boons stay read-only. Follow
+[BEDIT-01–07](docs/testing-boon-editing.md) for editor/game persistence,
+undo/redo, actual EXP comparison and the separate weapon-discount toggle capture.
+See [Boons evidence and format](docs/boons.md).
 
 **Accepted milestone: Notable Deeds Test 2.** Adds 350 mapped milestones with
 32 editable activity counters and 15 read-only counters. Claim states and Karma
@@ -139,7 +141,9 @@ screenshots. The Stables destination does not unlock the stable facility.
 Unknown records and values are preserved; sparse/ambiguous layouts refuse edits.
 
 * [Milestone 5: Boons controlled capture guide](docs/testing-boons.md)
-* [Milestone 5: read-only implementation validation](docs/test-results-boons-2026-11-15.md)
+* [Milestone 5: Research 1 capture results](docs/test-results-boons-2026-11-15.md)
+* [Milestone 5: Boons Test 1 game guide](docs/testing-boon-editing.md)
+* [Milestone 5: Boons Test 1 implementation validation](docs/test-results-boon-editing-2026-11-15.md)
 * [Deeds follow-up: 15 read-only counters queued for testing](docs/deeds-follow-up.md)
 * [Milestone 4: Notable Deeds testing guide](docs/testing-notable-deeds.md)
 * [Notable Deeds feature, full catalogue and binary format](docs/notable-deeds.md)
