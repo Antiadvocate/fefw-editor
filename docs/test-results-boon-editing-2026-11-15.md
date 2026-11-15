@@ -1,5 +1,8 @@
 # Boons Test 1 — implementation and player acceptance
 
+This report records Test 1 and its price follow-up. The new Weapons Discount
+editor control is covered by [Boons Test 2](test-results-weapon-boon-2026-11-15.md).
+
 Date: 2026-11-15. The **existing EXP +10% on/off control is accepted on the
 reported Leda Part I Chapter 9 / fefw-recomp-0.1.5 setup**. BEDIT-01–04 and
 07 have player-reported passes; the returned saves verify Off/On persistence,

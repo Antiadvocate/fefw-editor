@@ -1,8 +1,18 @@
-"""Single-save EXP activation control and the wider read-only Boon catalogue."""
+"""Single-save EXP/Weapons Discount controls and the wider Boon catalogue."""
 from tkinter import ttk
 
 import boons
 import fefw_core as core
+
+
+CONTROLS = {
+    '経験値': ('Increased Exp 10%', boons.exp_edit_reason, boons.exp_state_label, boons.edited_exp_active),
+    '武器割引': ('Weapons Discount 10%', boons.weapons_edit_reason, boons.weapons_state_label, boons.edited_weapons_active),
+}
+
+
+def control_for(group, tier):
+    return CONTROLS.get(group['name']) if tier['tier'] == 1 else None
 
 
 class BoonPageMixin:
@@ -20,7 +30,7 @@ class BoonPageMixin:
         self.boon_search.bind("<KeyRelease>", lambda e: self.refresh_boons())
 
         ttk.Label(page, style="CardFaint.TLabel", justify="left", wraplength=900, text=(
-            "The already-owned EXP +10% Boon can be switched on/off. "
+            "Already-owned EXP +10% and Weapons Discount 10% can be switched on/off. "
             "Purchases, tiers and other Boons remain read-only.\n"
             "Turn off ‘Also edit this route’s other saves’. Ctrl+S saves, Ctrl+Z undoes, Ctrl+Y redoes."
         )).pack(side="bottom", anchor="w", pady=(8, 0))
@@ -36,7 +46,7 @@ class BoonPageMixin:
         self.boon_off = ttk.Button(actions, text="Turn off", style="Small.TButton",
                                    command=lambda: self.set_boon_active(False), state="disabled")
         self.boon_off.pack(side="left")
-        ttk.Label(actions, text="Existing EXP +10% only · Save to write changes",
+        ttk.Label(actions, text="Existing first-tier Boons only · Save to write changes",
                   style="CardMuted.TLabel").pack(side="left", padx=(14, 0))
 
         frame = ttk.Frame(page, style="Card.TFrame")
@@ -86,21 +96,18 @@ class BoonPageMixin:
             if f is not None:
                 self._boon_observed = observation = boons.read_observation(f)
                 summary += f" · Karma Shards: {observation['karma_shards']:,}"
-                reason = boons.exp_edit_reason(observation)
                 self.boon_observation.configure(text=(
                     "Increased Exp 10%: " + boons.exp_state_label(observation)
-                    + (f" · {reason}" if reason else "")))
+                    + " · Weapons Discount 10%: " + boons.weapons_state_label(observation)))
         except core.SaveError as exc:
             self._boon_error = str(exc)
             self.boon_observation.configure(text=str(exc))
         for iid, group, tier in rows:
             self._boon_rows[iid] = (group, tier)
             state = "Not mapped"
-            if group['name'] == '経験値' and tier['tier'] == 1:
-                state = boons.exp_state_label(self._boon_observed) if self._boon_observed else "Unavailable"
-            elif group['name'] == '武器割引' and tier['tier'] == 1 and self._boon_observed:
-                value = self._boon_observed['weapons_purchase']
-                state = "Purchase recorded" if value == 1 else "Not recorded" if value is None else f"Unknown ({value})"
+            control = control_for(group, tier)
+            if control:
+                state = control[2](self._boon_observed) if self._boon_observed else "Unavailable"
             tree.insert("", "end", iid=iid, text=boons.display_name(group), values=(
                 tier['tier'], state, tier['value'], tier['cost'], tier['clear_count'], group['name']))
         self.boon_count.configure(text=summary)
@@ -112,23 +119,25 @@ class BoonPageMixin:
         self.boon_off.configure(state="disabled")
         picked = self.boon_tree.selection()
         if len(picked) != 1 or picked[0] not in self._boon_rows:
-            self.boon_detail.configure(text="Select Increased Exp, tier 1, to switch an existing +10% Boon on/off.\n"
+            self.boon_detail.configure(text="Select Increased Exp or Weapons Discount, tier 1, to switch an owned Boon on/off.\n"
                                             "Other rows show reference values; they do not indicate a current bonus.")
             return
         group, tier = self._boon_rows[picked[0]]
         note = "Read-only: ownership, activation and stacking are not mapped for this tier."
-        if group['name'] == '経験値' and tier['tier'] == 1:
+        control = control_for(group, tier)
+        if control:
+            label, edit_reason, state_label, _ = control
             observation = self._boon_observed
-            reason = boons.exp_edit_reason(observation) if observation else self._boon_error
+            reason = edit_reason(observation) if observation else self._boon_error
             if reason:
                 note = "Read-only: " + reason
             else:
-                state = boons.exp_state_label(observation)
-                note = f"Existing +10% Boon: {state}. Switching preserves ownership and Karma Shards."
+                state = state_label(observation)
+                note = f"Existing {label}: {state}. Switching preserves ownership and Karma Shards."
+                if group['name'] == '武器割引':
+                    note += " Test 2: editor-generated states await game acceptance."
                 self.boon_on.configure(state="normal" if state == "Off" else "disabled")
                 self.boon_off.configure(state="normal" if state == "On" else "disabled")
-        elif group['name'] == '武器割引' and tier['tier'] == 1:
-            note = "Read-only: purchase and off/on captures recorded; 10% lower listed weapon prices confirmed in game. Editor control unavailable."
         self.boon_detail.configure(text=(
             f"{boons.display_name(group)} · tier {tier['tier']} · {group['name']}\n"
             f"Reference value: {tier['value']}; listed cost: {tier['cost']} Karma Shards; "
@@ -144,14 +153,16 @@ class BoonPageMixin:
             return
         selected = self.boon_tree.selection()
         row = self._boon_rows.get(selected[0]) if len(selected) == 1 else None
-        if not row or row[0]['name'] != '経験値' or row[1]['tier'] != 1:
-            self.flash("Select Increased Exp, tier 1; other Boons are read-only.", "info")
+        control = control_for(*row) if row else None
+        if not control:
+            self.flash("Select Increased Exp or Weapons Discount, tier 1; other rows are read-only.", "info")
             self._select_boon()
             return
         self._commit_form()
+        label, _, _, edit = control
         try:
             before = self.core_of()
-            after = boons.edited_exp_active(before, active)
+            after = edit(before, active)
         except core.SaveError as exc:
             self.flash(str(exc), "error")
             self.refresh_boons()
@@ -161,5 +172,5 @@ class BoonPageMixin:
             self.refresh_boons()
             return
         self.push_undo()
-        self._core_edit(lambda f: boons.edited_exp_active(f, active),
-                        f"Increased Exp 10% → {'On' if active else 'Off'}")
+        self._core_edit(lambda f: edit(f, active),
+                        f"{label} → {'On' if active else 'Off'}")

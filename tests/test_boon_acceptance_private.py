@@ -60,7 +60,8 @@ class BoonAcceptanceCapturesTest(unittest.TestCase):
                 f = self.saves[name]
                 self.assertEqual(boons.read_observation(f), {
                     'karma_shards': 710, 'exp_candidate': 1,
-                    'exp_disabled': disabled, 'weapons_purchase': None})
+                    'exp_disabled': disabled, 'weapons_purchase': None,
+                    'weapons_disabled': None})
                 expected = audiences.read(baseline)
                 if disabled: expected[boons.EXP_DISABLED] = disabled
                 self.assertEqual(audiences.read(f), expected)

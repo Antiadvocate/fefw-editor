@@ -1,46 +1,51 @@
 # Boons of Salvation: reference catalogue and mapping status
 
-**Boons Test 1** adds a narrowly scoped on/off control for an **already-owned
-EXP +10% Boon**. Select **Increased Exp, tier 1**, then **Turn on** or **Turn
-off**. Only the state-changing button is enabled. These actions change memory;
-Save writes the selected slot, Undo/Redo restores the state. Turn off route
-mirroring. Other tiers and Boons remain read-only.
+**Boons Test 2** supports on/off controls for **already-owned EXP +10%** and
+**already-purchased Weapons Discount 10%**. Select the corresponding tier-1
+row, then **Turn on** or **Turn off**. Only the state-changing button is enabled.
+Save writes the selected slot; Undo/Redo restores the state. Turn off route
+mirroring. Purchases, higher tiers and all other Boons remain read-only.
 
 The catalogue contains 81 reference tiers in 31 groups, costs and clear-count
-fields. **Increased Exp** and **Weapons Discount** now use screenshot-confirmed
-wording. Other names are descriptive translations. English/descriptive and
-original Japanese search all remain available. Reads as is the catalogue group
-identifier, not a claimed symbolic save key. Reference values are not current
-bonuses. Weapons Discount's first-tier row reports its purchase-associated raw
-record; it does not infer activation or a working price reduction.
+fields. **Increased Exp** and **Weapons Discount** use screenshot-confirmed
+names. Other names remain descriptive translations. English/descriptive and
+original Japanese search remain available. Reads as is the catalogue group
+identifier, not a claimed symbolic save key. Reference values are not decoded
+current bonuses. Only the two observed first-tier state shapes show On/Off.
 
 ## Editing boundary and byte layout
 
-The live shared-map locator requires two known anchors, unique keys and
-expected GameUserData ancestry. No map number or fixed save offset is used.
-The player resource header must also be recognised. EXP editing is available
-only when `3b6429de = 1` and `6447f467` is absent or 1; absent/zero/unknown
-ownership and other disable values remain read-only. This state shape matches
-the captured +10% Boon; it does not decode later tiers.
+The shared-map locator requires known anchors, unique keys and expected
+GameUserData ancestry. No map number or fixed offset is used. The resource
+header must also be recognised. Each control requires its ownership record
+to be exactly 1 and its own disable marker to be absent or 1:
 
-* **Off:** add `6447f467 = 1` with the map's compact encoding.
-* **On:** remove `6447f467`; do not replace it with zero.
-* Already at the requested state: preserve all bytes and do not add an undo entry.
-* Every other record, including `3b6429de` and `5bfcaa34`, remains unchanged.
-  No Karma, claim, tier, eligibility, global-file or other-slot write is made.
+| Control | Required ownership/purchase record | Disable marker | Game acceptance |
+|---|---|---|---|
+| Increased Exp 10% | `3b6429de = 1` | `6447f467` | Editor control accepted |
+| Weapons Discount 10% | `5bfcaa34 = 1` | `ddb8d06b` | In-game toggle/price effect confirmed; editor control pending |
 
-The existing object-tree replacement relocates pointers when the map resizes;
-serialization updates checksums. Unknown records and their compact/wide
-encodings are preserved. The UI refuses actions with route mirroring enabled,
-validates the current payload before adding undo history, and refreshes status
-and buttons after edits, Undo/Redo and reload.
+* **Off:** add only the selected disable marker with compact value 1.
+* **On:** remove only that marker; never replace it with zero.
+* Already at the requested state: preserve every byte and add no undo entry.
+* Missing/zero/unknown ownership or other disable values keep that control
+  read-only. Stored zero is not absence. One control never changes the other.
+* Preserve ownership, currency, claims, other flags and their byte encodings.
+  No tier, eligibility, global-file or other-slot write is made.
+
+The object-tree writer relocates pointers when the map resizes; serialization
+updates checksums. The UI refuses mirroring, validates the current payload
+before adding undo history, and refreshes states after edits and Undo/Redo.
 
 The existing EXP +10% toggle is **accepted on the reported Leda Chapter 9
-setup**. Editor-generated Off/On states persist in game, and a one-kill/retreat
-comparison gives Leda +16 EXP Off versus +17 On. The sample supports an effect
-but does not establish a universal rounding rule. See the
-[acceptance report](test-results-boon-editing-2026-11-15.md) for controlled
-starting states, incidental gameplay changes and coverage limits.
+setup**: editor-generated Off/On states persist and the one-kill comparison
+records +16 EXP Off / +17 On. This is not a universal rounding rule.
+Weapons Discount has a separate captured Off/On marker and screenshots showing
+300 → 270, 500 → 450, 1,500 → 1,350 and 2,000 → 1,800 with the in-game toggle.
+Test 2 still needs [WEDIT acceptance](testing-weapon-boon.md) for editor-produced
+states, save/reload and prices. No repeat of the accepted EXP battle test is
+requested. [Local validation](test-results-weapon-boon-2026-11-15.md) includes
+exact preservation and matching the controlled game captures.
 
 ## What was known when Research 1 shipped
 
@@ -132,9 +137,9 @@ listed prices in both On states: 300 → 270, 500 → 450, 1,500 → 1,350 and
 2,000 → 1,800. One final On save preserves the purchase marker and Karma 410
 with no disable marker; the two intermediate states have screenshots only.
 See the [price follow-up](test-results-boon-editing-2026-11-15.md#shop-price-follow-up).
-Keep Weapons Discount read-only pending its own implementation and editor
-acceptance. Its exact symbolic key, later tiers and fractional-price rounding
-remain unknown. Do not generalise the EXP toggle to other Boons.
+Test 2 implements the isolated Weapons Discount toggle; editor acceptance is
+pending. Its exact symbolic key, later tiers and fractional-price rounding
+remain unknown. Do not generalise either toggle to other Boons.
 
 The requested return to the 15 read-only Deeds counters is tracked in
 [deeds-follow-up.md](deeds-follow-up.md), starting with the three enemy counters.

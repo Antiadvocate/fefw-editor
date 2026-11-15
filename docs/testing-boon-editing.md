@@ -6,7 +6,7 @@ unpurchased-before and purchased-On/Off triplet. A later On/Off/On shop comparis
 confirms 10% lower listed weapon prices; Weapons Discount editing remains
 unavailable. See the [acceptance report](test-results-boon-editing-2026-11-15.md).
 The procedure below is retained for reproducibility, not a request to repeat
-the completed round.
+the completed round. The current follow-up is [Boons Test 2: WEDIT](testing-weapon-boon.md).
 
 This is the first **editable** Boons build. It switches the already-owned
 **Increased Exp 10%** Boon on/off. It does not purchase Boons, change tiers,

@@ -1,4 +1,4 @@
-"""Reference data and the isolated disable marker for the existing EXP +10% Boon.
+"""Reference data and isolated disable markers for two existing first-tier Boons.
 
 Only the observed ownership=1, disable=absent/1 state is editable. Purchase,
 higher tiers and other Boon activation keys are not inferred from these hashes.
@@ -16,6 +16,7 @@ HERE = Path(__file__).resolve().parent
 EXP_CANDIDATE = 0x3b6429de
 EXP_DISABLED = 0x6447f467
 WEAPONS_PURCHASE = 0x5bfcaa34
+WEAPONS_DISABLED = 0xddb8d06b
 
 
 class BoonError(core.SaveError):
@@ -64,7 +65,8 @@ def read_observation(f: core.SaveFile) -> dict:
     return {"karma_shards": f.u32(user + core.KARMA_AT),
             "exp_candidate": values.get(EXP_CANDIDATE),
             "exp_disabled": values.get(EXP_DISABLED),
-            "weapons_purchase": values.get(WEAPONS_PURCHASE)}
+            "weapons_purchase": values.get(WEAPONS_PURCHASE),
+            "weapons_disabled": values.get(WEAPONS_DISABLED)}
 
 
 def observation_label(value: int | None) -> str:
@@ -103,6 +105,38 @@ def edited_exp_active(f: core.SaveFile, active: bool) -> bytearray:
         flag = next(fl for fl in fm.flags if fl.hash == EXP_DISABLED)
         return core.flag_remove(f, fm, flag)
     return core.flag_add(f, fm, EXP_DISABLED, 1)
+
+
+def weapons_edit_reason(observation: dict) -> str:
+    if observation['weapons_purchase'] != 1:
+        return "Requires the observed, already-purchased Weapons Discount 10% Boon."
+    if observation['weapons_disabled'] not in (None, 1):
+        return f"Unknown Weapons Discount disable value ({observation['weapons_disabled']}); preserved."
+    return ""
+
+
+def weapons_state_label(observation: dict) -> str:
+    if weapons_edit_reason(observation):
+        return "Unknown / read-only"
+    return "Off" if observation['weapons_disabled'] == 1 else "On"
+
+
+def edited_weapons_active(f: core.SaveFile, active: bool) -> bytearray:
+    """Toggle the captured purchased 10% state; do not buy or change any tier."""
+    if type(active) is not bool:
+        raise BoonError("Choose On or Off for the existing Weapons Discount 10% Boon.")
+    observation = read_observation(f)
+    reason = weapons_edit_reason(observation)
+    if reason:
+        raise BoonError(reason)
+    disabled = observation['weapons_disabled']
+    if (active and disabled is None) or (not active and disabled == 1):
+        return bytearray(f.payload)
+    fm = audiences.locate(f)
+    if active:
+        flag = next(fl for fl in fm.flags if fl.hash == WEAPONS_DISABLED)
+        return core.flag_remove(f, fm, flag)
+    return core.flag_add(f, fm, WEAPONS_DISABLED, 1)
 
 
 def matching_rows(query: str = "") -> list[tuple[str, dict, dict]]:

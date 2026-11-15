@@ -43,7 +43,7 @@ The game data version was not separately reported.
 | 2 | Blessings | All seven EXP fields; six data-derived level previews; Fortuna special | [BLESS-01–11](testing-blessings.md) passed; see coverage limits in the report |
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
-| 5 | Boons | Existing EXP +10% toggle accepted; other Boons/tiers read-only; no purchase writes | [BEDIT results](test-results-boon-editing-2026-11-15.md): editor/game persistence and +16 Off / +17 On; Weapons Discount mapping captured and 10% listed-price reduction observed in On/Off/On comparison |
+| 5 | Boons | EXP +10% accepted; Weapons Discount 10% editor toggle in Test 2; other Boons/tiers read-only | [BEDIT results](test-results-boon-editing-2026-11-15.md): editor/game persistence and +16 Off / +17 On; Weapons Discount mapping captured and 10% listed-price reduction observed in On/Off/On comparison |
 | 6 | Story | Read-only summary first; narrowly validated Leda transitions only | Load scene, advance to battle, finish/save/reload with no missing facilities |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
@@ -197,8 +197,9 @@ purchased On/Off captures. After Armorer access was restored separately, the
 follow-up On/Off/On screenshots show the same 10% listed-price reduction in
 both On states. The final returned save has the purchase marker, no disable
 marker and Karma 410; intermediate states were supplied as screenshots only.
-This is evidence of the in-game toggle, not acceptance of a discount editor
-control. Exact symbolic identity, higher tiers and fractional-price rounding
+Test 2 now implements the captured discount toggle; its [editor acceptance
+round](testing-weapon-boon.md) is pending. The earlier price evidence establishes
+the in-game effect, not acceptance of the new editor control. Exact symbolic identity, higher tiers and fractional-price rounding
 remain unknown.
 See the [acceptance report](test-results-boon-editing-2026-11-15.md).
 

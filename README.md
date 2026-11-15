@@ -7,7 +7,10 @@ library, or a ready-made Windows `.exe`.
 
 > **Unofficial and reverse-engineered.** Close the game before saving and keep
 > your own backup. The first save next to each slot also keeps the untouched
-> original as `<slot>.bak`.
+> original as `<slot>.bak`, and every save after that keeps the copy it replaced
+> as `<slot>.bak1`, `.bak2` and so on (highest number = newest), so a game
+> auto-save that landed between two editor saves is never lost. Backups are
+> never deleted or renamed; clear out old ones yourself when you like.
 
 ![Units page](docs/units.png)
 
@@ -22,7 +25,7 @@ library, or a ready-made Windows `.exe`.
 | **Convoy** | | Everything in storage, materials included: add a stack, stock every material at once, swap the item in any row, change its quantity, remove a row, and repair a list damaged by older versions |
 | **Gold** | | Set gold |
 | **Player** | | Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
-| **Classes** | | A unit's whole class list (set the current class, add, swap or remove one, set its exp) and its weapon masteries with their rank (E … S+) and exp — a range of masteries can be given the same exp at once |
+| **Classes** | | A unit's whole class list (set the current class, add, swap or remove one, set its exp) and its weapon masteries with their rank (E … S+) and exp — select several masteries (Ctrl+A, Shift+click or Shift+drag) and Set rank, Set exp or Remove changes all of them at once |
 | **Supports** | | Every character's support partners with the **points** this save holds for the pair, the highest rank the game defines, and which conversations this save has recorded. Set the points (0 … 3200) and the game works the level out from them. **Record conversation as seen** writes that conversation's flag |
 | **Mounts** | | The battalion and mount each unit carries, chosen from the save's pool |
 | **World map** | | Which of the map's places, junctions and road points the save has **shown** or hides, and which places are marked **visited** (white versus dark icon). Show or hide a selection, a whole road, or every place / road at once. See *World map* below |
@@ -30,18 +33,22 @@ library, or a ready-made Windows `.exe`.
 | **Tutorials** | | 115 identified help entries; make selected tutorials available or remove them from the selected save. English names, original Japanese keys, explicit raw states and undo/redo. See [tutorials.md](docs/tutorials.md) |
 | **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Six level previews tested in Leda Chapter 9; Fortuna's EXP effect remains unknown. Selection and Divine Sand are read-only. Six tested first-audience toggles; Fortuna has no audience condition. See [blessings.md](docs/blessings.md) |
 | **Fast travel** | | Add/remove 20 identified Dagsion destination flags in the selected save, with original keys and undo/redo. The original 16 have screenshot-confirmed English names. Four additional flags persisted in Chapter 9 tests; only Yu Phas Temple appeared and allowed travel, while walking back in stayed blocked. See [fast-travel.md](docs/fast-travel.md) |
-| **Boons** | | Tested on/off control for an already-owned EXP +10% Boon, preserving ownership and Karma; undo/redo and selected-save editing. Other tiers and Boons remain a read-only reference catalogue. See [boons.md](docs/boons.md) |
+| **Boons** | | Accepted EXP +10% on/off control and a new Weapons Discount 10% toggle for already-owned Boons. Preserves ownership and Karma; undo/redo and selected-save editing. Other tiers/Boons remain read-only. See [boons.md](docs/boons.md) |
 | **Notable Deeds** | | 350 milestones; 32 editable activity totals and 15 read-only counters. Targets/rewards and stored claim states shown separately; no currency or claim writes. See [notable-deeds.md](docs/notable-deeds.md) |
 
-**Current build: Boons Test 1.** Adds **Turn on / Turn off** for the existing
-EXP +10% Boon, using the disable marker isolated in the player's captures.
-The existing EXP toggle is accepted on the reported Leda Chapter 9 setup:
-edited states persist in game and Leda gained 16 EXP Off / 17 On in the supplied
-comparison. Purchases, tier changes and other Boons stay read-only. Weapons
-Discount On/Off captures are documented, and a follow-up On/Off/On comparison
-confirms 10% lower listed weapon prices on this setup. Discount editing remains
-unavailable. See the [acceptance report](docs/test-results-boon-editing-2026-11-15.md)
-and [Boons format](docs/boons.md).
+**Current build: Boons Test 2 · upstream v1.3.9.** Adds **Turn on / Turn off**
+for the already-purchased **Weapons Discount 10%** Boon. Its in-game marker and
+10% listed-price effect are captured; editor-generated states now await the
+[focused WEDIT test round](docs/testing-weapon-boon.md). The EXP +10% control
+remains accepted, including persistence and +16 EXP Off / +17 On in the prior
+comparison. Purchases, tier changes and other Boons remain read-only.
+See the [new validation report](docs/test-results-weapon-boon-2026-11-15.md),
+[earlier acceptance report](docs/test-results-boon-editing-2026-11-15.md) and
+[Boons format](docs/boons.md).
+
+This build merges upstream `7157e6c`: numbered `.bak`, `.bak1`, `.bak2` backups
+and the preceding weapon-mastery multi-selection fix. The original `.bak` is
+retained; later distinct pre-save disk states receive increasing numbers.
 
 **Accepted milestone: Notable Deeds Test 2.** Adds 350 mapped milestones with
 32 editable activity counters and 15 read-only counters. Claim states and Karma
