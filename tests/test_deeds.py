@@ -34,6 +34,19 @@ def outside_map(f):
 
 
 class DeedTest(unittest.TestCase):
+    def test_claim_risk_checks_all_tiers_and_strict_thresholds(self):
+        values = {h: v for h, v, _ in rows()}
+        tiers = deeds.catalog()[TRAIN]['milestones']
+        for tier in tiers:
+            if tier['target'] in (50, 75): values[int(tier['hash'], 16)] = 4
+        before = dict(values)
+        for value, expected in ((9, [10, 50, 75]), (40, [50, 75]), (50, [75]),
+                                (70, [75]), (75, []), (100, [])):
+            self.assertEqual([t['target'] for t in deeds.claims_at_risk(TRAIN, value, values)], expected)
+        # An unclaimed milestone is not described as previously claimed.
+        self.assertEqual(values[READY], 2)
+        self.assertEqual(values, before)
+
     def test_catalog_and_english_flag_labels(self):
         cat = deeds.catalog()
         self.assertEqual(len(cat), 47)

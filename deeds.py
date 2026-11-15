@@ -118,6 +118,16 @@ def maximum(h: int, values: dict[int, int]) -> int:
     return max(catalog()[h]["milestones"][-1]["target"], values.get(h, 0))
 
 
+def claims_at_risk(h: int, value: int, values: dict[int, int]) -> list[dict]:
+    """Claimed milestones left below target; the game may clear their claims.
+
+    This is a preview only. Even an increase can leave a pre-existing
+    inconsistent claim below target, so check the proposed total itself.
+    """
+    return [tier for tier in catalog()[h]["milestones"]
+            if tier["target"] > value and values.get(int(tier["hash"], 16)) == 4]
+
+
 def edited(f: core.SaveFile, h: int, value: int) -> bytearray:
     """Change exactly one allowlisted counter, never a milestone state or currency."""
     cat = catalog()

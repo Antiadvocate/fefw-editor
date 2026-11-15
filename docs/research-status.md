@@ -18,7 +18,9 @@ travel flags persist, and only Yu Phas Temple appeared at Chapter 9. See the
 **Polish Test 2** corrects that name and themes horizontal scrollbars; [POL-04–05](testing-polish.md) have now both passed.
 **Notable Deeds Test 1** adds 350 mapped milestones, 32 editable activity
 counters and 15 read-only counters. Claims and Karma Shards remain read-only;
-[DEED-01–10](testing-notable-deeds.md) are pending. Accepted audience/travel
+[DEED-01–10](test-results-deeds-2026-11-15.md#player-acceptance-and-supplied-saves)
+passed except DEED-06: the game cleared a claim after a decrease. Test 2 adds
+a targeted OK/Cancel warning; [DEED-11–14](testing-notable-deeds.md) are pending. Accepted audience/travel
 controls lose Experimental labels; the three hidden destinations say Effect unknown.
 Other sections below
 are research notes and acceptance gates, not working UI features or
@@ -39,7 +41,7 @@ The game data version was not separately reported.
 | 1 | Tutorials and known English names | Selected save only; preserve Japanese keys and unknown records | [TUT-01–07](testing.md) |
 | 2 | Blessings | All seven EXP fields; six data-derived level previews; Fortuna special | [BLESS-01–11](testing-blessings.md) passed; see coverage limits in the report |
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
-| 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | [DEED-01–10](testing-notable-deeds.md) pending, including completion refresh and one in-game reward claim |
+| 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) check the new warning |
 | 5 | Boons | Confirm ownership and activation storage before enabling writes | Controlled purchase/activation diff, effect check and persistence |
 | 6 | Story | Read-only summary first; narrowly validated Leda transitions only | Load scene, advance to battle, finish/save/reload with no missing facilities |
 
@@ -145,6 +147,12 @@ supports the observation but is not an isolated reward-system test.
 Some counters may be derived or recalculated. The visible played-hours counter
 is not proof of a safe way to edit elapsed play time. Record the observed
 counter, displayed threshold and claim state separately for every mapped deed.
+
+DEED acceptance subsequently confirmed training 75 creates state 2 during the
+load/menu check, and claiming changes 2 → 4 with Karma 710 → 720. Lowering
+training to 40 caused the game to remove the 50-tier state 4, leaving an
+incomplete 40/50 milestone. The editor now warns before an effective edit
+leaves any claimed target unmet; it does not directly rewrite claims or currency.
 
 ## Boons of Salvation
 

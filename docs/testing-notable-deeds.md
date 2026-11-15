@@ -1,8 +1,52 @@
-# Notable Deeds Test 1: acceptance guide
+# Notable Deeds: acceptance guide
 
-The header must say **Notable Deeds Test 1**. `BUILD.txt` identifies the source
+The current header must say **Notable Deeds Test 2**. `BUILD.txt` identifies the source
 commit and CI run. Extract to a fresh folder and launch its `editor.py` using
 your already-working environment; there are no new dependencies.
+
+## Test 2: only DEED-11–14 need checking
+
+Test 1 passed except DEED-06, which established that the game removes a claim
+when its counter falls below the target. The [evidence report](test-results-deeds-2026-11-15.md#player-acceptance-and-supplied-saves)
+records the supplied files. No repeat of the full in-game suite is requested.
+
+Use a disposable **B0** copy with training total **65** and targets 10–50
+already **Claimed (4)**. Keep the game closed and mirroring off. These follow-up
+checks can all be done in the editor; do not use the lowered copy for normal play.
+
+* **DEED-11 — Cancel:** select any training tier (including 75), enter **40**,
+  Apply. Expect the exact warning “You are about to unclaim some previously
+  claimed rewards. Continue anyway?”, **OK** and **Cancel**, with target **50**
+  listed. Cancel must leave training 65, every claim unchanged, no dirty change
+  and no new Undo entry. Repeat using Escape or closing the dialog; same result.
+* **DEED-12 — OK and history:** repeat 65 → 40, choose OK. Expect total 40 and
+  the 50-tier still Claimed (4) **in the editor**. Undo restores 65; Redo restores
+  40. Save/Reload retains 40 and the stored claim. The game may clear it later,
+  as already demonstrated; no new in-game trip is needed. Restore B0 afterward.
+* **DEED-13 — Warning boundaries:** fresh B0 each time. Try 65 → **60**, **50**
+  and **75**: none should warn. 65 → **49** should list target 50; Cancel.
+  65 → **9** should list 10, 20, 30, 40, 50; Cancel. An unchanged 65 or invalid
+  -1 / 101 should not prompt or create history. The warning is based on the
+  entire activity, regardless of which milestone row is selected.
+* **DEED-14 — Evidence labels:** livestock and golden or silver mummies use
+  the screenshot-confirmed descriptions but remain read-only. The help text
+  explains that the game can clear claims below target. Check the dialog is
+  readable and buttons work in your current theme; capture it once.
+
+```text
+Build / commit:
+DEED-11: (Cancel, Escape/close, no history)
+DEED-12: (OK, Undo/Redo, Save/Reload)
+DEED-13:
+DEED-14:
+Screenshot / unexpected behavior:
+```
+
+## Test 1: original procedure retained for reference
+
+The original DEED-06 preservation expectation below was disproved by the game
+and is superseded by Test 2's warning. The original procedure is retained so
+its reported results remain reproducible; do not treat it as a current guarantee.
 
 Use **Leda Part I Chapter 9 / fefw-recomp-0.1.5** and the accepted B0 baseline.
 Keep B0 untouched. Start each in-game case from a separate disposable copy.

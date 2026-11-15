@@ -1,10 +1,11 @@
 # Notable Deeds: progress and claim states
 
-**Notable Deeds Test 1** adds a searchable table of **350 milestones across
+**Notable Deeds** provides a searchable table of **350 milestones across
 47 mapped counters**. **32 activity counters** can be edited, one at a time.
-The other 15 are read-only. This first build awaits the [DEED acceptance
-run](testing-notable-deeds.md); earlier restoration evidence is not acceptance
-of this new counter-only workflow.
+The other 15 are read-only. The player completed the first [DEED acceptance
+run](test-results-deeds-2026-11-15.md#player-acceptance-and-supplied-saves). Training
+completion and a +10-shard claim worked. Lowering training below a claimed tier
+caused the game to remove that claim, so **Test 2 adds an OK/Cancel warning**.
 
 ## Use
 
@@ -14,11 +15,15 @@ of this new counter-only workflow.
 3. Select a milestone. The form shows its **whole activity total**, exact
    counter key/hash, allowed range and any read-only reason.
 4. Enter **New total**, or click **Use selected target** to fill the input.
-   Filling the input does not edit the save. Click **Apply progress**, then
+   Filling the input does not edit the save. Click **Apply progress**. If the new
+   total leaves any previously claimed tier below target, an **OK/Cancel**
+   warning lists the affected targets. Cancel is the default and makes no
+   deed edit or undo entry. OK applies the counter edit. Then
    **Save** / Ctrl+S. Ctrl+Z/Ctrl+Y undo/redo; Reload rereads the saved file.
 5. Load the exact edited slot in game and check progress. Claim rewards in
-   game. An edited counter may require a normal activity to refresh the game's
-   milestone states; that behavior is a test question, not an assumed guarantee.
+   game. The tested training counter refreshed completion on the reported load/menu
+   check; a natural threshold-crossing training action also worked. Other
+   milestones may have additional refresh or visibility conditions.
 
 One counter feeds every tier for that activity. Editing the 75-training row
 changes the training total, including progress shown against the 10–100 tiers.
@@ -48,8 +53,18 @@ normal and a zero-to-zero action does not manufacture a record.
 
 **Every claim state is read-only here.** This tab neither creates completion
 flags nor marks rewards claimed, grants Karma Shards, changes Boons, or resets
-claims when progress is reduced. A claimed milestone can therefore show a
-lower counter with its old claim flag intact. Do not use the generic Flags tab
+claims when progress is reduced **in the editor**. However, the game can remove
+those claims on loading: the supplied 65 → 40 training test cleared the
+50-training claim and displayed incomplete 40/50, while Karma stayed 710.
+A stored Claimed (4) label before loading does not prevent this game behavior.
+The confirmation text is “You are about to unclaim some previously claimed
+rewards. Continue anyway?” and shows which claimed targets exceed the new total.
+It is only shown for an effective, valid edit. Meeting a target exactly or
+reducing progress without leaving any claimed target unmet does not prompt.
+No-op, invalid and read-only attempts do not prompt. This check also covers an
+existing inconsistent claim when an increase still leaves its target unmet.
+Undo/Redo restore the approved editor state; they do not undo game actions.
+Do not use the generic Flags tab
 to substitute guessed completion/visibility edits for this workflow.
 
 ## Coverage and limits
@@ -62,8 +77,8 @@ local performances and ore. The complete catalogue below specifies each one.
 Read-only: paralogues, three support conversation ranks, five skill growth
 ranks, two blessing growth counters, play time, and three insufficiently
 confirmed enemy categories. The first eleven may depend on underlying
-progress. Play time may be recalculated from elapsed time. The enemy labels
-are explicitly provisional translations. Raw EXP edits elsewhere do not
+progress. Play time may be recalculated from elapsed time. The giant-enemy label remains provisional; livestock and golden/silver mummy
+names are confirmed by the DEED-08 screenshot, but their editing is untested. Raw EXP edits elsewhere do not
 prove that a growth deed counter can independently reproduce those changes.
 
 Edits are bounded to **0 through the last mapped target**, or through the
@@ -92,8 +107,9 @@ reported the progress correct but rewards unclaimed, then claimed them in
 game. A supplied comparison showed **79 milestone states changing 2 → 4**.
 The accepted B0 reference contains 39 of these counters and 79 claimed states;
 eight zero counters are omitted. The combined reward/boon balance change is
-not an isolated currency test. This build intentionally changes counters only;
-[DEED-04–05](testing-notable-deeds.md) test when game-side completion refreshes.
+not an isolated currency test. This feature changes counters only. [DEED-04–05](test-results-deeds-2026-11-15.md#player-acceptance-and-supplied-saves)
+confirmed training 75 creates state 2 and an in-game claim changes 2 → 4 with
+Karma 710 → 720. DEED-06 confirmed the game can clear state 4 below target.
 
 Counter keys use `実績_…`; milestone keys use `実績状態_…`. Both hashes are the
 low 32 bits of FNV-1 64 of the full UTF-8 key (`core.id_hash`). The same map
@@ -141,9 +157,9 @@ any hashed key.
 | Blessings raised to level 2 | `実績_加護レベル2達成数` | `da109aa3` | Read-only | 1, 3, 6 | 10, 30, 100 |
 | Blessings raised to maximum | `実績_加護レベル最大達成数` | `b8892bfd` | Read-only | 1, 3, 6 | 30, 100, 200 |
 | Training sessions | `実績_訓練回数` | `2adbdfbf` | Editable | 10, 20, 30, 40, 50, 75, 100 | 10, 10, 10, 10, 10, 10, 10 |
-| Performances watched | `実績_観劇回数` | `c01c6da3` | Editable | 10, 20, 30, 40, 50 | 10, 10, 10, 10, 10 |
+| Theatre visits | `実績_観劇回数` | `c01c6da3` | Editable | 10, 20, 30, 40, 50 | 10, 10, 10, 10, 10 |
 | Temple services performed | `実績_奉仕回数` | `b693004d` | Editable | 10, 20, 30, 40, 50 | 10, 10, 10, 10, 10 |
-| Overnight stays | `実績_宿泊回数` | `e14e0e21` | Editable | 10, 20, 30, 40, 50, 75, 100 | 10, 10, 10, 10, 10, 10, 10 |
+| Rooms rented at inns | `実績_宿泊回数` | `e14e0e21` | Editable | 10, 20, 30, 40, 50, 75, 100 | 10, 10, 10, 10, 10, 10, 10 |
 | Turns performing individual actions | `実績_個別行動周期数` | `dbc7c723` | Editable | 10, 20, 30, 40, 50 | 10, 10, 10, 10, 10 |
 | Meals at inns | `実績_食事回数` | `4baccce0` | Editable | 10, 20, 30, 40, 50, 75, 100 | 10, 10, 10, 10, 10, 10, 10 |
 | Gifts given | `実績_贈り物回数` | `23a7a96e` | Editable | 10, 20, 30, 40, 50, 75, 100 | 10, 10, 10, 10, 10, 10, 10 |
@@ -156,8 +172,8 @@ any hashed key.
 | Undead foes defeated in battle | `実績_冥魔敵撃破数` | `1be28238` | Editable | 10, 20, 30, 40, 50, 75, 100, 150, 200, 250, 300, 350, 400, 450, 500 | 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 |
 | Giant foes defeated (translation) | `実績_巨大敵撃破数` | `84f61022` | Read-only | 10, 20, 30, 40, 50, 75, 100, 150, 200 | 10, 10, 10, 10, 10, 10, 10, 10, 10 |
 | Beasts defeated in battle | `実績_野生敵撃破数` | `9bd7c8ca` | Editable | 10, 20, 30, 40, 50, 75, 100, 150, 200 | 10, 10, 10, 10, 10, 10, 10, 10, 10 |
-| Domestic animals defeated (translation) | `実績_家畜敵撃破数` | `550f13b3` | Read-only | 10, 20, 30, 40, 50, 75, 100, 150, 200 | 10, 10, 10, 10, 10, 10, 10, 10, 10 |
-| Special foes defeated (translation) | `実績_特別敵撃破数` | `e203feff` | Read-only | 10, 20, 30, 40, 50, 75, 100, 150, 200 | 10, 10, 10, 10, 10, 10, 10, 10, 10 |
+| Livestock defeated in battle | `実績_家畜敵撃破数` | `550f13b3` | Read-only | 10, 20, 30, 40, 50, 75, 100, 150, 200 | 10, 10, 10, 10, 10, 10, 10, 10, 10 |
+| Golden or silver mummies defeated | `実績_特別敵撃破数` | `e203feff` | Read-only | 10, 20, 30, 40, 50, 75, 100, 150, 200 | 10, 10, 10, 10, 10, 10, 10, 10, 10 |
 | Attacks avoided | `実績_回避回数` | `6614ae03` | Editable | 10, 20, 30, 40, 50, 75, 100, 150, 200, 250, 300 | 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 |
 | Critical attacks performed | `実績_必殺回数` | `e997585d` | Editable | 10, 20, 30, 40, 50, 75, 100, 150, 200, 250, 300 | 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 |
 | Assists performed | `実績_補助回数` | `c12cf155` | Editable | 10, 20, 30, 40, 50, 75, 100, 150, 200, 250, 300 | 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 |

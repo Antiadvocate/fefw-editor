@@ -1,5 +1,5 @@
 """Single-counter Notable Deeds edits with normal save and undo controls."""
-from tkinter import ttk
+from tkinter import messagebox, ttk
 
 import deeds
 import fefw_core as core
@@ -19,7 +19,7 @@ class DeedPageMixin:
 
         ttk.Label(page, style="CardFaint.TLabel", wraplength=980, justify="left", text=(
             "Edit one activity total; it feeds every milestone for that activity. Claim rewards in game. "
-            "Target reached is a counter comparison, not a claim-state change. Unlisted milestones may have game conditions.\n"
+            "The game can clear claimed rewards if their progress falls below target. Unlisted milestones may have game conditions.\n"
             "Turn off ‘Also edit this route’s other saves’. Apply changes memory; Ctrl+S saves, Ctrl+Z undoes."
         )).pack(side="bottom", anchor="w", pady=(8, 0))
         form = ttk.Frame(page, style="Card.TFrame", padding=(14, 10))
@@ -126,7 +126,7 @@ class DeedPageMixin:
             return
         value = values.get(h, 0)
         stored = f"{value:,}" if h in values else "0 (not stored)"
-        note = reason or f"Allowed total: 0–{deeds.maximum(h, values):,}. This changes all {len(row['milestones'])} milestones' progress; claim states stay as stored."
+        note = reason or f"Allowed total: 0–{deeds.maximum(h, values):,}. Updates all {len(row['milestones'])} milestones' progress. The game may clear claims below target."
         self.deed_detail.configure(text=f"{row['label']} · current total: {stored}\n{row['name']} · {h:08x}\n{note}")
         self.deed_value.state(["!disabled"])
         self.deed_value.delete(0, "end")
@@ -139,6 +139,17 @@ class DeedPageMixin:
         if len(picked) == 1 and picked[0] in self._deed_rows and not self.deed_target.instate(["disabled"]):
             self.deed_value.delete(0, "end")
             self.deed_value.insert(0, str(self._deed_rows[picked[0]][1]["target"]))
+
+    def _confirm_deed_unclaim(self, h, value, affected):
+        targets = ", ".join(f"{tier['target']:,}" for tier in affected)
+        return messagebox.askokcancel(
+            "Previously claimed rewards",
+            "You are about to unclaim some previously claimed rewards. Continue anyway?",
+            detail=(f"{deeds.catalog()[h]['label']}: new total {value:,}.\n"
+                    f"Affected claimed targets: {targets}.\n\n"
+                    "The game can clear these claims when it loads the edited save. "
+                    "The editor keeps the stored claim flags and Karma Shards unchanged."),
+            icon="warning", default="cancel", parent=self)
 
     def set_deed(self):
         if not self.sv:
@@ -165,6 +176,10 @@ class DeedPageMixin:
             return
         if after == before.payload:
             self.flash("This activity already has that total.", "info")
+            return
+        affected = deeds.claims_at_risk(h, value, deeds.read(before))
+        if affected and not self._confirm_deed_unclaim(h, value, affected):
+            self.flash("Progress edit cancelled; no deed changes applied.", "info")
             return
         self.push_undo()
         self._core_edit(lambda f: deeds.edited(f, h, value), f"Set {deeds.catalog()[h]['label']} to {value:,}")

@@ -547,7 +547,7 @@
     },
     "c01c6da3": {
       "name": "実績_観劇回数",
-      "label": "Performances watched",
+      "label": "Theatre visits",
       "category": "Base activities",
       "editable": true,
       "read_only_reason": "",
@@ -625,7 +625,7 @@
     },
     "e14e0e21": {
       "name": "実績_宿泊回数",
-      "label": "Overnight stays",
+      "label": "Rooms rented at inns",
       "category": "Base activities",
       "editable": true,
       "read_only_reason": "",
@@ -1372,10 +1372,10 @@
     },
     "550f13b3": {
       "name": "実績_家畜敵撃破数",
-      "label": "Domestic animals defeated (translation)",
+      "label": "Livestock defeated in battle",
       "category": "Battle",
       "editable": false,
-      "read_only_reason": "Enemy category and isolated counter behavior need confirmation.",
+      "read_only_reason": "The English enemy category is confirmed; isolated counter editing still needs testing.",
       "milestones": [
         {
           "name": "実績状態_家畜敵を撃破",
@@ -1435,10 +1435,10 @@
     },
     "e203feff": {
       "name": "実績_特別敵撃破数",
-      "label": "Special foes defeated (translation)",
+      "label": "Golden or silver mummies defeated",
       "category": "Battle",
       "editable": false,
-      "read_only_reason": "Enemy category and isolated counter behavior need confirmation.",
+      "read_only_reason": "The English enemy category is confirmed; isolated counter editing still needs testing.",
       "milestones": [
         {
           "name": "実績状態_特別敵を撃破",
