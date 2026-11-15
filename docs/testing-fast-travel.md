@@ -5,6 +5,13 @@ Read `BUILD.txt` for the exact commit. The window's upstream version is still
 1.3.7. This candidate includes the accepted Tutorials and Blessings features,
 including the corrected **Fortuna** display name.
 
+**Acceptance completed 2026-11-15:** the player reported OPEN-01–02 and
+FT-01–08 passed, with label corrections supplied for FT-01. See the
+[validation report](test-results-fast-travel-2026-11-15.md). The instructions
+below retain Test 1's original labels for reproducibility. In current source,
+**Harbor is Port**, and all 16 English labels match the supplied game screenshots.
+The Test 1 ZIP is unchanged. No repeat game run is required for these label edits.
+
 ## Prepare once
 
 * Reuse the working Python environment. Extract into a new directory and run
@@ -21,7 +28,7 @@ including the corrected **Fortuna** display name.
   failing copy and revert to the untouched baseline. Do not continue that
   failure into the next case.
 
-The English row names below are provisional translations; use the hash to
+The English row names below were provisional translations in Test 1; use the hash to
 identify a row if the in-game name differs. [All 16 identities](fast-travel.md)
 are documented. Do not spend resources or progress a chapter during these checks.
 

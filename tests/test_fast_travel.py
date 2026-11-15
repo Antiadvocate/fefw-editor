@@ -72,7 +72,7 @@ class FastTravelTest(unittest.TestCase):
         self.assertNotIn(core.id_hash('ファストトラベル_厩舎前'), cat)
         names = {}; ft.apply_labels(names)
         self.assertEqual(names[STABLES]['name'], cat[STABLES]['name'])
-        self.assertIn('(translated)', names[STABLES]['label'])
+        self.assertEqual(names[STABLES]['label'], 'Fast travel: Stables')
         names[STABLES]['name'] = 'conflicting_identity'
         before = dict(names)
         with self.assertRaises(ft.FastTravelError): ft.apply_labels(names)

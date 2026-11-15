@@ -1,118 +1,118 @@
 {
   "schema": 1,
-  "scope": "16 Dagsion destinations from the confirmed Leda Chapter 9 restoration. English labels are provisional translations. Not an exhaustive catalogue.",
+  "scope": "16 Dagsion destinations from the confirmed Leda Chapter 9 restoration. English labels confirmed in player screenshots on 2026-11-15. Not an exhaustive catalogue.",
   "entries": {
     "5a48ce35": {
       "name": "拠点_FT_Hub_000_A1_ファストトラベル_闘技場前",
-      "label": "Arena Entrance",
+      "label": "Arena Plaza",
       "area": "Dagsion",
-      "label_source": "editor translation; in-game wording pending",
-      "evidence": "player-confirmed restoration; isolated add/remove tests pending"
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry"
     },
     "bb86129f": {
       "name": "拠点_FT_Hub_000_A1_ファストトラベル_商店街",
-      "label": "Shopping Street",
+      "label": "Shopping Arcade",
       "area": "Dagsion",
-      "label_source": "editor translation; in-game wording pending",
-      "evidence": "player-confirmed restoration; isolated add/remove tests pending"
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry"
     },
     "ad2b97e0": {
       "name": "拠点_FT_Hub_000_A1_ファストトラベル_商業区画",
-      "label": "Commercial District",
+      "label": "City Streets",
       "area": "Dagsion",
-      "label_source": "editor translation; in-game wording pending",
-      "evidence": "player-confirmed restoration; isolated add/remove tests pending"
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry"
     },
     "387f1e5a": {
       "name": "拠点_FT_Hub_000_A1_ファストトラベル_上参道",
-      "label": "Upper Approach",
+      "label": "Upper Temple Row",
       "area": "Dagsion",
-      "label_source": "editor translation; in-game wording pending",
-      "evidence": "player-confirmed restoration; isolated add/remove tests pending"
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry"
     },
     "9b4262d7": {
       "name": "拠点_FT_Hub_000_A1_ファストトラベル_下参道",
-      "label": "Lower Approach",
+      "label": "Lower Temple Row",
       "area": "Dagsion",
-      "label_source": "editor translation; in-game wording pending",
-      "evidence": "player-confirmed restoration; isolated add/remove tests pending"
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry"
     },
     "90d7a0f8": {
       "name": "拠点_FT_Hub_000_A1_ファストトラベル_富裕区画",
-      "label": "Affluent District",
+      "label": "Entertainment District",
       "area": "Dagsion",
-      "label_source": "editor translation; in-game wording pending",
-      "evidence": "player-confirmed restoration; isolated add/remove tests pending"
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry"
     },
     "2c475b48": {
       "name": "拠点_FT_Hub_000_A110_ファストトラベル_ジュラ神殿",
       "label": "Jurah's Temple",
       "area": "Dagsion",
-      "label_source": "editor translation; in-game wording pending",
-      "evidence": "player-confirmed restoration; isolated add/remove tests pending"
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry"
     },
     "2d2ded41": {
       "name": "拠点_FT_Hub_000_A120_ファストトラベル_マーズ神殿",
       "label": "Mars's Temple",
       "area": "Dagsion",
-      "label_source": "editor translation; in-game wording pending",
-      "evidence": "player-confirmed restoration; isolated add/remove tests pending"
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry"
     },
     "547cf68b": {
       "name": "拠点_FT_Hub_000_A130_ファストトラベル_スミルノス神殿",
       "label": "Smyrnos's Temple",
       "area": "Dagsion",
-      "label_source": "editor translation; in-game wording pending",
-      "evidence": "player-confirmed restoration; isolated add/remove tests pending"
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry"
     },
     "16f93ab4": {
       "name": "拠点_FT_Hub_000_A161_ファストトラベル_クレール神殿",
       "label": "Credna's Temple",
       "area": "Dagsion",
-      "label_source": "editor translation; in-game wording pending",
-      "evidence": "player-confirmed restoration; isolated add/remove tests pending"
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry"
     },
     "b482d5dc": {
       "name": "拠点_FT_Hub_000_A150_ファストトラベル_カーラ神殿",
       "label": "Kalla's Temple",
       "area": "Dagsion",
-      "label_source": "editor translation; in-game wording pending",
-      "evidence": "player-confirmed restoration; isolated add/remove tests pending"
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-reported add/remove, travel and persistence PASS on Leda Chapter 9"
     },
     "00fe96da": {
       "name": "拠点_FT_Hub_000_A102_ファストトラベル_アウロラ神殿",
       "label": "Aurora's Temple",
       "area": "Dagsion",
-      "label_source": "editor translation; in-game wording pending",
-      "evidence": "player-confirmed restoration; isolated add/remove tests pending"
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry"
     },
     "2478dd30": {
       "name": "拠点_FT_Hub_000_A1_ファストトラベル_厩舎前",
       "label": "Stables",
       "area": "Dagsion",
-      "label_source": "editor translation; in-game wording pending",
-      "evidence": "player-confirmed restoration; isolated add/remove tests pending"
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-reported add/remove, travel and persistence PASS on Leda Chapter 9"
     },
     "1b5a4006": {
       "name": "拠点_FT_Hub_000_A1_ファストトラベル_港",
-      "label": "Harbor",
+      "label": "Port",
       "area": "Dagsion",
-      "label_source": "editor translation; in-game wording pending",
-      "evidence": "player-confirmed restoration; isolated add/remove tests pending"
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-reported add/remove, travel and persistence PASS on Leda Chapter 9; FT-03/04 Port saves independently checked"
     },
     "e86370a7": {
       "name": "拠点_FT_Hub_000_A1_ファストトラベル_貧民街",
-      "label": "Slums",
+      "label": "Lowtown",
       "area": "Dagsion",
-      "label_source": "editor translation; in-game wording pending",
-      "evidence": "player-confirmed restoration; isolated add/remove tests pending"
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry"
     },
     "c1c872f8": {
       "name": "拠点_FT_Hub_000_A70_ファストトラベル_酒場",
       "label": "Tavern",
       "area": "Dagsion",
-      "label_source": "editor translation; in-game wording pending",
-      "evidence": "player-confirmed restoration; isolated add/remove tests pending"
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry"
     }
   }
 }

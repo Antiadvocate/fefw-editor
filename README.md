@@ -29,7 +29,7 @@ library, or a ready-made Windows `.exe`.
 | **Flags** | | Every named variable the save stores: support conversations, recruited / met, achievements, feature and class unlocks. Search, filter, set, add, remove |
 | **Tutorials** | | 115 identified help entries; make selected tutorials available or remove them from the selected save. English names, original Japanese keys, explicit raw states and undo/redo. See [tutorials.md](docs/tutorials.md) |
 | **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Six level previews tested in Leda Chapter 9; Fortuna's EXP effect remains unknown. Selection and Divine Sand are read-only. See [blessings.md](docs/blessings.md) |
-| **Fast travel** | | Add/remove 16 identified Dagsion destination flags in the selected save, with provisional English translations, original keys and undo/redo. Independent of world-map and facility unlocks; new game tests pending. See [fast-travel.md](docs/fast-travel.md) |
+| **Fast travel** | | Add/remove 16 identified Dagsion destination flags in the selected save, with screenshot-confirmed English names, original keys and undo/redo. Independent of world-map and facility unlocks; milestone acceptance passed on Leda Chapter 9. See [fast-travel.md](docs/fast-travel.md) |
 
 Units can also be **copied in** from another slot or **removed**. Every edit can
 be undone (Ctrl+Z / Ctrl+Y), and **Snapshot** / **Restore…** keep copies of the
@@ -113,10 +113,11 @@ values and coverage limits.
 
 In **Fast travel**, search/select a destination, then **Make available** or
 **Remove selected**, and Save. The catalogue covers 16 flags from the confirmed
-Leda Chapter 9 restoration; isolated editing/travel tests for this interface
-are pending. English destination labels are provisional translations. The
-Stables destination does not unlock the stable facility. Unknown records and
-values are preserved; sparse/ambiguous layouts refuse edits.
+Leda Chapter 9 restoration. OPEN-01–02 and FT-01–08 passed on the reported
+setup, including removal, restoration, travel and persistence for Port,
+Kalla's Temple and Stables. All 16 English labels match the supplied game
+screenshots. The Stables destination does not unlock the stable facility.
+Unknown records and values are preserved; sparse/ambiguous layouts refuse edits.
 
 * [Milestone 3: Fast travel and Open button testing guide](docs/testing-fast-travel.md)
 * [Fast travel feature, catalogue and binary-format documentation](docs/fast-travel.md)

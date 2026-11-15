@@ -25,7 +25,7 @@ class FastTravelPageMixin:
         self.fast_travel_search.pack(fill="x", pady=(8, 0))
         self.fast_travel_search.bind("<KeyRelease>", lambda e: self.refresh_fast_travel())
         ttk.Label(page, style="CardFaint.TLabel", wraplength=980, justify="left", text=(
-            "English names are provisional translations; search by name, Japanese key or hash. "
+            "Search by English name, Japanese key or hash. "
             "Edits affect the selected save's destination list. Travel still depends on game conditions; "
             "the Stables destination does not unlock the stable facility. Keep at least three known destinations.\n"
             "Turn off ‘Also edit this route’s other saves’. Ctrl+Z undoes; Ctrl+S saves."
@@ -36,7 +36,7 @@ class FastTravelPageMixin:
         frame.columnconfigure(0, weight=1)
         tree = self.fast_travel_tree = ttk.Treeview(frame, columns=("state", "jp", "hash"),
                                                    show="tree headings", selectmode="extended")
-        for col, label, width in (("#0", "Destination (translated)", 220), ("state", "State", 175),
+        for col, label, width in (("#0", "Destination", 220), ("state", "State", 175),
                                   ("jp", "Reads as", 570), ("hash", "Hash", 95)):
             tree.heading(col, text=label, anchor="w")
             tree.column(col, width=width, minwidth=width, stretch=col == "jp")
@@ -76,7 +76,7 @@ class FastTravelPageMixin:
         unlisted = len(values.keys() - cat.keys())
         self.fast_travel_count.configure(text=(
             f"{available} of {len(cat)} known destinations available · "
-            f"{unlisted} other list records preserved · game tests pending"))
+            f"{unlisted} other list records preserved"))
         for button in self.fast_travel_buttons:
             button.state(["!disabled"])
 

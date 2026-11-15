@@ -1,10 +1,12 @@
 # Fast travel: destination availability
 
 The **Fast travel** tab edits 16 identified Dagsion destination flags in the
-selected save. This is milestone 3, awaiting its own in-game acceptance run.
-The earlier restored destination list was player-confirmed on Leda Part I
-Chapter 9. Individual removal, restoration and travel via this new interface
-still need the [numbered tests](testing-fast-travel.md).
+selected save. Milestone 3's [numbered acceptance tests](testing-fast-travel.md)
+passed on the reported Leda Part I Chapter 9 / `fefw-recomp-0.1.5` setup.
+Port, Kalla's Temple and Stables were tested for removal, restoration, travel
+and persistence. The full destination list and all English names were confirmed
+with player screenshots; the other 13 destinations have not each had isolated
+in-game add/remove tests. See the [validation report](test-results-fast-travel-2026-11-15.md).
 
 ## Using the page
 
@@ -23,10 +25,10 @@ means the record is missing, not value zero. Other values display as
 **Unknown (value); preserved** and cannot be changed by this page. The summary
 counts all known destinations, including rows hidden by search.
 
-English labels are explicitly **provisional editor translations**. The precise
-English in-game wording was not retained in the earlier restoration notes.
-Confirm it in FT-01 before treating these labels as official localization.
-The same translated labels appear in **Flags**, prefixed by `Fast travel:`;
+English labels match the **in-game Base Map menu**, confirmed in the player's
+2026-11-15 screenshots. Test 1 used provisional translations; the report records
+the eight corrections, including Harbor → Port and Slums → Lowtown.
+The same labels appear in **Flags**, prefixed by `Fast travel:`;
 **Reads as** retains the full original key. A hash is the stable identity.
 
 ## Catalogue
@@ -35,14 +37,14 @@ Every key below has the exact prefix `拠点_FT_Hub_000_`. Append the suffix
 without spaces. `fast_travel_names.json` stores the complete keys, labels and
 evidence notes; `catalog()` verifies each identity against its hash.
 
-| Provisional English label | Hash | Exact key suffix |
+| In-game English label | Hash | Exact key suffix |
 |---|---|---|
-| Arena Entrance | `5a48ce35` | `A1_ファストトラベル_闘技場前` |
-| Shopping Street | `bb86129f` | `A1_ファストトラベル_商店街` |
-| Commercial District | `ad2b97e0` | `A1_ファストトラベル_商業区画` |
-| Upper Approach | `387f1e5a` | `A1_ファストトラベル_上参道` |
-| Lower Approach | `9b4262d7` | `A1_ファストトラベル_下参道` |
-| Affluent District | `90d7a0f8` | `A1_ファストトラベル_富裕区画` |
+| Arena Plaza | `5a48ce35` | `A1_ファストトラベル_闘技場前` |
+| Shopping Arcade | `bb86129f` | `A1_ファストトラベル_商店街` |
+| City Streets | `ad2b97e0` | `A1_ファストトラベル_商業区画` |
+| Upper Temple Row | `387f1e5a` | `A1_ファストトラベル_上参道` |
+| Lower Temple Row | `9b4262d7` | `A1_ファストトラベル_下参道` |
+| Entertainment District | `90d7a0f8` | `A1_ファストトラベル_富裕区画` |
 | Jurah's Temple | `2c475b48` | `A110_ファストトラベル_ジュラ神殿` |
 | Mars's Temple | `2d2ded41` | `A120_ファストトラベル_マーズ神殿` |
 | Smyrnos's Temple | `547cf68b` | `A130_ファストトラベル_スミルノス神殿` |
@@ -50,8 +52,8 @@ evidence notes; `catalog()` verifies each identity against its hash.
 | Kalla's Temple | `b482d5dc` | `A150_ファストトラベル_カーラ神殿` |
 | Aurora's Temple | `00fe96da` | `A102_ファストトラベル_アウロラ神殿` |
 | Stables | `2478dd30` | `A1_ファストトラベル_厩舎前` |
-| Harbor | `1b5a4006` | `A1_ファストトラベル_港` |
-| Slums | `e86370a7` | `A1_ファストトラベル_貧民街` |
+| Port | `1b5a4006` | `A1_ファストトラベル_港` |
+| Lowtown | `e86370a7` | `A1_ファストトラベル_貧民街` |
 | Tavern | `c1c872f8` | `A70_ファストトラベル_酒場` |
 
 ## Format and locator
@@ -102,4 +104,4 @@ advanced interface with broader abilities; this page's guarantees apply to its
 own controls. There is no unlock-everything preset.
 
 See [the validation report](test-results-fast-travel-2026-11-15.md) for the
-distinction between automated preservation checks and pending game tests.
+distinction between automated preservation checks and the scope of game testing.

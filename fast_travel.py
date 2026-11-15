@@ -42,14 +42,14 @@ def catalog() -> dict[int, dict]:
 
 
 def apply_labels(names: dict[int, dict]) -> None:
-    """Keep exact hashed keys in Reads as; translations are explicitly marked."""
+    """Use screenshot-confirmed English names; keep exact keys in Reads as."""
     entries = catalog()
     for h, row in entries.items():
         if names.get(h, {}).get("name", row["name"]) != row["name"]:
             raise FastTravelError(f"Conflicting flag name for {h:08x}")
     for h, row in entries.items():
         names[h] = {**names.get(h, {}), "name": row["name"],
-                    "label": f"Fast travel: {row['label']} (translated)",
+                    "label": f"Fast travel: {row['label']}",
                     "kind": "fast_travel"}
 
 
