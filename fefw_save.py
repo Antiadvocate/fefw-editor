@@ -272,15 +272,8 @@ class SaveFile:
         path = path or self.path
         if not path:
             raise SaveError("no output path")
-        # The .bak is the untouched original: it is written once and never
-        # replaced, so it survives any number of later saves.  (Replacing it
-        # whenever the size changed meant the second save overwrote the
-        # original with the first edit.)
         if backup and os.path.exists(path):
-            bak = path + ".bak"
-            if not os.path.exists(bak):
-                with open(path, "rb") as src, open(bak, "wb") as dst:
-                    dst.write(src.read())
+            write_backup(path)
         data = self.to_bytes()
         # write next to the target and swap it in, so a crash mid-write never
         # leaves a half-written slot behind
@@ -754,6 +747,63 @@ def _parse_record(payload: bytes, o: int, uid: int, meta: dict) -> UnitRecord | 
 # a whole save folder (Auto + every Chapter_* slot)
 # --------------------------------------------------------------------------
 SLOT_PREFIXES = ("Auto", "Chapter_", "Route_", "Part_")
+
+
+_BAK_N = re.compile(r"\.bak(\d+)$")
+
+
+def numbered_backups(path: str) -> list[tuple[int, str]]:
+    """The slot's numbered backups as (n, path), oldest (lowest n) first."""
+    folder, base = os.path.split(os.path.abspath(path))
+    out = []
+    try:
+        names = os.listdir(folder)
+    except OSError:
+        return out
+    for name in names:
+        if name.startswith(base + ".bak"):
+            m = _BAK_N.fullmatch(name[len(base):])
+            if m:
+                out.append((int(m.group(1)), os.path.join(folder, name)))
+    out.sort()
+    return out
+
+
+def write_backup(path: str) -> str | None:
+    """Copy the slot as it is on disk before the editor writes over it.
+
+    ``<slot>.bak`` is the untouched original: written by the first save and
+    never replaced.  Every later save keeps what was on disk just before it as
+    ``<slot>.bak1``, ``.bak2``... (highest = newest), so a game auto-save that
+    landed between two editor saves is never lost.  Nothing is renamed or
+    deleted, and the next number is one past the highest present, so deleting
+    old backups by hand never makes a new one overwrite another.  A copy that
+    is byte-for-byte the newest backup already kept is skipped.  A ``.bak``
+    left by an older version is kept as the original.  Returns the path
+    written, or None when nothing needed keeping.
+    """
+    with open(path, "rb") as fh:
+        data = fh.read()
+    bak = path + ".bak"
+    if not os.path.exists(bak):
+        target = bak
+    else:
+        nums = numbered_backups(path)
+        newest = nums[-1][1] if nums else bak
+        try:
+            with open(newest, "rb") as fh:
+                if fh.read() == data:
+                    return None
+        except OSError:
+            pass
+        target = f"{path}.bak{(nums[-1][0] if nums else 0) + 1}"
+    # write next to the target and swap it in, so a crash mid-copy never
+    # leaves a half-written backup behind
+    tmp = target + ".tmp"
+    with open(tmp, "wb") as fh:
+        fh.write(data)
+    os.replace(tmp, target)
+    return target
 
 
 def is_slot_name(name: str) -> bool:

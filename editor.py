@@ -1845,8 +1845,8 @@ class App(AdvancedMixin, tk.Tk):
             messagebox.showerror(APP_NAME, "Some slots could not be written:\n\n"
                                  + "\n".join(failed) + "\n\nIs the game still running?")
             return False
-        self.flash(f"Saved {', '.join(written)}. Originals kept as .bak next to each slot.",
-                   "ok")
+        self.flash(f"Saved {', '.join(written)}. The copy each save replaced is kept next "
+                   "to it as a numbered .bak.", "ok")
         return True
 
     def on_close(self):

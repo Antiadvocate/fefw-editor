@@ -7,7 +7,10 @@ library, or a ready-made Windows `.exe`.
 
 > **Unofficial and reverse-engineered.** Close the game before saving and keep
 > your own backup. The first save next to each slot also keeps the untouched
-> original as `<slot>.bak`.
+> original as `<slot>.bak`, and every save after that keeps the copy it replaced
+> as `<slot>.bak1`, `.bak2` and so on (highest number = newest), so a game
+> auto-save that landed between two editor saves is never lost. Backups are
+> never deleted or renamed; clear out old ones yourself when you like.
 
 ![Units page](docs/units.png)
 
