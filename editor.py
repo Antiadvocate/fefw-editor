@@ -39,7 +39,7 @@ from editor_advanced import AdvancedMixin  # noqa: E402  (Player / Classes / Fla
 from ui_util import enable_multi_select, last_tree  # noqa: E402  (Ctrl+A / Shift+drag in tables)
 
 APP_NAME = "Fortune's Weave Save Editor"
-__version__ = "1.3.6"
+__version__ = "1.3.7"
 SETTINGS_PATH = os.path.join(USER_DIR, "editor_settings.json")
 ICON_DIR = os.path.join(USER_DIR, "icons")
 
@@ -731,7 +731,8 @@ class App(AdvancedMixin, tk.Tk):
         self.inv_tree.tag_configure("header", foreground=p["muted"], font=self.f_small)
         for tree in (getattr(self, "cls_tree", None), getattr(self, "mas_tree", None),
                      getattr(self, "flag_tree", None), getattr(self, "mount_tree", None),
-                     getattr(self, "pool_tree", None)):
+                     getattr(self, "pool_tree", None),
+                     getattr(self, "map_tree", None)):
             if tree is not None:
                 tree.tag_configure("flag_unknown", foreground=p["muted"])
                 tree.tag_configure("empty", foreground=p["faint"])
@@ -880,6 +881,7 @@ class App(AdvancedMixin, tk.Tk):
         self.classes_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.flags_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.mounts_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
+        self.world_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.pages.add(self.units_page, text="Units")
         self.pages.add(self.convoy_page, text="Convoy")
         self.pages.add(self.gold_page, text="Gold")
@@ -888,6 +890,7 @@ class App(AdvancedMixin, tk.Tk):
         self.pages.add(self.classes_page, text="Classes")
         self.pages.add(self.flags_page, text="Flags")
         self.pages.add(self.mounts_page, text="Mounts")
+        self.pages.add(self.world_page, text="World map")
 
         self._build_units()
         self._build_convoy()
@@ -897,6 +900,7 @@ class App(AdvancedMixin, tk.Tk):
         self._build_classes()
         self._build_flags()
         self._build_mounts()
+        self._build_world_map()
         self._style_trees()
         self._enable_multi_select_all()
         self._update_dirty()
@@ -1586,6 +1590,8 @@ class App(AdvancedMixin, tk.Tk):
             target = self.cls_search
         elif sel == str(self.mounts_page):
             target = None
+        elif sel == str(self.world_page):
+            target = self.map_search
         if target is None:
             return
         target.focus_set()
