@@ -209,6 +209,14 @@ remains the supplied B0-01 package's Auto. Exact symbolic identity, higher
 tiers and fractional-price rounding remain unknown. See the
 [Test 2 acceptance report](test-results-weapon-boon-2026-11-15.md).
 
+Next is the player's requested [locked Weapons Discount 20% experiment](testing-weapon-discount-20.md).
+A hash-matching level-name pattern fits both observed ownership records. A
+disposable candidate changes the weapon record from 1 to 2 without changing
+progression or currency. Its 20% effect, On/Off behavior and reload persistence
+await game testing. General Boon editing and a save-derived eligibility column
+will be designed from the result; a failed candidate alone would not prove
+that a progression lock caused the failure.
+
 The Test 1 acceptance report records incidental baseline progression observations
 that constrain the B05/B06 tests. The known feast unlock flag was already 1
 in B0 and all four B05 captures. Personal save-restoration repair work is

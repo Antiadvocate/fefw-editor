@@ -143,6 +143,15 @@ Test 2's isolated Weapons Discount toggle passed WEDIT-01–07 and is accepted
 on the reported setup. Its exact symbolic key, later tiers and fractional-price rounding
 remain unknown. Do not generalise either toggle to other Boons.
 
+The next [Weapons Discount 20% experiment](testing-weapon-discount-20.md)
+changes the known level/purchase-associated value from 1 to 2 while preserving
+progression and Karma. Its gameplay result is pending. Hash matching now
+identifies candidate names `因果報酬_レベル_経験値` and
+`因果報酬_レベル_武器割引` for the two observed ownership records; these share
+the same level prefix, but were not recovered from executable code. This
+supports testing a tier index; it does not yet validate higher-tier editing
+or decode the save's purchase eligibility. Disable-record names remain unknown.
+
 The requested return to the 15 read-only Deeds counters is tracked in
 [deeds-follow-up.md](deeds-follow-up.md), starting with the three enemy counters.
 

@@ -157,6 +157,7 @@ Unknown records and values are preserved; sparse/ambiguous layouts refuse edits.
 * [Milestone 5: Boons Test 1 acceptance and validation](docs/test-results-boon-editing-2026-11-15.md)
 * [Milestone 5: Boons Test 2 Weapons Discount acceptance](docs/test-results-weapon-boon-2026-11-15.md)
 * [Milestone 5: Boons Test 2 reproduction guide](docs/testing-weapon-boon.md)
+* [Next Boon research: locked Weapons Discount 20% experiment](docs/testing-weapon-discount-20.md)
 * [Deeds follow-up: 15 read-only counters queued for testing](docs/deeds-follow-up.md)
 * [Milestone 4: Notable Deeds testing guide](docs/testing-notable-deeds.md)
 * [Notable Deeds feature, full catalogue and binary format](docs/notable-deeds.md)
