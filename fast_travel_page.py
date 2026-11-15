@@ -25,7 +25,7 @@ class FastTravelPageMixin:
         self.fast_travel_search.pack(fill="x", pady=(8, 0))
         self.fast_travel_search.bind("<KeyRelease>", lambda e: self.refresh_fast_travel())
         ttk.Label(page, style="CardFaint.TLabel", wraplength=980, justify="left", text=(
-            "Experimental destinations may be blocked by the current chapter; their English names are provisional. "
+            "Experimental destinations may stay hidden or restricted by the current chapter; some names are provisional. "
             "Search by name, Japanese key or hash. "
             "Edits affect the selected save's destination list. Travel still depends on game conditions; "
             "the Stables destination does not unlock the stable facility. Keep at least three original destinations.\n"

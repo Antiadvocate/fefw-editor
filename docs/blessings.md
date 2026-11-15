@@ -17,9 +17,11 @@ this same record.
 
 **Polish Test 1** also adds a separate experimental first-audience checkbox
 for six gods. Fortuna has no audience condition and shows Not required with a
-disabled checkbox. These new controls are pending gameplay tests; the EXP
-acceptance above does not validate them. See [first audiences](audiences.md)
-for usage, exact keys, scope and preservation, and [the new guide](testing-polish.md).
+disabled checkbox. The player subsequently reported AUD-01–08 passed on the
+same Chapter 9 setup; supplied Mars files and screenshots confirm flag
+persistence and a portrait-visibility difference at unchanged EXP. See
+[first audiences](audiences.md) for the limits, exact keys and preservation,
+and [the test guide](testing-polish.md) for isolated cases.
 
 ## Using the page
 

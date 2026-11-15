@@ -68,8 +68,8 @@ class BlessingPageMixin:
         self.blessing_audience_detail.pack(anchor="w", pady=(5, 0))
         ttk.Label(page, style="CardFaint.TLabel", wraplength=980, justify="left", text=(
             "Edit one god at a time. Level previews use game-data thresholds; Fortuna is special. "
-            "The audience toggle changes only the first-talk flag; game effects need testing. "
-            "It does not grant EXP or change a travel destination. Selection and Divine Sand stay as stored.\n"
+            "The audience toggle changes only the first-talk flag; other access conditions may still apply. "
+            "Audience edits leave EXP, selected blessings, Divine Sand and travel destinations unchanged.\n"
             "Turn off ‘Also edit this route’s other saves’. Apply EXP and the toggle change memory; "
             "Ctrl+S saves, Ctrl+Z undoes, Ctrl+Y redoes."
         )).pack(anchor="w", pady=(8, 0))

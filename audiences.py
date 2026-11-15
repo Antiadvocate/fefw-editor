@@ -1,7 +1,7 @@
 """Experimental first-audience flags, separate from blessing EXP and travel.
 
 Six exact keys are referenced by the MIR audience-condition fields. Fortuna's
-condition is empty. Game effects of toggling these flags still need testing.
+condition is empty. Leda Chapter 9 acceptance and its limits are in docs/audiences.md.
 """
 from __future__ import annotations
 

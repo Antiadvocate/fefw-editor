@@ -11,8 +11,12 @@ its [game acceptance tests](testing-fast-travel.md) passed on the reported
 Leda Chapter 9 setup. English names now match the supplied menu screenshots;
 see the [evidence and coverage limits](test-results-fast-travel-2026-11-15.md).
 **Polish Test 1** adds four experimental early-access destinations and six
-first-audience controls. Fortuna has no audience condition. These additions
-are structurally tested but pending [POL/FTX/AUD game acceptance](testing-polish.md).
+first-audience controls. Fortuna has no audience condition. The player has
+completed POL/FTX/AUD testing: audience controls have reported passes, all four
+travel flags persist, and only Yu Phas Temple appeared at Chapter 9. See the
+[evidence and limits](test-results-polish-2026-11-15.md#player-acceptance-and-supplied-saves).
+**Polish Test 2** corrects that name and themes horizontal scrollbars; only
+[POL-04–05](testing-polish.md) need a short follow-up check.
 Other sections below
 are research notes and acceptance gates, not working UI features or
 instructions to apply unverified offsets.
@@ -74,7 +78,12 @@ Audience/access flags are separate from blessing EXP. The exact keys include
 `共有_行動_初めてマーズと話した` and `共有_行動_初めてカーラと話した`.
 The six MIR audience-condition fields identify the new [audience controls](audiences.md).
 Fortuna has an empty condition. Increasing EXP alone does not establish that a
-god has been met or its menu unlocked; audience edits are also awaiting game tests.
+god has been met or its menu unlocked. AUD-01–08 now have player-reported passes
+on Leda Chapter 9. Mars has supplied Off/On screenshots and four save files:
+portrait visibility differs, audience absence/1 persists, EXP stays 25 and
+Divine Sand stays 100. His Off-after file stores selected=1 versus 0 before;
+the On pair stays 0. The cause of that game-session change is not established.
+The other five gods lack individual supplied evidence in this submission.
 
 ## Fast travel and facilities
 
@@ -93,10 +102,14 @@ restoration, travel and persistence covered Port, Kalla's Temple and Stables.
 The private FT-03/04 files independently confirm Port absent then restored,
 all other destination records preserved, and stable-facility unlock absent.
 The other 13 original entries have no isolated game edit/arrival test yet.
-Four absent destinations (Aurora's private room/garden, Salamis Guesthouse and
-Yu-Fas Temple; provisional names) have exact keys and a separate experimental
-coverage label in Polish Test 1. Their early access, arrival/exit and persistence
-await FTX-01–04. The original 16 remain the only map-identification anchors.
+Four experimental destinations were tested in FTX-01–04. All four flags persist
+in supplied before/after saves. Aurora's private room/garden and Salamis
+Guesthouse did not appear in the Base Map list; their labels remain provisional.
+**Yu Phas Temple** is the player-confirmed English name. It appeared, allowed
+travel and walking out, but walking back in remained off limits. Its removed
+file has no flag; disappearance from the game menu was not explicitly reported.
+The original 16 remain the only map-identification anchors. These results do
+not identify or bypass the remaining entry/visibility conditions.
 
 The exam proctor, drinks vendor and Perform quest tab also worked after the
 restoration. These could become small facility controls once their precise

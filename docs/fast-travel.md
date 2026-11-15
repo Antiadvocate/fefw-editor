@@ -57,24 +57,31 @@ evidence notes; `catalog()` verifies each identity against its hash.
 | Lowtown | `e86370a7` | `A1_ファストトラベル_貧民街` |
 | Tavern | `c1c872f8` | `A70_ファストトラベル_酒場` |
 
-## Four experimental additions (Polish Test 1)
+## Four experimental additions
 
 These exact scoped keys occur in `GameData/Timeline_Com.bin`; corresponding
 names and locators are in Hub/HubDispos data. All four are absent from the
-private FT-04 save. **English names are provisional translations, and early
-access is untested.** They may be subject to chapter, route or scene conditions.
-The Coverage column distinguishes them from the original confirmed list.
-Test them one per copied save using [FTX-01–04](testing-polish.md), without
-changing first-audience or chapter flags at the same time.
+private FT-04 save. In Polish Test 1, the player tested all four on Leda Part I
+Chapter 9 / `fefw-recomp-0.1.5`. **All four flags persisted, but only Yu Phas
+Temple appeared in the Base Map list.** Travel there and walking out worked;
+walking back in was still blocked as off limits. The flag does not remove that
+story/entry restriction. Aurora's two locations and Salamis Guesthouse stayed
+hidden; their additional visibility conditions remain unidentified.
+
+Yu Phas Temple is the player's confirmed English name; the other three labels
+remain provisional. All four retain experimental coverage, and none becomes a
+map-identification anchor. See the [acceptance evidence and limits](test-results-polish-2026-11-15.md#player-acceptance-and-supplied-saves).
+The isolated [FTX-01–04 procedure](testing-polish.md) remains available for later
+chapters or versions; do not add guessed gate or story flags to force visibility.
 
 Use the same `拠点_FT_Hub_000_` prefix for each suffix below.
 
-| Provisional label | Hash | Exact suffix |
+| Label (only Yu Phas Temple confirmed) | Hash | Exact suffix |
 |---|---|---|
 | Aurora's private room | `38574e83` | `A100_ファストトラベル_アウロラの私室` |
 | Aurora's garden | `1e4d4a23` | `A101_ファストトラベル_アウロラの庭園` |
 | Salamis Guesthouse | `efb57d93` | `A9_ファストトラベル_サラミス迎賓館` |
-| Yu-Fas Temple | `65411bed` | `A141_ファストトラベル_ユ・ファス神殿` |
+| Yu Phas Temple | `65411bed` | `A141_ファストトラベル_ユ・ファス神殿` |
 
 ## Format and locator
 

@@ -5,11 +5,18 @@ to Blessings. The six ordinary gods have exact first-talk conditions in the
 game data. Fortuna's condition is empty: she displays **Not required**, and
 her checkbox is disabled. There is no invented Fortuna flag.
 
-These controls are **pending game testing**. The keys are identified; the
-effect of adding or removing them before their usual story point is not yet
-confirmed. A recorded audience is not a promise of temple entry, an available
-conversation, a portrait, or a usable blessing. The game may impose other
-conditions or restore flags from story state.
+The player reported **AUD-01–08 passed** on Leda Part I Chapter 9 /
+`fefw-recomp-0.1.5`. Supplied Mars Off/On screenshots show his portrait obscured
+when Off and visible when On, while Bless Lv remains 1. His four before/after
+saves independently confirm audience absence/1 persists and EXP stays 25.
+The other five gods have reported passes without individual files/screenshots
+in this submission; their precise visible effects are not independently verified.
+
+A recorded audience is not a promise of temple entry, an available conversation,
+or a usable blessing in every scene. The game may impose other conditions.
+See [acceptance evidence](test-results-polish-2026-11-15.md#player-acceptance-and-supplied-saves)
+for a stored-selection change during the Mars Off game session and the limits
+of these observations.
 
 ## Use
 
@@ -89,5 +96,5 @@ checksums. Tests compare the rest of the payload after normalizing relocatable
 pointers and check the serialized file again. The GUI uses the normal selected
 slot undo/cache/save flow and refuses edits with route mirroring enabled.
 
-See [validation](test-results-polish-2026-11-15.md) for automated evidence.
-No first-audience game result is claimed yet, on Leda or another route/version.
+See [validation](test-results-polish-2026-11-15.md) for automated and player evidence.
+Other routes, chapters and game versions remain unverified.

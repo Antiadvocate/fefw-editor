@@ -120,7 +120,7 @@
       "area": "Dagsion",
       "experimental": true,
       "label_source": "Provisional translation of the Japanese game key; English menu label not confirmed",
-      "evidence": "Exact scoped flag in Timeline_Com.bin; destination and locator names in Hub/HubDispos data; absent in private FT-04; early access and persistence pending in-game testing"
+      "evidence": "Exact scoped key in game data; FTX-01–03 on Leda Part I Chapter 9 / fefw-recomp-0.1.5: value 1 persisted in supplied before/after saves, but player reported no Base Map entry. Additional visibility conditions remain unidentified."
     },
     "1e4d4a23": {
       "name": "拠点_FT_Hub_000_A101_ファストトラベル_アウロラの庭園",
@@ -128,7 +128,7 @@
       "area": "Dagsion",
       "experimental": true,
       "label_source": "Provisional translation of the Japanese game key; English menu label not confirmed",
-      "evidence": "Exact scoped flag in Timeline_Com.bin; destination and locator names in Hub/HubDispos data; absent in private FT-04; early access and persistence pending in-game testing"
+      "evidence": "Exact scoped key in game data; FTX-01–03 on Leda Part I Chapter 9 / fefw-recomp-0.1.5: value 1 persisted in supplied before/after saves, but player reported no Base Map entry. Additional visibility conditions remain unidentified."
     },
     "efb57d93": {
       "name": "拠点_FT_Hub_000_A9_ファストトラベル_サラミス迎賓館",
@@ -136,15 +136,15 @@
       "area": "Dagsion",
       "experimental": true,
       "label_source": "Provisional translation of the Japanese game key; English menu label not confirmed",
-      "evidence": "Exact scoped flag in Timeline_Com.bin; destination and locator names in Hub/HubDispos data; absent in private FT-04; early access and persistence pending in-game testing"
+      "evidence": "Exact scoped key in game data; FTX-01–03 on Leda Part I Chapter 9 / fefw-recomp-0.1.5: value 1 persisted in supplied before/after saves, but player reported no Base Map entry. Additional visibility conditions remain unidentified."
     },
     "65411bed": {
       "name": "拠点_FT_Hub_000_A141_ファストトラベル_ユ・ファス神殿",
-      "label": "Yu-Fas Temple",
+      "label": "Yu Phas Temple",
       "area": "Dagsion",
       "experimental": true,
-      "label_source": "Provisional translation of the Japanese game key; English menu label not confirmed",
-      "evidence": "Exact scoped flag in Timeline_Com.bin; destination and locator names in Hub/HubDispos data; absent in private FT-04; early access and persistence pending in-game testing"
+      "label_source": "English in-game name reported by player in FTX-04, 2026-11-15",
+      "evidence": "FTX-04 on Leda Part I Chapter 9 / fefw-recomp-0.1.5: player reported new travel entry, arrival and walking out; walking back in was off limits. Supplied saves confirm value 1 before/after and absence in removed file. Other access conditions remain in force."
     }
   }
 }

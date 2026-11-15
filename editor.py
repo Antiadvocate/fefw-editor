@@ -645,10 +645,12 @@ class App(AdvancedMixin, tk.Tk):
         s.layout("Treeview", [("Treeview.treearea", {"sticky": "nswe"})])
         s.configure("Side.Treeview", background=p["side"], fieldbackground=p["side"])
 
-        s.configure("Vertical.TScrollbar", background=p["raised"], troughcolor=p["card"],
-                    bordercolor=p["card"], lightcolor=p["raised"], darkcolor=p["raised"],
-                    arrowcolor=p["faint"], gripcount=0, arrowsize=12)
-        s.map("Vertical.TScrollbar", background=[("active", p["border"])])
+        for orientation in ("Vertical", "Horizontal"):
+            style = f"{orientation}.TScrollbar"
+            s.configure(style, background=p["raised"], troughcolor=p["card"],
+                        bordercolor=p["card"], lightcolor=p["raised"], darkcolor=p["raised"],
+                        arrowcolor=p["faint"], gripcount=0, arrowsize=12)
+            s.map(style, background=[("active", p["border"])])
 
         # tabs
         s.configure("TNotebook", background=p["bg"], borderwidth=0, tabmargins=(0, 4, 0, 0))
@@ -828,7 +830,7 @@ class App(AdvancedMixin, tk.Tk):
         brand = ttk.Frame(actions, style="Header.TFrame")
         brand.pack(side="left")
         ttk.Label(brand, text="Fortune's Weave", style="Title.TLabel").pack(anchor="w")
-        ttk.Label(brand, text=f"SAVE EDITOR  ·  v{__version__}  ·  Polish Test 1",
+        ttk.Label(brand, text=f"SAVE EDITOR  ·  v{__version__}  ·  Polish Test 2",
                   style="Subtitle.TLabel").pack(anchor="w")
 
         right = ttk.Frame(actions, style="Header.TFrame")

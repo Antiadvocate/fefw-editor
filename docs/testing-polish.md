@@ -1,10 +1,36 @@
-# Polish Test 1: early travel and first audiences
+# Polish tests: early travel, first audiences and follow-up polish
 
-Build: **FEFW-Polish-Test-1**, branch `feature/polish-audiences`.
-The header says **Polish Test 1**; `BUILD.txt` identifies the exact source
+Current build: **FEFW-Polish-Test-2**, branch `feature/polish-audiences`.
+The header says **Polish Test 2**; `BUILD.txt` identifies the exact source
 commit and CI run. No new Python dependencies. Extract to a fresh directory
 and launch **that directory's `editor.py`** with your working environment.
 See [setup](source-setup.md) if needed.
+
+## Test 2: only these two follow-up checks are requested
+
+The player reported POL-01–03 and AUD-01–08 passed. The first run's travel
+results and supplied save checks are [recorded separately](test-results-polish-2026-11-15.md#player-acceptance-and-supplied-saves).
+No repeat of the earlier game cases is needed for these visual/label changes.
+
+* **POL-04 — Scrollbar theme:** in a copied save, inspect Fast travel and
+  Blessings at a width that needs horizontal scrolling. The horizontal bar
+  should match the vertical bar and current theme, including its track,
+  thumb, arrows and hover state. Drag it both ways and confirm the table
+  scrolls. Switch to the light theme, repeat, then switch back to dark;
+  both bars should update immediately. Report any remaining bright strip or
+  unusable control, and capture it if present.
+* **POL-05 — Confirmed name:** search Fast travel for `65411bed`. Expect
+  **Yu Phas Temple**, unchanged Japanese key/hash, and Experimental coverage.
+  The Flags tab should use the same corrected English label. Searching by
+  `Yu Phas` should find it. No save edit or further temple trip is needed.
+
+```text
+Build / commit from BUILD.txt:
+POL-04: PASS / FAIL (dark, light, hover, scrolling)
+POL-05: PASS / FAIL
+```
+
+## Test 1: original procedure retained for reference
 
 This run tests four early-access destinations and the first-audience condition
 for every god. Six gods have editable flags; Fortuna has no such condition.
@@ -64,7 +90,8 @@ Do not use this mixed editor-exercise save for the isolated game cases.
 
 ## FTX-01–04 — One additional destination per case
 
-Names below are provisional translations. Use the hash to find the correct row
+Three names below are provisional; Yu Phas Temple was confirmed by the player.
+Use the hash to find the correct row
 and report its exact English game-menu label. All four are expected Absent in B0.
 
 | Case | Editor label | Hash |
@@ -72,7 +99,7 @@ and report its exact English game-menu label. All four are expected Absent in B0
 | FTX-01 | Aurora's garden | `1e4d4a23` |
 | FTX-02 | Aurora's private room | `38574e83` |
 | FTX-03 | Salamis Guesthouse | `efb57d93` |
-| FTX-04 | Yu-Fas Temple | `65411bed` |
+| FTX-04 | Yu Phas Temple | `65411bed` |
 
 Repeat this sequence separately for every row:
 
