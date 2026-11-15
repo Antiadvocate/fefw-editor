@@ -25,7 +25,7 @@ class FastTravelPageMixin:
         self.fast_travel_search.pack(fill="x", pady=(8, 0))
         self.fast_travel_search.bind("<KeyRelease>", lambda e: self.refresh_fast_travel())
         ttk.Label(page, style="CardFaint.TLabel", wraplength=980, justify="left", text=(
-            "Three destinations have unknown effects; their flags persist but did not reveal Chapter 9 travel entries. Yu Phas Temple allows travel and exit; walking in is still restricted at Chapter 9. "
+            "Aurora’s room/garden require Cai for their travel locators; Salamis Guesthouse requires Theodora. Yu Phas travel/exit passed on Leda Chapter 9; its entrance remains restricted. See Facilities > Access conditions. "
             "Search by name, Japanese key or hash. "
             "Edits affect the selected save's destination list. Travel still depends on game conditions; "
             "the Stables destination does not unlock the stable facility. Keep at least three original destinations.\n"

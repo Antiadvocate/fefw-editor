@@ -1,5 +1,10 @@
 # Fortune's Weave Save Editor
 
+**Facilities Test 1 branch:** 27 service/gate switches and a read-only access
+conditions view are ready for player testing. See [Facilities](docs/facilities.md),
+[the test sequence](docs/testing-facilities.md), and [preparation results](docs/test-results-facilities-test1.md).
+The accepted main baseline is unchanged; these controls are not yet game-accepted.
+
 A save editor for **Fire Emblem: Fortune's Weave** saves made by the Eden
 Switch emulator. It edits your playthrough (units, items, convoy, gold, skills,
 flags) and leaves the game itself alone. Plain Python + Tkinter, one extra

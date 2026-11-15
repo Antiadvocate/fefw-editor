@@ -138,3 +138,13 @@ own controls. There is no unlock-everything preset.
 
 See [the validation report](test-results-fast-travel-2026-11-15.md) for the
 distinction between automated preservation checks and the scope of game testing.
+
+## Facility/access follow-up
+
+Facilities Test 1 identifies protagonist filters on the three previously
+hidden travel locators: Aurora’s room/garden require Cai, Salamis Guesthouse
+requires Theodora. Yu Phas has separate route/chapter entrance conditions.
+The Facilities > Access conditions view explains these without rewriting
+story progress; [the evidence](facilities.md) supersedes the earlier statement
+that all extra visibility conditions were unidentified. Gate of the Gods
+registrations now have separate controls from these ordinary destinations.

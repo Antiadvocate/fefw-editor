@@ -1,0 +1,222 @@
+{
+  "schema": 1,
+  "scope": "20 service switches and 7 temple-transfer registrations. Individual service/entrance availability still depends on game conditions. Test build; not an exhaustive facility catalogue.",
+  "entries": {
+    "b9a0e16b": {
+      "name": "禁止_武器屋",
+      "label": "Armorer",
+      "kind": "Service",
+      "polarity": "restriction",
+      "coverage": "Unlock tested",
+      "note": "Removing this restriction restored the shop in the accepted Leda Chapter 9 baseline. Re-locking and this new control still need game testing; stock and prices are unchanged by this switch."
+    },
+    "5e9748e0": {
+      "name": "禁止_道具屋",
+      "label": "Item shop",
+      "kind": "Service",
+      "polarity": "restriction",
+      "coverage": "Unlock tested",
+      "note": "Removing this restriction restored the shop in the accepted Leda Chapter 9 baseline. Re-locking and this new control still need game testing; stock and prices are unchanged by this switch."
+    },
+    "8244b3ea": {
+      "name": "機能開放_市場",
+      "label": "Marketplace",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "9399b963": {
+      "name": "機能開放_宿屋",
+      "label": "Inn",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "e0f3191e": {
+      "name": "機能開放_止まり木",
+      "label": "Pale Raven perch",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "338bab8f": {
+      "name": "機能開放_案内板",
+      "label": "Bulletin boards",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "367c5dd1": {
+      "name": "機能開放_奉仕活動",
+      "label": "Temple service",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "d70afcb2": {
+      "name": "機能開放_訓練所",
+      "label": "Training",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "0be47d8b": {
+      "name": "機能開放_資格試験",
+      "label": "Certification exams",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "f0c779ce": {
+      "name": "機能開放_饗宴",
+      "label": "Feasts",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "0f4e5aa1": {
+      "name": "機能開放_鍛冶屋",
+      "label": "Blacksmith",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "a78e9de8": {
+      "name": "機能開放_ヴァンダル商会",
+      "label": "Vandahl Trading Company",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "efdc12db": {
+      "name": "機能開放_劇場",
+      "label": "Theatre",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "6769ad7f": {
+      "name": "機能開放_劇場出演",
+      "label": "Theatre performances",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "8c4805b2": {
+      "name": "機能開放_テルマエ",
+      "label": "Thermae (baths)",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "d96b06cc": {
+      "name": "機能開放_酒場贈り物売り",
+      "label": "Tavern gift vendor",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "e3d04d6c": {
+      "name": "機能開放_拠点興行",
+      "label": "Local performances (Leda)",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "970ba7f8": {
+      "name": "機能開放_酒場興行",
+      "label": "Tavern performances (Leda)",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "2e270aa7": {
+      "name": "機能開放_飲み物係",
+      "label": "Drink vendor (Leda)",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "63fc6b22": {
+      "name": "機能開放_厩舎",
+      "label": "Stables",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "The accepted baseline intentionally keeps Stables locked. This switch is independent of the Stables fast-travel destination; changing it does not populate mounts or change unit mount assignments."
+    },
+    "3fdd2f30": {
+      "name": "神殿_転移_カーラ神殿",
+      "label": "Gate of the Gods: Kalla",
+      "kind": "Gate registration",
+      "polarity": "unlock",
+      "coverage": "Registration tested",
+      "note": "Registering this flag restored Kalla’s missing Gate of the Gods destination. Removal and this new control need testing. This is separate from the ordinary temple destination and does not bypass entrance or story conditions."
+    },
+    "c125a07e": {
+      "name": "神殿_転移_マーズ神殿",
+      "label": "Gate of the Gods: Mars",
+      "kind": "Gate registration",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "Inferred registration from the same temple-transfer flag family as the accepted Kalla repair. Test the listing, arrival, exit and reload separately. This is separate from the ordinary temple destination and does not bypass entrance or story conditions."
+    },
+    "f2d863f0": {
+      "name": "神殿_転移_ジュラ神殿",
+      "label": "Gate of the Gods: Jurah",
+      "kind": "Gate registration",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "Inferred registration from the same temple-transfer flag family as the accepted Kalla repair. Test the listing, arrival, exit and reload separately. This is separate from the ordinary temple destination and does not bypass entrance or story conditions."
+    },
+    "515e9031": {
+      "name": "神殿_転移_スミルノス神殿",
+      "label": "Gate of the Gods: Smyrnos",
+      "kind": "Gate registration",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "Inferred registration from the same temple-transfer flag family as the accepted Kalla repair. Test the listing, arrival, exit and reload separately. This is separate from the ordinary temple destination and does not bypass entrance or story conditions."
+    },
+    "2574b004": {
+      "name": "神殿_転移_クレール神殿",
+      "label": "Gate of the Gods: Credna",
+      "kind": "Gate registration",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "Inferred registration from the same temple-transfer flag family as the accepted Kalla repair. Test the listing, arrival, exit and reload separately. This is separate from the ordinary temple destination and does not bypass entrance or story conditions."
+    },
+    "d2f2cb2f": {
+      "name": "神殿_転移_アウロラ神殿",
+      "label": "Gate of the Gods: Aurora",
+      "kind": "Gate registration",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "Inferred registration from the same temple-transfer flag family as the accepted Kalla repair. Test the listing, arrival, exit and reload separately. This is separate from the ordinary temple destination and does not bypass entrance or story conditions."
+    },
+    "7d2c41eb": {
+      "name": "神殿_転移_ユ・ファス神殿",
+      "label": "Gate of the Gods: Yu Phas",
+      "kind": "Gate registration",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "Inferred registration from the same temple-transfer flag family as the accepted Kalla repair. Test the listing, arrival, exit and reload separately. This is separate from the ordinary temple destination and does not bypass entrance or story conditions."
+    }
+  }
+}

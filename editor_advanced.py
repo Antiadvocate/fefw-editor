@@ -27,6 +27,7 @@ import fast_travel
 import deeds
 from deed_page import DeedPageMixin
 from boon_page import BoonPageMixin
+from facility_page import FacilityPageMixin
 import audiences
 import tutorials
 import flag_labels
@@ -135,7 +136,7 @@ def rank_of(exp: int) -> int:
     return r
 
 
-class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTravelPageMixin, DeedPageMixin, BoonPageMixin):
+class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTravelPageMixin, DeedPageMixin, BoonPageMixin, FacilityPageMixin):
     # ------------------------------------------------------------- helpers
     def core_of(self, sv=None):
         """fefw_core.SaveFile for a slot (cached on the payload object)."""
@@ -194,6 +195,7 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
         self.refresh_tutorials()
         self.refresh_blessings()
         self.refresh_fast_travel()
+        self.refresh_facilities()
         self.refresh_deeds()
         self.refresh_boons()
 
@@ -205,6 +207,7 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
         self.refresh_tutorials()
         self.refresh_blessings()
         self.refresh_fast_travel()
+        self.refresh_facilities()
         self.refresh_deeds()
         self.refresh_boons()
 

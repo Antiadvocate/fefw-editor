@@ -276,9 +276,25 @@ No personal save, screenshots containing personal data, or game binary belongs
 in the public test fixtures. Use small synthetic payloads for CI and record
 private game-test outcomes separately.
 
-## Newly requested Facilities scope
+## Facilities Test 1 prepared
 
-Facility locking/unlocking is queued after the current Deeds investigation.
+The two queued facility features now have a test implementation on
+`feature/facilities-access`: 20 service switches, seven Gate of the Gods
+registrations, and read-only access-condition diagnostics. The recovered
+protagonist filters explain why Aurora’s room/garden and Salamis stayed hidden
+on Leda; entrance conditions are separate. Broad story/route bypasses are not
+implemented. See [scope and evidence](facilities.md), [the player sequence](testing-facilities.md)
+and [preparation checks](test-results-facilities-test1.md). Main and the accepted
+baseline stay unchanged while the player tests. Stables remains locked in all
+13 supplied cases.
+
+The next priorities are acceptance of facility switches and access diagnostics,
+then prioritization of new-unit creation with robust `unit_number` validation,
+followed by the earlier story/character-visibility work.
+
+## Requested Facilities scope
+
+Facility locking/unlocking follows the now-completed Deeds rollout.
 Start with independently verified shop restrictions and distinguish service
 availability, physical-entry conditions and fast-travel registration. The
 previous shop and Gate of the Gods Kalla's Temple repairs motivate these

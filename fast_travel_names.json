@@ -151,7 +151,7 @@
       "label": "Aurora's private room",
       "area": "Dagsion",
       "label_source": "Provisional translation of the Japanese game key; English menu label not confirmed",
-      "evidence": "Exact scoped key in game data; FTX-01–03 on Leda Part I Chapter 9 / fefw-recomp-0.1.5: value 1 persisted in supplied before/after saves, but player reported no Base Map entry. Additional visibility conditions remain unidentified.",
+      "evidence": "Exact scoped key in game data; FTX-01–03 on Leda Part I Chapter 9 / fefw-recomp-0.1.5: value 1 persisted in supplied before/after saves, but player reported no Base Map entry. Additional visibility conditions remain unidentified. HubDispos now identifies a Cai-only travel-locator condition. This explains the Leda absence; other-route gameplay remains untested.",
       "locator_anchor": false,
       "coverage": "Effect unknown"
     },
@@ -160,7 +160,7 @@
       "label": "Aurora's garden",
       "area": "Dagsion",
       "label_source": "Provisional translation of the Japanese game key; English menu label not confirmed",
-      "evidence": "Exact scoped key in game data; FTX-01–03 on Leda Part I Chapter 9 / fefw-recomp-0.1.5: value 1 persisted in supplied before/after saves, but player reported no Base Map entry. Additional visibility conditions remain unidentified.",
+      "evidence": "Exact scoped key in game data; FTX-01–03 on Leda Part I Chapter 9 / fefw-recomp-0.1.5: value 1 persisted in supplied before/after saves, but player reported no Base Map entry. Additional visibility conditions remain unidentified. HubDispos now identifies a Cai-only travel-locator condition. This explains the Leda absence; other-route gameplay remains untested.",
       "locator_anchor": false,
       "coverage": "Effect unknown"
     },
@@ -169,7 +169,7 @@
       "label": "Salamis Guesthouse",
       "area": "Dagsion",
       "label_source": "Provisional translation of the Japanese game key; English menu label not confirmed",
-      "evidence": "Exact scoped key in game data; FTX-01–03 on Leda Part I Chapter 9 / fefw-recomp-0.1.5: value 1 persisted in supplied before/after saves, but player reported no Base Map entry. Additional visibility conditions remain unidentified.",
+      "evidence": "Exact scoped key in game data; FTX-01–03 on Leda Part I Chapter 9 / fefw-recomp-0.1.5: value 1 persisted in supplied before/after saves, but player reported no Base Map entry. Additional visibility conditions remain unidentified. HubDispos now identifies a Theodora-only travel-locator condition. This explains the Leda absence; other-route gameplay remains untested.",
       "locator_anchor": false,
       "coverage": "Effect unknown"
     },
