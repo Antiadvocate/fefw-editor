@@ -1,9 +1,10 @@
 # Source test candidate setup
 
 Use this guide for `FEFW-Tutorials-Test-1.zip` / `feature/verified-tutorials`
-and `FEFW-Blessings-Test-1.zip` / `feature/blessings-exp`.
-The Blessings candidate includes the tested Tutorials changes. If Tutorials
-already launches, reuse that Python environment: no new dependencies are
+and `FEFW-Blessings-Test-1.zip` / `feature/blessings-exp`, plus
+`FEFW-Fast-Travel-Test-1.zip` / `feature/fast-travel`.
+The Fast travel candidate includes the accepted Tutorials and Blessings changes.
+If either earlier candidate already launches, reuse that Python environment: no new dependencies are
 needed. Extract the new archive into its own directory and launch its
 `editor.py`, rather than the old Tutorials copy. The window still shows the
 upstream version number; identify the candidate by its `BUILD.txt` or commit.
@@ -98,7 +99,8 @@ and dependency versions printed above and any error output. The Distrobox
 instructions use officially supported components but have not yet been run on
 the tester's Bazzite machine. Once the GUI opens, continue with
 [the Tutorials guide](testing.md) or, for the new candidate,
-[the Blessings guide](testing-blessings.md).
+[the Blessings guide](testing-blessings.md) or
+[the Fast travel / Open button guide](testing-fast-travel.md).
 
 References checked 2026-11-15:
 

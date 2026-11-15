@@ -660,7 +660,7 @@ class App(AdvancedMixin, tk.Tk):
               lightcolor=[("selected", p["accent"])],
               expand=[("selected", (0, 0, 0, 0))])
         s.configure("Main.TNotebook", background=p["side"], tabmargins=(12, 0, 0, 0))
-        s.configure("Main.TNotebook.Tab", background=p["side"], padding=self.pad(20, 10),
+        s.configure("Main.TNotebook.Tab", background=p["side"], padding=self.pad(12, 10),
                     lightcolor=p["side"], bordercolor=p["side"])
         s.map("Main.TNotebook.Tab", background=[("selected", p["bg"]), ("active", p["raised"])],
               lightcolor=[("selected", p["accent"])])
@@ -823,13 +823,15 @@ class App(AdvancedMixin, tk.Tk):
         # ---- header
         head = ttk.Frame(self, style="Header.TFrame", padding=(18, 12, 18, 10))
         head.pack(fill="x")
-        brand = ttk.Frame(head, style="Header.TFrame")
+        actions = ttk.Frame(head, style="Header.TFrame")
+        actions.pack(fill="x")
+        brand = ttk.Frame(actions, style="Header.TFrame")
         brand.pack(side="left")
         ttk.Label(brand, text="Fortune's Weave", style="Title.TLabel").pack(anchor="w")
         ttk.Label(brand, text=f"SAVE EDITOR  ·  v{__version__}",
                   style="Subtitle.TLabel").pack(anchor="w")
 
-        right = ttk.Frame(head, style="Header.TFrame")
+        right = ttk.Frame(actions, style="Header.TFrame")
         right.pack(side="right")
         self.theme_btn = ttk.Button(right, text="☀" if self.theme_name() == "dark" else "☾",
                                     width=3, style="Icon.TButton", command=self.toggle_theme)
@@ -841,18 +843,19 @@ class App(AdvancedMixin, tk.Tk):
         self.revert_btn.pack(side="right")
         ttk.Button(right, text="Snapshot", command=self.take_snapshot).pack(side="right", padx=(0, 8))
         ttk.Button(right, text="Restore…", command=self.restore_snapshot).pack(side="right")
+        self.open_btn = ttk.Button(right, text="Open…", command=self.open_dialog)
+        self.open_btn.pack(side="right", padx=(0, 8))
 
         mid = ttk.Frame(head, style="Header.TFrame")
-        mid.pack(side="left", padx=(32, 0), fill="x", expand=True)
+        mid.pack(fill="x", pady=(10, 0))
         r1 = ttk.Frame(mid, style="Header.TFrame")
         r1.pack(fill="x")
         ttk.Label(r1, text="Slot", style="Side.TLabel").pack(side="left")
         self.slot_var = tk.StringVar()
         self.slot_box = ttk.Combobox(r1, textvariable=self.slot_var, state="readonly", width=52)
-        self.slot_box.pack(side="left", padx=(8, 8))
+        self.slot_box.pack(side="left", padx=(8, 0), fill="x", expand=True)
         self.slot_box.bind("<<ComboboxSelected>>", self.on_slot_pick)
         self.register_combo(self.slot_box)
-        ttk.Button(r1, text="Open folder…", command=self.open_dialog).pack(side="left")
         r2 = ttk.Frame(mid, style="Header.TFrame")
         r2.pack(fill="x", pady=(6, 0))
         self.mirror_chk = ttk.Checkbutton(r2, text="Also edit this route's other saves",
@@ -884,6 +887,7 @@ class App(AdvancedMixin, tk.Tk):
         self.world_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.tutorials_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.blessings_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
+        self.fast_travel_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.pages.add(self.units_page, text="Units")
         self.pages.add(self.convoy_page, text="Convoy")
         self.pages.add(self.gold_page, text="Gold")
@@ -895,6 +899,7 @@ class App(AdvancedMixin, tk.Tk):
         self.pages.add(self.world_page, text="World map")
         self.pages.add(self.tutorials_page, text="Tutorials")
         self.pages.add(self.blessings_page, text="Blessings")
+        self.pages.add(self.fast_travel_page, text="Fast travel")
 
         self._build_units()
         self._build_convoy()
@@ -907,6 +912,7 @@ class App(AdvancedMixin, tk.Tk):
         self._build_world_map()
         self._build_tutorials()
         self._build_blessings()
+        self._build_fast_travel()
         self._style_trees()
         self._enable_multi_select_all()
         self._update_dirty()
@@ -1601,6 +1607,8 @@ class App(AdvancedMixin, tk.Tk):
             target = self.map_search
         elif sel == str(self.tutorials_page):
             target = self.tutorial_search
+        elif sel == str(self.fast_travel_page):
+            target = self.fast_travel_search
         if target is None:
             return
         target.focus_set()

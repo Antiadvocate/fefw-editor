@@ -5,7 +5,10 @@ This records a staged contribution based on a Leda Part I Chapter 9 restoration.
 **Blessings EXP for all seven gods** is implemented and the BLESS-01–11
 acceptance run passed on the reported Leda Chapter 9 setup; see
 [the feature documentation](blessings.md), [test guide](testing-blessings.md)
-and [test report](test-results-blessings-2026-11-15.md). Other sections below
+and [test report](test-results-blessings-2026-11-15.md).
+**Fast travel** now has a 16-destination tab and a visible **Open…** action;
+its [new game acceptance tests](testing-fast-travel.md) are pending.
+Other sections below
 are research notes and acceptance gates, not working UI features or
 instructions to apply unverified offsets.
 
@@ -23,7 +26,7 @@ The game data version was not separately reported.
 |---|---|---|---|
 | 1 | Tutorials and known English names | Selected save only; preserve Japanese keys and unknown records | [TUT-01–07](testing.md) |
 | 2 | Blessings | All seven EXP fields; six data-derived level previews; Fortuna special | [BLESS-01–11](testing-blessings.md) passed; see coverage limits in the report |
-| 3 | Fast travel | Named destination flags, separate from map visibility | Add/remove one destination, travel, save/reload; check gates/map unchanged |
+| 3 | Fast travel and Open button | 16 scoped Dagsion flags; provisional translations; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md), pending |
 | 4 | Notable deeds | Separate counter, completion and claim state | One incomplete, one complete-unclaimed and one claimed deed; verify rewards once |
 | 5 | Boons | Confirm ownership and activation storage before enabling writes | Controlled purchase/activation diff, effect check and persistence |
 | 6 | Story | Read-only summary first; narrowly validated Leda transitions only | Load scene, advance to battle, finish/save/reload with no missing facilities |
@@ -72,6 +75,12 @@ The restored destination list was player-confirmed. World map shown/visited
 bytes do not determine fast travel availability. Reconstruct the destination
 catalogue from the recorded destination flags and verify each against the
 in-game list; similarly named NPC/location flags are not interchangeable.
+The new [Fast travel page](fast-travel.md) implements those 16 exact scoped keys,
+value 1 or record removal. It identifies the live flag-group map structurally,
+preserves other records and refuses sparse/ambiguous saves. English labels are
+provisional translations pending comparison with the game's menu. Automated
+remove/restore round-trips pass for all 16 in the private B0 reference;
+individual game removal and restoration via the new page remain unverified.
 
 The exam proctor, drinks vendor and Perform quest tab also worked after the
 restoration. These could become small facility controls once their precise
@@ -143,7 +152,8 @@ Do not present an arbitrary skip as safe merely because the container parses.
   retain this as unresolved, not a completed feature.
 * **English names:** preserve exact original keys in Reads as. Add official
   names supported by screenshots/data; keep uncertain translations labelled
-  as uncertain. Stage 1 covers the 115 tutorial names only.
+  as uncertain. Stage 1 covers 115 tutorial names; stage 3 adds the 16
+  explicitly marked destination translations.
 
 No personal save, screenshots containing personal data, or game binary belongs
 in the public test fixtures. Use small synthetic payloads for CI and record

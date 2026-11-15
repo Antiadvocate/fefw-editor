@@ -9,6 +9,8 @@ import fefw_core as core
 import fefw_save as container
 import tutorials
 import blessings
+import fast_travel
+from test_fast_travel import outside_list
 from test_tutorials import FORESIGHT, RELIQUARY, THIRD_EYE, raw_map
 
 
@@ -26,6 +28,36 @@ def outside_tutorials(f):
 
 @unittest.skipUnless(os.environ.get('FEFW_TEST_SAVE'), 'No private fixture supplied')
 class PrivateSaveTest(unittest.TestCase):
+    def test_fast_travel_remove_restore_roundtrip_all_destinations(self):
+        source = Path(os.environ['FEFW_TEST_SAVE'])
+        original = source.read_bytes()
+        initial_box = container.SaveFile(str(source))
+        self.assertEqual(initial_box.verify(), [])
+        initial = core.SaveFile(initial_box.payload)
+        values = fast_travel.read(initial)
+        all_records = raw_map(initial, fast_travel.locate(initial))
+        with tempfile.TemporaryDirectory() as tmp:
+            for h in fast_travel.catalog():
+                self.assertEqual(values.get(h), 1, 'This test uses the known full-list B0 fixture')
+                box = container.SaveFile(str(source))
+                for edit in (None, 1):
+                    outside = outside_list(core.SaveFile(box.payload))
+                    box.payload = fast_travel.edited(core.SaveFile(box.payload), {h: edit})
+                    self.assertEqual(outside_list(core.SaveFile(box.payload)), outside)
+                    path = Path(tmp) / 'Auto'; path.write_bytes(box.to_bytes())
+                    # Serialization refreshes embedded checksums after relocation.
+                    serialized_payload = bytes(box.payload)
+                    box = container.SaveFile(str(path))
+                    self.assertEqual(box.verify(), [])
+                    self.assertEqual(bytes(box.payload), serialized_payload)
+                    actual = core.SaveFile(box.payload)
+                    self.assertEqual(fast_travel.read(actual).get(h), edit)
+                    records = raw_map(actual, fast_travel.locate(actual))
+                    for other in all_records.keys() - {h}:
+                        self.assertEqual(records[other], all_records[other])
+                self.assertEqual(fast_travel.read(core.SaveFile(box.payload)), values)
+        self.assertEqual(source.read_bytes(), original)
+
     def test_all_seven_blessing_exp_fields_roundtrip(self):
         source = Path(os.environ['FEFW_TEST_SAVE'])
         original = source.read_bytes()

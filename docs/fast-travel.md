@@ -1,0 +1,105 @@
+# Fast travel: destination availability
+
+The **Fast travel** tab edits 16 identified Dagsion destination flags in the
+selected save. This is milestone 3, awaiting its own in-game acceptance run.
+The earlier restored destination list was player-confirmed on Leda Part I
+Chapter 9. Individual removal, restoration and travel via this new interface
+still need the [numbered tests](testing-fast-travel.md).
+
+## Using the page
+
+1. Close the game and open a copied save using **Open…** in the top action bar.
+   Select a slot file, such as `Auto`; the editor loads its folder and selects
+   that slot. Ctrl+O still opens the same chooser. Unsaved edits trigger the
+   existing save/discard/cancel prompt.
+2. Turn off **Also edit this route's other saves**. Select **Fast travel**.
+3. Search by English label, original Japanese key or eight-digit hash. Ctrl+F
+   focuses search. Select one or more rows, then **Make available** or
+   **Remove selected**. The controls change memory; **Save** / Ctrl+S writes it.
+4. Ctrl+Z and Ctrl+Y undo/redo. **Reload** reads the saved state again.
+
+**Available (1)** means the stored flag is present with value 1. **Absent**
+means the record is missing, not value zero. Other values display as
+**Unknown (value); preserved** and cannot be changed by this page. The summary
+counts all known destinations, including rows hidden by search.
+
+English labels are explicitly **provisional editor translations**. The precise
+English in-game wording was not retained in the earlier restoration notes.
+Confirm it in FT-01 before treating these labels as official localization.
+The same translated labels appear in **Flags**, prefixed by `Fast travel:`;
+**Reads as** retains the full original key. A hash is the stable identity.
+
+## Catalogue
+
+Every key below has the exact prefix `拠点_FT_Hub_000_`. Append the suffix
+without spaces. `fast_travel_names.json` stores the complete keys, labels and
+evidence notes; `catalog()` verifies each identity against its hash.
+
+| Provisional English label | Hash | Exact key suffix |
+|---|---|---|
+| Arena Entrance | `5a48ce35` | `A1_ファストトラベル_闘技場前` |
+| Shopping Street | `bb86129f` | `A1_ファストトラベル_商店街` |
+| Commercial District | `ad2b97e0` | `A1_ファストトラベル_商業区画` |
+| Upper Approach | `387f1e5a` | `A1_ファストトラベル_上参道` |
+| Lower Approach | `9b4262d7` | `A1_ファストトラベル_下参道` |
+| Affluent District | `90d7a0f8` | `A1_ファストトラベル_富裕区画` |
+| Jurah's Temple | `2c475b48` | `A110_ファストトラベル_ジュラ神殿` |
+| Mars's Temple | `2d2ded41` | `A120_ファストトラベル_マーズ神殿` |
+| Smyrnos's Temple | `547cf68b` | `A130_ファストトラベル_スミルノス神殿` |
+| Credna's Temple | `16f93ab4` | `A161_ファストトラベル_クレール神殿` |
+| Kalla's Temple | `b482d5dc` | `A150_ファストトラベル_カーラ神殿` |
+| Aurora's Temple | `00fe96da` | `A102_ファストトラベル_アウロラ神殿` |
+| Stables | `2478dd30` | `A1_ファストトラベル_厩舎前` |
+| Harbor | `1b5a4006` | `A1_ファストトラベル_港` |
+| Slums | `e86370a7` | `A1_ファストトラベル_貧民街` |
+| Tavern | `c1c872f8` | `A70_ファストトラベル_酒場` |
+
+## Format and locator
+
+These are hashed-key records in a `GameUserData` flag map. Their key is the
+low 32 bits of FNV-1 64 applied to the full UTF-8 name, via `core.id_hash`.
+An earlier unsuccessful attempt used unscoped names such as
+`ファストトラベル_厩舎前` in another namespace. Those are different identities
+and must not be substituted.
+
+The successful reference's list happened to be enumerated as map 3. Enumeration
+and absolute offsets are not stable. `fast_travel.locate()` instead requires:
+
+* Exactly one `GameUserData` block and one candidate map containing known keys.
+* At least three distinct known destination keys and no duplicate keys.
+* A non-struct map node with no child objects, inside a struct group whose
+  parent is the live `GameUserData` node. Embedded or unexpected layouts fail.
+
+The format uses an end pointer, version byte 0, u16 count, then records:
+u32 hash followed by a one-byte value, or `ff` plus a signed i32. Newly added
+available records use a one-byte 1. Removal deletes the record and reduces the
+count. Existing records, including wider encodings, retain their exact bytes
+and order. New records append to the list. Restoring a removed record therefore
+restores its meaning but is not promised to restore its original byte position.
+
+`core.replace_content()` handles alignment and pointer relocation; container
+serialization updates checksums. Unknown records remain untouched. The B0
+reference has the 16 known flags at 1 plus 14 other list records.
+The edit is validated as a whole before it changes memory. No-op requests
+are byte-identical and create no undo entry. Invalid or unknown-state requests
+reject the entire batch. At least three known keys must remain, to preserve
+reliable future identification. Sparse or ambiguous saves are read-only here;
+the page does not invent identifying entries or guess a map.
+
+## Boundaries
+
+This page does not change world-map visibility/visited bytes, gates, story,
+quests, tutorials, blessing EXP/selection/Sand, Karma Shards or facility flags.
+The **Stables destination is separate from the stable facility**. In the
+reference the destination exists while `機能開放_厩舎` remains absent. Neither
+adding the destination nor changing its English label grants facility access.
+
+An available flag does not override travel restrictions imposed by the current
+scene or story. Visiting a location may let the game discover it again; isolate
+removal tests from travel through that area. Other routes, hubs, sparse early
+saves and game versions have not been established. Raw Flags remains an
+advanced interface with broader abilities; this page's guarantees apply to its
+own controls. There is no unlock-everything preset.
+
+See [the validation report](test-results-fast-travel-2026-11-15.md) for the
+distinction between automated preservation checks and pending game tests.

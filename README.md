@@ -29,6 +29,7 @@ library, or a ready-made Windows `.exe`.
 | **Flags** | | Every named variable the save stores: support conversations, recruited / met, achievements, feature and class unlocks. Search, filter, set, add, remove |
 | **Tutorials** | | 115 identified help entries; make selected tutorials available or remove them from the selected save. English names, original Japanese keys, explicit raw states and undo/redo. See [tutorials.md](docs/tutorials.md) |
 | **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Six level previews tested in Leda Chapter 9; Fortuna's EXP effect remains unknown. Selection and Divine Sand are read-only. See [blessings.md](docs/blessings.md) |
+| **Fast travel** | | Add/remove 16 identified Dagsion destination flags in the selected save, with provisional English translations, original keys and undo/redo. Independent of world-map and facility unlocks; new game tests pending. See [fast-travel.md](docs/fast-travel.md) |
 
 Units can also be **copied in** from another slot or **removed**. Every edit can
 be undone (Ctrl+Z / Ctrl+Y), and **Snapshot** / **Restore…** keep copies of the
@@ -85,8 +86,12 @@ If you know where any of these live, contributions are welcome.
 
 ### Contribution test candidate
 
-This branch adds **Blessings EXP** editing for all seven gods and retains the
-tested **Tutorials** page with 115 identified English names and
+This branch adds **Fast travel** destination editing and a visible **Open…**
+button in the top action bar. The slot selector now has its own row so it cannot
+squeeze the button off-screen. Open selects a save file and loads its folder;
+Ctrl+O and the existing unsaved-change prompt still work. This candidate retains
+**Blessings EXP** editing for all seven gods and the tested **Tutorials** page
+with 115 identified English names and
 the original Japanese keys. Search, select, **Make available** or **Remove
 selected**, then Ctrl+S. Ctrl+Z/Ctrl+Y undo/redo. Turn off route mirroring for
 these edits; unknown records and unrelated progress are preserved.
@@ -106,6 +111,16 @@ stored EXP (65535). Its gameplay effect remains unknown. EXP alone does not
 establish first-audience or temple-access flags. See the report for the exact
 values and coverage limits.
 
+In **Fast travel**, search/select a destination, then **Make available** or
+**Remove selected**, and Save. The catalogue covers 16 flags from the confirmed
+Leda Chapter 9 restoration; isolated editing/travel tests for this interface
+are pending. English destination labels are provisional translations. The
+Stables destination does not unlock the stable facility. Unknown records and
+values are preserved; sparse/ambiguous layouts refuse edits.
+
+* [Milestone 3: Fast travel and Open button testing guide](docs/testing-fast-travel.md)
+* [Fast travel feature, catalogue and binary-format documentation](docs/fast-travel.md)
+* [Milestone 3: validation report](docs/test-results-fast-travel-2026-11-15.md)
 * [Blessings feature, thresholds and binary-format documentation](docs/blessings.md)
 * [Milestone 2: all seven gods test guide](docs/testing-blessings.md)
 * [Milestone 2: automated and GUI test report](docs/test-results-blessings-2026-11-15.md)
