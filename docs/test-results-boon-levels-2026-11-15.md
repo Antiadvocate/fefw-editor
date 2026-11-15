@@ -1,5 +1,19 @@
 # WD20 acceptance and Boons Test 3 validation
 
+## Subsequent Test 3 game failure
+
+The player reports Set all to max only partly worked. Screenshots show EXP 50%,
+Sword/Spear/Axe/Bow +3 and Weapons/Items/Gifts discounts 30%, while Brawling,
+Black-Magic, White-Magic, Infantry, Rider, Heavy, Flier and Authority EXP remain
+at +0 and offer their first tier for 300. This is a failed general mapping,
+not accepted all-group editing. These are menu observations, not independent
+measurements of every effect. No Test 3 edited or game-resaved slot accompanied
+this report. See the [investigation](boon-key-investigation.md).
+
+The local and CI results below remain valid structural checks. They did not
+test the new keys against independent game captures and therefore did not catch
+this defect. WD20's isolated acceptance is unaffected.
+
 Date: 2026-11-15. **WD20-01–03 passed**, with four screenshots and two returned
 game saves. At the player's request the editor now exposes all 31 Boons / 81
 tiers using the common level and activation-key patterns. Broader gameplay

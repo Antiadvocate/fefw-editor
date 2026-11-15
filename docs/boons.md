@@ -1,5 +1,12 @@
 # Boons of Salvation: levels, activation and evidence
 
+**Test 3 bulk game acceptance failed.** Eight skill-EXP groups remain at +0
+in the returned game screenshots. The general key derivation is incomplete;
+an editor readback of its own written value is not proof of game ownership.
+The failed groups and key-length hypothesis are tracked in the
+[mapping investigation](boon-key-investigation.md). No corrected key or new
+build is claimed until an isolated game capture establishes the actual mapping.
+
 **Boons Test 3** makes all **31 Boons / 81 listed tiers** editable in the
 selected save. Select a row and **Set selected tier**, or **Set all to max**
 to grant the maximum tier of every group, including groups hidden by search.

@@ -1,5 +1,11 @@
 # Boons Test 3: all catalogue tiers
 
+**Known issue:** the general bulk unlock failed in game for eight skill-EXP
+groups. Do not repeat Set all to max expecting those entries to unlock. The
+editor's inferred state is not authoritative for those groups. The
+[focused capture request](boon-key-investigation.md) replaces a broad retest
+while the key derivation is investigated.
+
 Extract FEFW-Boons-Test-3.zip into a fresh folder and launch its editor.py with
 the working Python environment. No new dependencies are needed. The header
 shows **v1.3.9 · Boons Test 3**, and **Flags is the far-right tab**.

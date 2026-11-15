@@ -37,6 +37,12 @@ library, or a ready-made Windows `.exe`.
 | **Notable Deeds** | | 350 milestones; 32 editable activity totals and 15 read-only counters. Targets/rewards and stored claim states shown separately; no currency or claim writes. See [notable-deeds.md](docs/notable-deeds.md) |
 
 **Current build: Boons Test 3 · upstream v1.3.9.** All 31 Boons are editable.
+**Known game failure:** Set all to max does not unlock every group. The returned
+screenshots show eight skill-EXP groups still at +0 despite the editor displaying
+the written maximum. Existing automated tests check write/read consistency,
+not whether the game recognizes each inferred key. Do not treat the bulk action
+as accepted; see [the investigation and requested captures](docs/boon-key-investigation.md).
+
 Select a row and **Set selected tier**, **Remove Boon**, or use **Set all to max**.
 Select the owned tier to switch it On/Off. Bulk max includes groups hidden by
 search and preserves existing Off states. Save writes the selected slot;
