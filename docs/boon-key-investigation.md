@@ -1,69 +1,55 @@
-# Test 3 bulk-unlock failure: key-length investigation
+# Boon save-key investigation
 
-Date: 2026-11-15. Status: **game failure confirmed; exact replacement keys
-not yet established**. No corrected build or accepted bulk unlock is claimed.
+Date: 2026-11-15. **Brawling and Black-Magic keys independently captured;
+Test 4 corrects eight skill aliases. Bulk game acceptance remains pending.**
 
-## Independent evidence
+## Test 3 failure
 
-The player supplied two game screenshots after using Set all to max. They
-show a consistent split, even though the editor reads all written values back
-as maximum. The catalogue group names exactly match the supplied Reward.bin
-strings; the first check found no transcription error.
+Screenshots after Set all to max showed EXP 50%, Sword/Spear/Axe/Bow +3,
+and Weapons/Items/Gifts discounts 30%. Brawling, Black-Magic, White-Magic,
+Infantry, Rider, Heavy, Flier and Authority remained +0 with tier 1 offered
+for 300. These are menu observations, not measurements of every effect.
+The original synthetic tests read back their own inferred keys and therefore
+could not establish that the game recognized those records.
 
-| Screenshot observation | Groups | Generated level-key UTF-8 length |
-|---|---|---|
-| Received / maximum shown | EXP 50%; Sword, Spear, Axe, Bow +3; Weapons, Items, Gifts discounts 30% | 32, 35 or 38 bytes |
-| First tier still offered for 300 / status +0 | Brawling, Black-Magic, White-Magic, Infantry, Rider, Heavy, Flier, Authority EXP | 41 or 44 bytes |
+All catalogue names match Reward.bin. Longer keys correlated with failure,
+prompting a length-limit hypothesis. The first 39-/40-byte candidate hashes
+did **not** match the later captures. No general hash or UTF-8 truncation rule
+is established or implemented.
 
-These observations confirm menu state, not every gameplay effect. Other groups
-are outside the two screenshots. No Test 3 edited or game-resaved slot was
-attached, so actual post-load stored records cannot yet be compared.
+## Isolated game captures
 
-## Hypothesis, not a patch
+Two independent three-save sets start from the accepted baseline. Both before
+files match it byte-for-byte. Each purchase spends 300 Karma (410 → 110) and
+adds one level record; Off adds one marker while retaining level 1.
 
-The known prefix is 23 UTF-8 bytes. Every failed displayed group produces a
-longer key than every displayed success. A fixed-size buffer or name-length
-limit in the game's dynamic key construction is therefore a useful hypothesis.
-The cutoff, handling of partial UTF-8 characters, and whether activation keys
-use the same rule remain unknown. A 39- or 40-byte limit is not yet proven.
+| Group | Catalogue name | Name reproducing both captured keys | Level key | Off key |
+|---|---|---|---|---|
+| Brawling | 技能経験格闘 | 技能経験格 | 45409cb9 | 79b46b58 |
+| Black-Magic | 技能経験黒魔法 | 技能経験黒 | 45227c65 | 79c9024c |
 
-For Brawling, the present full key hashes to ad9326cb. Hashing the first 39
-bytes would give acca4eb2; the first 40 bytes would give 9bc3b8e1. These are
-diagnostic candidates only and must not be shipped as verified fixes. The six
-blessing-cost group keys are also long (45–51 bytes), but their failure was not
-shown and should not be stated as an observed result.
+The level uses low 32 bits of FNV-1 64 over UTF-8 因果報酬_レベル_ followed
+by the abbreviated name. Off continues low-32-bit FNV-1 state a21ab2b4 over
+the same name; the original prefix text is unknown.
 
-The synthetic tests checked the same inferred key derivation on both sides of
-a write/read round trip. They establish serialization and preservation, not
-that the game's lookup uses that derivation. The next regression fixture must
-use an independently captured game key for a failed long-name group.
+This supports explicit skill aliases without identifying every runtime naming
+detail. Six further aliases are inferred: 白魔法→白, 歩兵→歩, 騎兵→騎,
+重装→重, 飛行→飛 and 指揮→指. Each retains the 技能経験 prefix. These and
+higher tiers require a game retest. Long blessing-cost names are unchanged;
+their failure was not shown in screenshots.
 
-## Minimal controlled capture
+## Test 4 behavior
 
-Use a disposable copy of the current Test 3 game state. Keep the accepted
-baseline separately. Close the game before copying each slot, make no other
-purchases or progress changes, and return:
+The editor reads and writes corrected keys. Old Test 3 full-name skill records
+no longer appear as ownership and are preserved without automatic migration
+or deletion. Set all to max explicitly writes corrected records and preserves
+recognized game On/Off states. It does not charge Karma.
 
-1. **BK-before**: save in game before buying any of the missing Boons.
-2. **BK-purchased-on**: buy **Increased Brawling Exp +1** in game for 300 Karma,
-   confirm its active state, then save and quit.
-3. **BK-off**: reload, turn that same Brawling Boon Off in game, save and quit.
+Brawling and Black-Magic tier 1 display **Save-verified**, separate from the
+EXP/Weapons **Game-tested** effects. Six inferred aliases and untested higher
+tiers retain **Inferred**. Tests compare literal captured identities and game
+maps rather than only a shared read/write derivation.
 
-No screenshots or repeat battle tests are needed for this comparison. The
-first pair isolates the game-written level key and purchase accounting; the
-second isolates the activation key. The existing incorrect Test 3 records,
-if retained, also help identify a narrowly scoped migration for affected saves.
-Do not rerun bulk max between these captures.
-
-## Correction gate
-
-Compare all maps and resource changes in the returned captures. Establish the
-actual level and disable identities independently, then test any inferred
-length rule against both and the existing short-name captures. Apply any
-format rule only to the relevant Boon key construction; do not truncate the
-editor's general identifier hash function. Preserve unknown records and avoid
-silently interpreting stale Test 3 values as recognized game ownership.
-
-The accepted EXP and Weapons Discount tests remain accepted. Test 3's general
-bulk acceptance is failed until this mapping defect is resolved and checked
-against the game.
+See the [capture report](test-results-boon-skill-keys-2026-11-15.md) and
+[Test 4 game check](testing-boon-levels.md). No further isolated purchase sets
+are requested before that check. The accepted baseline is unchanged.

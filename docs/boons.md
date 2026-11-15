@@ -1,13 +1,12 @@
 # Boons of Salvation: levels, activation and evidence
 
-**Test 3 bulk game acceptance failed.** Eight skill-EXP groups remain at +0
-in the returned game screenshots. The general key derivation is incomplete;
-an editor readback of its own written value is not proof of game ownership.
-The failed groups and key-length hypothesis are tracked in the
-[mapping investigation](boon-key-investigation.md). No corrected key or new
-build is claimed until an isolated game capture establishes the actual mapping.
+**Boons Test 4** corrects the eight skill-EXP aliases implicated in Test 3's
+partial bulk-unlock failure. Brawling and Black-Magic tier 1 level/Off keys
+match isolated game captures; six other aliases are inferred and await a game
+retest. The [investigation](boon-key-investigation.md) records the evidence and
+why no general string-length limit is applied.
 
-**Boons Test 3** makes all **31 Boons / 81 listed tiers** editable in the
+All **31 Boons / 81 listed tiers** remain editable in the
 selected save. Select a row and **Set selected tier**, or **Set all to max**
 to grant the maximum tier of every group, including groups hidden by search.
 **Remove Boon** removes its owned level. Tier edits preserve the independent
@@ -16,7 +15,9 @@ Save writes changes. Each action, including the full bulk edit, is one
 Undo/Redo step. Route mirroring must be off. **Flags is the far-right tab.**
 
 The Evidence column distinguishes **Game-tested** tiers (EXP 1 and Weapons
-Discount 1/2) from **Inferred** mappings. Weapons Discount 20% worked and
+Discount 1/2), **Save-verified** purchase/toggle mappings (Brawling and
+Black-Magic tier 1), and **Inferred** mappings. Save verification does not
+claim that those editor changes or battle effects have been accepted in game. Weapons Discount 20% worked and
 persisted before its normal progression requirement: Wooden Sword 240 On /
 300 Off, Bronze Sword 400 On / 500 Off. This supports broad tier editing using
 the shared key pattern; it does not verify every other group's gameplay effect.
@@ -38,13 +39,19 @@ save offset is used. Groups are allowlisted from the catalogue.
 
 | Field | Mapping | Evidence |
 |---|---|---|
-| Owned level | low 32 bits of FNV-1 64 of UTF-8 `因果報酬_レベル_` + group name | Names reproduce EXP `3b6429de` and Weapons `5bfcaa34`; Weapons 1 → 2 gives 10% → 20% in game |
-| Disable marker | Continue low-32-bit FNV-1 state `a21ab2b4` over the UTF-8 group name | Independently reproduces EXP `6447f467` and Weapons `ddb8d06b`; original prefix text is unknown |
+| Owned level | low 32 bits of FNV-1 64 of UTF-8 `因果報酬_レベル_` + save-key name | Names reproduce EXP `3b6429de` and Weapons `5bfcaa34`; Weapons 1 → 2 gives 10% → 20% in game |
+| Disable marker | Continue low-32-bit FNV-1 state `a21ab2b4` over the UTF-8 save-key name | Independently reproduces EXP `6447f467` and Weapons `ddb8d06b`; original prefix text is unknown |
 | On | Disable marker absent | Captured EXP tier 1 and Weapons tiers 1/2 |
 | Off | Disable marker 1 | Captured EXP tier 1 and Weapons tiers 1/2 |
 
-The same level prefix and disable hash-state are **extrapolated** to the other
-29 groups. All 62 generated keys are distinct. These are inferred mappings,
+Eight skill groups use explicit save-key aliases: 格闘→格, 黒魔法→黒,
+白魔法→白, 歩兵→歩, 騎兵→騎, 重装→重, 飛行→飛 and 指揮→指,
+after 技能経験. The first two are capture-verified; the other six are inferred.
+Other groups retain their full catalogue names. A general truncation rule has
+not been established, including for blessing-cost Boons.
+
+The same level prefix and disable hash-state are **extrapolated** where no
+independent capture exists. All 62 generated keys are distinct. These are inferred mappings,
 not recovered executable logic. Lower rows say Below tier N; only the owned
 row displays On/Off. There is one owned level per group, not independent
 ownership of each displayed row.
@@ -59,6 +66,9 @@ ownership of each displayed row.
   Boon therefore keeps it Off. Set all to max preserves all switches, too.
 * Every requested group is validated before mutation. One unknown group aborts
   a bulk edit; unrelated valid groups can still be edited individually.
+* Incorrect Test 3 full-name skill records are ignored for ownership and
+  preserved as unrelated records; no old maximum is silently migrated. Explicit
+  tier edits or bulk max write the corrected keys.
 * Unselected records, compact/wide encodings, currency, claims and progression
   are preserved. No-op requests preserve every byte and add no undo entry.
 * A changed map is rebuilt once, with pointer relocation and serialization

@@ -1,48 +1,48 @@
-# Boons Test 3: all catalogue tiers
+# Boons Test 4: corrected skill keys
 
-**Known issue:** the general bulk unlock failed in game for eight skill-EXP
-groups. Do not repeat Set all to max expecting those entries to unlock. The
-editor's inferred state is not authoritative for those groups. The
-[focused capture request](boon-key-investigation.md) replaces a broad retest
-while the key derivation is investigated.
+Extract FEFW-Boons-Test-4.zip into a fresh folder and launch its editor.py with
+the working Python environment. No new dependencies. The header says
+**v1.3.9 · Boons Test 4** and **Flags remains the far-right tab**.
 
-Extract FEFW-Boons-Test-3.zip into a fresh folder and launch its editor.py with
-the working Python environment. No new dependencies are needed. The header
-shows **v1.3.9 · Boons Test 3**, and **Flags is the far-right tab**.
+Test 3 partly failed because eight skill-EXP groups used full catalogue names.
+Brawling and Black-Magic keys now match independent captures of abbreviated
+names. The other six aliases follow that pattern and need this game check.
+See [the evidence](boon-key-investigation.md).
 
-Open a copy of your save, turn off **Also edit this route's other saves**, and
-open **Boons**. The package contains no personal saves. The accepted B0-01
-package Auto remains the reference baseline; WD20 captures are test evidence.
+## Focused game check
+
+1. Open a disposable copy of the accepted baseline in Test 4. Turn off
+   **Also edit this route's other saves**, open Boons, use **Set all to max**
+   and save. Close the game before writing its save file.
+2. Load it in game. Check that Brawling, Black-Magic, White-Magic, Infantry,
+   Rider, Heavy, Flier and Authority now show **+3**. Check remaining menu
+   entries too, noting any missing/non-maximum group, particularly the six
+   blessing-cost Boons not shown in the first failure screenshots.
+3. Save in game, quit and reload to check persistence. Return that one
+   game-resaved file, with screenshots of any discrepancy. Individual
+   before/purchase/Off sets for every group are not needed at this stage.
+
+Do not promote this test save to baseline automatically. No repeat of accepted
+Weapons Discount price or earlier EXP battle tests is requested.
+
+## Controls and evidence
 
 | Control | Behavior |
 |---|---|
-| Set selected tier | Sets the selected group's owned tier to that row; can raise or lower it, including before normal purchase requirements |
-| Remove Boon | Removes that group's owned level; preserves its independent On/Off marker |
-| Turn on / Turn off | Changes activation for the currently owned tier; select its row first |
-| Set all to max | Sets all 31 groups to their catalogue maxima, including groups hidden by search; preserves existing On/Off switches |
-| Undo / Redo | Restores one complete action, including a bulk edit |
-| Save | Writes the selected save and uses the upstream numbered backups |
+| Set selected tier | Sets that group's owned tier, including before normal purchase requirements |
+| Remove Boon | Removes its owned level and retains its independent On/Off marker |
+| Turn on / Turn off | Changes activation for the selected, currently owned tier |
+| Set all to max | Sets all 31 groups to their catalogue maxima, including hidden search results; retains existing Off states |
+| Undo / Redo | Restores one complete action, including bulk max |
+| Save | Writes the selected slot with upstream numbered backups |
 
-To unlock every tier, use **Set all to max**, review the states, then **Save**.
-If a Boon was already Off, it stays Off: select its owned maximum-tier row and
-choose Turn on if desired. Removal followed by re-adding also retains the old
-switch state. No Karma is spent or refunded and no progression is changed.
+**Game-tested** labels accepted EXP/Weapons effects. **Save-verified** labels
+Brawling/Black-Magic tier 1 purchase/toggle records captured from the game;
+it does not assert that this build has passed a game retest. **Inferred**
+labels other mappings/tiers. Game cost and Required clears are reference
+purchase requirements, not a decoded save-side lock status.
 
-The table shows **Not owned**, **Below tier N**, **On/Off**, or an unknown value
-that must be preserved. Unknown levels or switch values block that group;
-an unknown group blocks bulk max rather than partially applying it. Valid
-unrelated groups remain individually editable.
-
-**Game-tested** means EXP tier 1 or Weapons Discount tier 1/2. **Inferred**
-means the shared level and activation-key patterns were extended to that row.
-Automated checks cover all 81 tier choices, but the remaining gameplay effects
-have not been individually verified. Required clears and Game cost are reference
-purchase requirements; they are not a decoded save-side Locked/Unlocked state.
-
-WD20 is complete; there is no repeat of its price/reload or earlier battle and
-baseline-repair tests requested. For a quick check of this broader build, load
-a disposable edited copy, inspect the Boons menu, save/reload and note any
-missing or reset tier. A game-resaved copy would help diagnose any discrepancy.
-
-See [the evidence and validation report](test-results-boon-levels-2026-11-15.md)
-and [format documentation](boons.md).
+For a Test 3 edited save, incorrect full-name skill records are preserved but
+ignored. Missing corrected keys therefore show Not owned. Explicitly setting
+a tier or using bulk max writes the corrected key; nothing is migrated merely
+by opening a save. Karma and progression are preserved, without refunds.

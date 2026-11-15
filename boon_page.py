@@ -91,14 +91,14 @@ class BoonPageMixin:
                             and (state['groups'][g['name']]['level'] or 0) > 0 for g in groups)
                 self.boon_observation.configure(text=(
                     f"{owned} of {len(groups)} owned · Game-tested: EXP tier 1; Weapons Discount tiers 1–2. "
-                    "Other tiers use inferred mappings."))
+                    "Save-verified: Brawling and Black-Magic tier 1. Other tiers remain inferred."))
         except core.SaveError as exc:
             self._boon_error = str(exc)
             self.boon_observation.configure(text=str(exc))
         for iid, group, tier in rows:
             self._boon_rows[iid] = (group, tier)
             saved = boons.row_state(group, tier, self._boon_state['groups'][group['name']]) if self._boon_state else 'Unavailable'
-            evidence = 'Game-tested' if (group['name'], tier['tier']) in boons.GAME_TESTED_TIERS else 'Inferred'
+            evidence = boons.evidence_label(group['name'], tier['tier'])
             tree.insert("", "end", iid=iid, text=boons.display_name(group), values=(
                 tier['tier'], saved, tier['value'], evidence, tier['cost'], tier['clear_count'], group['name']))
         self.boon_count.configure(text=summary)

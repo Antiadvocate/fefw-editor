@@ -1,5 +1,8 @@
 # WD20 acceptance and Boons Test 3 validation
 
+Historical report. The subsequent [Test 4 investigation and validation](test-results-boon-skill-keys-2026-11-15.md)
+records isolated Brawling/Black-Magic captures and corrected skill aliases.
+
 ## Subsequent Test 3 game failure
 
 The player reports Set all to max only partly worked. Screenshots show EXP 50%,

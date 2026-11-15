@@ -1,7 +1,8 @@
 """Catalogue-scoped Boon levels and independent On/Off markers.
 
-EXP tier 1 and Weapons Discount tiers 1/2 have game evidence. Remaining keys
-and tiers extrapolate the common hash pattern; see docs/boons.md. The original
+EXP tier 1 and Weapons Discount tiers 1/2 have game evidence. Brawling and
+Black-Magic tier 1 have isolated save captures. Remaining keys and tiers
+extrapolate the common hash pattern; see docs/boons.md. The original
 first-tier helpers remain available for reproducing the earlier experiments.
 """
 from __future__ import annotations
@@ -24,6 +25,21 @@ LEVEL_PREFIX = '因果報酬_レベル_'
 # both captured disable keys; the original prefix text is not yet recovered.
 DISABLED_PREFIX_STATE = 0xa21ab2b4
 GAME_TESTED_TIERS = {('経験値', 1), ('武器割引', 1), ('武器割引', 2)}
+SAVE_CAPTURED_TIERS = {('技能経験格闘', 1), ('技能経験黒魔法', 1)}
+# Save keys use abbreviated skill names, not the Reward.bin display groups.
+# Brawling and Black-Magic are independently captured; the other six aliases
+# are inferred from that pattern and still require game acceptance. This is
+# deliberately NOT a general string/UTF-8 truncation rule.
+SKILL_KEY_NAMES = {
+    '技能経験格闘': '技能経験格',
+    '技能経験黒魔法': '技能経験黒',
+    '技能経験白魔法': '技能経験白',
+    '技能経験歩兵': '技能経験歩',
+    '技能経験騎兵': '技能経験騎',
+    '技能経験重装': '技能経験重',
+    '技能経験飛行': '技能経験飛',
+    '技能経験指揮': '技能経験指',
+}
 
 
 class BoonError(core.SaveError):
@@ -160,10 +176,19 @@ def display_name(group: dict) -> str:
 def group_keys(name: str) -> tuple[int, int]:
     if name not in {g['name'] for g in catalog()}:
         raise BoonError('Choose a Boon from the catalogue.')
+    name = SKILL_KEY_NAMES.get(name, name)
     disabled = DISABLED_PREFIX_STATE
     for byte in name.encode('utf8'):
         disabled = ((disabled * 0x1b3) & 0xffffffff) ^ byte
     return core.id_hash(LEVEL_PREFIX + name), disabled
+
+
+def evidence_label(name: str, tier: int) -> str:
+    if (name, tier) in GAME_TESTED_TIERS:
+        return 'Game-tested'
+    if (name, tier) in SAVE_CAPTURED_TIERS:
+        return 'Save-verified'
+    return 'Inferred'
 
 
 def read_state(f: core.SaveFile) -> dict:

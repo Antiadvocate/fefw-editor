@@ -23,14 +23,13 @@ passed except DEED-06: the game cleared a claim after a decrease. Test 2 adds
 a targeted OK/Cancel warning; [DEED-11–14](testing-notable-deeds.md) all passed.
 The Notable Deeds milestone is accepted on the reported setup. Accepted audience/travel
 controls lose Experimental labels; the three hidden destinations say Effect unknown.
-**Boons Test 3** exposes all 31 Boons / 81 tiers after WD20 passed.
-**Its general bulk unlock subsequently failed in game** for eight skill-EXP
-groups; see the [mapping investigation](boon-key-investigation.md). The editor's
-inferred maximum is not proof that the game recognizes the record. EXP tier 1
-and Weapons Discount tiers 1/2 are game-tested; remaining level and activation
-mappings are inferred. Tier/remove/On/Off, bulk max and selected-save Undo/Redo
-are implemented. Flags is the rightmost tab. See the
-[Test 3 report](test-results-boon-levels-2026-11-15.md).
+**Boons Test 4** corrects eight skill-EXP save-key aliases after Test 3's
+bulk unlock partly failed in game. Brawling and Black-Magic purchase/Off keys
+are independently captured; six other aliases remain inferred. See the
+[investigation](boon-key-investigation.md) and [Test 4 report](test-results-boon-skill-keys-2026-11-15.md).
+All 31 Boons / 81 tiers remain editable; EXP tier 1 and Weapons Discount tiers
+1/2 have accepted game-effect evidence. Bulk acceptance still needs a game
+retest. Flags remains the rightmost tab.
 Other sections below
 are research notes and acceptance gates, not working UI features or
 instructions to apply unverified offsets.

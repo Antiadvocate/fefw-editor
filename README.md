@@ -36,12 +36,13 @@ library, or a ready-made Windows `.exe`.
 | **Boons** | | All 31 Boons / 81 tiers: set a tier, remove ownership, switch On/Off or set all to max. Karma and progression preserved; undo/redo. Game-tested and inferred mappings labelled. See [boons.md](docs/boons.md) |
 | **Notable Deeds** | | 350 milestones; 32 editable activity totals and 15 read-only counters. Targets/rewards and stored claim states shown separately; no currency or claim writes. See [notable-deeds.md](docs/notable-deeds.md) |
 
-**Current build: Boons Test 3 · upstream v1.3.9.** All 31 Boons are editable.
-**Known game failure:** Set all to max does not unlock every group. The returned
-screenshots show eight skill-EXP groups still at +0 despite the editor displaying
-the written maximum. Existing automated tests check write/read consistency,
-not whether the game recognizes each inferred key. Do not treat the bulk action
-as accepted; see [the investigation and requested captures](docs/boon-key-investigation.md).
+**Current build: Boons Test 4 · upstream v1.3.9.** Corrects the eight skill-EXP
+key mappings that made Test 3's Set all to max only partly work in game.
+Brawling and Black-Magic level/Off keys now match isolated game captures;
+the six other skill aliases follow that pattern and await in-game acceptance.
+No general hash truncation is applied. Earlier incorrect records are preserved
+but ignored when showing ownership. See [the findings](docs/boon-key-investigation.md)
+and [Test 4 validation](docs/test-results-boon-skill-keys-2026-11-15.md).
 
 Select a row and **Set selected tier**, **Remove Boon**, or use **Set all to max**.
 Select the owned tier to switch it On/Off. Bulk max includes groups hidden by
@@ -50,7 +51,8 @@ Undo/Redo restores the entire action. **Flags is now the far-right tab.**
 
 The locked **Weapons Discount 20%** test passed: 240/400 prices On, 300/500
 Off, with level and activation persisting after reload. EXP tier 1 and Weapons
-tiers 1/2 have game evidence; other tiers are explicitly marked **Inferred**.
+tiers 1/2 have game evidence. Brawling and Black-Magic tier 1 are **Save-verified**;
+other tiers are explicitly marked **Inferred**.
 The broader editor is structurally tested, without claiming every Boon's effect
 has been verified in game. See the [usage guide](docs/testing-boon-levels.md),
 [results and validation](docs/test-results-boon-levels-2026-11-15.md) and
