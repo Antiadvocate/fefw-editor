@@ -486,12 +486,14 @@ class AdvancedMixin(MapPageMixin):
         bar2 = ttk.Frame(mbox, style="Card.TFrame")
         bar2.pack(fill="x")
         ttk.Label(bar2, text="Weapon masteries", style="CardH3.TLabel").pack(side="left")
+        self.mas_sel_lbl = ttk.Label(bar2, text="", style="CardMuted.TLabel")
+        self.mas_sel_lbl.pack(side="left", padx=(10, 0))
         for text, cmd in (("Set rank…", self.set_mastery_rank), ("Set exp…", self.set_mastery_exp),
                           ("Add…", self.add_mastery), ("Remove", self.remove_mastery)):
             ttk.Button(bar2, text=text, style="Small.TButton", command=cmd).pack(side="right",
                                                                                padx=(6, 0))
         self.mas_tree = ttk.Treeview(mbox, columns=("rank", "exp", "next"),
-                                     show="tree headings", selectmode="browse")
+                                     show="tree headings", selectmode="extended")
         self.mas_tree.heading("#0", text="Weapon", anchor="w")
         self.mas_tree.heading("rank", text="Rank", anchor="center")
         self.mas_tree.heading("exp", text="Exp", anchor="e")
@@ -505,6 +507,8 @@ class AdvancedMixin(MapPageMixin):
         self.mas_tree.pack(side="left", fill="both", expand=True, pady=(6, 0))
         mas_sb.pack(side="left", fill="y", pady=(6, 0))
         self.mas_tree.bind("<Double-1>", lambda e: self.set_mastery_rank())
+        self.mas_tree.bind("<<TreeviewSelect>>", lambda e: self._on_mastery_select())
+        enable_multi_select(self.mas_tree)
 
         note = ttk.Frame(main, style="Card.TFrame")
         note.pack(fill="x", padx=(10, 0), pady=(6, 0))
@@ -598,6 +602,8 @@ class AdvancedMixin(MapPageMixin):
             self.cls_tree.insert("", "end", text=class_label(klass),
                                  values=(value, flags, "●" if klass == cid else ""),
                                  iid=str(i))
+        keep_uid, keep = getattr(self, "_mas_keep", (None, ()))
+        kept = []
         for i, (idx, exp) in enumerate(u.masteries):
             r = rank_of(exp)
             nxt = RANK_EXP[r + 1] if r + 1 < len(RANK_EXP) else None
@@ -605,6 +611,17 @@ class AdvancedMixin(MapPageMixin):
             self.mas_tree.insert("", "end", text=nm,
                                  values=(RANKS[r], exp, nxt if nxt is not None else "max"),
                                  iid=str(i))
+            if keep_uid == u.start and idx in keep:
+                kept.append(str(i))
+        # an edit rebuilds this list; keep the same weapons selected (by weapon,
+        # not row, because Add / Remove shift the rows)
+        if kept:
+            self.mas_tree.selection_set(kept)
+            self.mas_tree.focus(kept[0])
+            self.mas_tree.see(kept[0])
+        else:
+            self._mas_keep = (None, ())
+        self._on_mastery_select()
 
     # -- class actions
     def _class_rows(self):
@@ -760,48 +777,53 @@ class AdvancedMixin(MapPageMixin):
         self._core_edit(edit, what)
 
     # -- mastery actions
+    def _mastery_entries(self) -> list[int]:
+        """Selected mastery rows (entry index), in list order."""
+        sel = self.mas_tree.selection() if hasattr(self, "mas_tree") else ()
+        return sorted({int(i) for i in sel if str(i).isdigit()})
+
+    def _mastery_names(self, u, entries) -> list[str]:
+        out = []
+        for i in entries:
+            idx = u.masteries[i][0]
+            out.append(MASTERIES[idx][0] if 0 <= idx < len(MASTERIES) else f"#{idx}")
+        return out
+
+    def _remember_masteries(self, u, entries, extra=()):
+        """Keep these weapons selected when the edit rebuilds the list."""
+        self._mas_keep = (u.start, {u.masteries[i][0] for i in entries} | set(extra))
+
+    def _on_mastery_select(self):
+        if not hasattr(self, "mas_sel_lbl"):
+            return
+        n = len(self._mastery_entries())
+        self.mas_sel_lbl.configure(
+            text=f"{n} selected: Set rank / Set exp / Remove change all {n}" if n > 1 else "")
+
+    @staticmethod
+    def _short_list(names, limit: int = 4) -> str:
+        return ", ".join(names[:limit]) + (f" +{len(names) - limit} more"
+                                          if len(names) > limit else "")
+
     def set_mastery_rank(self):
         u = self._cls_unit()
-        sel = self.mas_tree.selection()
-        if u is None or not sel:
+        entries = self._mastery_entries()
+        if u is None or not entries:
+            self.flash("Pick a weapon mastery row first.", "info")
             return
-        entry = int(sel[0])
+        names = self._mastery_names(u, entries)
         rows = [(i, RANKS[i], f"{RANK_EXP[i]} exp") for i in range(len(RANKS))]
-        r = self._picker(f"Rank for {MASTERIES[u.masteries[entry][0]][0]}", rows)
+        if len(entries) == 1:
+            title = f"Rank for {names[0]}"
+            current = rank_of(u.masteries[entries[0]][1])
+        else:
+            title = f"Rank for {len(entries)} masteries ({self._short_list(names)})"
+            current = None
+        r = self._picker(title, rows, current)
         if r is None:
             return
         exp = RANK_EXP[r]
-
-        def edit(g):
-            v = next((x for x in g.units() if x.start == u.start), None)
-            if v is None:
-                return None
-            mas = list(v.masteries)
-            mas[entry] = (mas[entry][0], exp)
-            new = core.with_lists(g, v, mas, list(v.classes))
-            return new
-
-        self._core_edit(edit, f"{MASTERIES[u.masteries[entry][0]][0]} → {RANKS[r]}")
-
-    def set_mastery_exp(self):
-        u = self._cls_unit()
-        sel = self.mas_tree.selection()
-        if u is None or not sel:
-            return
-        entries = sorted({int(i) for i in sel if str(i).isdigit()})
-        if not entries:
-            return
-        cur = u.masteries[entries[0]][1] if len(entries) == 1 else 0
-        if len(entries) == 1:
-            prompt = (f"Exp for {MASTERIES[u.masteries[entries[0]][0]][0]} "
-                      f"(0 – 65535):")
-        else:
-            names = [MASTERIES[u.masteries[i][0]][0] for i in entries]
-            shown = ", ".join(names[:4]) + (f" +{len(names) - 4} more" if len(names) > 4 else "")
-            prompt = f"Exp for {len(entries)} masteries ({shown}) (0 – 65535):"
-        val = _ask_number(self, "Mastery exp", prompt, cur, 65535)
-        if val is None:
-            return
+        self._remember_masteries(u, entries)
 
         def edit(g):
             v = next((x for x in g.units() if x.start == u.start), None)
@@ -810,7 +832,43 @@ class AdvancedMixin(MapPageMixin):
             mas = list(v.masteries)
             changed = False
             for i in entries:
-                if mas[i][1] != val:
+                if i < len(mas) and mas[i][1] != exp:
+                    mas[i] = (mas[i][0], exp)
+                    changed = True
+            if not changed:
+                return None
+            return core.with_lists(g, v, mas, list(v.classes))
+
+        what = (f"{names[0]} → {RANKS[r]}" if len(entries) == 1
+                else f"{len(entries)} masteries → {RANKS[r]}")
+        self._core_edit(edit, what)
+
+    def set_mastery_exp(self):
+        u = self._cls_unit()
+        entries = self._mastery_entries()
+        if u is None or not entries:
+            self.flash("Pick a weapon mastery row first.", "info")
+            return
+        names = self._mastery_names(u, entries)
+        cur = u.masteries[entries[0]][1] if len(entries) == 1 else 0
+        if len(entries) == 1:
+            prompt = f"Exp for {names[0]} (0 – 65535):"
+        else:
+            prompt = (f"Exp for {len(entries)} masteries ({self._short_list(names)}) "
+                      f"(0 – 65535):")
+        val = _ask_number(self, "Mastery exp", prompt, cur, 65535)
+        if val is None:
+            return
+        self._remember_masteries(u, entries)
+
+        def edit(g):
+            v = next((x for x in g.units() if x.start == u.start), None)
+            if v is None:
+                return None
+            mas = list(v.masteries)
+            changed = False
+            for i in entries:
+                if i < len(mas) and mas[i][1] != val:
                     mas[i] = (mas[i][0], val)
                     changed = True
             if not changed:
@@ -818,7 +876,7 @@ class AdvancedMixin(MapPageMixin):
             return core.with_lists(g, v, mas, list(v.classes))
 
         if len(entries) == 1:
-            what = f"{MASTERIES[u.masteries[entries[0]][0]][0]} exp → {val}"
+            what = f"{names[0]} exp → {val}"
         else:
             what = f"{len(entries)} masteries' exp → {val}"
         self._core_edit(edit, what)
@@ -836,6 +894,7 @@ class AdvancedMixin(MapPageMixin):
         idx = self._picker("Add a weapon mastery", rows)
         if idx is None:
             return
+        self._mas_keep = (u.start, {idx})
 
         def edit(g):
             v = next((x for x in g.units() if x.start == u.start), None)
@@ -848,24 +907,32 @@ class AdvancedMixin(MapPageMixin):
 
     def remove_mastery(self):
         u = self._cls_unit()
-        sel = self.mas_tree.selection()
-        if u is None or not sel:
+        entries = self._mastery_entries()
+        if u is None or not entries:
+            self.flash("Pick a weapon mastery row first.", "info")
             return
-        entry = int(sel[0])
-        idx = u.masteries[entry][0]
+        names = self._mastery_names(u, entries)
+        what_q = (f"the {names[0]} mastery" if len(entries) == 1
+                  else f"{len(entries)} masteries ({self._short_list(names, 6)})")
         if not messagebox.askyesno("Save editor",
-                                   f"Remove the {MASTERIES[idx][0]} mastery from "
-                                   f"{unit_name(u.person)}?", parent=self):
+                                   f"Remove {what_q} from {unit_name(u.person)}?",
+                                   parent=self):
             return
+        drop = set(entries)
+        self._mas_keep = (None, ())
 
         def edit(g):
             v = next((x for x in g.units() if x.start == u.start), None)
             if v is None:
                 return None
-            mas = [m for i, m in enumerate(v.masteries) if i != entry]
+            mas = [m for i, m in enumerate(v.masteries) if i not in drop]
+            if len(mas) == len(v.masteries):
+                return None
             return core.with_lists(g, v, mas, list(v.classes))
 
-        self._core_edit(edit, f"Removed mastery {MASTERIES[idx][0]}")
+        what = (f"Removed mastery {names[0]}" if len(entries) == 1
+                else f"Removed {len(entries)} masteries")
+        self._core_edit(edit, what)
 
     # ============================================================== FLAGS
     def _build_flags(self):
