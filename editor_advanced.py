@@ -29,6 +29,7 @@ from deed_page import DeedPageMixin
 from boon_page import BoonPageMixin
 import audiences
 import tutorials
+import flag_labels
 from ui_util import enable_multi_select
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -102,26 +103,12 @@ def flag_names() -> dict:
     global _FLAG_NAMES
     if _FLAG_NAMES is None:
         try:
-            raw = json.load(open(os.path.join(HERE, "flag_names.json"), encoding="utf8"))
+            with open(os.path.join(HERE, "flag_names.json"), encoding="utf8") as fh:
+                raw = json.load(fh)
             _FLAG_NAMES = {int(k, 16): v for k, v in raw.items()}
         except Exception:                     # noqa: BLE001 — the page still works
             _FLAG_NAMES = {}
-        try:
-            tutorials.apply_labels(_FLAG_NAMES)
-        except tutorials.TutorialError:
-            pass  # Tutorial page reports catalogue errors; raw flags still work.
-        try:
-            fast_travel.apply_labels(_FLAG_NAMES)
-        except fast_travel.FastTravelError:
-            pass  # Fast travel page reports errors; raw flags remain usable.
-        try:
-            audiences.apply_labels(_FLAG_NAMES)
-        except audiences.AudienceError:
-            pass  # Audience controls report unsupported layouts.
-        try:
-            deeds.apply_labels(_FLAG_NAMES)
-        except deeds.DeedError:
-            pass  # Deeds page reports catalogue errors; raw flags still work.
+        flag_labels.apply_labels(_FLAG_NAMES, strict=False)
     return _FLAG_NAMES
 
 
@@ -1001,7 +988,7 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
         self.flag_tree = scrolled_tree(page, columns=("label", "value", "map"),
                                        show="tree headings", selectmode="browse")
         self.flag_tree.heading("#0", text="Name", anchor="w")
-        self.flag_tree.heading("label", text="Reads as", anchor="w")
+        self.flag_tree.heading("label", text="Reads As", anchor="w")
         self.flag_tree.heading("value", text="Value", anchor="e")
         self.flag_tree.heading("map", text="List", anchor="e")
         self.flag_tree.column("#0", width=260)

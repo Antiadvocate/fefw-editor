@@ -83,7 +83,6 @@ class DeedPageMixin:
         claimed = unclaimed = total = 0
         for h, row in cat.items():
             value = values.get(h, 0)
-            reason = deeds.read_only_reason(h, values)
             for tier in row["milestones"]:
                 total += 1
                 state = values.get(int(tier["hash"], 16))
@@ -102,10 +101,9 @@ class DeedPageMixin:
         if view:
             tree.yview_moveto(view[0])
         editable = sum(not deeds.read_only_reason(h, values) for h in cat)
-        experimental = sum(not deeds.read_only_reason(h, values) and bool(row.get('experimental_note'))
-                           for h, row in cat.items())
+        inferred = sum(bool(row.get('inferred')) for row in cat.values())
         self.deed_count.configure(text=(f"{len(self._deed_rows)} of {total} milestones · {editable} of {len(cat)} counters editable · "
-                                        f"{experimental} experimental · "
+                                        f"{inferred} inferred · "
                                         f"{claimed} claimed · {unclaimed} complete, unclaimed (stored)"))
         self._deed_selected()
 
@@ -130,8 +128,8 @@ class DeedPageMixin:
         value = values.get(h, 0)
         stored = f"{value:,}" if h in values else "0 (not stored)"
         note = reason or f"Allowed total: 0–{deeds.maximum(h, values):,}. Updates all {len(row['milestones'])} milestones' progress. The game may clear claims below target."
-        if not reason and row.get('experimental_note'):
-            note = row['experimental_note'] + '\n' + note
+        if not reason and row.get('editing_note'):
+            note = row['editing_note'] + '\n' + note
         self.deed_detail.configure(text=f"{row['label']} · current total: {stored}\n{row['name']} · {h:08x}\n{note}")
         self.deed_value.state(["!disabled"])
         self.deed_value.delete(0, "end")

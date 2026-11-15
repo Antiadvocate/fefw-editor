@@ -1,19 +1,17 @@
 # Notable Deeds: progress and claim states
 
-**Notable Deeds** provides a searchable table of **350 milestones across
-47 mapped counters**. **32 activity counters** retain their existing editing
-controls. **Hours Played is now experimentally editable** on the Deeds Hours
-Test 1 branch; the other 14 remain read-only. See the [controlled Hours test](testing-deed-hours.md).
-The experiment changes its stored Deed total only. **HOURS-01–03 passed**:
-20 hours persisted, the game created completion, and the claim granted exactly
-20 Karma. Later real-hour updates and higher tiers remain untested; Test 1's
-Experimental label is retained in the supplied build. The player completed the first [DEED acceptance
-run](test-results-deeds-2026-11-15.md#player-acceptance-and-supplied-saves). Training
-completion and a +10-shard claim worked. Lowering training below a claimed tier
-caused the game to remove that claim, so **Test 2 adds an OK/Cancel warning**.
-The player subsequently reported **DEED-11–14 all passed** on 2026-11-15,
-completing acceptance of this milestone on the reported Leda Chapter 9 setup.
-This does not expand the tested counters, routes or versions.
+**Notable Deeds** provides **350 milestones across 47 editable counters**.
+The 14 counters enabled after the Hours test are labelled **Inferred**: three
+enemy totals, five skill-growth totals, two blessing-growth totals, three
+support-conversation totals and paralogues. Their editing follows the tested
+counter workflow, but their individual game behavior is not established.
+See the [release scope](deeds-inferred-release.md) and [evidence register](deeds-follow-up.md).
+
+**Hours Played 17 → 20 passed** completion, reward and save/load checks.
+Later real-hour updates and higher tiers remain untested. The original
+32-counter workflow and claimed-reward warning retain their accepted status.
+The [original results](test-results-deeds-2026-11-15.md) and
+[Hours results](test-results-deed-hours-2026-11-15.md) record the tested scope.
 
 ## Use
 
@@ -48,7 +46,7 @@ normal and a zero-to-zero action does not manufacture a record.
 | Progress | Counter compared with this tier's target; may differ from the game's currently refreshed display |
 | Karma Shards | Reward amount from the mapped data; not currency granted by the editor |
 | Claim state (stored) | The actual milestone flag, independent of the displayed progress |
-| Counter editing | Editable, Experimental or Read-only; select the row for the note/reason |
+| Counter editing | Editable, Inferred or Read-only due to an unsupported stored state; select the row for the note/reason |
 | Reads as · milestone key | Original Japanese milestone key, preserved exactly |
 | Milestone hash | Stable low-32-bit hashed identity |
 
@@ -75,13 +73,13 @@ Undo/Redo restore the approved editor state; they do not undo game actions.
 Do not use the generic Flags tab
 to substitute guessed completion/visibility edits for this workflow.
 
-## Planned second pass
+## Remaining evidence
 
-At the player's request, [DEED-R01–15](deeds-follow-up.md) queues controlled tests
-for the remaining counters. The player has now selected Hours Played first.
-Only that counter is enabled experimentally, and [HOURS-01–03](testing-deed-hours.md)
-has passed. This supports a labelled assumption for a later group of game-wide
-counters; it does not establish every counter's dependencies.
+At the player's request, all remaining counters are enabled using a labelled
+working assumption from the tested counter edits. [DEED-R01–15](deeds-follow-up.md)
+now tracks evidence and dependencies, not a gate keeping these controls locked.
+No further game test is required before this requested release. Individual
+results can strengthen or correct the Inferred labels later.
 
 ## Coverage and limits
 
@@ -90,14 +88,13 @@ kills, avoided attacks, critical attacks, assists, Blaze Arts, gambits, Support
 Salvation, skirmishes, clashes, links, searches, rare search materials, feasts,
 local performances and ore. The complete catalogue below specifies each one.
 
-Read-only: paralogues, three support conversation ranks, five skill growth
-ranks, two blessing growth counters and three insufficiently confirmed enemy
-categories. Story, conversation, skill and blessing totals may depend on
-underlying progress. Hours Played passed its short-session completion/claim
-test; recalculation at a later real hour boundary remains untested. The
-giant-enemy label remains provisional; livestock and golden/silver mummy
-names are confirmed by the DEED-08 screenshot, but their editing is untested. Raw EXP edits elsewhere do not
-prove that a growth deed counter can independently reproduce those changes.
+The 14 newly enabled counters are inferred. Story, conversation, skill and
+blessing totals may depend on underlying progress; editing their Deed total
+does not complete quests, play conversations or raise unit/blessing levels.
+Hours Played passed its short-session completion/claim test; a later natural
+hour boundary remains untested. The giant-enemy English label is provisional;
+livestock and golden/silver mummy names are screenshot-confirmed. Unknown claim
+states, negative stored counters and ambiguous layouts still disable edits.
 
 Edits are bounded to **0 through the last mapped target**, or through the
 current stored total if that is higher. Existing higher totals can be retained
@@ -162,18 +159,18 @@ any hashed key.
 
 | Activity | Counter key | Hash | Editing | Targets | Rewards |
 |---|---|---|---|---|---|
-| Paralogues cleared | `実績_外伝クリア数` | `ac891429` | Read-only | 1, 2, 3, 4, 5, 6, 7, 8, 9 | 25, 25, 25, 25, 25, 25, 25, 25, 25 |
-| C support conversations viewed | `実績_支援会話C再生数` | `6e05ea11` | Read-only | 5, 10, 15, 20, 25, 30, 35, 40, 45, 50 | 10, 10, 15, 20, 25, 30, 35, 40, 45, 50 |
-| B support conversations viewed | `実績_支援会話B再生数` | `cc4a3b3a` | Read-only | 5, 10, 15, 20, 25, 30, 35, 40, 45, 50 | 10, 10, 15, 20, 25, 30, 35, 40, 45, 50 |
-| A support conversations viewed | `実績_支援会話A再生数` | `01aca43b` | Read-only | 5, 10, 15, 20, 25, 30, 35, 40, 45, 50 | 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 |
-| Hours played | `実績_プレイ時間` | `eb92a0f6` | Experimental | 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 250, 300 | 10, 20, 30, 40, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50 |
-| Skill levels raised to C | `実績_技能レベルC成長数` | `c6f4cfe6` | Read-only | 3 | 10 |
-| Skill levels raised to B | `実績_技能レベルB成長数` | `05413e55` | Read-only | 3 | 20 |
-| Skill levels raised to A | `実績_技能レベルA成長数` | `69c3bd94` | Read-only | 3 | 30 |
-| Skill levels raised to S | `実績_技能レベルS成長数` | `0c174336` | Read-only | 3 | 40 |
-| Skill levels raised to maximum | `実績_技能レベル最大成長数` | `0cd50d11` | Read-only | 3 | 50 |
-| Blessings raised to level 2 | `実績_加護レベル2達成数` | `da109aa3` | Read-only | 1, 3, 6 | 10, 30, 100 |
-| Blessings raised to maximum | `実績_加護レベル最大達成数` | `b8892bfd` | Read-only | 1, 3, 6 | 30, 100, 200 |
+| Paralogues cleared | `実績_外伝クリア数` | `ac891429` | Inferred | 1, 2, 3, 4, 5, 6, 7, 8, 9 | 25, 25, 25, 25, 25, 25, 25, 25, 25 |
+| C support conversations viewed | `実績_支援会話C再生数` | `6e05ea11` | Inferred | 5, 10, 15, 20, 25, 30, 35, 40, 45, 50 | 10, 10, 15, 20, 25, 30, 35, 40, 45, 50 |
+| B support conversations viewed | `実績_支援会話B再生数` | `cc4a3b3a` | Inferred | 5, 10, 15, 20, 25, 30, 35, 40, 45, 50 | 10, 10, 15, 20, 25, 30, 35, 40, 45, 50 |
+| A support conversations viewed | `実績_支援会話A再生数` | `01aca43b` | Inferred | 5, 10, 15, 20, 25, 30, 35, 40, 45, 50 | 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 |
+| Hours played | `実績_プレイ時間` | `eb92a0f6` | Editable | 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 250, 300 | 10, 20, 30, 40, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50 |
+| Skill levels raised to C | `実績_技能レベルC成長数` | `c6f4cfe6` | Inferred | 3 | 10 |
+| Skill levels raised to B | `実績_技能レベルB成長数` | `05413e55` | Inferred | 3 | 20 |
+| Skill levels raised to A | `実績_技能レベルA成長数` | `69c3bd94` | Inferred | 3 | 30 |
+| Skill levels raised to S | `実績_技能レベルS成長数` | `0c174336` | Inferred | 3 | 40 |
+| Skill levels raised to maximum | `実績_技能レベル最大成長数` | `0cd50d11` | Inferred | 3 | 50 |
+| Blessings raised to level 2 | `実績_加護レベル2達成数` | `da109aa3` | Inferred | 1, 3, 6 | 10, 30, 100 |
+| Blessings raised to maximum | `実績_加護レベル最大達成数` | `b8892bfd` | Inferred | 1, 3, 6 | 30, 100, 200 |
 | Training sessions | `実績_訓練回数` | `2adbdfbf` | Editable | 10, 20, 30, 40, 50, 75, 100 | 10, 10, 10, 10, 10, 10, 10 |
 | Theatre visits | `実績_観劇回数` | `c01c6da3` | Editable | 10, 20, 30, 40, 50 | 10, 10, 10, 10, 10 |
 | Temple services performed | `実績_奉仕回数` | `b693004d` | Editable | 10, 20, 30, 40, 50 | 10, 10, 10, 10, 10 |
@@ -188,10 +185,10 @@ any hashed key.
 | Gold spent at shops in bases | `実績_買い物消費金額` | `71015890` | Editable | 10000, 30000, 50000, 100000, 200000, 300000 | 10, 10, 10, 20, 20, 20 |
 | Foes defeated in battle | `実績_敵撃破数` | `50126cb8` | Editable | 10, 20, 30, 40, 50, 75, 100, 150, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000 | 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 |
 | Undead foes defeated in battle | `実績_冥魔敵撃破数` | `1be28238` | Editable | 10, 20, 30, 40, 50, 75, 100, 150, 200, 250, 300, 350, 400, 450, 500 | 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 |
-| Giant foes defeated (translation) | `実績_巨大敵撃破数` | `84f61022` | Read-only | 10, 20, 30, 40, 50, 75, 100, 150, 200 | 10, 10, 10, 10, 10, 10, 10, 10, 10 |
+| Giant foes defeated (translation) | `実績_巨大敵撃破数` | `84f61022` | Inferred | 10, 20, 30, 40, 50, 75, 100, 150, 200 | 10, 10, 10, 10, 10, 10, 10, 10, 10 |
 | Beasts defeated in battle | `実績_野生敵撃破数` | `9bd7c8ca` | Editable | 10, 20, 30, 40, 50, 75, 100, 150, 200 | 10, 10, 10, 10, 10, 10, 10, 10, 10 |
-| Livestock defeated in battle | `実績_家畜敵撃破数` | `550f13b3` | Read-only | 10, 20, 30, 40, 50, 75, 100, 150, 200 | 10, 10, 10, 10, 10, 10, 10, 10, 10 |
-| Golden or silver mummies defeated | `実績_特別敵撃破数` | `e203feff` | Read-only | 10, 20, 30, 40, 50, 75, 100, 150, 200 | 10, 10, 10, 10, 10, 10, 10, 10, 10 |
+| Livestock defeated in battle | `実績_家畜敵撃破数` | `550f13b3` | Inferred | 10, 20, 30, 40, 50, 75, 100, 150, 200 | 10, 10, 10, 10, 10, 10, 10, 10, 10 |
+| Golden or silver mummies defeated | `実績_特別敵撃破数` | `e203feff` | Inferred | 10, 20, 30, 40, 50, 75, 100, 150, 200 | 10, 10, 10, 10, 10, 10, 10, 10, 10 |
 | Attacks avoided | `実績_回避回数` | `6614ae03` | Editable | 10, 20, 30, 40, 50, 75, 100, 150, 200, 250, 300 | 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 |
 | Critical attacks performed | `実績_必殺回数` | `e997585d` | Editable | 10, 20, 30, 40, 50, 75, 100, 150, 200, 250, 300 | 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 |
 | Assists performed | `実績_補助回数` | `c12cf155` | Editable | 10, 20, 30, 40, 50, 75, 100, 150, 200, 250, 300 | 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 |

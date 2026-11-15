@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 import deeds
 import fefw_core as core
-from test_deeds import TRAIN, PARALOGUES, rows
+from test_deeds import TRAIN, rows
 from test_fast_travel import fixture
 from test_tutorial_page import PageHarness
 
@@ -81,8 +81,11 @@ class DeedPageTest(unittest.TestCase):
         app.mirrored = False
         for value in ('bad', '1.5', '-1', '101', '65'):
             app.input = value; app.set_deed()
-        app._deed_rows['milestone'] = (PARALOGUES, deeds.catalog()[PARALOGUES]['milestones'][0])
-        app.input = '20'; app.set_deed()
+        # Known counters remain read-only when a claim has an unknown state.
+        claim = int(deeds.catalog()[TRAIN]['milestones'][0]['hash'], 16)
+        app.sv.payload = fixture([[(h, 1 if h == claim else v, w) for h, v, w in rows()]]).payload
+        original = bytes(app.sv.payload)
+        app.input = '75'; app.set_deed()
         self.assertEqual(app.messages[-1][1], 'error')
         app.selected = (); app.set_deed()
         self.assertEqual(bytes(app.sv.payload), original)

@@ -3,7 +3,8 @@
 Status: **HOURS-01–03 passed by player report**, corroborated by both returned
 saves. See the [acceptance report](test-results-deed-hours-2026-11-15.md).
 The procedure below records the completed DEED-R14 experiment; no repeat is
-requested. The other 14 counters await the next scoped build.
+requested. The [current release](deeds-inferred-release.md) enables the other
+14 counters as Inferred; the original Test 1 package below is historical.
 
 ## Prepared inputs
 

@@ -34,17 +34,20 @@ library, or a ready-made Windows `.exe`.
 | **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Six level previews tested in Leda Chapter 9; Fortuna's EXP effect remains unknown. Selection and Divine Sand are read-only. Six tested first-audience toggles; Fortuna has no audience condition. See [blessings.md](docs/blessings.md) |
 | **Fast travel** | | Add/remove 20 identified Dagsion destination flags in the selected save, with original keys and undo/redo. The original 16 have screenshot-confirmed English names. Four additional flags persisted in Chapter 9 tests; only Yu Phas Temple appeared and allowed travel, while walking back in stayed blocked. See [fast-travel.md](docs/fast-travel.md) |
 | **Boons** | | All 31 Boons / 81 tiers: set a tier, remove ownership, switch On/Off or set all to max. Karma and progression preserved; undo/redo. Game-tested and inferred mappings labelled. See [boons.md](docs/boons.md) |
-| **Notable Deeds** | | 350 milestones; 33 editable totals, including Hours Played with its 20-hour game test passed, and 14 read-only counters. Targets/rewards and stored claim states shown separately; no currency or claim writes. See [notable-deeds.md](docs/notable-deeds.md) |
+| **Notable Deeds** | | 350 milestones; 47 editable totals; the 14 newly enabled counters are labelled Inferred. Hours Played passed its 20-hour game test. Targets/rewards and stored claim states shown separately; no currency or claim writes. See [notable-deeds.md](docs/notable-deeds.md) |
 
-**Current branch build: Deeds Hours Test 1 · upstream v1.3.9.** Hours Played is
-experimentally editable in Notable Deeds, alongside the accepted 32 counters;
-14 remain read-only. The prepared game test changes only the Deed total
-17 → 20, preserving claims, Karma and separate elapsed-time fields. See the
-[Hours test guide](docs/testing-deed-hours.md) and [acceptance report](docs/test-results-deed-hours-2026-11-15.md).
-**HOURS-01–03 passed.** Returned saves retain 20 hours, show completion state 2
-then claimed state 4, and confirm Karma 410 → 430. Test 1 still labels the
-control Experimental; later real-hour updates and higher tiers are untested.
-The other 14 counters remain read-only pending the next inferred test group.
+**Current build: upstream v1.3.9, with all Deed counters editable.** The 14
+newly enabled counters are labelled **Inferred**; the accepted Hours test and
+original counter workflow remain documented separately. Counter edits preserve
+claim states, Karma and underlying story/unit progress. Existing unknown-state
+checks, claim warnings, Undo/Redo and numbered backups remain available.
+See the [release scope](docs/deeds-inferred-release.md).
+
+The header shows the product/version without temporary test wording. Flags
+remains the rightmost tab. Known English names appear in **Name**, with exact
+original Japanese keys in **Reads As**. Shared catalogue overlays keep these
+labels consistent in the running editor and generated dictionary. Future
+main merges follow [AGENTS.md](AGENTS.md).
 
 **Accepted Boons Test 4 milestone.** Corrects the eight skill-EXP
 key mappings that made Test 3's Set all to max only partly work in game.

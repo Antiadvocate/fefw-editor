@@ -214,3 +214,11 @@ need in-game confirmation beyond the first EXP effect.
 | Jurah blessing cost reduction | `加護消費_ジュラ` | 20, 50 | 300, 300 | 1, 3 |
 | Kalla blessing cost reduction | `加護消費_カーラ` | 20, 50 | 300, 300 | 1, 3 |
 | Credna blessing cost reduction | `加護消費_クレール` | 20, 50 | 300, 300 | 1, 3 |
+
+## Flags names
+
+The Flags tab now names all 31 tier and 31 disable records in English. Tier
+records retain their exact Japanese keys, including the eight abbreviated
+skill aliases, in Reads As. The disable hashes are mapped but their original
+prefix text is unrecovered; those Reads As cells remain empty. Descriptive
+labels do not change hashes, values, evidence levels or Boon behavior.

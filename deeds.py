@@ -30,10 +30,11 @@ def catalog() -> dict[int, dict]:
                     or not row["milestones"] or not row["category"]
                     or (not row["editable"] and not row["read_only_reason"])):
                 raise ValueError("invalid counter identity")
-            if 'experimental_note' in row and (not row['editable']
-                    or not isinstance(row['experimental_note'], str)
-                    or not row['experimental_note'].strip()):
-                raise ValueError('invalid experimental counter note')
+            if (type(row.get('inferred', False)) is not bool
+                    or ('editing_note' in row and (not isinstance(row['editing_note'], str)
+                                                   or not row['editing_note'].strip()))
+                    or (row.get('inferred') and (not row['editable'] or not row.get('editing_note')))):
+                raise ValueError('invalid counter editing evidence')
             last = 0
             for tier in row["milestones"]:
                 sh = int(tier["hash"], 16)
@@ -125,7 +126,7 @@ def maximum(h: int, values: dict[int, int]) -> int:
 def editing_label(h: int, values: dict[int, int]) -> str:
     if read_only_reason(h, values):
         return 'Read-only'
-    return 'Experimental' if catalog()[h].get('experimental_note') else 'Editable'
+    return 'Inferred' if catalog()[h].get('inferred') else 'Editable'
 
 
 def claims_at_risk(h: int, value: int, values: dict[int, int]) -> list[dict]:

@@ -191,6 +191,29 @@ def evidence_label(name: str, tier: int) -> str:
     return 'Inferred'
 
 
+def apply_labels(names: dict[int, dict]) -> None:
+    """Name all known tier/disable records without inventing the Off prefix."""
+    updates = {}
+    for group in catalog():
+        name = group['name']
+        level, disabled = group_keys(name)
+        key = LEVEL_PREFIX + SKILL_KEY_NAMES.get(name, name)
+        if names.get(level, {}).get('name', key) != key:
+            raise BoonError(f'Conflicting Boon level identity for {level:08x}')
+        # The original disable prefix text is unrecovered. Keep a known
+        # original if supplied later; otherwise Reads As is empty, not guessed.
+        off_key = names.get(disabled, {}).get('name', '')
+        if off_key and core.id_hash(off_key) != disabled:
+            raise BoonError(f'Conflicting Boon disable identity for {disabled:08x}')
+        for h, original, label in (
+                (level, key, 'Boon tier: ' + display_name(group)),
+                (disabled, off_key, 'Boon disabled: ' + display_name(group))):
+            if h in updates:
+                raise BoonError('Ambiguous Boon label identities.')
+            updates[h] = {**names.get(h, {}), 'name': original, 'label': label, 'kind': 'boon'}
+    names.update(updates)
+
+
 def read_state(f: core.SaveFile) -> dict:
     observation = read_observation(f)  # Validates the shared map and resource header.
     values = audiences.read(f)

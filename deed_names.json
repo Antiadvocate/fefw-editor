@@ -6,8 +6,8 @@
       "name": "実績_外伝クリア数",
       "label": "Paralogues cleared",
       "category": "Story",
-      "editable": false,
-      "read_only_reason": "May depend on underlying progress; counter-only behavior is not isolated.",
+      "editable": true,
+      "read_only_reason": "",
       "milestones": [
         {
           "name": "実績状態_外伝をクリア",
@@ -63,14 +63,16 @@
           "target": 9,
           "reward": 25
         }
-      ]
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
     },
     "6e05ea11": {
       "name": "実績_支援会話C再生数",
       "label": "C support conversations viewed",
       "category": "Supports",
-      "editable": false,
-      "read_only_reason": "May depend on underlying progress; counter-only behavior is not isolated.",
+      "editable": true,
+      "read_only_reason": "",
       "milestones": [
         {
           "name": "実績状態_支援会話Cを見た",
@@ -132,14 +134,16 @@
           "target": 50,
           "reward": 50
         }
-      ]
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
     },
     "cc4a3b3a": {
       "name": "実績_支援会話B再生数",
       "label": "B support conversations viewed",
       "category": "Supports",
-      "editable": false,
-      "read_only_reason": "May depend on underlying progress; counter-only behavior is not isolated.",
+      "editable": true,
+      "read_only_reason": "",
       "milestones": [
         {
           "name": "実績状態_支援会話Bを見た",
@@ -201,14 +205,16 @@
           "target": 50,
           "reward": 50
         }
-      ]
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
     },
     "01aca43b": {
       "name": "実績_支援会話A再生数",
       "label": "A support conversations viewed",
       "category": "Supports",
-      "editable": false,
-      "read_only_reason": "May depend on underlying progress; counter-only behavior is not isolated.",
+      "editable": true,
+      "read_only_reason": "",
       "milestones": [
         {
           "name": "実績状態_支援会話Aを見た",
@@ -270,7 +276,9 @@
           "target": 50,
           "reward": 1000
         }
-      ]
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
     },
     "eb92a0f6": {
       "name": "実績_プレイ時間",
@@ -364,14 +372,14 @@
           "reward": 50
         }
       ],
-      "experimental_note": "Hours Played experiment: edits the Deed counter only. The game may recalculate it; check completion and save/load before relying on it."
+      "editing_note": "20-hour completion, reward and save/load tested. Later real-hour updates and higher milestones remain untested."
     },
     "c6f4cfe6": {
       "name": "実績_技能レベルC成長数",
       "label": "Skill levels raised to C",
       "category": "Growth",
-      "editable": false,
-      "read_only_reason": "May depend on underlying progress; counter-only behavior is not isolated.",
+      "editable": true,
+      "read_only_reason": "",
       "milestones": [
         {
           "name": "実績状態_技能レベルCを成長",
@@ -379,14 +387,16 @@
           "target": 3,
           "reward": 10
         }
-      ]
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
     },
     "05413e55": {
       "name": "実績_技能レベルB成長数",
       "label": "Skill levels raised to B",
       "category": "Growth",
-      "editable": false,
-      "read_only_reason": "May depend on underlying progress; counter-only behavior is not isolated.",
+      "editable": true,
+      "read_only_reason": "",
       "milestones": [
         {
           "name": "実績状態_技能レベルBを成長",
@@ -394,14 +404,16 @@
           "target": 3,
           "reward": 20
         }
-      ]
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
     },
     "69c3bd94": {
       "name": "実績_技能レベルA成長数",
       "label": "Skill levels raised to A",
       "category": "Growth",
-      "editable": false,
-      "read_only_reason": "May depend on underlying progress; counter-only behavior is not isolated.",
+      "editable": true,
+      "read_only_reason": "",
       "milestones": [
         {
           "name": "実績状態_技能レベルAを成長",
@@ -409,14 +421,16 @@
           "target": 3,
           "reward": 30
         }
-      ]
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
     },
     "0c174336": {
       "name": "実績_技能レベルS成長数",
       "label": "Skill levels raised to S",
       "category": "Growth",
-      "editable": false,
-      "read_only_reason": "May depend on underlying progress; counter-only behavior is not isolated.",
+      "editable": true,
+      "read_only_reason": "",
       "milestones": [
         {
           "name": "実績状態_技能レベルSを成長",
@@ -424,14 +438,16 @@
           "target": 3,
           "reward": 40
         }
-      ]
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
     },
     "0cd50d11": {
       "name": "実績_技能レベル最大成長数",
       "label": "Skill levels raised to maximum",
       "category": "Growth",
-      "editable": false,
-      "read_only_reason": "May depend on underlying progress; counter-only behavior is not isolated.",
+      "editable": true,
+      "read_only_reason": "",
       "milestones": [
         {
           "name": "実績状態_技能レベル最大を成長",
@@ -439,14 +455,16 @@
           "target": 3,
           "reward": 50
         }
-      ]
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
     },
     "da109aa3": {
       "name": "実績_加護レベル2達成数",
       "label": "Blessings raised to level 2",
       "category": "Growth",
-      "editable": false,
-      "read_only_reason": "May depend on underlying progress; counter-only behavior is not isolated.",
+      "editable": true,
+      "read_only_reason": "",
       "milestones": [
         {
           "name": "実績状態_加護レベル2を達成",
@@ -466,14 +484,16 @@
           "target": 6,
           "reward": 100
         }
-      ]
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
     },
     "b8892bfd": {
       "name": "実績_加護レベル最大達成数",
       "label": "Blessings raised to maximum",
       "category": "Growth",
-      "editable": false,
-      "read_only_reason": "May depend on underlying progress; counter-only behavior is not isolated.",
+      "editable": true,
+      "read_only_reason": "",
       "milestones": [
         {
           "name": "実績状態_加護レベル最大を達成",
@@ -493,7 +513,9 @@
           "target": 6,
           "reward": 200
         }
-      ]
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
     },
     "2adbdfbf": {
       "name": "実績_訓練回数",
@@ -1249,8 +1271,8 @@
       "name": "実績_巨大敵撃破数",
       "label": "Giant foes defeated (translation)",
       "category": "Battle",
-      "editable": false,
-      "read_only_reason": "Enemy category and isolated counter behavior need confirmation.",
+      "editable": true,
+      "read_only_reason": "",
       "milestones": [
         {
           "name": "実績状態_巨大敵を撃破",
@@ -1306,7 +1328,9 @@
           "target": 200,
           "reward": 10
         }
-      ]
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
     },
     "9bd7c8ca": {
       "name": "実績_野生敵撃破数",
@@ -1375,8 +1399,8 @@
       "name": "実績_家畜敵撃破数",
       "label": "Livestock defeated in battle",
       "category": "Battle",
-      "editable": false,
-      "read_only_reason": "The English enemy category is confirmed; isolated counter editing still needs testing.",
+      "editable": true,
+      "read_only_reason": "",
       "milestones": [
         {
           "name": "実績状態_家畜敵を撃破",
@@ -1432,14 +1456,16 @@
           "target": 200,
           "reward": 10
         }
-      ]
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
     },
     "e203feff": {
       "name": "実績_特別敵撃破数",
       "label": "Golden or silver mummies defeated",
       "category": "Battle",
-      "editable": false,
-      "read_only_reason": "The English enemy category is confirmed; isolated counter editing still needs testing.",
+      "editable": true,
+      "read_only_reason": "",
       "milestones": [
         {
           "name": "実績状態_特別敵を撃破",
@@ -1495,7 +1521,9 @@
           "target": 200,
           "reward": 10
         }
-      ]
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
     },
     "6614ae03": {
       "name": "実績_回避回数",

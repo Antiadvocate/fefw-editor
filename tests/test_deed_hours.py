@@ -1,4 +1,4 @@
-"""Hours experiment is scoped, reversible, and never marks rewards claimed."""
+"""Hours editing stays bounded and never marks rewards claimed."""
 import unittest
 from unittest.mock import patch
 
@@ -14,16 +14,13 @@ TWENTY = 0x71725a0a
 
 
 class DeedHoursTest(unittest.TestCase):
-    def test_only_hours_is_experimental_and_other_restricted_counters_stay_readonly(self):
+    def test_hours_acceptance_is_distinct_from_newly_inferred_counters(self):
         cat = deeds.catalog(); values = {h: v for h, v, _ in rows()}
         self.assertEqual(TIME, 0xeb92a0f6)
-        self.assertEqual(deeds.editing_label(TIME, values), 'Experimental')
-        self.assertEqual(sum(r['editable'] for r in cat.values()), 33)
-        blocked = [h for h, r in cat.items() if not r['editable']]
-        self.assertEqual(len(blocked), 14)
-        f = fixture([rows()])
-        for h in blocked:
-            with self.assertRaises(deeds.DeedError): deeds.edited(f, h, 1)
+        self.assertEqual(deeds.editing_label(TIME, values), 'Editable')
+        self.assertFalse(cat[TIME].get('inferred'))
+        self.assertIn('20-hour completion', cat[TIME]['editing_note'])
+        self.assertTrue(all(r['editable'] for r in cat.values()))
 
     def test_hours_changes_preserve_all_other_bytes_claims_and_unrelated_maps(self):
         f = fixture([[(0x12345678, 410, True)], rows() + [(TEN, 4, False)]])
@@ -39,7 +36,7 @@ class DeedHoursTest(unittest.TestCase):
             self.assertEqual(deeds.edited(g, TIME, target), g.payload)
         self.assertEqual(bytes(f.payload), before)
 
-    def test_experimental_note_does_not_bypass_unknown_state_or_range_guards(self):
+    def test_accepted_hours_does_not_bypass_unknown_state_or_range_guards(self):
         for data in (rows() + [(TEN, 1, False)],
                      [(h, -1, True) if h == TIME else (h, v, w) for h, v, w in rows()]):
             f = fixture([data]); original = bytes(f.payload)

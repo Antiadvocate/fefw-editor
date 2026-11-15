@@ -1,6 +1,7 @@
 # Notable Deeds: acceptance guide
 
-The current header must say **Notable Deeds Test 2**. `BUILD.txt` identifies the source
+The historical test package header says **Notable Deeds Test 2**. Current main
+uses only the product/version header. `BUILD.txt` identifies the source
 commit and CI run. Extract to a fresh folder and launch its `editor.py` using
 your already-working environment; there are no new dependencies.
 

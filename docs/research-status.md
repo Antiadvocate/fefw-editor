@@ -2,14 +2,14 @@
 
 This records a staged contribution based on a Leda Part I Chapter 9 restoration.
 
-**Hours Played (DEED-R14) accepted for the 20-hour test**, before the other
-remaining Deeds counters. The user selected a controlled counter-only test, followed
-by consideration of other game-wide counters using its result as a working
-assumption. The [test guide](testing-deed-hours.md) and
-[acceptance report](test-results-deed-hours-2026-11-15.md) record HOURS-01–03
-passed: both game saves retain 20, the reward moves from ready (2) to claimed
-(4), and Karma rises exactly 410 → 430. The supplied build still labels the
-33rd counter Experimental; later real-hour updates remain untested.
+**All Deed counters enabled for main at the user's request.** The 14 formerly
+restricted counters are labelled Inferred. Hours Played passed its 20-hour
+completion, claim and reload checks; its [acceptance report](test-results-deed-hours-2026-11-15.md)
+records the limits. See the [release scope](deeds-inferred-release.md).
+
+Main merges now remove temporary header text and refresh English Flags names,
+preserving Japanese originals in Reads As and Flags as the rightmost tab.
+[AGENTS.md](../AGENTS.md) records these standing requirements.
 
 **Tutorials and its English flag labels** are implemented and player-tested.
 **Blessings EXP for all seven gods** is implemented and the BLESS-01–11
@@ -239,16 +239,14 @@ that constrain the B05/B06 tests. The known feast unlock flag was already 1
 in B0 and all four B05 captures. Personal save-restoration repair work is
 tracked separately; these observations are not registered as editor defects.
 
-## Deeds: second pass requested
+## Deeds: inferred rollout enabled
 
-The follow-up covers the **15 formerly read-only counters**, with Hours Played
-now passed at the user's request. Only Hours is newly enabled; the remaining
-14 await an explicitly scoped follow-up informed by that result.
-The [DEED-R01–15 register](deeds-follow-up.md) specifies counter-specific questions
-and the evidence gate for enabling each field. The accepted Deeds behavior
-and unclaim warning remain in place. The three enemy counters are recommended
-next, followed by growth/support totals, with paralogues last. Extrapolated
-behavior must be labelled inferred; the rest are queued work, not acceptance.
+All 47 counters are editable. [DEED-R01–15](deeds-follow-up.md) tracks Hours
+acceptance and the remaining 14 inferred fields. Individual game outcomes are
+still useful for refining those labels, but are no longer prerequisites to
+exposing the controls. The claimed-reward warning and unknown-state guards
+apply throughout. Editing a Deed does not edit its underlying story/support,
+skill or blessing records.
 
 ## Story progress
 
@@ -286,3 +284,34 @@ availability, physical-entry conditions and fast-travel registration. The
 previous shop and Gate of the Gods Kalla's Temple repairs motivate these
 controls; those baseline repairs remain resolved, not new editor defects.
 Preserve unrelated facilities, including the intentionally locked Stables.
+
+## Feature backlog: create new unit entry
+
+Requested on 2026-11-15 for prioritization. Facility locking/unlocking remains
+the next queued feature; unit creation is an additional feature, not part of
+the current Deeds release.
+
+A new unit entry needs a unique `unit_number`. The earlier personal-save
+restoration duplicated unit identities: selecting Catania selected Buccar,
+and selecting Olympia selected Sirocco; cancelling a move could warp the
+selected unit to the other unit's tile. The corrected baseline passed its
+selection and save/load checks. This was a restoration issue, not evidence
+that the editor already supports safe unit creation.
+
+Implementation requirements:
+
+- Check the full relevant unit table for occupied `unit_number` values,
+  including entries not currently visible or recruited. Preserve existing
+  identities and refuse ambiguous, invalid or exhausted allocation states.
+- Allocate a new identity and audit dependent references when constructing
+  the entry. Do not copy another unit's identity or rely on roster display
+  order, character name or character hash as a substitute for `unit_number`.
+- Validate the complete result before writing; preserve every existing unit
+  and unrelated save record. Support Undo/Redo and normal backup behavior.
+
+Required testing includes duplicate and boundary cases, repeated additions,
+save/reopen and game save/load. In game, deploy original and newly added units
+together and check selection, movement, cancellation and tile occupancy for
+each, explicitly covering the earlier Catania/Buccar and Olympia/Sirocco
+failure pattern. A parseable save or correct roster list alone is insufficient
+acceptance. Use synthetic fixtures publicly and keep personal saves private.
