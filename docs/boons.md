@@ -23,7 +23,7 @@ to be exactly 1 and its own disable marker to be absent or 1:
 | Control | Required ownership/purchase record | Disable marker | Game acceptance |
 |---|---|---|---|
 | Increased Exp 10% | `3b6429de = 1` | `6447f467` | Editor control accepted |
-| Weapons Discount 10% | `5bfcaa34 = 1` | `ddb8d06b` | In-game toggle/price effect confirmed; editor control pending |
+| Weapons Discount 10% | `5bfcaa34 = 1` | `ddb8d06b` | Editor control accepted; Off/On persistence verified in returned saves |
 
 * **Off:** add only the selected disable marker with compact value 1.
 * **On:** remove only that marker; never replace it with zero.
@@ -42,10 +42,12 @@ setup**: editor-generated Off/On states persist and the one-kill comparison
 records +16 EXP Off / +17 On. This is not a universal rounding rule.
 Weapons Discount has a separate captured Off/On marker and screenshots showing
 300 → 270, 500 → 450, 1,500 → 1,350 and 2,000 → 1,800 with the in-game toggle.
-Test 2 still needs [WEDIT acceptance](testing-weapon-boon.md) for editor-produced
-states, save/reload and prices. No repeat of the accepted EXP battle test is
-requested. [Local validation](test-results-weapon-boon-2026-11-15.md) includes
-exact preservation and matching the controlled game captures.
+Test 2 is now accepted: all [WEDIT checks](testing-weapon-boon.md) passed by
+player report, and four returned saves verify editor-produced Off/On states
+and persistence. The player reports prices matching the earlier screenshots;
+no new price screenshots were supplied. The [acceptance report](test-results-weapon-boon-2026-11-15.md)
+separates reported gameplay results from verified save contents, including
+exact reproduction of both edited payloads and preservation checks.
 
 ## What was known when Research 1 shipped
 
@@ -137,8 +139,8 @@ listed prices in both On states: 300 → 270, 500 → 450, 1,500 → 1,350 and
 2,000 → 1,800. One final On save preserves the purchase marker and Karma 410
 with no disable marker; the two intermediate states have screenshots only.
 See the [price follow-up](test-results-boon-editing-2026-11-15.md#shop-price-follow-up).
-Test 2 implements the isolated Weapons Discount toggle; editor acceptance is
-pending. Its exact symbolic key, later tiers and fractional-price rounding
+Test 2's isolated Weapons Discount toggle passed WEDIT-01–07 and is accepted
+on the reported setup. Its exact symbolic key, later tiers and fractional-price rounding
 remain unknown. Do not generalise either toggle to other Boons.
 
 The requested return to the 15 read-only Deeds counters is tracked in

@@ -1,7 +1,13 @@
 # Boons Test 2: existing Weapons Discount 10% on/off
 
-This round tests the new editor control. The earlier in-game Off/On mapping
-and 10% listed-price comparison are already complete. EXP editing is accepted;
+**Accepted on 2026-11-15: WEDIT-01–07 all passed by player report.** Four
+returned saves verify Off/On editing and persistence. Prices matched the
+earlier screenshots by report; no new screenshots were taken. Backups reached
+`.bak4`. See the [results and evidence limits](test-results-weapon-boon-2026-11-15.md).
+No additional screenshots or repeat test round is required for this acceptance.
+
+The procedure below is retained for reproduction. The earlier in-game Off/On
+mapping and 10% listed-price comparison are complete. EXP editing is accepted;
 do not repeat its battle test or the completed personal-save repairs.
 
 ## Setup
@@ -34,10 +40,12 @@ do not purchase the displayed next tier in game.
 | **WEDIT-06 — Numbered backups** | Inspect backups created by WEDIT-02/03. In a fresh test folder the first editor save creates Auto.bak; the next changed pre-save disk state creates Auto.bak1. | Original .bak is retained; later backups get increasing numbers. Existing backups are not overwritten or renamed. A state identical to the newest backup may be skipped. With existing numbered backups, expect the next highest number instead. |
 | **WEDIT-07 — Brief regression check** | Reopen the final saved slot in the editor and check Boons, the nine-unit roster, currency, Deeds and travel menus. | No unexpected state changes. No repeat of the full B0 battle/gate suites is requested. |
 
-The minimum return is the seven results, **four actual slot files** named
-above, and Off/On price screenshots. These distinguish the editor's output
-from what the game subsequently saved. If a check cannot be completed, report
-BLOCKED and why; do not infer a pass from checksums alone.
+The original requested return was the seven results, **four actual slot files**
+named above, and Off/On price screenshots. The accepted return supplies all
+four files and reported passes, using the earlier price screenshots as the
+visual reference. Its final On capture is named **W03-on-game** (without the E).
+For future reproduction, distinguish the editor's output from the game's save
+and report any blocked check explicitly; do not infer gameplay from checksums.
 
 ```text
 WEDIT-01:

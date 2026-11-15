@@ -134,8 +134,6 @@ class BoonPageMixin:
             else:
                 state = state_label(observation)
                 note = f"Existing {label}: {state}. Switching preserves ownership and Karma Shards."
-                if group['name'] == '武器割引':
-                    note += " Test 2: editor-generated states await game acceptance."
                 self.boon_on.configure(state="normal" if state == "Off" else "disabled")
                 self.boon_off.configure(state="normal" if state == "On" else "disabled")
         self.boon_detail.configure(text=(
