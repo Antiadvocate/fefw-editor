@@ -1,11 +1,11 @@
 # Fortune's Weave Save Editor
 
-**Story progression investigation:** Test 1's UI passed, but Tests 1 and 2 did
-not establish working chapter transitions. The general chapter writer is paused;
-Player shows a warning and read-only research list. Chapters 4–12 remain the scope,
-with four Chapter 4/9 resume-state diagnostics next. See
-[Test 2 returns](docs/test-results-story-test2-return.md) and
-[Test 3](docs/testing-story-resume-test3.md).
+**Story progression — Leda Part 1:** Player offers chapter starts 4–12 after a
+five-point caution warning. Chapters 4 and 9 passed opening and next-story-beat
+tests with the current roster/facility state; other targets remain Inferred.
+Chapters 1–3, other routes and battle saves are unavailable. See
+[scope](docs/story-progression.md), [Test 3 passes](docs/test-results-story-test3.md)
+and [Test 4 remaining chapters](docs/testing-story-start-test4.md).
 
 **Facilities branch:** the UI and FAC-01–06 game tests passed on Leda Part 1
 Chapter 9. Ten services and six gates are Game-tested; Yu Phas additionally
@@ -37,7 +37,7 @@ library, or a ready-made Windows `.exe`.
 | | Class | Pick any class the game knows. It's added to the unit's own class list, the way the game does it |
 | **Convoy** | | Everything in storage, materials included: add a stack, stock every material at once, swap the item in any row, change its quantity, remove a row, and repair a list damaged by older versions |
 | **Gold** | | Set gold |
-| **Player** | | Leda Part 1 story research (writer paused after failed progression tests); gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
+| **Player** | | Experimental Leda Part 1 chapter starts 4–12, with warning and route/state guards; 4/9 game-tested, others inferred. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
 | **Classes** | | A unit's whole class list (set the current class, add, swap or remove one, set its exp) and its weapon masteries with their rank (E … S+) and exp — select several masteries (Ctrl+A, Shift+click or Shift+drag) and Set rank, Set exp or Remove changes all of them at once |
 | **Supports** | | Every character's support partners with the **points** this save holds for the pair, the highest rank the game defines, and which conversations this save has recorded. Set the points (0 … 3200) and the game works the level out from them. **Record conversation as seen** writes that conversation's flag |
 | **Mounts** | | The battalion and mount each unit carries, chosen from the save's pool |

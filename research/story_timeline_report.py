@@ -30,8 +30,12 @@ def report(gamedata):
         if not match:continue
         chapter=int(match[1]);stored=values['章']
         if stored!=(0 if chapter==1 else chapter):raise ValueError('Unexpected title/chapter pairing')
+        previous_at=at-schema['stride']
+        previous={n:v for n,t,o,v in d.values(previous_at,schema)}
         entries.append({'chapter':chapter,'title_id':args[0],'offset':hex(at),
-                        'stored_chapter':stored,'month':values['月'],'day':values['日'],'time':values['時刻']})
+                        'stored_chapter':stored,'month':values['月'],'day':values['日'],'time':values['時刻'],
+                        'preceding_row':{'offset':hex(previous_at),'kind':previous['種類'],
+                                         'args':previous['引数'],'meaning':'Unrecovered; not proof of checkpoint creation'}})
     entries.sort(key=lambda r:r['chapter'])
     if [r['chapter'] for r in entries]!=list(range(1,13)):raise ValueError('Expected exactly chapters 1–12')
     return {'source':'Timeline_Part1_Led.bin','sha256':hashlib.sha256(d.b).hexdigest(),

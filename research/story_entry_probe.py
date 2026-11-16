@@ -15,75 +15,12 @@ import fefw_save as container
 import story
 
 BASELINE_SHA256='8675e054e082bd2b80cae318b9889326531d00f9fe3f8b366add5edf80de5663'
-RESTART_KEYS=frozenset((0x0db29669,0x1e2fc0a5,0xa23565e2,0x9fd3e608,0xa23565e3,0x1475b227,0xa23565e0,0x8c8807e8))
-HEADER_KEY=core.fnv1_32(b'Header')
-DATA_KEY=core.fnv1_32(b'Data')
-# Title-row date/time from the private Timeline_Part1_Led report. Year comes
-# from the source, verified against the same save's GameSchedule clock.
+from story_start import (RESTART_KEYS, HEADER_KEY, DATA_KEY, one_block, members,
+                         restart_leaves, clear_restart, normalized_blocks)
+# Historical Test 2 targets and profiles, retained for reproduction.
 ENTRY_DATES={4:(3,1,8),9:(7,10,18)}
 CASES=(('ST2-09A-Entry-mode',9,'A'),('ST2-09B-Empty-restart',9,'B'),
        ('ST2-09C-Entry-date',9,'C'),('ST2-04C-Entry-date',4,'C'))
-
-
-def one_block(f,name):
-    hits=[b for b in f.blocks if b.name==name]
-    if len(hits)!=1:raise core.SaveError('Expected one '+name)
-    return hits[0]
-
-
-def members(f,tree,at,keys):
-    index=tree.node_at(at)
-    if index<0 or not tree.nodes[index].struct:raise core.SaveError('Expected a restart struct')
-    node=tree.nodes[index];table=f.ptr(at);count=f.u32(at)>>24
-    if count!=len(keys) or table+8*count!=node.end:raise core.SaveError('Unknown restart member layout')
-    rows=[(f.u32(table+8*i),f.ptr(table+8*i+4)) for i in range(count)]
-    if set(k for k,v in rows)!=keys or len({v for k,v in rows})!=count:
-        raise core.SaveError('Missing or duplicate restart members')
-    if set(v for k,v in rows)!={n.start for n in tree.nodes if n.parent==index}:
-        raise core.SaveError('Unexpected restart children')
-    return dict(rows)
-
-
-def restart_leaves(f):
-    tree=core.SaveTree(f.payload);block=one_block(f,'GameRestartData')
-    slots=members(f,tree,block.start,RESTART_KEYS)
-    if f.payload[block.start+4:block.start+8]!=b'\x03\0\0\0':
-        raise core.SaveError('Unknown restart version/prefix')
-    leaves=[]
-    for at in slots.values():
-        fields=members(f,tree,at,{HEADER_KEY,DATA_KEY})
-        for key,start in fields.items():
-            node=tree.nodes[tree.node_at(start)]
-            if node.struct or any(n.parent==tree.node_at(start) for n in tree.nodes):
-                raise core.SaveError('Unexpected restart blob structure')
-            body=bytes(f.payload[start+4:node.end])
-            if len(body)<4 or int.from_bytes(body[:4],'little')!=len(body)-4:
-                raise core.SaveError('Invalid restart blob length')
-            data=body[4:]
-            if key==HEADER_KEY and len(data) not in (0,256):
-                raise core.SaveError('Unknown restart Header size')
-            if data and any(data):
-                if len(data)<32 or int.from_bytes(data[:4],'little')!=core.MAGIC:
-                    raise core.SaveError('Unknown restart blob encoding')
-                size,checksum,kind=struct.unpack_from('<III',data,4)
-                if kind!=1 or size+32!=len(data) or core.fnv1_32(data[32:])!=checksum:
-                    raise core.SaveError('Invalid embedded restart container')
-            leaves.append(start)
-    return sorted(leaves)
-
-
-def clear_restart(f):
-    starts=restart_leaves(f)  # Validate every record before changing any.
-    result=core.SaveFile(f.payload)
-    for start in reversed(starts):
-        result=core.SaveFile(core.replace_content(result,start,bytes(4)))
-    assert len(restart_leaves(result))==16
-    return result.payload
-
-
-def normalized_blocks(f):
-    tree=core.SaveTree(f.payload)
-    return {b.name:tree.copy_object(tree.node_at(b.start),0) for b in f.blocks}
 
 
 def edited_profile(f,chapter,profile):

@@ -1,5 +1,9 @@
 # Story Test 2 — returned results, 2026-11-16
 
+Historical failure report. The subsequent [Test 3](test-results-story-test3.md)
+passed Chapters 4/9; [current scope](story-progression.md) supersedes the paused
+editor status described below.
+
 **None of the four candidates established working chapter progression.** The
 general editor action remains paused. UI01–06 from Test 1 remain accepted;
 they are UI/guard results, not chapter-transition acceptance.

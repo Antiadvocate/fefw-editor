@@ -1,5 +1,9 @@
 # Story resume — Test 3
 
+**Archived test plan:** all four cases passed their reported opening/next-beat
+checks. [Results](test-results-story-test3.md) select D, retaining HubSeq. Use
+[Test 4](testing-story-start-test4.md) for the remaining chapters and current editor.
+
 These are diagnostic copies, not accepted fixes or a new baseline. Test 2
 failed to start chapters correctly. Test 3 checks a separate resume identifier
 that the earlier tests did not change, followed by an optional removal of the

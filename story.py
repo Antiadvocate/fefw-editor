@@ -102,7 +102,7 @@ def edited(f, chapter):
 
 
 def sync_outer_summary(payload, out):
-    """Derive the load-screen mirror at serialization, so Undo also restores it.
+    """Derive chapter, sequence, entry state and clock mirrors when serializing.
 
 Only known, consistent Leda P1 layouts are eligible. Other routes/formats and
 ambiguous files keep their original summary. No raw container state is changed
@@ -115,3 +115,4 @@ at edit time; the existing payload-only Undo stack remains authoritative.
         return
     out[42] = info.chapter
     struct.pack_into('<Q', out, 73, info.sequence)
+    out[48:57] = payload[info.header+20:info.header+29]

@@ -120,11 +120,14 @@ class StoryTest(unittest.TestCase):
 
 class StoryHarness(PageHarness):
     def __init__(self,route=4):
-        super().__init__();f=fixture(route);self.sv.payload=f.payload;self.sv.raw=bytes(raw_for(f))
+        from test_story_resume_probe import fixture as start_fixture
+        super().__init__();f=start_fixture();i=story.read(f)
+        f.payload[i.header+12]=f.payload[i.user+3]=route
+        self.sv.payload=f.payload;self.sv.raw=bytes(raw_for(f))
         self.confirm=True;self.choice=9;self.confirmed=0;self.chosen=0
     def legacy_edit(self, chapter):
-        # Exercise generic history with a previously staged Test 1 edit, not
-        # the now-paused editor action.
+        # Retain the original sequence-only history regression independently
+        # of the full chapter-entry action covered in test_story_start.
         p=story.edited(core.SaveFile(self.sv.payload),chapter)
         if bytes(p)==bytes(self.sv.payload):return
         self.push_undo();self.sv.payload=p;self.sv._core_cache=None
@@ -184,13 +187,13 @@ class StoryPageTest(unittest.TestCase):
         a.undo();self.assertEqual(bytes(other.payload),before)
         a.undo();self.assertEqual(bytes(other.payload),before)
 
-    def test_failed_general_writer_is_paused_and_obelisk_warning_precedes_backup(self):
+    def test_early_targets_refused_and_obelisk_warning_precedes_backup(self):
         import story_page
         a=StoryHarness();before=bytes(a.sv.payload)
-        a.apply_story_chapter(9);a.apply_story_chapter(1)
+        a.apply_story_chapter(1);a.apply_story_chapter(3)
         self.assertEqual(bytes(a.sv.payload),before)
         self.assertFalse(hasattr(a,'_undo_stack'))
-        self.assertIn('paused',a.messages[-1][0])
+        self.assertIn('deferred',a.messages[-1][0])
         self.assertEqual(story_page.WARNING_POINTS[-2],
             'Skipping chapters will lock them out of being present in the Obelisk Chamber as this relies on chapter save files.')
         self.assertIn('Back up',story_page.WARNING_POINTS[-1])

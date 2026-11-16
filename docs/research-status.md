@@ -63,7 +63,7 @@ The game data version was not separately reported.
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
 | 5 | Boons | All 31 groups / 81 tiers editable; broader mappings labelled Inferred | [BEDIT results](test-results-boon-editing-2026-11-15.md): +16 EXP Off / +17 On. [WEDIT-01–07 passed](test-results-weapon-boon-2026-11-15.md): discount Off/On persists in returned saves; player reports earlier 10% prices reproduced and backups through .bak4 |
-| 6 | Story | Writer paused; warning-gated research list; other routes read-only | UI01–06 passed; Tests 1/2 did not establish working transitions. [Test 3](testing-story-resume-test3.md) diagnoses the separate resume identifier and HubSeq |
+| 6 | Story | Warning-gated Leda P1 starts 4–12; other routes and battle states read-only | [Test 3](test-results-story-test3.md): 4/9 opening and next beat passed. Remaining seven targets inferred; [Test 4](testing-story-start-test4.md) pending |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
 test report before being called game-tested. Other routes are not covered by
@@ -261,17 +261,24 @@ The user requested a warning-gated Leda Part 1 selector and one test save per
 chapter. [Story progression Test 1](story-progression.md) staged entries for
 Chapters 1–12, refusing other routes/parts and inconsistent save fields. It
 preserved all prior progression records, existing units and embedded snapshots.
-UI01–06 passed, but all twelve progression cases failed. The general writer
-is paused; the [return report](test-results-story-test1-return.md) identifies
+UI01–06 passed, but all twelve progression cases failed. The writer was paused;
+the [return report](test-results-story-test1-return.md) identifies
 preserved resume state, schedule and an old Chapter 9 restart cache. Four
-[Test 2 diagnostics](testing-story-entry-test2.md) isolate entry mode, restart
+[Test 2 diagnostics](testing-story-entry-test2.md) isolating entry mode, restart
 and date initialization at Chapters 4 and 9 did not establish working transitions.
 [Test 2 returns](test-results-story-test2-return.md) narrow restart availability
-but do not prove its exclusive data source. [Test 3](testing-story-resume-test3.md)
-now isolates a separate resume identifier and optional HubSeq removal while
-preserving current flags, roster and other progression records.
-The earlier Chapter 9 restoration remains the only game-tested skip; container
-validity and chapter-title existence do not promote the other mappings.
+but do not prove its exclusive data source. [Test 3](test-results-story-test3.md)
+passed for Chapters 4 and 9 after adding the separate resume identifier. HubSeq
+removal brought no benefit, so the editor retains it and uses the full D setup.
+The UI now offers 4–12, with only 4/9 Game-tested; the other seven entries stay
+Inferred pending [Test 4](testing-story-start-test4.md). Chapters 1–3 remain deferred.
+
+The user observed no new external Chapter_Led_ files except 1_1 in the earlier
+Chapter 1 test. Creation at the previous chapter boundary is a hypothesis, not
+confirmed behavior. Type 84 precedes Chapters 2–12 in the timeline, but its
+function is unrecovered. Internal target restart snapshots do rebuild after
+successful entry. Keep the Obelisk warning; investigate a natural boundary
+before adding external checkpoint creation.
 
 ## Other candidates and known limits
 
