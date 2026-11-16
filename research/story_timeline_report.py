@@ -1,0 +1,43 @@
+"""Read a private Timeline_Part1_Led.bin to verify the 12 chapter title rows.
+
+Chapter existence is not proof of the inferred save sequence mapping. This
+report is read-only and the game dump is neither bundled nor needed at runtime.
+"""
+from pathlib import Path
+import argparse
+import hashlib
+import json
+import re
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
+from research import facility_access_report as data
+
+
+def report(gamedata):
+    data.BASE=Path(gamedata);d=data.Data('Timeline_Part1_Led.bin')
+    schemas=[s for s in d.schemas if any(n=='ハッシュキー' for n,t,z,o in s['fields'])]
+    if len(schemas)!=1:raise ValueError('Expected one timeline schema')
+    schema=schemas[0];entries=[]
+    # Group references occur in both the array header and its row headers.
+    # Require the title action and one exact title ID to exclude the container.
+    for ref in d.refs_to_string('レダ篇'):
+        at=ref-8
+        if at<schema['end'] or at+schema['stride']>len(d.b):continue
+        values={n:v for n,t,o,v in d.values(at,schema)}
+        args=values['引数']
+        if values['種類']!=10 or not isinstance(args,list) or len(args)!=1:continue
+        match=re.fullmatch(r'MCID_1_LED_title(\d\d)',args[0])
+        if not match:continue
+        chapter=int(match[1]);stored=values['章']
+        if stored!=(0 if chapter==1 else chapter):raise ValueError('Unexpected title/chapter pairing')
+        entries.append({'chapter':chapter,'title_id':args[0],'offset':hex(at),
+                        'stored_chapter':stored,'month':values['月'],'day':values['日'],'time':values['時刻']})
+    entries.sort(key=lambda r:r['chapter'])
+    if [r['chapter'] for r in entries]!=list(range(1,13)):raise ValueError('Expected exactly chapters 1–12')
+    return {'source':'Timeline_Part1_Led.bin','sha256':hashlib.sha256(d.b).hexdigest(),
+            'scope':'Title-row existence only; save sequence hashes remain inferred','chapters':entries}
+
+
+if __name__=='__main__':
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('gamedata',type=Path)
+    print(json.dumps(report(p.parse_args().gamedata),indent=2))

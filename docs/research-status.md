@@ -63,7 +63,7 @@ The game data version was not separately reported.
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
 | 5 | Boons | All 31 groups / 81 tiers editable; broader mappings labelled Inferred | [BEDIT results](test-results-boon-editing-2026-11-15.md): +16 EXP Off / +17 On. [WEDIT-01–07 passed](test-results-weapon-boon-2026-11-15.md): discount Off/On persists in returned saves; player reports earlier 10% prices reproduced and backups through .bak4 |
-| 6 | Story | Read-only summary first; narrowly validated Leda transitions only | Load scene, advance to battle, finish/save/reload with no missing facilities |
+| 6 | Story | Experimental warning-gated Leda P1 chapter entry; no prior-progression grants; other routes read-only | [STORY-UI01–06 / STORY-01–12](testing-story-progression.md): actual entry and next story beat; pending |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
 test report before being called game-tested. Other routes are not covered by
@@ -257,9 +257,13 @@ timeline, schedule, quests and facility availability can all need to agree.
 Changing only a chapter number can produce the right label with the wrong
 scene or roster.
 
-Start with a read-only summary and evidence-backed Leda checkpoints. Keep other
-routes read-only until paired saves and gameplay tests establish transitions.
-Do not present an arbitrary skip as safe merely because the container parses.
+The user requested a warning-gated Leda Part 1 selector and one test save per
+chapter. [Story progression Test 1](story-progression.md) now stages entries for
+Chapters 1–12, refusing other routes/parts and inconsistent save fields. It
+preserves all prior progression records, existing units and embedded snapshots.
+The 12 independent tests await actual chapter-start and next-story-beat results.
+The earlier Chapter 9 restoration remains the only game-tested skip; container
+validity and chapter-title existence do not promote the other mappings.
 
 ## Other candidates and known limits
 

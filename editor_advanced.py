@@ -28,6 +28,7 @@ import deeds
 from deed_page import DeedPageMixin
 from boon_page import BoonPageMixin
 from facility_page import FacilityPageMixin
+from story_page import StoryPageMixin
 import audiences
 import tutorials
 import flag_labels
@@ -136,7 +137,7 @@ def rank_of(exp: int) -> int:
     return r
 
 
-class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTravelPageMixin, DeedPageMixin, BoonPageMixin, FacilityPageMixin):
+class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTravelPageMixin, DeedPageMixin, BoonPageMixin, FacilityPageMixin, StoryPageMixin):
     # ------------------------------------------------------------- helpers
     def core_of(self, sv=None):
         """fefw_core.SaveFile for a slot (cached on the payload object)."""
@@ -273,7 +274,7 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
     # ============================================================ PLAYER
     def _build_player(self):
         page = self.player_page
-        card = ttk.Frame(page, style="Card.TFrame", padding=(16, 14))
+        card = ttk.Frame(page, style="Card.TFrame", padding=(16, 10))
         card.pack(fill="x")
         ttk.Label(card, text="Player", style="CardH3.TLabel").pack(anchor="w")
         ttk.Label(card, text="Army-wide values, stored in GameUserData at the start of the save.",
@@ -298,7 +299,7 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
                                      justify="left")
         self.player_note.grid(row=3, column=0, columnspan=3, sticky="w", pady=(10, 0))
 
-        card2 = ttk.Frame(page, style="Card.TFrame", padding=(16, 14))
+        card2 = ttk.Frame(page, style="Card.TFrame", padding=(16, 10))
         card2.pack(fill="x", pady=(10, 0))
         ttk.Label(card2, text="Run settings", style="CardH3.TLabel").pack(anchor="w")
         ttk.Label(card2, text="Written into every copy the save keeps, and into every slot in this "
@@ -320,8 +321,10 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
         cb2.bind("<<ComboboxSelected>>", lambda e: self.apply_settings())
         self.play_lbl = ttk.Label(card2, text="", style="CardFaint.TLabel")
         self.play_lbl.pack(anchor="w", pady=(10, 0))
+        self._build_story(page)
 
     def refresh_player(self):
+        self.refresh_story()
         if not hasattr(self, "player_vars"):
             return
         f = self.core_of()
@@ -1368,9 +1371,10 @@ def push_undo(self):
     if not self.sv:
         return
     stack = getattr(self, "_undo_stack", None)
-    if stack is None:
+    if stack is None or getattr(self, "_history_slot", None) is not self.sv:
         stack = self._undo_stack = []
         self._redo_stack = []
+        self._history_slot = self.sv
     stack.append(bytes(self.sv.payload))
     del stack[:-60]
     self._redo_stack.clear()
@@ -1378,7 +1382,7 @@ def push_undo(self):
 
 def undo(self):
     stack = getattr(self, "_undo_stack", None)
-    if not stack or not self.sv:
+    if not stack or not self.sv or getattr(self, "_history_slot", None) is not self.sv:
         self.flash("Nothing to undo.", "info")
         return
     self._redo_stack.append(bytes(self.sv.payload))
@@ -1392,7 +1396,7 @@ def undo(self):
 
 def redo(self):
     stack = getattr(self, "_redo_stack", None)
-    if not stack or not self.sv:
+    if not stack or not self.sv or getattr(self, "_history_slot", None) is not self.sv:
         self.flash("Nothing to redo.", "info")
         return
     self._undo_stack.append(bytes(self.sv.payload))

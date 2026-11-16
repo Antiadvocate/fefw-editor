@@ -259,6 +259,8 @@ class SaveFile:
         if st and out[36] == 15:              # the load-screen summary
             out[38] = st[2] & 0xFF          # mode first
             out[39] = st[1] & 0xFF          # then difficulty
+        import story
+        story.sync_outer_summary(payload, out)
         struct.pack_into("<I", out, 0x100, len(out) - 0x104)
         struct.pack_into("<I", out, 0x104, MAGIC)
         struct.pack_into("<I", out, 0x108, len(out) - self.zstd_offset)
