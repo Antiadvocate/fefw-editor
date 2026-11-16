@@ -8,9 +8,12 @@ as **Inferred** initial targets. The initial implementation was followed by
 [Test 1 results](test-results-story-cai-test1.md): Chapters 2/9 passed, Chapter 4
 opened but progression was blocked. The UI now shows that distinction;
 [Test 2](test-results-functions-cai-test2.md) restored Journal access but all
-four combinations still failed to advance Chapter 4. The next
-[save-only Chapter 3 test](testing-story-cai-test3.md) seeks a natural Chapter 4
-transition for comparison. The initial evidence below is retained for provenance.
+four combinations still failed to advance Chapter 4.
+[Test 3](test-results-story-cai-test3.md) passed Chapter 3 and reached Chapter 4
+naturally, but its objective remained blocked. The screenshot then identified
+a Sewers entrance requiring a missing Chapter 2 dialogue-read record; a
+[one-record test](testing-cai-sewers.md) is prepared. The initial evidence below
+is retained for provenance.
 
 ## Native save evidence
 
