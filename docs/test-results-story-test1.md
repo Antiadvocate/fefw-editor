@@ -1,7 +1,8 @@
 # Story progression Test 1 — preparation
 
 Prepared 2026-11-16 on `feature/leda-story-progression`, based on facility
-acceptance commit `b5845b4`. **Game acceptance is pending.** The accepted main
+acceptance commit `b5845b4`. **Superseded by returned results: UI passed; all twelve progression cases failed.**
+See [the return report](test-results-story-test1-return.md). The accepted main
 branch and personal baseline are unchanged.
 
 ## Evidence before this experiment
@@ -51,7 +52,8 @@ new flag names or flag writes. The product/version header stays clean.
 
 ## Pending player results
 
-STORY-UI01–06 and STORY-01–12 are pending. For each chapter, capture actual
+Historical preparation status: STORY-UI01–06 and STORY-01–12 were pending.
+They have now been returned; see the report linked above. For each chapter, capture actual
 entry and the next main story beat, followed by a game-resaved file where
 possible. Long-term testing is not claimed. No source save, screenshot, video
 or GameData file is committed to the public branch.

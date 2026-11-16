@@ -1,9 +1,10 @@
 # Fortune's Weave Save Editor
 
-**Story progression Test 1 branch:** Player → Story progression… opens a caution
-warning, then a Leda Part 1 chapter selector (1–12). Other routes are read-only.
-It does not grant prior unlocks or units. The new cases are **not yet game-tested**;
-see [scope](docs/story-progression.md) and [test guide](docs/testing-story-progression.md).
+**Story progression investigation:** Test 1's UI passed, but progression failed
+in all twelve chapter cases. The general chapter writer is paused; Player shows
+a warning and read-only research list. Chapters 4–12 are the next scope, starting
+with four Chapter 4/9 diagnostics. See [returned results](docs/test-results-story-test1-return.md)
+and [Test 2](docs/testing-story-entry-test2.md).
 
 **Facilities branch:** the UI and FAC-01–06 game tests passed on Leda Part 1
 Chapter 9. Ten services and six gates are Game-tested; Yu Phas additionally
@@ -35,7 +36,7 @@ library, or a ready-made Windows `.exe`.
 | | Class | Pick any class the game knows. It's added to the unit's own class list, the way the game does it |
 | **Convoy** | | Everything in storage, materials included: add a stack, stock every material at once, swap the item in any row, change its quantity, remove a row, and repair a list damaged by older versions |
 | **Gold** | | Set gold |
-| **Player** | | Experimental Leda Part 1 story entry (warning and route guard); gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
+| **Player** | | Leda Part 1 story research (writer paused after failed progression tests); gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
 | **Classes** | | A unit's whole class list (set the current class, add, swap or remove one, set its exp) and its weapon masteries with their rank (E … S+) and exp — select several masteries (Ctrl+A, Shift+click or Shift+drag) and Set rank, Set exp or Remove changes all of them at once |
 | **Supports** | | Every character's support partners with the **points** this save holds for the pair, the highest rank the game defines, and which conversations this save has recorded. Set the points (0 … 3200) and the game works the level out from them. **Record conversation as seen** writes that conversation's flag |
 | **Mounts** | | The battalion and mount each unit carries, chosen from the save's pool |

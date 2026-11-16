@@ -122,6 +122,13 @@ class StoryHarness(PageHarness):
     def __init__(self,route=4):
         super().__init__();f=fixture(route);self.sv.payload=f.payload;self.sv.raw=bytes(raw_for(f))
         self.confirm=True;self.choice=9;self.confirmed=0;self.chosen=0
+    def legacy_edit(self, chapter):
+        # Exercise generic history with a previously staged Test 1 edit, not
+        # the now-paused editor action.
+        p=story.edited(core.SaveFile(self.sv.payload),chapter)
+        if bytes(p)==bytes(self.sv.payload):return
+        self.push_undo();self.sv.payload=p;self.sv._core_cache=None
+        self._touch([self.sv]);self.refresh_after_core()
     def _confirm_story_warning(self):self.confirmed+=1;return self.confirm
     def _choose_story_chapter(self):self.chosen+=1;return self.choice
 
@@ -134,12 +141,12 @@ class StoryPageTest(unittest.TestCase):
         self.assertEqual(bytes(a.sv.payload),original);self.assertFalse(hasattr(a,'_undo_stack'))
 
     def test_applied_entry_undo_redo_and_noop(self):
-        a=StoryHarness();original=bytes(a.sv.payload);a.core_of();a.open_story_progression()
+        a=StoryHarness();original=bytes(a.sv.payload);a.core_of();a.legacy_edit(9)
         changed=bytes(a.sv.payload);self.assertNotEqual(original,changed)
         self.assertEqual(story.read(a.core_of()).chapter,9);self.assertEqual(a.dirty_slots,[a.sv])
         a.undo();self.assertEqual(bytes(a.sv.payload),original)
         a.redo();self.assertEqual(bytes(a.sv.payload),changed)
-        n=len(a._undo_stack);a.apply_story_chapter(9);self.assertEqual(len(a._undo_stack),n)
+        n=len(a._undo_stack);a.legacy_edit(9);self.assertEqual(len(a._undo_stack),n)
 
     def test_cai_and_mirroring_refused_even_when_calling_edit_directly(self):
         for a in (StoryHarness(1),StoryHarness()):
@@ -157,7 +164,7 @@ class StoryPageTest(unittest.TestCase):
 
     def test_undo_and_redo_never_cross_loaded_slots_or_reloaded_objects(self):
         a=StoryHarness();leda=a.sv;original=bytes(leda.payload)
-        a.apply_story_chapter(9);changed=bytes(leda.payload)
+        a.legacy_edit(9);changed=bytes(leda.payload)
         cai=StoryHarness(1).sv;cai_before=bytes(cai.payload)
         a.sv=cai;a.undo();a.redo()
         self.assertEqual(bytes(cai.payload),cai_before)
@@ -171,8 +178,19 @@ class StoryPageTest(unittest.TestCase):
         a.undo();a.redo();self.assertEqual(bytes(a.sv.payload),before)
 
     def test_new_edit_in_another_slot_starts_its_own_history(self):
-        a=StoryHarness();a.apply_story_chapter(9)
+        a=StoryHarness();a.legacy_edit(9)
         other=StoryHarness().sv;a.sv=other;before=bytes(other.payload)
-        a.apply_story_chapter(12);self.assertEqual(len(a._undo_stack),1)
+        a.legacy_edit(12);self.assertEqual(len(a._undo_stack),1)
         a.undo();self.assertEqual(bytes(other.payload),before)
         a.undo();self.assertEqual(bytes(other.payload),before)
+
+    def test_failed_general_writer_is_paused_and_obelisk_warning_precedes_backup(self):
+        import story_page
+        a=StoryHarness();before=bytes(a.sv.payload)
+        a.apply_story_chapter(9);a.apply_story_chapter(1)
+        self.assertEqual(bytes(a.sv.payload),before)
+        self.assertFalse(hasattr(a,'_undo_stack'))
+        self.assertIn('paused',a.messages[-1][0])
+        self.assertEqual(story_page.WARNING_POINTS[-2],
+            'Skipping chapters will lock them out of being present in the Obelisk Chamber as this relies on chapter save files.')
+        self.assertIn('Back up',story_page.WARNING_POINTS[-1])

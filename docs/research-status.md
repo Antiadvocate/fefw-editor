@@ -63,7 +63,7 @@ The game data version was not separately reported.
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
 | 5 | Boons | All 31 groups / 81 tiers editable; broader mappings labelled Inferred | [BEDIT results](test-results-boon-editing-2026-11-15.md): +16 EXP Off / +17 On. [WEDIT-01–07 passed](test-results-weapon-boon-2026-11-15.md): discount Off/On persists in returned saves; player reports earlier 10% prices reproduced and backups through .bak4 |
-| 6 | Story | Experimental warning-gated Leda P1 chapter entry; no prior-progression grants; other routes read-only | [STORY-UI01–06 / STORY-01–12](testing-story-progression.md): actual entry and next story beat; pending |
+| 6 | Story | Experimental warning-gated Leda P1 chapter entry; no prior-progression grants; other routes read-only | UI01–06 passed; all twelve progression tests failed. [Test 2](testing-story-entry-test2.md) diagnoses entry/restart/date state |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
 test report before being called game-tested. Other routes are not covered by
@@ -258,10 +258,14 @@ Changing only a chapter number can produce the right label with the wrong
 scene or roster.
 
 The user requested a warning-gated Leda Part 1 selector and one test save per
-chapter. [Story progression Test 1](story-progression.md) now stages entries for
+chapter. [Story progression Test 1](story-progression.md) staged entries for
 Chapters 1–12, refusing other routes/parts and inconsistent save fields. It
-preserves all prior progression records, existing units and embedded snapshots.
-The 12 independent tests await actual chapter-start and next-story-beat results.
+preserved all prior progression records, existing units and embedded snapshots.
+UI01–06 passed, but all twelve progression cases failed. The general writer
+is paused; the [return report](test-results-story-test1-return.md) identifies
+preserved resume state, schedule and an old Chapter 9 restart cache. Four
+[Test 2 diagnostics](testing-story-entry-test2.md) isolate entry mode, restart
+and date initialization at Chapters 4 and 9 before broader Chapters 4–12 work.
 The earlier Chapter 9 restoration remains the only game-tested skip; container
 validity and chapter-title existence do not promote the other mappings.
 

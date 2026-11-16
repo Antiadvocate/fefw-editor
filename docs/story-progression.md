@@ -1,18 +1,23 @@
 # Story progression — Leda Part 1 experiment
 
-Open **Player → Story progression…**. A warning appears before the chapter
-list. Cancel leaves the save unchanged. Continue shows Chapters 1–12; applying
-stages a chapter-entry edit in the selected slot. Ctrl+Z/Ctrl+Y undo/redo it;
-Ctrl+S saves with normal numbered backups. A fresh directory backup is still
-needed before experimenting, as stated in the warning. Undo/Redo history is
-bound to the loaded save object: switching to another slot or reloading a new
-copy cannot apply the old slot's history. Editing another slot starts its own
-history.
+**Current status: general chapter editing is paused.** UI01–06 passed, but
+all twelve Test 1 progression cases failed. See the
+[returned evidence](test-results-story-test1-return.md) and
+[Test 2 diagnostic comparison](testing-story-entry-test2.md).
 
-**Only Leda Part 1 saves are editable.** The editor reads the save's live route,
+Player → Story progression… still shows the caution warning and a read-only
+research list for Chapters 4–12. Apply is disabled and direct UI edit calls are
+refused. Chapters 1–3 are deferred pending location work. The requested Obelisk
+Chamber warning appears directly above the fresh-directory backup note.
+
+The technical description below records the original sequence-only experiment;
+it is retained for reproducibility, not a working general transition.
+
+**Only Leda Part 1 saves can enter the research dialog.** The editor reads the save's live route,
 part and chapter, not its filename or which units happen to be recruited.
 Cai, Dietrich, Theodora, Eshmel, other parts, unknown layouts and disagreeing
-route/sequence copies are refused. The check runs again when applying the edit.
+route/sequence copies are refused. Direct calls recheck this guard before refusing
+the paused edit.
 Other routes retain a read-only progression summary. Route mirroring must be off.
 
 ## What the experiment does
@@ -41,15 +46,16 @@ are not renamed. Main and the accepted personal baseline are unchanged.
 ## Warning and evidence
 
 The warning is titled **CAUTION - UNEXPECTED CONSEQUENCES POSSIBLE** and includes
-the four requested points: Leda Part 1 only; no prior unlocks/units; limited
-chapter-start/next-sequence testing; and an immediate fresh-directory backup.
+five points: Leda Part 1 only; no prior unlocks/units; limited
+chapter-start/next-sequence testing; the Obelisk Chamber limitation; and an
+immediate fresh-directory backup. The Obelisk point appears directly above backup.
 An additional sentence makes the current evidence explicit: the earlier
 Chapter 9 restoration alone has the reported in-game load/progression result.
-The new selector and its 12 cases await game testing. Long-term behavior is
+The new selector's twelve game cases failed progression; those results supersede the original preparation status. Long-term behavior is
 unverified even after a successful start/next-beat test.
 
-The chapter list labels other entries **Inferred entry; game test pending**.
-Chapter 9 identifies its earlier restoration separately from current testing.
+The chapter research list now reports Test 1 failures for all entries and
+keeps Chapter 9's earlier restoration evidence separate.
 Do not promote any new entry simply because its header has the right number
 or its container checksums are valid.
 
@@ -72,11 +78,11 @@ The original Chapter 1 and Chapter 2 checkpoints store sequence IDs
 `b7b6cc2aad8afbbd` and `b7b9cc2aad8d3152`. Reversing their FNV-1 64-bit suffixes
 `1_1` and `2_1` yields the same prefix state, `fde8dadc5dfc1118`. Appending
 `9_1` gives `b79bcc2aad7433e5`, the successful earlier restoration's value.
-The new implementation exactly reproduces that restoration's decompressed
+The original implementation exactly reproduces that restoration's decompressed
 payload when applied to its original Chapter 2 source. The full symbolic key
 has not been recovered; Chapters 3–8 and 10–12 extend this pattern and remain
 inferred. Chapter 1/2 IDs are save-observed, but selecting them from the current
-baseline is still a new game test.
+baseline failed the Test 1 progression check.
 
 `Timeline_Part1_Led.bin` independently contains 12 title rows, IDs
 `MCID_1_LED_title01` through `MCID_1_LED_title12`. Its SHA-256 is
@@ -94,10 +100,10 @@ save**: raw container state is not kept outside the existing payload history.
 Other routes, unknown layouts and disagreeing outer route/part are left alone.
 All other outer fields stay unchanged apart from ordinary lengths/checksums.
 
-## Test assets
+## Historical Test 1 assets
 
 [Testing guide](testing-story-progression.md) and
-[preparation report](test-results-story-test1.md). The private kit includes
+[preparation report](test-results-story-test1.md). That private kit included
 12 independently edited Auto files, each based on the same accepted B0-01
 Chapter 9 baseline, plus an untouched control. No case is based on another
 case's return. Saves, screenshots and GameData stay out of Git.

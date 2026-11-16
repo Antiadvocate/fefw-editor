@@ -1,5 +1,8 @@
 # Story progression — Test 1
 
+**Archived test guide:** all twelve progression cases failed. Use the
+[Test 2 comparison](testing-story-entry-test2.md) for the next experiment.
+
 The kit contains an editor, **12 independent chapter cases**, an untouched
 control and a results template. All cases start from the accepted B0-01
 Chapter 9 baseline; existing later unlocks are preserved. They do not become
