@@ -59,7 +59,7 @@ class StoryFilesTest(unittest.TestCase):
         self.assertEqual(self.source.read_bytes(), self.original)
         self.assertFalse(self.target.exists())
         a.undo(); self.assertIsNone(a.sv._pending_story_chapter)
-        a.redo(); self.assertEqual(a.sv._pending_story_chapter, 4)
+        a.redo(); self.assertEqual(a.sv._pending_story_chapter, story.ChapterFileRequest(4, 4))
         # Subsequent ordinary edits belong in both saved files.
         i = story.read(a.core_of())
         a.sv.payload[i.user+6] = 99
@@ -91,10 +91,10 @@ class StoryFilesTest(unittest.TestCase):
         self.assertEqual(a.sv.payload, before)
         self.assertEqual(len(a._undo_stack), 2)
         a.undo(); self.assertIsNone(a.sv._pending_story_chapter)
-        a.redo(); self.assertEqual(a.sv._pending_story_chapter, 4)
+        a.redo(); self.assertEqual(a.sv._pending_story_chapter, story.ChapterFileRequest(4, 4))
         self.assertTrue(a.save_all())
         a.apply_story_chapter(4, True)
-        self.assertEqual(a.sv._pending_story_chapter, 4)
+        self.assertEqual(a.sv._pending_story_chapter, story.ChapterFileRequest(4, 4))
         self.assertTrue(a.save_all()); self.confirm.assert_called_once()
 
     def test_existing_target_no_cancels_entire_save_yes_preserves_numbered_backups(self):
@@ -106,7 +106,7 @@ class StoryFilesTest(unittest.TestCase):
         self.assertEqual(self.source.read_bytes(), self.original)
         self.assertEqual(self.target.read_bytes(), self.original)
         self.assertFalse(list(self.root.glob('*.bak*')))
-        self.assertEqual(a.sv._pending_story_chapter, 4)
+        self.assertEqual(a.sv._pending_story_chapter, story.ChapterFileRequest(4, 4))
         self.confirm.return_value = True
         self.assertTrue(a.save_all())
         self.assertEqual(Path(str(self.target)+'.bak').read_bytes(), self.original)
@@ -124,7 +124,7 @@ class StoryFilesTest(unittest.TestCase):
             self.assertFalse(self.app.save_all())
         self.assertEqual(self.source.read_bytes(), self.original)
         self.assertEqual(self.target.read_bytes(), self.original)
-        self.assertEqual(self.app.sv._pending_story_chapter, 4)
+        self.assertEqual(self.app.sv._pending_story_chapter, story.ChapterFileRequest(4, 4))
         self.errors.assert_called_once()
 
     def test_target_changes_during_confirmation_are_not_overwritten(self):
@@ -177,7 +177,7 @@ class StoryFilesTest(unittest.TestCase):
         other = SaveHarness(self.root, 'Route_Led')
         a.sv = other.sv; a.undo(); a.redo()
         self.assertIsNone(getattr(a.sv, '_pending_story_chapter', None))
-        self.assertEqual(a.files[str(self.source)]._pending_story_chapter, 4)
+        self.assertEqual(a.files[str(self.source)]._pending_story_chapter, story.ChapterFileRequest(4, 4))
         reloaded = container.SaveFile(str(self.source))
         self.assertIsNone(getattr(reloaded, '_pending_story_chapter', None))
         a.sv = reloaded; a.undo(); a.redo()

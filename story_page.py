@@ -1,4 +1,4 @@
-"""Warning-gated chapter selector on Player; Leda Part 1 only."""
+"""Warning-gated chapter selector; tested Leda and inferred Cai Part 1 targets."""
 import tkinter as tk
 from tkinter import ttk
 
@@ -9,13 +9,30 @@ import story_start
 
 WARNING_TITLE = 'CAUTION - UNEXPECTED CONSEQUENCES POSSIBLE'
 WARNING_POINTS = (
-    "This feature currently only works with Leda's Part 1, Chapters 2–12. Chapter 1 cannot be selected because its first objective cannot be progressed.",
+    "This is a Leda Part 1 save. Chapters 2–12 are available. Chapter 1 cannot be selected because its first objective cannot be progressed.",
     'It will start you at the applicable chapter. It WILL NOT unlock facilities, features, tutorials, map points, side quests from previous chapters or give you units that should be in your party. That will need to be managed separately.',
     'This has only been tested that the chapter starts and can be progressed to the next story sequence or battle. Long term testing has not been carried out.',
     'The Obelisk Chamber relies on chapter save files. Select “Create a chapter start file using this state” to write the chosen chapter’s file when you Save. Other skipped chapters still need their own files. Existing files require overwrite confirmation and are backed up first.',
     'Back up your save into a fresh directory NOW before proceeding.',
 )
 EVIDENCE_NOTE = ('Chapters 2–12 passed opening and next-story-beat tests. Editor-created chapter files passed Obelisk tests for Chapters 8 and 9; other chapters are untested through the Obelisk. Entry resets the clock and internal restart state.')
+
+
+def warning_points(route):
+    if route == 4:
+        return WARNING_POINTS
+    if route == 1:
+        return ('This is a Cai Part 1 save. Only Chapters 2, 4 and 9 are currently available as experimental targets. Other Cai chapters are not yet supported.',
+                WARNING_POINTS[1],
+                'Cai chapter editing and editor-created Cai chapter files have not yet been tested in game. Leda test results do not establish Cai compatibility. Long term testing has not been carried out.',
+                *WARNING_POINTS[3:])
+    raise story.StoryError('Unsupported story route.')
+
+
+def evidence_note(route):
+    if route == 4:
+        return EVIDENCE_NOTE
+    return ('Cai targets are Inferred. Two natural Cai checkpoints support the entry-ID pattern; the supplied Auto supports the resume layout. Entry resets the clock and internal restart state. Test the opening and next main story beat.')
 
 
 class StoryPageMixin:
@@ -35,12 +52,12 @@ class StoryPageMixin:
             return
         self.story_button.state(['disabled'])
         if not self.sv:
-            self.story_status.configure(text='Open a Leda Part 1 save. Other routes remain read-only.')
+            self.story_status.configure(text='Open a Leda or Cai Part 1 save. Other routes remain read-only.')
             return
         route = layer.route_info(self.sv.payload)
         label = f'{route[0]} · Part {route[1]} · Chapter {route[2]}\n' if route else ''
-        if route and (route[0], route[1]) != ('Leda', 1):
-            self.story_status.configure(text=label + 'Read-only. Story editing supports Leda Part 1 only.')
+        if route and (route[0], route[1]) not in (('Leda', 1), ('Cai', 1)):
+            self.story_status.configure(text=label + 'Read-only. Story editing supports Leda and Cai Part 1 only.')
             return
         try:
             info = story_start.validate(self.core_of())
@@ -48,13 +65,14 @@ class StoryPageMixin:
         except core.SaveError as exc:
             self.story_status.configure(text=label + str(exc)); return
         pending = getattr(self.sv, '_pending_story_chapter', None)
-        note = f'\nChapter_Led_1_{pending} will be created on Save.' if pending else ''
-        self.story_status.configure(text=info.label + '\nChapters 2–12 game-tested; Chapter 1 unavailable.' + note)
+        note = f'\n{story.chapter_filename(pending.route, pending.chapter)} will be created on Save.' if pending else ''
+        evidence = 'Chapters 2–12 game-tested; Chapter 1 unavailable.' if info.route == 4 else 'Chapters 2, 4 and 9 inferred; game tests pending.'
+        self.story_status.configure(text=info.label + '\n' + evidence + note)
         self.story_button.state(['!disabled'])
 
     def _story_ready(self):
         if not self.sv:
-            self.flash('Open a Leda Part 1 save first.', 'warn'); return False
+            self.flash('Open a Leda or Cai Part 1 save first.', 'warn'); return False
         if self.mirror.get():
             self.flash('Turn off “Also edit this route’s other saves” before editing story progression.', 'warn')
             return False
@@ -69,23 +87,29 @@ class StoryPageMixin:
         if not self._story_ready():
             return
         slot = self.sv
+        route = story.read(core.SaveFile(slot.payload)).route
         if not self._confirm_story_warning():
             return
         if self.sv is not slot or not self._story_ready():
             return
+        if story.read(core.SaveFile(slot.payload)).route != route:
+            self.flash('The route changed while the warning was open. Open Story progression again.', 'warn'); return
         choice = self._choose_story_chapter()
-        if choice is not None and self.sv is slot:
+        if choice is not None and self.sv is slot and self._story_ready():
+            if story.read(core.SaveFile(slot.payload)).route != route:
+                self.flash('The route changed while choosing a chapter. Open Story progression again.', 'warn'); return
             self.apply_story_chapter(*choice)
 
     def _confirm_story_warning(self):
+        route = story.read(core.SaveFile(self.sv.payload)).route
         win = tk.Toplevel(self); win.title(WARNING_TITLE); win.transient(self)
         self.place_dialog(win, 720, 570)
         win.configure(background=self.p['bg']); win.resizable(False, False)
         frame = ttk.Frame(win, padding=20); frame.pack(fill='both', expand=True)
         ttk.Label(frame, text=WARNING_TITLE, style='CardH3.TLabel', wraplength=670).pack(anchor='w', pady=(0, 12))
-        for point in WARNING_POINTS:
+        for point in warning_points(route):
             ttk.Label(frame, text='• ' + point, wraplength=665, justify='left').pack(anchor='w', pady=(0, 10))
-        ttk.Label(frame, text=EVIDENCE_NOTE, wraplength=665, justify='left',
+        ttk.Label(frame, text=evidence_note(route), wraplength=665, justify='left',
                   style='CardMuted.TLabel').pack(anchor='w', pady=(0, 8))
         result = [False]
         def finish(value):
@@ -99,11 +123,15 @@ class StoryPageMixin:
         return result[0]
 
     def _choose_story_chapter(self):
-        win = tk.Toplevel(self); win.title('Leda · Part 1 — choose chapter'); win.transient(self)
+        info = story_start.validate(core.SaveFile(self.sv.payload))
+        lord = story.ROUTES[info.route]
+        chapters = story_start.TARGETS[info.route]
+        win = tk.Toplevel(self); win.title(f'{lord} · Part 1 — choose chapter'); win.transient(self)
         self.place_dialog(win, 680, 540); win.configure(background=self.p['bg'])
         frame = ttk.Frame(win, padding=18); frame.pack(fill='both', expand=True)
         ttk.Label(frame, text='Choose a chapter start', style='CardH3.TLabel').pack(anchor='w')
-        ttk.Label(frame, text='Selected save only. Apply stages the chapter start and date; Ctrl+S saves and Ctrl+Z undoes. Chapter 1 is unavailable.',
+        limit = 'Chapter 1 is unavailable.' if info.route == 4 else 'Only Cai Chapters 2, 4 and 9 are offered for this first test.'
+        ttk.Label(frame, text='Selected save only. Apply stages the chapter start and date; Ctrl+S saves and Ctrl+Z undoes. ' + limit,
                   wraplength=625, justify='left').pack(anchor='w', pady=(4, 10))
         buttons = ttk.Frame(frame); buttons.pack(side='bottom', fill='x', pady=(12, 0))
         options = ttk.Frame(frame); options.pack(side='bottom', fill='x', pady=(10, 0))
@@ -113,13 +141,13 @@ class StoryPageMixin:
         ttk.Label(options, text='Written beside the selected save only when you Save. Existing chapter files require confirmation; a .bak (or numbered .bak) is kept first.',
                   wraplength=625, justify='left', style='CardMuted.TLabel').pack(anchor='w', pady=(4, 0))
         tree = ttk.Treeview(frame, columns=('evidence',), show='tree headings', height=12, selectmode='browse')
-        tree.heading('#0', text='Leda Part 1', anchor='w'); tree.column('#0', width=150, stretch=False)
+        tree.heading('#0', text=f'{lord} Part 1', anchor='w'); tree.column('#0', width=150, stretch=False)
         tree.heading('evidence', text='Evidence / limits', anchor='w'); tree.column('evidence', width=450)
         tree.pack(fill='both', expand=True)
-        for chapter in story_start.CHAPTERS:
-            text = 'Game-tested opening and next story beat' if chapter in story_start.TESTED else 'Inferred — game test pending'
+        for chapter in chapters:
+            text = 'Game-tested opening and next story beat' if chapter in story_start.TESTED_BY_ROUTE[info.route] else 'Inferred — game test pending'
             tree.insert('', 'end', iid=str(chapter), text=f'Chapter {chapter}', values=(text,))
-        current = str(max(2, story.require_leda(self.core_of()).chapter))
+        current = str(info.chapter if info.chapter in chapters else chapters[0])
         tree.selection_set(current); tree.see(current); tree.focus(current)
         result = [None]
         def apply():
@@ -135,18 +163,21 @@ class StoryPageMixin:
         if not self._story_ready():
             return
         try:
-            story_start.target(chapter)
+            route = story_start.validate(core.SaveFile(self.sv.payload)).route
+            story_start.target(chapter, route)
             self._commit_form()
             if not self._story_ready():
                 return
+            if story.read(core.SaveFile(self.sv.payload)).route != route:
+                raise story.StoryError('The route changed; reopen Story progression.')
             new = story_start.edited(core.SaveFile(self.sv.payload), chapter)
         except core.SaveError as exc:
             self.flash(str(exc), 'error'); return
-        pending = chapter if create_file else None
+        pending = story.ChapterFileRequest(route, chapter) if create_file else None
         if bytes(new) == bytes(self.sv.payload) and pending == getattr(self.sv, '_pending_story_chapter', None):
             self.flash('This chapter-start setup is already staged.', 'info'); return
         self.push_undo()
         self.sv.payload = bytearray(new); self.sv.scan(); self.sv._core_cache = None
         self.sv._pending_story_chapter = pending
         self._touch([self.sv]); self.refresh_after_core()
-        self.flash(f'Leda Part 1 Chapter {chapter} start staged — Ctrl+S saves; Ctrl+Z undoes.', 'ok')
+        self.flash(f'{story.ROUTES[route]} Part 1 Chapter {chapter} start staged — Ctrl+S saves; Ctrl+Z undoes.', 'ok')

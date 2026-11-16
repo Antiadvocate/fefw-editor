@@ -111,7 +111,7 @@ class StoryTest(unittest.TestCase):
             self.assertTrue({n for n in range(256) if initial[n]!=actual[n]}<=allowed)
 
     def test_serializer_preserves_other_routes_unknown_and_ambiguous_summaries(self):
-        for f in (fixture(1),fixture(3),fixture(4,2)):
+        for f in (fixture(2),fixture(3),fixture(4,2)):
             out=raw_for(f);out[42]=99;before=bytes(out);story.sync_outer_summary(f.payload,out)
             self.assertEqual(bytes(out),before)
         f=fixture();out=raw_for(f);out[40]=1;before=bytes(out)
@@ -123,6 +123,8 @@ class StoryHarness(PageHarness):
         from test_story_resume_probe import fixture as start_fixture
         super().__init__();f=start_fixture();i=story.read(f)
         f.payload[i.header+12]=f.payload[i.user+3]=route
+        if route == 1:
+            for at in (i.header+45,i.user+81):struct.pack_into('<Q',f.payload,at,story.sequence(i.chapter,1))
         self.sv.payload=f.payload;self.sv.raw=bytes(raw_for(f))
         self.confirm=True;self.choice=9;self.confirmed=0;self.chosen=0
     def legacy_edit(self, chapter):
@@ -151,8 +153,8 @@ class StoryPageTest(unittest.TestCase):
         a.redo();self.assertEqual(bytes(a.sv.payload),changed)
         n=len(a._undo_stack);a.legacy_edit(9);self.assertEqual(len(a._undo_stack),n)
 
-    def test_cai_and_mirroring_refused_even_when_calling_edit_directly(self):
-        for a in (StoryHarness(1),StoryHarness()):
+    def test_unsupported_route_and_mirroring_refused_even_when_calling_edit_directly(self):
+        for a in (StoryHarness(2),StoryHarness()):
             if story.read(a.core_of()).route==4:a.mirrored=True
             original=bytes(a.sv.payload);a.open_story_progression();a.apply_story_chapter(9)
             self.assertEqual(a.confirmed,0);self.assertEqual(bytes(a.sv.payload),original)

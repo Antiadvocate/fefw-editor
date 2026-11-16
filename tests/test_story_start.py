@@ -79,7 +79,7 @@ class StoryStartTest(unittest.TestCase):
         self.assertEqual(len(a._undo_stack),1)
         a.undo(); self.assertEqual(a.sv.payload,before)
         a.redo(); self.assertEqual(a.sv.payload,after)
-        other = StoryHarness(1).sv
+        other = StoryHarness(2).sv
         other_before = bytes(other.payload)
         a.sv = other
         a.undo(); a.redo(); a.apply_story_chapter(9)

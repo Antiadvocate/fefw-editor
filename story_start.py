@@ -1,8 +1,9 @@
 """Leda Part 1 chapter entry, using the game-tested Test 3 D profile.
 
-Chapters 2–12 have short-session game evidence. Chapter 1 is unavailable:
+Leda Chapters 2–12 have short-session game evidence. Chapter 1 is unavailable:
 its opening plays but its first objective cannot be progressed.
 No private captures or GameData are required at runtime.
+Cai Part 1 Chapters 2/4/9 are offered as inferred initial probes.
 """
 from datetime import datetime
 import struct
@@ -19,6 +20,9 @@ ENTRY_DATES = {1: (12, 1, 12, 0), 2: (1, 2, 12, 0), 3: (1, 20, 20, 0),
                4: (3, 1, 8, 0), 5: (4, 6, 12, 0), 6: (5, 8, 12, 0),
                7: (5, 28, 20, 0), 8: (6, 29, 11, 0), 9: (7, 10, 18, 0),
                10: (9, 28, 2, 0), 11: (10, 16, 12, 0), 12: (11, 7, 12, 0)}
+CAI_DATES = {2: (1, 25, 11, 0), 4: (3, 1, 12, 0), 9: (9, 3, 12, 0)}
+TARGETS = {4: CHAPTERS, 1: tuple(CAI_DATES)}
+TESTED_BY_ROUTE = {4: TESTED, 1: frozenset()}
 RESUME_OFFSET = 58
 FREE_TIME_ID = 0xd8588d186b3f9502
 CHECKPOINT_ID = 0xa2f3e9a7ff461708
@@ -91,10 +95,14 @@ def normalized_blocks(f):
 
 
 
-def target(chapter):
-    if type(chapter) is not int or chapter not in CHAPTERS:
+def target(chapter, route=4):
+    if type(route) is not int or route not in TARGETS:
+        raise story.StoryError('Story editing supports Leda and Cai Part 1 only.')
+    if type(chapter) is not int or chapter not in TARGETS[route]:
+        if route == 1:
+            raise story.StoryError('Choose Cai Part 1 Chapter 2, 4 or 9. Other Cai targets are not yet available.')
         raise story.StoryError('Choose a Leda Part 1 chapter from 2 to 12. Chapter 1 is unavailable because its first objective cannot be progressed.')
-    return ENTRY_DATES[chapter]
+    return (CAI_DATES if route == 1 else ENTRY_DATES)[chapter]
 
 
 def validate(f):
@@ -105,7 +113,7 @@ def validate(f):
     mode = bytes(f.payload[header.start+20:header.start+22])
     if mode not in (b'\x12\x05', b'\x10\x0b'):
         raise story.StoryError('Story editing needs a supported free-time or chapter-start save. Battle and unknown resume states are read-only.')
-    info = story.require_leda(f)
+    info = story.require_supported(f)
     resume = struct.unpack_from('<Q', f.payload, info.user+RESUME_OFFSET)[0]
     if (mode, resume) not in ((b'\x12\x05', FREE_TIME_ID), (b'\x10\x0b', CHECKPOINT_ID)):
         raise story.StoryError('Story editing needs a supported free-time or chapter-start save. Battle and unknown resume states are read-only.')
@@ -127,7 +135,8 @@ def validate(f):
 
 
 def edited(f, chapter):
-    date = target(chapter)
+    info = validate(f)
+    date = target(chapter, info.route)
     return _edited_at_entry(f, chapter, ENTRY_YEARS[chapter], date)
 
 
@@ -138,7 +147,7 @@ def _edited_at_entry(f, chapter, year, date):
     original = normalized_blocks(f)
     schedule, calendar = one_block(f, 'GameSchedule'), one_block(f, 'Calendar')
     clock = struct.pack('<H5B', year, month, day, hour, minute, 0)
-    p = story.edited(f, chapter)
+    p = story.edited(f, chapter, route=info.route)
     p[info.header+20:info.header+22] = b'\x10\x0b'
     p[info.header+22:info.header+29] = clock
     p[schedule.start+5:schedule.end] = clock+bytes(12)
@@ -153,7 +162,7 @@ def _edited_at_entry(f, chapter, year, date):
         raise story.StoryError('An unrelated object changed; the chapter edit was refused.')
     user = bytearray(original['GameUserData'])
     user[9] = chapter
-    struct.pack_into('<Q', user, 85, story.sequence(chapter))
+    struct.pack_into('<Q', user, 85, story.sequence(chapter, info.route))
     struct.pack_into('<Q', user, 4+RESUME_OFFSET, CHECKPOINT_ID)
     if bytes(user) != after['GameUserData'] or check.chapter != chapter:
         raise story.StoryError('Unexpected player or flag changes; the chapter edit was refused.')

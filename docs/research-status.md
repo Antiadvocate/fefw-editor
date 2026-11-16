@@ -63,7 +63,7 @@ The game data version was not separately reported.
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
 | 5 | Boons | All 31 groups / 81 tiers editable; broader mappings labelled Inferred | [BEDIT results](test-results-boon-editing-2026-11-15.md): +16 EXP Off / +17 On. [WEDIT-01–07 passed](test-results-weapon-boon-2026-11-15.md): discount Off/On persists in returned saves; player reports earlier 10% prices reproduced and backups through .bak4 |
-| 6 | Story | Leda P1 starts 2–12; optional chapter file on Save with confirmation/backups | [Test 5](test-results-story-test5.md) completes offered Leda targets. Chapter 1 failed and is unavailable. Obelisk files 8/9 passed. [Cai](story-cai-research.md) next; native saves needed |
+| 6 | Story | Leda P1 starts 2–12; inferred Cai P1 starts 2/4/9; route-bound chapter files on Save | Leda offered targets accepted; Obelisk 8/9 passed. [Cai Test 1](testing-story-cai-test1.md) pending from native Cai Auto and two matching checkpoints |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
 test report before being called game-tested. Other routes are not covered by
@@ -278,11 +278,13 @@ objective blocks, with missing music after control resumes. It is removed from
 the picker and rejected by the public edit action; the warning explains why.
 The old candidate remains reproducible only through the historical research script.
 
-Cai is next. Its separate Part 1 timeline has 12 title rows and different entry
-dates. [Cai preparation](story-cai-research.md) records the extracted dates and
-required native saves. No native Cai save was located among current inputs;
-Cai editing and checkpoint creation remain disabled until route-specific entry
-identifiers, dates and layout can be anchored in real captures.
+Native Cai Auto and Chapter 1/2 checkpoints have now been supplied. Both natural
+checkpoints independently recover prefix `eab884585a706f5d`; source route, resume,
+calendar and restart layouts validate. The editor offers Cai Chapters 2, 4 and 9
+as Inferred, using Cai dates and file names. [Cai Test 1](testing-story-cai-test1.md)
+uses three independent copies of the supplied Auto. Leda support is unchanged.
+No Route_Kai file is required or synthesized; its natural creation trigger is
+unconfirmed. [Cai evidence](story-cai-research.md) records the inputs and limits.
 
 The user observed no new external Chapter_Led_ files except 1_1 in the earlier
 Chapter 1 test. Creation at the previous chapter boundary is a hypothesis, not

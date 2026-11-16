@@ -1,4 +1,4 @@
-"""Live story field validation and historical Leda sequence-only editing.
+"""Live story validation and route-specific sequence writers for Leda and Cai.
 
 Production chapter-entry targets and acceptance live in story_start. The low-level
 sequence writer retains Chapter 1 for reproducing historical failed probes.
@@ -10,6 +10,9 @@ import fefw_core as core
 
 CHAPTERS = tuple(range(1, 13))
 LEDA_PREFIX = 0xfde8dadc5dfc1118
+CAI_PREFIX = 0xeab884585a706f5d
+PREFIXES = {4: LEDA_PREFIX, 1: CAI_PREFIX}
+FILE_CODES = {4: 'Led', 1: 'Kai'}
 ROUTES = {1: 'Cai', 2: 'Dietrich', 3: 'Theodora', 4: 'Leda', 9: 'Eshmel'}
 
 
@@ -17,13 +20,26 @@ class StoryError(core.SaveError):
     pass
 
 
-def sequence(chapter):
+def sequence(chapter, route=4):
     if type(chapter) is not int or chapter not in CHAPTERS:
-        raise StoryError('Choose a Leda Part 1 chapter from 1 to 12.')
-    value = LEDA_PREFIX
+        raise StoryError('Choose a Part 1 chapter from 1 to 12.')
+    if type(route) is not int or route not in PREFIXES:
+        raise StoryError('Story editing supports Leda and Cai Part 1 only.')
+    value = PREFIXES[route]
     for byte in f'{chapter}_1'.encode('ascii'):
         value = ((value * 0x100000001b3) & 0xffffffffffffffff) ^ byte
     return value
+
+
+@dataclass(frozen=True)
+class ChapterFileRequest:
+    route: int
+    chapter: int
+
+
+def chapter_filename(route, chapter):
+    sequence(chapter, route)  # Validate before constructing a filename.
+    return f'Chapter_{FILE_CODES[route]}_1_{chapter}'
 
 
 @dataclass(frozen=True)
@@ -84,20 +100,29 @@ def require_leda(f):
     return info
 
 
+def require_supported(f):
+    info = read(f)
+    if info.route not in PREFIXES or info.part != 1 or info.chapter not in CHAPTERS:
+        raise StoryError(f'{info.label}. Story editing supports Leda and Cai Part 1 only.')
+    return info
+
+
 def check_outer(raw, info):
     """Chapter/sequence may lag unsaved edits; route and part must still agree."""
     if len(raw) < 81 or raw[36] != 15 or tuple(raw[40:42]) != (info.route, info.part):
         raise StoryError('The outer save summary disagrees with the live route/part.')
 
 
-def edited(f, chapter):
-    target = sequence(chapter)
-    info = require_leda(f)  # Recheck at the mutation boundary, not just in the UI.
+def edited(f, chapter, *, route=4):
+    target = sequence(chapter, route)
+    info = require_supported(f)
+    if info.route != route:
+        raise StoryError('The requested story route does not match the save; route conversion is not supported.')
     p = bytearray(f.payload)
     p[info.header + 14] = p[info.user + 5] = chapter
     for at in (info.header + 45, info.user + 81):
         struct.pack_into('<Q', p, at, target)
-    check = require_leda(core.SaveFile(p))
+    check = require_supported(core.SaveFile(p))
     if (check.chapter, check.sequence) != (chapter, target):
         raise StoryError('The chapter edit did not validate.')
     return p
@@ -106,12 +131,12 @@ def edited(f, chapter):
 def sync_outer_summary(payload, out):
     """Derive chapter, sequence, entry state and clock mirrors when serializing.
 
-Only known, consistent Leda P1 layouts are eligible. Other routes/formats and
+Only known, consistent Leda/Cai P1 layouts are eligible. Other routes/formats and
 ambiguous files keep their original summary. No raw container state is changed
-at edit time; the existing payload-only Undo stack remains authoritative.
+at edit time; the payload in Undo history remains authoritative.
 """
     try:
-        info = require_leda(core.SaveFile(payload))
+        info = require_supported(core.SaveFile(payload))
         check_outer(out, info)
     except (core.SaveError, IndexError, struct.error):
         return

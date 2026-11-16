@@ -4,10 +4,15 @@
 through the opening and next main story beat. Chapter 1 is unavailable: its
 opening plays, but the first objective does not advance. Optional chapter-file
 creation on Save passed UI/backup checks and Obelisk loading for Chapters 8/9.
-Other chapter files remain untested through the Obelisk. Cai is the next research
-target; editing remains guarded to Leda until native Cai save evidence is supplied.
-See [scope](docs/story-progression.md), [Test 5 results](docs/test-results-story-test5.md)
-and [Cai preparation](docs/story-cai-research.md).
+Other Leda chapter files remain untested through the Obelisk.
+
+**Cai Part 1 — first tests:** native Cai saves now support experimental targets
+**2, 4 and 9**, all labelled Inferred. The selector follows the loaded save's
+route; it cannot convert Leda into Cai. Optional chapter files use
+`Chapter_Kai_1_*`, with the same Save-only confirmation/backup behavior.
+See [scope](docs/story-progression.md), [Cai evidence](docs/story-cai-research.md)
+and [Cai Test 1](docs/testing-story-cai-test1.md). No Route_Kai file is required.
+
 
 **Facilities branch:** the UI and FAC-01–06 game tests passed on Leda Part 1
 Chapter 9. Ten services and six gates are Game-tested; Yu Phas additionally
@@ -39,7 +44,7 @@ library, or a ready-made Windows `.exe`.
 | | Class | Pick any class the game knows. It's added to the unit's own class list, the way the game does it |
 | **Convoy** | | Everything in storage, materials included: add a stack, stock every material at once, swap the item in any row, change its quantity, remove a row, and repair a list damaged by older versions |
 | **Gold** | | Set gold |
-| **Player** | | Leda Part 1 chapter starts 2–12, with warning and route/state guards; all offered targets game-tested. Chapter 1 unavailable. Optional chapter file on Save with overwrite confirmation and backup. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
+| **Player** | | Leda Part 1 starts 2–12 (game-tested) and Cai Part 1 starts 2/4/9 (Inferred), selected from the save route. Other targets/routes guarded. Optional chapter file on Save with overwrite confirmation and backup. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
 | **Classes** | | A unit's whole class list (set the current class, add, swap or remove one, set its exp) and its weapon masteries with their rank (E … S+) and exp — select several masteries (Ctrl+A, Shift+click or Shift+drag) and Set rank, Set exp or Remove changes all of them at once |
 | **Supports** | | Every character's support partners with the **points** this save holds for the pair, the highest rank the game defines, and which conversations this save has recorded. Set the points (0 … 3200) and the game works the level out from them. **Record conversation as seen** writes that conversation's flag |
 | **Mounts** | | The battalion and mount each unit carries, chosen from the save's pool |

@@ -39,16 +39,20 @@ def prepare(files, dirty):
     dirty_keys = {path_key(p) for p in dirty}
     for source in sorted(dirty):
         sv = files.get(source)
-        chapter = getattr(sv, '_pending_story_chapter', None)
-        if chapter is None:
+        request = getattr(sv, '_pending_story_chapter', None)
+        if request is None:
             continue
+        if not isinstance(request, story.ChapterFileRequest):
+            raise core.SaveError('Unknown chapter-file request. Apply the chapter start again.')
+        chapter = request.chapter
         f = core.SaveFile(sv.payload)
         info = story_start.validate(f)
         story.check_outer(sv.raw, info)
         # Reject stale requests after a snapshot restore or unrelated story edit.
-        if info.chapter != chapter or bytes(story_start.edited(f, chapter)) != bytes(f.payload):
+        if (info.route != request.route or info.chapter != chapter
+                or bytes(story_start.edited(f, chapter)) != bytes(f.payload)):
             raise core.SaveError('The requested chapter file no longer matches a staged chapter start. Apply the chapter start again before saving.')
-        target = str(Path(source).absolute().with_name(f'Chapter_Led_1_{chapter}'))
+        target = str(Path(source).absolute().with_name(story.chapter_filename(info.route, chapter)))
         key = path_key(target)
         if key in targets or (key in dirty_keys and key != path_key(source)):
             raise core.SaveError(f'{Path(target).name} has competing unsaved changes. Save or discard that slot first.')

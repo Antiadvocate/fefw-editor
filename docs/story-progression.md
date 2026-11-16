@@ -1,4 +1,4 @@
-# Story progression — Leda Part 1
+# Story progression — Leda and Cai Part 1
 
 Player → Story progression… offers **Leda Part 1 Chapters 2–12**, all accepted
 for the chapter opening and next main story beat. **Chapter 1 cannot be selected**:
@@ -9,18 +9,26 @@ All Test 5 UI checks passed. Editor-created chapter files loaded and worked
 through the Obelisk for **Chapters 8 and 9**. Other chapter files have not been
 game-tested through the Obelisk; ordinary entry acceptance is a separate result.
 See [Test 5 results](test-results-story-test5.md). Full-campaign behavior remains
-untested. [Cai is next](story-cai-research.md), pending native save evidence.
+untested.
+
+**Cai Part 1** now offers Chapters **2, 4 and 9**, all **Inferred**. Native Auto
+and two natural checkpoints validate the route-specific entry pattern and
+shared layout. Cai openings, progression and editor-created chapter files still
+need [Test 1](testing-story-cai-test1.md). Other Cai targets remain unavailable.
+Chapter 1 is deferred for Cai, not assumed to share Leda's failure.
+
 Other routes/parts, battle saves and unsupported or inconsistent layouts remain
 read-only. The editor checks actual save contents, not filenames or party members.
 
 ## Using the editor
 
-1. Open a disposable, supported Leda Part 1 free-time or chapter-start save.
+1. Open a disposable, supported Leda or Cai Part 1 free-time or chapter-start save.
 2. Turn off route mirroring, then click Story progression… on Player.
 3. Read the warning and back up the whole save folder into a fresh directory.
 4. Continue to the chapter list. Each target carries its evidence label.
 5. Optionally check **Create a chapter start file using this state**. It queues
-   `Chapter_Led_1_<chapter>` beside the selected save. Unchecked creates no file.
+   `Chapter_Led_1_<chapter>` or `Chapter_Kai_1_<chapter>` beside the selected save,
+   according to the actual route. Unchecked creates no file.
 6. Apply stages the chapter/date and file request. Ctrl+Z/Ctrl+Y undo/redo both.
 7. Save (Ctrl+S) writes the selected save and any requested chapter file. Existing
    chapter files require confirmation first. No cancels the whole Save and keeps
@@ -35,15 +43,18 @@ its loaded save object; it cannot overwrite another slot or a reloaded object.
 The warning title remains **CAUTION - UNEXPECTED CONSEQUENCES POSSIBLE**. It
 retains the user's points about Leda Part 1, no previous unlock/unit grants,
 limited testing, the Obelisk Chamber and a fresh-directory backup. The Obelisk
-point is immediately above backup. The first bullet excludes Chapter 1. The evidence
-note distinguishes accepted Chapter 2–12 starts from Obelisk coverage limited to
-Chapters 8/9, and mentions clock/restart reset.
+point is immediately above backup. Warning text follows the loaded route: Leda
+explains Chapter 1's exclusion and its tested scope; Cai explicitly says its
+edits and chapter files have not been game-tested. Changing route while either
+dialog is open requires reopening it. The picker never chooses a different route.
 
 ## What is changed
 
 `story_start.edited` reproduces the successful **Test 3 D** setup. Its Chapter
 4/9 payloads and serialized files match the delivered D candidates exactly.
-Removing HubSeq brought no observed improvement, so it is retained.
+Removing HubSeq brought no observed improvement, so it is retained. Cai uses
+the same preparation mechanics with its own validated selector prefix and dates;
+that structural agreement does not establish game compatibility.
 
 | Saved component | Chapter-start edit |
 |---|---|
@@ -67,7 +78,7 @@ Test 2 C. The tests isolate the additional resume identifier against that setup;
 they do **not** establish that the identifier alone is sufficient on an otherwise
 untouched save. Exact runtime enum/type names are still unrecovered.
 
-## Target dates and evidence
+## Leda target dates and evidence
 
 | Chapter | Entry date/time | Short-session evidence |
 |---|---|---|
@@ -100,7 +111,8 @@ real Chapter 2–12 progression now supplies behavioral evidence for those targe
 ## External chapter files and the Obelisk Chamber
 
 The checkbox defaults to off unless a file request is already pending for this
-loaded slot. It targets only the selected chapter. Changing chapter replaces
+loaded slot. A request stores both route and chapter, so restoring another route
+cannot silently redirect it to a different chapter filename. It targets only the selected chapter. Changing chapter replaces
 the pending request; reapplying with the box unchecked removes it. No file is
 written by checking, Apply, Undo or Redo. Reload/discard drops unsaved requests.
 
@@ -125,7 +137,7 @@ reported; retry saves the remaining slot without repeating the checkpoint write.
 This is per-file recovery, not a multi-file transaction.
 
 Obelisk discovery and loading passed for **Chapters 8 and 9**. Other chapter
-files remain untested in the Obelisk. The checkbox supplies the named chapter file; it does not synthesize files for
+files remain untested in the Obelisk, including all Cai files. The checkbox supplies the named chapter file; it does not synthesize files for
 other skipped chapters, unlock the Obelisk facility, or recreate past campaign
 progress. Internal restart snapshots and external chapter files are distinct.
 The user observed that skips had not created new external files except 1_1 in
@@ -140,8 +152,12 @@ file creation does not establish the natural trigger.
 
 ## Guards and history
 
+Cai dates, capture evidence and the Route_Kai observation are detailed in
+[Cai preparation and Test 1](story-cai-research.md). Neither live editing nor
+chapter-file creation requires a Route_* file. The editor does not create one.
+
 The engine requires a unique Header (220 bytes, marker 15), GameUserData v23,
-agreeing route/part/chapter/sequence, and the recognized free-time or checkpoint
+agreeing route/part/chapter/sequence for Leda or Cai Part 1, and the recognized free-time or checkpoint
 resume/state pair. GameSchedule and Calendar sizes/versions, matching valid
 clocks and all eight restart members/blobs/checksums are checked before mutation.
 Unknown and battle states are refused before traversing their variable objects;
