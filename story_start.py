@@ -22,7 +22,10 @@ ENTRY_DATES = {1: (12, 1, 12, 0), 2: (1, 2, 12, 0), 3: (1, 20, 20, 0),
                4: (3, 1, 8, 0), 5: (4, 6, 12, 0), 6: (5, 8, 12, 0),
                7: (5, 28, 20, 0), 8: (6, 29, 11, 0), 9: (7, 10, 18, 0),
                10: (9, 28, 2, 0), 11: (10, 16, 12, 0), 12: (11, 7, 12, 0)}
-CAI_DATES = {2: (1, 25, 11, 0), 3: (2, 4, 8, 0), 4: (3, 1, 12, 0), 9: (9, 3, 12, 0)}
+CAI_DATES = {1: (1, 24, 2, 0), 2: (1, 25, 11, 0), 3: (2, 4, 8, 0),
+             4: (3, 1, 12, 0), 5: (3, 14, 12, 0), 6: (4, 19, 10, 0),
+             7: (6, 9, 12, 0), 8: (7, 10, 12, 0), 9: (9, 3, 12, 0),
+             10: (9, 15, 12, 0), 11: (10, 16, 8, 0), 12: (11, 3, 12, 0)}
 TARGETS = {4: CHAPTERS, 1: tuple(CAI_DATES)}
 TESTED_BY_ROUTE = {4: TESTED, 1: frozenset((2, 3, 9))}
 RESUME_OFFSET = 58
@@ -102,7 +105,7 @@ def target(chapter, route=4):
         raise story.StoryError('Story editing supports Leda and Cai Part 1 only.')
     if type(chapter) is not int or chapter not in TARGETS[route]:
         if route == 1:
-            raise story.StoryError('Choose Cai Part 1 Chapter 2, 3, 4 or 9. Other Cai targets are not yet available.')
+            raise story.StoryError('Choose a Cai Part 1 chapter from 1 to 12.')
         raise story.StoryError('Choose a Leda Part 1 chapter from 2 to 12. Chapter 1 is unavailable because its first objective cannot be progressed.')
     return (CAI_DATES if route == 1 else ENTRY_DATES)[chapter]
 
@@ -139,7 +142,7 @@ def validate(f):
 def edited(f, chapter):
     info = validate(f)
     date = target(chapter, info.route)
-    p = _edited_at_entry(f, chapter, ENTRY_YEARS[chapter], date)
+    p = _edited_at_entry(f, chapter, 1449 if info.route == 1 else ENTRY_YEARS[chapter], date)
     if info.route == 1 and chapter >= 3:
         p = facilities.edited(core.SaveFile(p), {facilities.SEWERS: True})
     return p

@@ -63,7 +63,7 @@ The game data version was not separately reported.
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
 | 5 | Boons | All 31 groups / 81 tiers editable; broader mappings labelled Inferred | [BEDIT results](test-results-boon-editing-2026-11-15.md): +16 EXP Off / +17 On. [WEDIT-01–07 passed](test-results-weapon-boon-2026-11-15.md): discount Off/On persists in returned saves; player reports earlier 10% prices reproduced and backups through .bak4 |
-| 6 | Story | Leda P1 starts 2–12; Cai P1 starts 2/9 accepted; research Chapter 3 passed; 4 blocked; route-bound chapter files on Save | [Cai Test 3](test-results-story-cai-test3.md): Chapter 3 completed; natural Chapter 4 still blocked. [Sewers test](testing-cai-sewers.md) isolates a missing Chapter 2 dialogue prerequisite |
+| 6 | Story | Leda P1 starts 2–12; Cai P1 starts 1–12, with 2/3/9 accepted and 4 conditional; route-bound chapter files on Save | [Sewers fix](test-results-sewers-functions.md) passed on natural Chapter 4. [Cai/Tutorials Test 5](testing-cai-tutorials-test5.md) covers remaining chapters and the complete 218-entry tutorial catalogue |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
 test report before being called game-tested. Other routes are not covered by
@@ -373,3 +373,16 @@ area switches, with inferred evidence. Training already had a control. Arena
 uses a distinct facility definition but lacks an established saved switch;
 read-only diagnostics and isolated probes avoid assuming a shared flag.
 [Test 2](testing-functions-cai-test2.md) targets this gap before more Cai chapters.
+
+## Cai remaining chapters and Tutorials completion — current candidate
+
+Cai Chapters 1–12 are selectable; 1, 5–8 and 10–12 await game tests.
+Chapter 4 is conditional after the successful Sewers fix; direct entry is
+being retried. The numeric Chapter 3+ rule enables Sewers for all later targets.
+
+Tutorials now contains every one of the 218 identities in the supplied two
+tables, with 115 previously checked names and 103 provisional translations.
+Filters, Select shown, bulk removal and restoration from a recognized empty
+list are included. The original 1/2 state limits remain; no read/unread claim
+is made. See [the kit guide](testing-cai-tutorials-test5.md) for pending checks.
+Earlier dated sections above describe their original builds.

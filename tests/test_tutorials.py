@@ -54,7 +54,7 @@ def raw_map(f, fm):
 class TutorialsTest(unittest.TestCase):
     def test_corrected_names_and_hashes(self):
         cat = tutorials.catalog()
-        self.assertEqual(len(cat), 115)
+        self.assertEqual(len(cat), 218)
         for h, name in ((0x08373a0e, 'Foresight'), (0x2b0739cc, 'Drifting Reliquary'),
                         (0xf501dfbc, 'Third Eye (Cai)'), (0xc2a2c517, 'Obelisk Chamber')):
             self.assertEqual(cat[h]['label'], name)

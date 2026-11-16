@@ -26,7 +26,7 @@ class CaiChapter3Test(unittest.TestCase):
         after = start.normalized_blocks(g)
         for name in before.keys()-{'Header','GameUserData','GameSchedule','Calendar','GameRestartData'}:
             self.assertEqual(before[name], after[name])
-        self.assertEqual(start.TARGETS[1], (2,3,4,9))
+        self.assertEqual(start.TARGETS[1], tuple(range(1,13)))
         current = core.SaveFile(start.edited(f,3))
         self.assertEqual(facilities.read(current)[facilities.SEWERS],1)
         self.assertEqual(bytes(f.payload), original)

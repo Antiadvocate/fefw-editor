@@ -1,696 +1,1980 @@
 {
   "schema": 1,
-  "scope": "115 identified tutorial names; not a complete game catalogue. See docs/tutorials.md for evidence and limitations.",
+  "scope": "All 218 tutorial identities in the supplied Tutorial and Tutorial_P0 tables. 115 previously checked labels; 103 provisional English translations. Game availability of new entries is untested.",
   "entries": {
     "82394787": {
       "name": "TUTO_オートセーブ",
       "label": "Autosave",
-      "title_id": null,
-      "evidence": "screenshot-and-save-restoration"
+      "title_id": "MID_TUT_AutoSave_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x180",
+      "category": "General"
     },
     "07eb05cf": {
       "name": "TUTO_マウス操作①",
       "label": "Mouse Controls",
       "title_id": "MID_TUT_Mouse1_t",
-      "evidence": "screenshot-and-save-restoration"
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1b0",
+      "category": "General"
     },
     "07eb05ce": {
       "name": "TUTO_マウス操作②",
       "label": "Mouse Control Details",
       "title_id": "MID_TUT_Mouse2_t",
-      "evidence": "screenshot-and-save-restoration"
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1e0",
+      "category": "General"
     },
     "80932e08": {
       "name": "TUTO_目的地",
       "label": "Objective Icon",
       "title_id": "MID_TUT_Hub_Destination_t",
-      "evidence": "screenshot-and-save-restoration"
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x210",
+      "category": "Free time"
     },
     "f7630579": {
       "name": "TUTO_自由行動",
       "label": "Free Time",
       "title_id": "MID_TUT_Hub_SectionFree_t",
-      "evidence": "screenshot-and-save-restoration"
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x240",
+      "category": "Free time"
     },
     "759963c2": {
       "name": "TUTO_自由行動とメインクエスト①",
       "label": "Progressing the Main Quest",
       "title_id": "MID_TUT_Hub_DueDate1_t",
-      "evidence": "screenshot-and-save-restoration"
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x270",
+      "category": "Free time"
+    },
+    "759963c3": {
+      "label": "Progressing the Main Quest II",
+      "evidence": "provisional-translation",
+      "name": "TUTO_自由行動とメインクエスト②",
+      "title_id": "MID_TUT_Hub_DueDate2_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2a0",
+      "category": "Free time"
     },
     "020939bf": {
       "name": "TUTO_施設リセット",
       "label": "Facility Renewal",
       "title_id": "MID_TUT_Hub_FacilityReset_t",
-      "evidence": "screenshot-and-save-restoration"
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x2d0",
+      "category": "Free time"
+    },
+    "de4c728f": {
+      "label": "Preparing to March",
+      "evidence": "provisional-translation",
+      "name": "TUTO_進軍準備",
+      "title_id": "MID_TUT_Hub_PreparationMarch_t",
+      "source": "Tutorial.bin",
+      "offset": "0x300",
+      "category": "Free time"
+    },
+    "1f99df25": {
+      "label": "Marching Officers",
+      "evidence": "provisional-translation",
+      "name": "TUTO_行軍管理官",
+      "title_id": "MID_TUT_Hub_MarchingOfficer_t",
+      "source": "Tutorial.bin",
+      "offset": "0x330",
+      "category": "Free time"
+    },
+    "fb7cfe44": {
+      "label": "Part 3 Free Time",
+      "evidence": "provisional-translation",
+      "name": "TUTO_3部自由行動",
+      "title_id": "MID_TUT_Hub_SectionFree3_t",
+      "source": "Tutorial.bin",
+      "offset": "0x360",
+      "category": "Free time"
     },
     "84c33a51": {
       "name": "TUTO_冒険手帳",
       "label": "Adventure Journal",
       "title_id": "MID_TUT_Hub_AdventureNotebook_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "f501dfbc": {
-      "name": "TUTO_透視",
-      "label": "Third Eye (Cai)",
-      "title_id": "MID_TUT_Root_Perspective_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "1cfa3e7a": {
-      "name": "TUTO_名声",
-      "label": "Renown",
-      "title_id": "MID_TUT_Hub_Fame_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "cab4ec3b": {
-      "name": "TUTO_クエスト",
-      "label": "Quests",
-      "title_id": "MID_TUT_Hub_Subquest_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "7b102c4f": {
-      "name": "TUTO_拠点地図",
-      "label": "Base Map",
-      "title_id": "MID_TUT_Hub_Map_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "8868aa83": {
-      "name": "TUTO_スカウト",
-      "label": "Recruiting Allies",
-      "title_id": "MID_TUT_Hub_Scout_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "ff8874da": {
-      "name": "TUTO_贈り物",
-      "label": "Giving Gifts",
-      "title_id": "MID_TUT_Hub_Gift_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "70980a6f": {
-      "name": "TUTO_案内板",
-      "label": "Bulletin Boards",
-      "title_id": "MID_TUT_Hub_InformationBoard_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "cd28cfa5": {
-      "name": "TUTO_白鴉の止まり木",
-      "label": "Feeding the Pale Raven",
-      "title_id": "MID_TUT_Hub_Perch_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "935aafea": {
-      "name": "TUTO_絆の降臨",
-      "label": "Support Salvation",
-      "title_id": "MID_TUT_Hub_AdventBonds_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "ae04a09a": {
-      "name": "TUTO_運命の記録・因果の扉",
-      "label": "Notable Deeds and Boons of Salvation",
-      "title_id": "MID_TUT_Hub_DestinyKarma_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "a3142903": {
-      "name": "TUTO_宿屋",
-      "label": "Inns",
-      "title_id": "MID_TUT_Hub_Inn_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "b56f10a2": {
-      "name": "TUTO_食事",
-      "label": "Meals",
-      "title_id": "MID_TUT_Hub_Meal_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "51892c9c": {
-      "name": "TUTO_個別行動",
-      "label": "Auto-Activities",
-      "title_id": "MID_TUT_Hub_IndividualAction_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "b8ad3a62": {
-      "name": "TUTO_武器屋",
-      "label": "Armories",
-      "title_id": "MID_TUT_Hub_WeaponShop_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "a2e06171": {
-      "name": "TUTO_道具屋",
-      "label": "Item Shops",
-      "title_id": "MID_TUT_Hub_ToolShop_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "cd32158a": {
-      "name": "TUTO_市場",
-      "label": "Marketplaces",
-      "title_id": "MID_TUT_Hub_Market_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "c2d5b701": {
-      "name": "TUTO_訓練",
-      "label": "Training",
-      "title_id": "MID_TUT_Hub_Training_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "98fbdd67": {
-      "name": "TUTO_闘技場",
-      "label": "Spectating",
-      "title_id": "MID_TUT_Hub_Arena_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "1965109f": {
-      "name": "TUTO_神殿",
-      "label": "Temples",
-      "title_id": "MID_TUT_Hub_Temple_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "acb522fb": {
-      "name": "TUTO_加護編成",
-      "label": "Blessings",
-      "title_id": "MID_TUT_Hub_GodFormation_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "7abf7631": {
-      "name": "TUTO_奉仕活動",
-      "label": "Temple Service",
-      "title_id": "MID_TUT_Hub_Volunteer_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "3659245e": {
-      "name": "TUTO_神の道の門",
-      "label": "Gate of the Gods",
-      "title_id": "MID_TUT_Hub_GodGate_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "c4801ceb": {
-      "name": "TUTO_資格試験",
-      "label": "Certification Exams",
-      "title_id": "MID_TUT_Hub_ClassTrial_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "12558a41": {
-      "name": "TUTO_兵種変更",
-      "label": "Reclassing Units",
-      "title_id": "MID_TUT_Hub_ClassChange_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "e8b98788": {
-      "name": "TUTO_ヴァンダル商会",
-      "label": "Vandahl Trading Company",
-      "title_id": "MID_TUT_Hub_firm_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "17351901": {
-      "name": "TUTO_鍛冶屋",
-      "label": "Blacksmith",
-      "title_id": "MID_TUT_Hub_Blacksmith_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "af3a4f61": {
-      "name": "TUTO_観劇",
-      "label": "Watching",
-      "title_id": "MID_TUT_Hub_TheaterViewing_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "2b0739cc": {
-      "name": "TUTO_方尖塔倉庫",
-      "label": "Drifting Reliquary",
-      "title_id": "MID_TUT_Hub_Warehouse_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "b0f48bad": {
-      "name": "TUTO_アプリ武器",
-      "label": "Extra Weapons",
-      "title_id": null,
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "61c5f443": {
-      "name": "TUTO_ワールドマップ",
-      "label": "The World Map",
-      "title_id": "MID_TUT_Gmap_Gmap_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "ef31175a": {
-      "name": "TUTO_勢力出現",
-      "label": "Roaming Encounters",
-      "title_id": "MID_TUT_Gmap_TroopAppearance_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "91927401": {
-      "name": "TUTO_HP継続",
-      "label": "Recovery During Free Time",
-      "title_id": "MID_TUT_Gmap_AfterBattle_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "efe8cf90": {
-      "name": "TUTO_スポット：拠点",
-      "label": "Bases",
-      "title_id": "MID_TUT_Gmap_Base_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "7ff54e21": {
-      "name": "TUTO_探索",
-      "label": "Search Locations",
-      "title_id": "MID_TUT_Gmap_Explore_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "ee2ed6a6": {
-      "name": "TUTO_スポット：駅",
-      "label": "Posthouses",
-      "title_id": "MID_TUT_Gmap_Station_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "08c25f09": {
-      "name": "TUTO_スポット：ダンジョン",
-      "label": "Dungeons",
-      "title_id": "MID_TUT_Gmap_DungeonSpot_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "cadd84e3": {
-      "name": "TUTO_スポット：簡易拠点",
-      "label": "Settlements",
-      "title_id": "MID_TUT_Gmap_SimpleBase_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "de253fb8": {
-      "name": "TUTO_スポット：神殿",
-      "label": "Main Temples",
-      "title_id": "MID_TUT_Gmap_TempleSpot_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "32d32716": {
-      "name": "TUTO_遭遇戦",
-      "label": "Skirmishes",
-      "title_id": "MID_TUT_Gmap_EncounterBattle_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "e357a466": {
-      "name": "TUTO_商人",
-      "label": "Trading on the World Map",
-      "title_id": "MID_TUT_Gmap_Merchant_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "1a2c014b": {
-      "name": "TUTO_関",
-      "label": "Checkpoints",
-      "title_id": "MID_TUT_Gmap_Seki_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "3bb4016e": {
-      "name": "TUTO_饗宴",
-      "label": "Feast Locations",
-      "title_id": "MID_TUT_Gmap_Feast_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "1fe9adeb": {
-      "name": "TUTO_ダンジョン探索",
-      "label": "Clashing in Dungeons",
-      "title_id": "MID_TUT_ShortBattle_Dungeon_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "138613de": {
-      "name": "TUTO_ショートバトル",
-      "label": "Clashes",
-      "title_id": "MID_TUT_ShortBattle_ShortBattle_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "ce37b008": {
-      "name": "TUTO_連携",
-      "label": "Links",
-      "title_id": "MID_TUT_ShortBattle_Cooperation_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "baa67558": {
-      "name": "TUTO_イベントバトル",
-      "label": "Event Clashes",
-      "title_id": "MID_TUT_ShortBattle_EventBattle_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "ec0d9634": {
-      "name": "TUTO_おまかせ",
-      "label": "Auto-Battle in Clashes",
-      "title_id": "MID_TUT_ShortBattle_Auto_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "d26efb9f": {
-      "name": "TUTO_破壊物品",
-      "label": "Breakable Objects in Dungeons",
-      "title_id": "MID_TUT_ShortBattle_DestroyedItems_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "6622071d": {
-      "name": "TUTO_ダンジョン「宝箱」",
-      "label": "Dungeon Chests",
-      "title_id": "MID_TUT_ShortBattle_DngTreasureChest_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "037e5a5d": {
-      "name": "TUTO_ダンジョン「休憩」",
-      "label": "Resting in Dungeons",
-      "title_id": "MID_TUT_ShortBattle_RestingPlace_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "1909d68d": {
-      "name": "TUTO_MVP",
-      "label": "Clash MVPs",
-      "title_id": "MID_TUT_ShortBattle_MVP_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "c9afad83": {
-      "name": "TUTO_ブレイズアーツ",
-      "label": "Blaze Arts",
-      "title_id": "MID_TUT_Bmap_BlazeArts_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "33556643": {
-      "name": "TUTO_オーバーブレイズ",
-      "label": "Overblaze",
-      "title_id": "MID_TUT_Bmap_OverBlaze_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "5d5a38bc": {
-      "name": "TUTO_移動",
-      "label": "Units and Movement",
-      "title_id": "MID_TUT_Bmap_Move_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "32b41814": {
-      "name": "TUTO_ユニットコマンド",
-      "label": "The Wait Command",
-      "title_id": "MID_TUT_Bmap_UnitCommand_t_",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "26c22fbf": {
-      "name": "TUTO_攻撃方法",
-      "label": "The Attack Command",
-      "title_id": "MID_TUT_Bmap_Attack_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "606d8841": {
-      "name": "TUTO_経験値",
-      "label": "Experience Points and Leveling Up",
-      "title_id": "MID_TUT_Bmap_ExperienceValue_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "d00c3b90": {
-      "name": "TUTO_フェイズチェンジ",
-      "label": "Phases and Turns",
-      "title_id": "MID_TUT_Bmap_PhaseChange_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "9884c095": {
-      "name": "TUTO_増援",
-      "label": "Enemy Reinforcements",
-      "title_id": "MID_TUT_Bmap_Reinforcements_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "5c6f187a": {
-      "name": "TUTO_回復",
-      "label": "Restoring HP",
-      "title_id": "MID_TUT_Bmap_Recovery_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "075cb5c5": {
-      "name": "TUTO_地形",
-      "label": "Terrain Effects",
-      "title_id": "MID_TUT_Bmap_Topography_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "1bd2c0d1": {
-      "name": "TUTO_射程",
-      "label": "Range",
-      "title_id": "MID_TUT_Bmap_Range_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "8f83d3a6": {
-      "name": "TUTO_特効／有効",
-      "label": "Effective and Effective+",
-      "title_id": "MID_TUT_Bmap_SpecialAttack_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "a40e72f2": {
-      "name": "TUTO_戦技",
-      "label": "Combat Arts",
-      "title_id": "MID_TUT_Bmap_CombatTechnique_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "a8d606b3": {
-      "name": "TUTO_詳細情報",
-      "label": "Unit Stats",
-      "title_id": "MID_TUT_Bmap_Xhelp_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "5a6abf3a": {
-      "name": "TUTO_魔法",
-      "label": "Attack Magic",
-      "title_id": "MID_TUT_Bmap_Magic_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "47e2250f": {
-      "name": "TUTO_危険範囲",
-      "label": "Threat Range",
-      "title_id": "MID_TUT_Bmap_HazardRange_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "ceb5f8c1": {
-      "name": "TUTO_ターゲットライン",
-      "label": "Target Lines",
-      "title_id": "MID_TUT_Bmap_TargetLine_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "17f65c17": {
-      "name": "TUTO_ターゲットライン②",
-      "label": "Target Line Colors",
-      "title_id": "MID_TUT_Bmap_TargetLine2_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "a35c8d43": {
-      "name": "TUTO_出撃準備",
-      "label": "Battle Preparation",
-      "title_id": "MID_TUT_Bmap_SortiePreparation_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "d427056e": {
-      "name": "TUTO_ユニット選択",
-      "label": "Unit Selection",
-      "title_id": "MID_TUT_Bmap_UnitSelection_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "bf990cc5": {
-      "name": "TUTO_身支度",
-      "label": "Inventory",
-      "title_id": "MID_TUT_Bmap_GettingDressed_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "e9837746": {
-      "name": "TUTO_配置変更",
-      "label": "Swap Spaces",
-      "title_id": "MID_TUT_Bmap_Realignment_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "f16b3dd0": {
-      "name": "TUTO_補助「回復魔法」",
-      "label": "Recovery Magic",
-      "title_id": "MID_TUT_Bmap_RecoveryMagic_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "5f662be0": {
-      "name": "TUTO_支援効果",
-      "label": "Support Buffs",
-      "title_id": "MID_TUT_Bmap_SupportingEffect_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "c5157ce9": {
-      "name": "TUTO_フォトナの能力",
-      "label": "Fortuna's Blessing",
-      "title_id": "MID_TUT_Bmap_TurnBackTime_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "046f8016": {
-      "name": "TUTO_会話",
-      "label": "Talk",
-      "title_id": "MID_TUT_Bmap_Conversation_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "6072e625": {
-      "name": "TUTO_ゲスト参戦",
-      "label": "Guest Combatants",
-      "title_id": "MID_TUT_Bmap_Guest_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "ce7a727a": {
-      "name": "TUTO_地形破壊",
-      "label": "Destroying Terrain",
-      "title_id": "MID_TUT_Bmap_TerrainDestruction_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "57c0d2bd": {
-      "name": "TUTO_離脱",
-      "label": "Escape",
-      "title_id": "MID_TUT_Bmap_Withdrawal_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "0e862608": {
-      "name": "TUTO_巨大敵",
-      "label": "Large Units and Barriers",
-      "title_id": "MID_TUT_Bmap_GiantEnemy_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "5dd0a4f5": {
-      "name": "TUTO_HPストック",
-      "label": "HP Reserve",
-      "title_id": "MID_TUT_Bmap_HPStock_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "3660d150": {
-      "name": "TUTO_宝箱",
-      "label": "Chests",
-      "title_id": "MID_TUT_Bmap_TreasureChest_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "5c17c5f1": {
-      "name": "TUTO_索敵マップ",
-      "label": "Low-Visibility Maps",
-      "title_id": "MID_TUT_Bmap_FogMap_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "8c3852f0": {
-      "name": "TUTO_雨天マップ",
-      "label": "Rainy Weather",
-      "title_id": "MID_TUT_Bmap_Rain_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "700bd0b7": {
-      "name": "TUTO_弓砲台",
-      "label": "Artillery",
-      "title_id": "MID_TUT_Bmap_BowBattery_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "29043d8a": {
-      "name": "TUTO_特殊効果床",
-      "label": "Special Terrain",
-      "title_id": "MID_TUT_Bmap_SpecialEffectsFlooring_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "5c370bea": {
-      "name": "TUTO_復活について",
-      "label": "Automatic Return",
-      "title_id": "MID_TUT_Bmap_Revival_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "26373fe0": {
-      "name": "TUTO_呪宝",
-      "label": "Cursed Treasures",
-      "title_id": "MID_TUT_Bmap_CursedTreasure_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "9609eed6": {
-      "name": "TUTO_SC14_06_聖水",
-      "label": "Pure Water",
-      "title_id": "MID_TUT_Bmap_HolyWater_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "759e15fb": {
-      "name": "TUTO_ブレイズアーツ「白鴉ノ槍　壱式」",
-      "label": "Eshmel's Purifying Flash",
-      "title_id": "MID_TUT_Bmap_WhiteRaven_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "5c02f403": {
-      "name": "TUTO_真焔将カイ",
-      "label": "Cai's Underworld Burst",
-      "title_id": "MID_TUT_Bmap_Kai_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "e458c1a3": {
-      "name": "TUTO_真焔将セオドラ",
-      "label": "Theodora's Earthen Throw",
-      "title_id": "MID_TUT_Bmap_Seodola_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "20e0a93c": {
-      "name": "TUTO_真焔将レダ",
-      "label": "Leda's Spellsongs",
-      "title_id": "MID_TUT_Bmap_Leda_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "fdf3931d": {
-      "name": "TUTO_真焔将ディートリヒ",
-      "label": "Dietrich's Moving Shadow",
-      "title_id": "MID_TUT_Bmap_Ditlih_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "10cd1ae2": {
-      "name": "TUTO_真焔将アナトリア",
-      "label": "Anatolia's Dragon Strike",
-      "title_id": "MID_TUT_Root_SalvationANH_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "3b8ef61b": {
-      "name": "TUTO_真焔将タリムーン",
-      "label": "Talimun's Curses",
-      "title_id": "MID_TUT_Root_SalvationTAL_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "8e7c0d4c": {
-      "name": "TUTO_ブレイズタイプ「冥府」",
-      "label": "Blaze Type: Underworld",
-      "title_id": "MID_TUT_Bmap_Hell_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "bda2cb4d": {
-      "name": "TUTO_ブレイズタイプ「天柱」",
-      "label": "Blaze Type: Celestial Wells",
-      "title_id": "MID_TUT_Bmap_HeavenlyPillar_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "53b39ed9": {
-      "name": "TUTO_ブレイズタイプ「機構」",
-      "label": "Blaze Type: Automaton",
-      "title_id": "MID_TUT_Bmap_Mechanism_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "6d9f2553": {
-      "name": "TUTO_ブレイズスキル「暴走」",
-      "label": "Blaze Ability: Rampage",
-      "title_id": "MID_TUT_Bmap_Runaway_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "4fce5bf9": {
-      "name": "TUTO_酒場興行1",
-      "label": "Tavern Performances (Leda)",
-      "title_id": "MID_TUT_Root_BarShow_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "7e009cb0": {
-      "name": "TUTO_地方興行1",
-      "label": "Local Performances (Leda)",
-      "title_id": "MID_TUT_Root_LocalEntertainment_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "7e009cb3": {
-      "name": "TUTO_地方興行2",
-      "label": "Secret Spots (Leda)",
-      "title_id": "MID_TUT_Root_LocalEntertainment2_t",
-      "evidence": "screenshot-and-save-restoration"
-    },
-    "9dfa38c7": {
-      "name": "TUTO_飲み物係",
-      "label": "The Drink Vendor (Leda)",
-      "title_id": "MID_TUT_Root_DrinkPerson_t",
-      "evidence": "screenshot-and-save-restoration"
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x390",
+      "category": "Free time"
     },
     "08373a0e": {
       "name": "TUTO_戦いの助言",
       "label": "Foresight",
       "title_id": "MID_TUT_Hub_Advice_t",
-      "evidence": "screenshot-and-save-restoration"
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x3c0",
+      "category": "Free time"
+    },
+    "1cfa3e7a": {
+      "name": "TUTO_名声",
+      "label": "Renown",
+      "title_id": "MID_TUT_Hub_Fame_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x3f0",
+      "category": "Free time"
+    },
+    "cab4ec3b": {
+      "name": "TUTO_クエスト",
+      "label": "Quests",
+      "title_id": "MID_TUT_Hub_Subquest_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x420",
+      "category": "Free time"
+    },
+    "7b102c4f": {
+      "name": "TUTO_拠点地図",
+      "label": "Base Map",
+      "title_id": "MID_TUT_Hub_Map_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x450",
+      "category": "Free time"
+    },
+    "8868aa83": {
+      "name": "TUTO_スカウト",
+      "label": "Recruiting Allies",
+      "title_id": "MID_TUT_Hub_Scout_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x480",
+      "category": "Free time"
+    },
+    "ff8874da": {
+      "name": "TUTO_贈り物",
+      "label": "Giving Gifts",
+      "title_id": "MID_TUT_Hub_Gift_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x4b0",
+      "category": "Free time"
+    },
+    "70980a6f": {
+      "name": "TUTO_案内板",
+      "label": "Bulletin Boards",
+      "title_id": "MID_TUT_Hub_InformationBoard_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x4e0",
+      "category": "Free time"
+    },
+    "cd28cfa5": {
+      "name": "TUTO_白鴉の止まり木",
+      "label": "Feeding the Pale Raven",
+      "title_id": "MID_TUT_Hub_Perch_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x510",
+      "category": "Free time"
+    },
+    "935aafea": {
+      "name": "TUTO_絆の降臨",
+      "label": "Support Salvation",
+      "title_id": "MID_TUT_Hub_AdventBonds_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x540",
+      "category": "Free time"
+    },
+    "ae04a09a": {
+      "name": "TUTO_運命の記録・因果の扉",
+      "label": "Notable Deeds and Boons of Salvation",
+      "title_id": "MID_TUT_Hub_DestinyKarma_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x570",
+      "category": "Free time"
+    },
+    "a3142903": {
+      "name": "TUTO_宿屋",
+      "label": "Inns",
+      "title_id": "MID_TUT_Hub_Inn_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x5a0",
+      "category": "Free time"
+    },
+    "b56f10a2": {
+      "name": "TUTO_食事",
+      "label": "Meals",
+      "title_id": "MID_TUT_Hub_Meal_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x5d0",
+      "category": "Free time"
+    },
+    "51892c9c": {
+      "name": "TUTO_個別行動",
+      "label": "Auto-Activities",
+      "title_id": "MID_TUT_Hub_IndividualAction_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x600",
+      "category": "Free time"
+    },
+    "b8ad3a62": {
+      "name": "TUTO_武器屋",
+      "label": "Armories",
+      "title_id": "MID_TUT_Hub_WeaponShop_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x630",
+      "category": "Free time"
+    },
+    "a2e06171": {
+      "name": "TUTO_道具屋",
+      "label": "Item Shops",
+      "title_id": "MID_TUT_Hub_ToolShop_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x660",
+      "category": "Free time"
+    },
+    "cd32158a": {
+      "name": "TUTO_市場",
+      "label": "Marketplaces",
+      "title_id": "MID_TUT_Hub_Market_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x690",
+      "category": "Free time"
+    },
+    "c2d5b701": {
+      "name": "TUTO_訓練",
+      "label": "Training",
+      "title_id": "MID_TUT_Hub_Training_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x6c0",
+      "category": "Free time"
+    },
+    "98fbdd67": {
+      "name": "TUTO_闘技場",
+      "label": "Spectating",
+      "title_id": "MID_TUT_Hub_Arena_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x6f0",
+      "category": "Free time"
+    },
+    "1965109f": {
+      "name": "TUTO_神殿",
+      "label": "Temples",
+      "title_id": "MID_TUT_Hub_Temple_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x720",
+      "category": "Free time"
+    },
+    "acb522fb": {
+      "name": "TUTO_加護編成",
+      "label": "Blessings",
+      "title_id": "MID_TUT_Hub_GodFormation_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x750",
+      "category": "Free time"
+    },
+    "7abf7631": {
+      "name": "TUTO_奉仕活動",
+      "label": "Temple Service",
+      "title_id": "MID_TUT_Hub_Volunteer_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x780",
+      "category": "Free time"
+    },
+    "3659245e": {
+      "name": "TUTO_神の道の門",
+      "label": "Gate of the Gods",
+      "title_id": "MID_TUT_Hub_GodGate_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x7b0",
+      "category": "Free time"
+    },
+    "c4801ceb": {
+      "name": "TUTO_資格試験",
+      "label": "Certification Exams",
+      "title_id": "MID_TUT_Hub_ClassTrial_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x7e0",
+      "category": "Free time"
+    },
+    "12558a41": {
+      "name": "TUTO_兵種変更",
+      "label": "Reclassing Units",
+      "title_id": "MID_TUT_Hub_ClassChange_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x810",
+      "category": "Free time"
+    },
+    "e8b98788": {
+      "name": "TUTO_ヴァンダル商会",
+      "label": "Vandahl Trading Company",
+      "title_id": "MID_TUT_Hub_firm_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x840",
+      "category": "Free time"
+    },
+    "17351901": {
+      "name": "TUTO_鍛冶屋",
+      "label": "Blacksmith",
+      "title_id": "MID_TUT_Hub_Blacksmith_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x870",
+      "category": "Free time"
+    },
+    "af3a4f61": {
+      "name": "TUTO_観劇",
+      "label": "Watching",
+      "title_id": "MID_TUT_Hub_TheaterViewing_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x8a0",
+      "category": "Free time"
+    },
+    "1c2b4d00": {
+      "label": "Theatre",
+      "evidence": "provisional-translation",
+      "name": "TUTO_演劇",
+      "title_id": "MID_TUT_Hub_Theater_t",
+      "source": "Tutorial.bin",
+      "offset": "0x8d0",
+      "category": "Free time"
+    },
+    "91fc9e12": {
+      "label": "Thermae",
+      "evidence": "provisional-translation",
+      "name": "TUTO_テルマエ",
+      "title_id": "MID_TUT_Hub_Thermae_t",
+      "source": "Tutorial.bin",
+      "offset": "0x900",
+      "category": "Free time"
+    },
+    "f92596de": {
+      "label": "Side Stories",
+      "evidence": "provisional-translation",
+      "name": "TUTO_外伝",
+      "title_id": "MID_TUT_Hub_SideStory_t",
+      "source": "Tutorial.bin",
+      "offset": "0x930",
+      "category": "Free time"
+    },
+    "ab0eee36": {
+      "label": "Returning Certifications",
+      "evidence": "provisional-translation",
+      "name": "TUTO_資格返還",
+      "title_id": "MID_TUT_Bmap_ReturnQualification_t",
+      "source": "Tutorial.bin",
+      "offset": "0x960",
+      "category": "Combat"
+    },
+    "cf0ad5b8": {
+      "label": "Salvation",
+      "evidence": "provisional-translation",
+      "name": "TUTO_救世",
+      "title_id": "MID_TUT_Hub_HonorPart3_t",
+      "source": "Tutorial.bin",
+      "offset": "0x990",
+      "category": "Free time"
+    },
+    "1bb681b4": {
+      "label": "Temple of the Heavenly Crown",
+      "evidence": "provisional-translation",
+      "name": "TUTO_天冠の神殿",
+      "title_id": "MID_TUT_Hub_TempleCrown_t",
+      "source": "Tutorial.bin",
+      "offset": "0x9c0",
+      "category": "Free time"
+    },
+    "88b83088": {
+      "label": "Divine General Exam Passes",
+      "evidence": "provisional-translation",
+      "name": "TUTO_神将試験手形",
+      "title_id": "MID_TUT_Hub_LegendPass_t",
+      "source": "Tutorial.bin",
+      "offset": "0x9f0",
+      "category": "Free time"
     },
     "c2a2c517": {
       "name": "TUTO_塔のアクセス",
       "label": "Obelisk Chamber",
       "title_id": "MID_TUT_Hub_Spire_t",
-      "evidence": "screenshot-and-save-restoration"
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0xa20",
+      "category": "Free time"
+    },
+    "2b0739cc": {
+      "name": "TUTO_方尖塔倉庫",
+      "label": "Drifting Reliquary",
+      "title_id": "MID_TUT_Hub_Warehouse_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0xa50",
+      "category": "Free time"
+    },
+    "0f8f2af5": {
+      "label": "Merging Units",
+      "evidence": "provisional-translation",
+      "name": "TUTO_ユニットマージ",
+      "title_id": "MID_TUT_Hub_Merge_t",
+      "source": "Tutorial.bin",
+      "offset": "0xa80",
+      "category": "Free time"
+    },
+    "61c5f443": {
+      "name": "TUTO_ワールドマップ",
+      "label": "The World Map",
+      "title_id": "MID_TUT_Gmap_Gmap_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0xab0",
+      "category": "World map"
+    },
+    "ef31175a": {
+      "name": "TUTO_勢力出現",
+      "label": "Roaming Encounters",
+      "title_id": "MID_TUT_Gmap_TroopAppearance_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0xae0",
+      "category": "World map"
+    },
+    "91927401": {
+      "name": "TUTO_HP継続",
+      "label": "Recovery During Free Time",
+      "title_id": "MID_TUT_Gmap_AfterBattle_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0xb10",
+      "category": "World map"
+    },
+    "efe8cf90": {
+      "name": "TUTO_スポット：拠点",
+      "label": "Bases",
+      "title_id": "MID_TUT_Gmap_Base_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0xb40",
+      "category": "World map"
+    },
+    "7ff54e21": {
+      "name": "TUTO_探索",
+      "label": "Search Locations",
+      "title_id": "MID_TUT_Gmap_Explore_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0xb70",
+      "category": "World map"
+    },
+    "ee2ed6a6": {
+      "name": "TUTO_スポット：駅",
+      "label": "Posthouses",
+      "title_id": "MID_TUT_Gmap_Station_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0xba0",
+      "category": "World map"
+    },
+    "08c25f09": {
+      "name": "TUTO_スポット：ダンジョン",
+      "label": "Dungeons",
+      "title_id": "MID_TUT_Gmap_DungeonSpot_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0xbd0",
+      "category": "World map"
+    },
+    "cadd84e3": {
+      "name": "TUTO_スポット：簡易拠点",
+      "label": "Settlements",
+      "title_id": "MID_TUT_Gmap_SimpleBase_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0xc00",
+      "category": "World map"
+    },
+    "de253fb8": {
+      "name": "TUTO_スポット：神殿",
+      "label": "Main Temples",
+      "title_id": "MID_TUT_Gmap_TempleSpot_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0xc30",
+      "category": "World map"
+    },
+    "32d32716": {
+      "name": "TUTO_遭遇戦",
+      "label": "Skirmishes",
+      "title_id": "MID_TUT_Gmap_EncounterBattle_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0xc60",
+      "category": "World map"
+    },
+    "e357a466": {
+      "name": "TUTO_商人",
+      "label": "Trading on the World Map",
+      "title_id": "MID_TUT_Gmap_Merchant_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0xc90",
+      "category": "World map"
+    },
+    "1a2c014b": {
+      "name": "TUTO_関",
+      "label": "Checkpoints",
+      "title_id": "MID_TUT_Gmap_Seki_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0xcc0",
+      "category": "World map"
+    },
+    "3bb4016e": {
+      "name": "TUTO_饗宴",
+      "label": "Feast Locations",
+      "title_id": "MID_TUT_Gmap_Feast_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0xcf0",
+      "category": "World map"
+    },
+    "255f6e46": {
+      "label": "Underworld Gate Status",
+      "evidence": "provisional-translation",
+      "name": "TUTO_冥界の門の状態",
+      "title_id": "MID_TUT_Gmap_UnderworldGateStatus_t",
+      "source": "Tutorial.bin",
+      "offset": "0xd20",
+      "category": "World map"
+    },
+    "64a29ef7": {
+      "label": "Troop Formation",
+      "evidence": "provisional-translation",
+      "name": "TUTO_部隊編成",
+      "title_id": "MID_TUT_Gmap_TroopFormation_t",
+      "source": "Tutorial.bin",
+      "offset": "0xd50",
+      "category": "World map"
+    },
+    "7d1133c7": {
+      "label": "Multiple Troops",
+      "evidence": "provisional-translation",
+      "name": "TUTO_複数部隊",
+      "title_id": "MID_TUT_Gmap_MultipleTroops_t",
+      "source": "Tutorial.bin",
+      "offset": "0xd80",
+      "category": "World map"
+    },
+    "e78e1337": {
+      "label": "Allies in Dagsion",
+      "evidence": "provisional-translation",
+      "name": "TUTO_ダグシオンにいる仲間",
+      "title_id": "MID_TUT_Gmap_StandbyUnit_t",
+      "source": "Tutorial.bin",
+      "offset": "0xdb0",
+      "category": "World map"
+    },
+    "0254bf3d": {
+      "label": "Eshmel Coming to Help",
+      "evidence": "provisional-translation",
+      "name": "TUTO_駆けつけるイシュマール",
+      "title_id": "MID_TUT_Gmap_IshmalComing_t",
+      "source": "Tutorial.bin",
+      "offset": "0xde0",
+      "category": "World map"
+    },
+    "0f5f74d4": {
+      "label": "Reconstruction",
+      "evidence": "provisional-translation",
+      "name": "TUTO_復興",
+      "title_id": "MID_TUT_Gmap_Reconstruction_t",
+      "source": "Tutorial.bin",
+      "offset": "0xe10",
+      "category": "World map"
+    },
+    "449f40fa": {
+      "label": "Fort Locations",
+      "evidence": "provisional-translation",
+      "name": "TUTO_スポット「砦」",
+      "title_id": "MID_TUT_Gmap_Fort_t",
+      "source": "Tutorial.bin",
+      "offset": "0xe40",
+      "category": "World map"
+    },
+    "b703d84e": {
+      "label": "Miasma",
+      "evidence": "provisional-translation",
+      "name": "TUTO_瘴気",
+      "title_id": "MID_TUT_Gmap_Miasma_t",
+      "source": "Tutorial.bin",
+      "offset": "0xe70",
+      "category": "World map"
+    },
+    "602a0c11": {
+      "label": "Underworld Gates",
+      "evidence": "provisional-translation",
+      "name": "TUTO_冥界の門",
+      "title_id": "MID_TUT_Gmap_UnderworldGate_t",
+      "source": "Tutorial.bin",
+      "offset": "0xea0",
+      "category": "World map"
+    },
+    "11214616": {
+      "label": "Destroying Gates",
+      "evidence": "provisional-translation",
+      "name": "TUTO_門破壊",
+      "title_id": "MID_TUT_Gmap_GateDestruction_t",
+      "source": "Tutorial.bin",
+      "offset": "0xed0",
+      "category": "World map"
+    },
+    "59126734": {
+      "label": "Defending Dagsion",
+      "evidence": "provisional-translation",
+      "name": "TUTO_ダグシオン防衛",
+      "title_id": "MID_TUT_Gmap_Defense_t",
+      "source": "Tutorial.bin",
+      "offset": "0xf00",
+      "category": "World map"
+    },
+    "b2acbc14": {
+      "label": "The Battle to Defend Dagsion",
+      "evidence": "provisional-translation",
+      "name": "TUTO_ダグシオン防衛戦",
+      "title_id": "MID_TUT_Gmap_DefenseBattle_t",
+      "source": "Tutorial.bin",
+      "offset": "0xf30",
+      "category": "World map"
+    },
+    "bf878870": {
+      "label": "The Battle to Defend Dagsion II",
+      "evidence": "provisional-translation",
+      "name": "TUTO_ダグシオン防衛戦②",
+      "title_id": "MID_TUT_Gmap_DefenseBattle2_t",
+      "source": "Tutorial.bin",
+      "offset": "0xf60",
+      "category": "World map"
+    },
+    "1ef156e1": {
+      "label": "Multiple Gates Appearing",
+      "evidence": "provisional-translation",
+      "name": "TUTO_複数の門の出現",
+      "title_id": "MID_TUT_Gmap_MultipleGate_t",
+      "source": "Tutorial.bin",
+      "offset": "0xf90",
+      "category": "World map"
+    },
+    "0a0f8a2f": {
+      "label": "The Great Gate",
+      "evidence": "provisional-translation",
+      "name": "TUTO_大門",
+      "title_id": "MID_TUT_Gmap_BigGate_t",
+      "source": "Tutorial.bin",
+      "offset": "0xfc0",
+      "category": "World map"
+    },
+    "eb6c1fa5": {
+      "label": "Shortening Reconstruction Time",
+      "evidence": "provisional-translation",
+      "name": "TUTO_復興時間の短縮",
+      "title_id": "MID_TUT_Gmap_ReconstructionShorten_t",
+      "source": "Tutorial.bin",
+      "offset": "0xff0",
+      "category": "World map"
+    },
+    "f5e3ef21": {
+      "label": "The Ninth Gate",
+      "evidence": "provisional-translation",
+      "name": "TUTO_第9門",
+      "title_id": "MID_TUT_Gmap_LastGate_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1020",
+      "category": "World map"
+    },
+    "1fe9adeb": {
+      "name": "TUTO_ダンジョン探索",
+      "label": "Clashing in Dungeons",
+      "title_id": "MID_TUT_ShortBattle_Dungeon_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1050",
+      "category": "Combat"
+    },
+    "138613de": {
+      "name": "TUTO_ショートバトル",
+      "label": "Clashes",
+      "title_id": "MID_TUT_ShortBattle_ShortBattle_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1080",
+      "category": "Combat"
+    },
+    "ce37b008": {
+      "name": "TUTO_連携",
+      "label": "Links",
+      "title_id": "MID_TUT_ShortBattle_Cooperation_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x10b0",
+      "category": "Combat"
+    },
+    "baa67558": {
+      "name": "TUTO_イベントバトル",
+      "label": "Event Clashes",
+      "title_id": "MID_TUT_ShortBattle_EventBattle_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x10e0",
+      "category": "Combat"
+    },
+    "ec0d9634": {
+      "name": "TUTO_おまかせ",
+      "label": "Auto-Battle in Clashes",
+      "title_id": "MID_TUT_ShortBattle_Auto_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1110",
+      "category": "Combat"
+    },
+    "d26efb9f": {
+      "name": "TUTO_破壊物品",
+      "label": "Breakable Objects in Dungeons",
+      "title_id": "MID_TUT_ShortBattle_DestroyedItems_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1140",
+      "category": "Combat"
+    },
+    "6622071d": {
+      "name": "TUTO_ダンジョン「宝箱」",
+      "label": "Dungeon Chests",
+      "title_id": "MID_TUT_ShortBattle_DngTreasureChest_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1170",
+      "category": "Combat"
+    },
+    "037e5a5d": {
+      "name": "TUTO_ダンジョン「休憩」",
+      "label": "Resting in Dungeons",
+      "title_id": "MID_TUT_ShortBattle_RestingPlace_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x11a0",
+      "category": "Combat"
+    },
+    "1909d68d": {
+      "name": "TUTO_MVP",
+      "label": "Clash MVPs",
+      "title_id": "MID_TUT_ShortBattle_MVP_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x11d0",
+      "category": "Combat"
+    },
+    "2c0c9318": {
+      "label": "Field Kills",
+      "evidence": "provisional-translation",
+      "name": "TUTO_フィールドキル",
+      "title_id": "MID_TUT_ShortBattle_FieldKill_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1200",
+      "category": "Combat"
+    },
+    "c9afad83": {
+      "name": "TUTO_ブレイズアーツ",
+      "label": "Blaze Arts",
+      "title_id": "MID_TUT_Bmap_BlazeArts_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1230",
+      "category": "Combat"
+    },
+    "33556643": {
+      "name": "TUTO_オーバーブレイズ",
+      "label": "Overblaze",
+      "title_id": "MID_TUT_Bmap_OverBlaze_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1260",
+      "category": "Combat"
+    },
+    "5d5a38bc": {
+      "name": "TUTO_移動",
+      "label": "Units and Movement",
+      "title_id": "MID_TUT_Bmap_Move_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1290",
+      "category": "Combat"
+    },
+    "32b41814": {
+      "name": "TUTO_ユニットコマンド",
+      "label": "The Wait Command",
+      "title_id": "MID_TUT_Bmap_UnitCommand_t_",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x12c0",
+      "category": "Combat"
+    },
+    "26c22fbf": {
+      "name": "TUTO_攻撃方法",
+      "label": "The Attack Command",
+      "title_id": "MID_TUT_Bmap_Attack_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x12f0",
+      "category": "Combat"
+    },
+    "6bde17b4": {
+      "label": "Weapon Type Characteristics",
+      "evidence": "provisional-translation",
+      "name": "TUTO_武器種ごとの特徴",
+      "title_id": "MID_TUT_Bmap_WeaponType_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1320",
+      "category": "Combat"
+    },
+    "606d8841": {
+      "name": "TUTO_経験値",
+      "label": "Experience Points and Leveling Up",
+      "title_id": "MID_TUT_Bmap_ExperienceValue_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1350",
+      "category": "Combat"
+    },
+    "d00c3b90": {
+      "name": "TUTO_フェイズチェンジ",
+      "label": "Phases and Turns",
+      "title_id": "MID_TUT_Bmap_PhaseChange_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1380",
+      "category": "Combat"
+    },
+    "9884c095": {
+      "name": "TUTO_増援",
+      "label": "Enemy Reinforcements",
+      "title_id": "MID_TUT_Bmap_Reinforcements_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x13b0",
+      "category": "Combat"
+    },
+    "5c6f187a": {
+      "name": "TUTO_回復",
+      "label": "Restoring HP",
+      "title_id": "MID_TUT_Bmap_Recovery_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x13e0",
+      "category": "Combat"
+    },
+    "075cb5c5": {
+      "name": "TUTO_地形",
+      "label": "Terrain Effects",
+      "title_id": "MID_TUT_Bmap_Topography_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1410",
+      "category": "Combat"
+    },
+    "1bd2c0d1": {
+      "name": "TUTO_射程",
+      "label": "Range",
+      "title_id": "MID_TUT_Bmap_Range_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1440",
+      "category": "Combat"
+    },
+    "8f83d3a6": {
+      "name": "TUTO_特効／有効",
+      "label": "Effective and Effective+",
+      "title_id": "MID_TUT_Bmap_SpecialAttack_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1470",
+      "category": "Combat"
+    },
+    "a40e72f2": {
+      "name": "TUTO_戦技",
+      "label": "Combat Arts",
+      "title_id": "MID_TUT_Bmap_CombatTechnique_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x14a0",
+      "category": "Combat"
+    },
+    "a8d606b3": {
+      "name": "TUTO_詳細情報",
+      "label": "Unit Stats",
+      "title_id": "MID_TUT_Bmap_Xhelp_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x14d0",
+      "category": "Combat"
+    },
+    "5a6abf3a": {
+      "name": "TUTO_魔法",
+      "label": "Attack Magic",
+      "title_id": "MID_TUT_Bmap_Magic_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1500",
+      "category": "Combat"
+    },
+    "47e2250f": {
+      "name": "TUTO_危険範囲",
+      "label": "Threat Range",
+      "title_id": "MID_TUT_Bmap_HazardRange_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1530",
+      "category": "Combat"
+    },
+    "ceb5f8c1": {
+      "name": "TUTO_ターゲットライン",
+      "label": "Target Lines",
+      "title_id": "MID_TUT_Bmap_TargetLine_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1560",
+      "category": "Combat"
+    },
+    "17f65c17": {
+      "name": "TUTO_ターゲットライン②",
+      "label": "Target Line Colors",
+      "title_id": "MID_TUT_Bmap_TargetLine2_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1590",
+      "category": "Combat"
+    },
+    "a35c8d43": {
+      "name": "TUTO_出撃準備",
+      "label": "Battle Preparation",
+      "title_id": "MID_TUT_Bmap_SortiePreparation_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x15c0",
+      "category": "Combat"
+    },
+    "d427056e": {
+      "name": "TUTO_ユニット選択",
+      "label": "Unit Selection",
+      "title_id": "MID_TUT_Bmap_UnitSelection_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x15f0",
+      "category": "Combat"
+    },
+    "bf990cc5": {
+      "name": "TUTO_身支度",
+      "label": "Inventory",
+      "title_id": "MID_TUT_Bmap_GettingDressed_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1620",
+      "category": "Combat"
+    },
+    "e9837746": {
+      "name": "TUTO_配置変更",
+      "label": "Swap Spaces",
+      "title_id": "MID_TUT_Bmap_Realignment_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1650",
+      "category": "Combat"
+    },
+    "f16b3dd0": {
+      "name": "TUTO_補助「回復魔法」",
+      "label": "Recovery Magic",
+      "title_id": "MID_TUT_Bmap_RecoveryMagic_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1680",
+      "category": "Combat"
+    },
+    "5f662be0": {
+      "name": "TUTO_支援効果",
+      "label": "Support Buffs",
+      "title_id": "MID_TUT_Bmap_SupportingEffect_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x16b0",
+      "category": "Combat"
+    },
+    "c5157ce9": {
+      "name": "TUTO_フォトナの能力",
+      "label": "Fortuna's Blessing",
+      "title_id": "MID_TUT_Bmap_TurnBackTime_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x16e0",
+      "category": "Combat"
+    },
+    "046f8016": {
+      "name": "TUTO_会話",
+      "label": "Talk",
+      "title_id": "MID_TUT_Bmap_Conversation_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1710",
+      "category": "Combat"
+    },
+    "6072e625": {
+      "name": "TUTO_ゲスト参戦",
+      "label": "Guest Combatants",
+      "title_id": "MID_TUT_Bmap_Guest_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1740",
+      "category": "Combat"
+    },
+    "ce7a727a": {
+      "name": "TUTO_地形破壊",
+      "label": "Destroying Terrain",
+      "title_id": "MID_TUT_Bmap_TerrainDestruction_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1770",
+      "category": "Combat"
+    },
+    "57c0d2bd": {
+      "name": "TUTO_離脱",
+      "label": "Escape",
+      "title_id": "MID_TUT_Bmap_Withdrawal_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x17a0",
+      "category": "Combat"
+    },
+    "0e862608": {
+      "name": "TUTO_巨大敵",
+      "label": "Large Units and Barriers",
+      "title_id": "MID_TUT_Bmap_GiantEnemy_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x17d0",
+      "category": "Combat"
+    },
+    "5dd0a4f5": {
+      "name": "TUTO_HPストック",
+      "label": "HP Reserve",
+      "title_id": "MID_TUT_Bmap_HPStock_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1800",
+      "category": "Combat"
+    },
+    "3660d150": {
+      "name": "TUTO_宝箱",
+      "label": "Chests",
+      "title_id": "MID_TUT_Bmap_TreasureChest_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1830",
+      "category": "Combat"
+    },
+    "5c17c5f1": {
+      "name": "TUTO_索敵マップ",
+      "label": "Low-Visibility Maps",
+      "title_id": "MID_TUT_Bmap_FogMap_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1860",
+      "category": "Combat"
+    },
+    "8c3852f0": {
+      "name": "TUTO_雨天マップ",
+      "label": "Rainy Weather",
+      "title_id": "MID_TUT_Bmap_Rain_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1890",
+      "category": "Combat"
+    },
+    "700bd0b7": {
+      "name": "TUTO_弓砲台",
+      "label": "Artillery",
+      "title_id": "MID_TUT_Bmap_BowBattery_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x18c0",
+      "category": "Combat"
+    },
+    "6c55bdbc": {
+      "label": "Explosives",
+      "evidence": "provisional-translation",
+      "name": "TUTO_爆発物",
+      "title_id": "MID_TUT_Bmap_Explosives_t",
+      "source": "Tutorial.bin",
+      "offset": "0x18f0",
+      "category": "Combat"
+    },
+    "29043d8a": {
+      "name": "TUTO_特殊効果床",
+      "label": "Special Terrain",
+      "title_id": "MID_TUT_Bmap_SpecialEffectsFlooring_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1920",
+      "category": "Combat"
+    },
+    "380c15b1": {
+      "label": "Burning Terrain",
+      "evidence": "provisional-translation",
+      "name": "TUTO_炎上",
+      "title_id": "MID_TUT_Bmap_Flame_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1950",
+      "category": "Combat"
+    },
+    "5c370bea": {
+      "name": "TUTO_復活について",
+      "label": "Automatic Return",
+      "title_id": "MID_TUT_Bmap_Revival_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1980",
+      "category": "Combat"
+    },
+    "79ce0990": {
+      "label": "Transfer Devices",
+      "evidence": "provisional-translation",
+      "name": "TUTO_転移装置",
+      "title_id": "MID_TUT_Bmap_ShiftingDevice_t",
+      "source": "Tutorial.bin",
+      "offset": "0x19b0",
+      "category": "Combat"
+    },
+    "26373fe0": {
+      "name": "TUTO_呪宝",
+      "label": "Cursed Treasures",
+      "title_id": "MID_TUT_Bmap_CursedTreasure_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x19e0",
+      "category": "Combat"
+    },
+    "47000957": {
+      "label": "Damage to the Carriage",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC11_03_馬車へのダメージ",
+      "title_id": "MID_TUT_Bmap_Carriage_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1a10",
+      "category": "Combat"
+    },
+    "840b4808": {
+      "label": "Pillars",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC11_06_柱",
+      "title_id": "MID_TUT_Bmap_Pillar_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1a40",
+      "category": "Combat"
+    },
+    "e16628f5": {
+      "label": "Onslaught",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC11_06_猛撃",
+      "title_id": "MID_TUT_Bmap_Onslaught_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1a70",
+      "category": "Combat"
+    },
+    "a7438cb4": {
+      "label": "The Battle Against Castor",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC11_14_カストール戦",
+      "title_id": "MID_TUT_Bmap_BattleOfCastor_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1aa0",
+      "category": "Combat"
+    },
+    "ed42b094": {
+      "label": "Control Devices (Cai)",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC11_14_制御装置",
+      "title_id": "MID_TUT_Bmap_ControllerKaiEdited_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1ad0",
+      "category": "Combat"
+    },
+    "2607e925": {
+      "label": "Destroying the Bell Tower",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC12_10_鐘楼の破壊",
+      "title_id": "MID_TUT_Bmap_BellTower_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1b00",
+      "category": "Combat"
+    },
+    "25598468": {
+      "label": "The Battle Against the Sea God Cetus",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC12_12_海神ケートゥス戦",
+      "title_id": "MID_TUT_Bmap_SeaGod_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1b30",
+      "category": "Combat"
+    },
+    "65a2293f": {
+      "label": "Fabio's Magic Traps",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC12_12_ファビオの魔法罠",
+      "title_id": "MID_TUT_Bmap_MagicTrap_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1b60",
+      "category": "Combat"
+    },
+    "7e7bcb93": {
+      "label": "Sandstorm Removal Devices",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC12_14_砂嵐除去装置",
+      "title_id": "MID_TUT_Bmap_RemovalDevice_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1b90",
+      "category": "Combat"
+    },
+    "868cb875": {
+      "label": "Fog Removal Devices",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC13_09_霧除去装置",
+      "title_id": "MID_TUT_Bmap_FogRemoval_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1bc0",
+      "category": "Combat"
+    },
+    "94d1d59a": {
+      "label": "Enemies with Weak Points",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC13_10_弱点個体について",
+      "title_id": "MID_TUT_Bmap_Weakness_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1bf0",
+      "category": "Combat"
+    },
+    "5db6a9e6": {
+      "label": "Treasure Hunting",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC13_11_お宝さがし",
+      "title_id": "MID_TUT_Bmap_TreasureHunt_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1c20",
+      "category": "Combat"
+    },
+    "0adf6331": {
+      "label": "Lanterns",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC14_03_灯籠",
+      "title_id": "MID_TUT_Bmap_Lantern_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1c50",
+      "category": "Combat"
+    },
+    "2de752c7": {
+      "label": "Lanterns II",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC14_03_灯籠②",
+      "title_id": "MID_TUT_Bmap_Lantern2_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1c80",
+      "category": "Combat"
+    },
+    "9609eed6": {
+      "name": "TUTO_SC14_06_聖水",
+      "label": "Pure Water",
+      "title_id": "MID_TUT_Bmap_HolyWater_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x1cb0",
+      "category": "Combat"
+    },
+    "9406b3a8": {
+      "label": "Humidity Control Devices",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC14_06_湿度調整装置",
+      "title_id": "MID_TUT_Bmap_HumidityRegulator_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1ce0",
+      "category": "Combat"
+    },
+    "a9e6824a": {
+      "label": "The Wall Around Theodora",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC14_13_セオドラを囲う壁",
+      "title_id": "MID_TUT_Bmap_EnclosingWall_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1d10",
+      "category": "Combat"
+    },
+    "f7c17308": {
+      "label": "Control Devices (Leda)",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC14_13_制御装置",
+      "title_id": "MID_TUT_Bmap_ControllerL_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1d40",
+      "category": "Combat"
+    },
+    "5b6c29b8": {
+      "label": "Stomach Acid",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC14_14_胃酸",
+      "title_id": "MID_TUT_Bmap_StomachAcid_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1d70",
+      "category": "Combat"
+    },
+    "e69c117c": {
+      "label": "Stomach Acid II",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SC14_14_胃酸②",
+      "title_id": "MID_TUT_Bmap_StomachAcid2_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1da0",
+      "category": "Combat"
+    },
+    "3662b39a": {
+      "label": "Lantern Ashes",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SCXX_00_灯篭の灰",
+      "title_id": "MID_TUT_Bmap_LanternAshes_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1dd0",
+      "category": "Combat"
+    },
+    "38b9d2ee": {
+      "label": "Giants",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SCXX_04_巨人",
+      "title_id": "MID_TUT_Bmap_Giant_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1e00",
+      "category": "Combat"
+    },
+    "aa53bc21": {
+      "label": "Food for Giants",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SCXX_04_巨人の餌",
+      "title_id": "MID_TUT_Bmap_GiantFood_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1e30",
+      "category": "Combat"
+    },
+    "869e8f18": {
+      "label": "The Trading Company's Cargo",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SCXX_05_商会の積荷",
+      "title_id": "MID_TUT_Bmap_ChamberCargo_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1e60",
+      "category": "Combat"
+    },
+    "ce28839d": {
+      "label": "Catapults and Control Devices",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SCXX_06_投石機と制御装置",
+      "title_id": "MID_TUT_Bmap_Trebuchet_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1e90",
+      "category": "Combat"
+    },
+    "5799891c": {
+      "label": "The People of Kunlun and Withdrawal",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SCXX_07_コンロンの民と離脱",
+      "title_id": "MID_TUT_Bmap_People_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1ec0",
+      "category": "Combat"
+    },
+    "a738ce98": {
+      "label": "The People of Kunlun and Confusion",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SCXX_07_コンロンの民と錯乱状態",
+      "title_id": "MID_TUT_Bmap_Confusion_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1ef0",
+      "category": "Combat"
+    },
+    "a1a275a6": {
+      "label": "Orichalcum and Giants",
+      "evidence": "provisional-translation",
+      "name": "TUTO_SCXX_08_オリハルコンと巨人",
+      "title_id": "MID_TUT_Bmap_Orichalcum_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1f20",
+      "category": "Combat"
+    },
+    "2d431270": {
+      "label": "Miasma Terrain: First Gate",
+      "evidence": "provisional-translation",
+      "name": "TUTO_瘴気地形「第１門」",
+      "title_id": "MID_TUT_Bmap_FirstGate_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1f50",
+      "category": "Combat"
+    },
+    "ef5e9e3b": {
+      "label": "Miasma Terrain: Second Gate",
+      "evidence": "provisional-translation",
+      "name": "TUTO_瘴気地形「第２門」",
+      "title_id": "MID_TUT_Bmap_SecondGate_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1f80",
+      "category": "Combat"
+    },
+    "79893a19": {
+      "label": "Miasma Terrain: Second Gate II",
+      "evidence": "provisional-translation",
+      "name": "TUTO_瘴気地形「第２門」②",
+      "title_id": "MID_TUT_Bmap_SecondGate2_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1fb0",
+      "category": "Combat"
+    },
+    "13e0cf7e": {
+      "label": "Miasma Terrain: Third Gate",
+      "evidence": "provisional-translation",
+      "name": "TUTO_瘴気地形「第３門」",
+      "title_id": "MID_TUT_Bmap_ThirdGate_t",
+      "source": "Tutorial.bin",
+      "offset": "0x1fe0",
+      "category": "Combat"
+    },
+    "6e88dae1": {
+      "label": "Miasma Terrain: Fourth Gate",
+      "evidence": "provisional-translation",
+      "name": "TUTO_瘴気地形「第４門」",
+      "title_id": "MID_TUT_Bmap_FourthGate_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2010",
+      "category": "Combat"
+    },
+    "3d10cca4": {
+      "label": "Miasma Terrain: Fifth Gate",
+      "evidence": "provisional-translation",
+      "name": "TUTO_瘴気地形「第５門」",
+      "title_id": "MID_TUT_Bmap_FifthGate_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2040",
+      "category": "Combat"
+    },
+    "b5ecf88f": {
+      "label": "Miasma Terrain: Sixth Gate",
+      "evidence": "provisional-translation",
+      "name": "TUTO_瘴気地形「第６門」",
+      "title_id": "MID_TUT_Bmap_SixthGate_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2070",
+      "category": "Combat"
+    },
+    "53b04b62": {
+      "label": "Miasma Terrain: Seventh Gate",
+      "evidence": "provisional-translation",
+      "name": "TUTO_瘴気地形「第７門」",
+      "title_id": "MID_TUT_Bmap_SeventhGate_t",
+      "source": "Tutorial.bin",
+      "offset": "0x20a0",
+      "category": "Combat"
+    },
+    "9ad30835": {
+      "label": "Miasma Terrain: Eighth Gate",
+      "evidence": "provisional-translation",
+      "name": "TUTO_瘴気地形「第８門」",
+      "title_id": "MID_TUT_Bmap_EighthGate_t",
+      "source": "Tutorial.bin",
+      "offset": "0x20d0",
+      "category": "Combat"
+    },
+    "3637f398": {
+      "label": "Miasma Terrain: Ninth Gate",
+      "evidence": "provisional-translation",
+      "name": "TUTO_瘴気地形「第９門」",
+      "title_id": "MID_TUT_Bmap_NinthGate_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2100",
+      "category": "Combat"
+    },
+    "4bce9c7b": {
+      "label": "Balor and the Underworld Gate",
+      "evidence": "provisional-translation",
+      "name": "TUTO_バロールと冥界の門",
+      "title_id": "MID_TUT_Bmap_LastBattle_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2130",
+      "category": "Combat"
+    },
+    "759e15fb": {
+      "name": "TUTO_ブレイズアーツ「白鴉ノ槍　壱式」",
+      "label": "Eshmel's Purifying Flash",
+      "title_id": "MID_TUT_Bmap_WhiteRaven_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x2160",
+      "category": "Combat"
+    },
+    "5c02f403": {
+      "name": "TUTO_真焔将カイ",
+      "label": "Cai's Underworld Burst",
+      "title_id": "MID_TUT_Bmap_Kai_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x2190",
+      "category": "Combat"
+    },
+    "e458c1a3": {
+      "name": "TUTO_真焔将セオドラ",
+      "label": "Theodora's Earthen Throw",
+      "title_id": "MID_TUT_Bmap_Seodola_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x21c0",
+      "category": "Combat"
+    },
+    "20e0a93c": {
+      "name": "TUTO_真焔将レダ",
+      "label": "Leda's Spellsongs",
+      "title_id": "MID_TUT_Bmap_Leda_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x21f0",
+      "category": "Combat"
+    },
+    "fdf3931d": {
+      "name": "TUTO_真焔将ディートリヒ",
+      "label": "Dietrich's Moving Shadow",
+      "title_id": "MID_TUT_Bmap_Ditlih_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x2220",
+      "category": "Combat"
+    },
+    "10cd1ae2": {
+      "name": "TUTO_真焔将アナトリア",
+      "label": "Anatolia's Dragon Strike",
+      "title_id": "MID_TUT_Root_SalvationANH_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x2250",
+      "category": "Route-specific"
+    },
+    "207baf02": {
+      "label": "True Flame General Bertrand",
+      "evidence": "provisional-translation",
+      "name": "TUTO_真焔将ベルトラン",
+      "title_id": "MID_TUT_Root_SalvationBEL_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2280",
+      "category": "Route-specific"
+    },
+    "3b8ef61b": {
+      "name": "TUTO_真焔将タリムーン",
+      "label": "Talimun's Curses",
+      "title_id": "MID_TUT_Root_SalvationTAL_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x22b0",
+      "category": "Route-specific"
+    },
+    "a5404637": {
+      "label": "True Flame General Orhel",
+      "evidence": "provisional-translation",
+      "name": "TUTO_真焔将オルヘル",
+      "title_id": "MID_TUT_Root_SalvationORH_t",
+      "source": "Tutorial.bin",
+      "offset": "0x22e0",
+      "category": "Route-specific"
+    },
+    "dfab9a9a": {
+      "label": "Joining Through Bonds",
+      "evidence": "provisional-translation",
+      "name": "TUTO_絆参戦",
+      "title_id": "MID_TUT_Bmap_BondsParticipation_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2310",
+      "category": "Combat"
+    },
+    "8e7c0d4c": {
+      "name": "TUTO_ブレイズタイプ「冥府」",
+      "label": "Blaze Type: Underworld",
+      "title_id": "MID_TUT_Bmap_Hell_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x2340",
+      "category": "Combat"
+    },
+    "bda2cb4d": {
+      "name": "TUTO_ブレイズタイプ「天柱」",
+      "label": "Blaze Type: Celestial Wells",
+      "title_id": "MID_TUT_Bmap_HeavenlyPillar_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x2370",
+      "category": "Combat"
+    },
+    "53b39ed9": {
+      "name": "TUTO_ブレイズタイプ「機構」",
+      "label": "Blaze Type: Automaton",
+      "title_id": "MID_TUT_Bmap_Mechanism_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x23a0",
+      "category": "Combat"
+    },
+    "4964b558": {
+      "label": "Blaze Skill: Grasp",
+      "evidence": "provisional-translation",
+      "name": "TUTO_ブレイズスキル「掌握」",
+      "title_id": "MID_TUT_Bmap_Grasp_t",
+      "source": "Tutorial.bin",
+      "offset": "0x23d0",
+      "category": "Combat"
+    },
+    "6d9f2553": {
+      "name": "TUTO_ブレイズスキル「暴走」",
+      "label": "Blaze Ability: Rampage",
+      "title_id": "MID_TUT_Bmap_Runaway_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x2400",
+      "category": "Combat"
+    },
+    "74d369a6": {
+      "label": "Blaze Skill: Resistance",
+      "evidence": "provisional-translation",
+      "name": "TUTO_ブレイズスキル「抵抗」",
+      "title_id": "MID_TUT_Bmap_Resistance_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2430",
+      "category": "Combat"
+    },
+    "3a5f6e04": {
+      "label": "Blaze Skill: Mechanism",
+      "evidence": "provisional-translation",
+      "name": "TUTO_ブレイズスキル「機構」",
+      "title_id": "MID_TUT_Bmap_MechanicalSkills_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2460",
+      "category": "Combat"
+    },
+    "82cae550": {
+      "label": "Blaze Skill: Heavenly Pillar",
+      "evidence": "provisional-translation",
+      "name": "TUTO_ブレイズスキル「天柱」",
+      "title_id": "MID_TUT_Bmap_HeavenlyPillarSkills_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2490",
+      "category": "Combat"
+    },
+    "dd3556d5": {
+      "label": "Helping People",
+      "evidence": "provisional-translation",
+      "name": "TUTO_人助け",
+      "title_id": "MID_TUT_Root_HelpePeople_t",
+      "source": "Tutorial.bin",
+      "offset": "0x24c0",
+      "category": "Route-specific"
+    },
+    "168a0508": {
+      "label": "Practice",
+      "evidence": "provisional-translation",
+      "name": "TUTO_稽古",
+      "title_id": "MID_TUT_Root_Practice_t",
+      "source": "Tutorial.bin",
+      "offset": "0x24f0",
+      "category": "Route-specific"
+    },
+    "7cfdcc02": {
+      "label": "Creating Fields I",
+      "evidence": "provisional-translation",
+      "name": "TUTO_畑を作る①",
+      "title_id": "MID_TUT_Root_Field_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2520",
+      "category": "Route-specific"
+    },
+    "7cfdcc03": {
+      "label": "Creating Fields II: Fertilizer",
+      "evidence": "provisional-translation",
+      "name": "TUTO_畑を作る②",
+      "title_id": "MID_TUT_Root_Fertilizer_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2550",
+      "category": "Route-specific"
+    },
+    "2bbf64b3": {
+      "label": "Luring Animals",
+      "evidence": "provisional-translation",
+      "name": "TUTO_おびき寄せる",
+      "title_id": "MID_TUT_Root_Capture_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2580",
+      "category": "Route-specific"
+    },
+    "5e08fc77": {
+      "label": "Deploying Animals",
+      "evidence": "provisional-translation",
+      "name": "TUTO_動物配備",
+      "title_id": "MID_TUT_Root_AnimalDeployment_t",
+      "source": "Tutorial.bin",
+      "offset": "0x25b0",
+      "category": "Route-specific"
+    },
+    "765756c2": {
+      "label": "Stables",
+      "evidence": "provisional-translation",
+      "name": "TUTO_厩舎",
+      "title_id": "MID_TUT_Root_Stable_t",
+      "source": "Tutorial.bin",
+      "offset": "0x25e0",
+      "category": "Route-specific"
+    },
+    "045dbde6": {
+      "label": "Stables II",
+      "evidence": "provisional-translation",
+      "name": "TUTO_厩舎②",
+      "title_id": "MID_TUT_Root_Stable2_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2610",
+      "category": "Route-specific"
+    },
+    "f501dfbc": {
+      "name": "TUTO_透視",
+      "label": "Third Eye (Cai)",
+      "title_id": "MID_TUT_Root_Perspective_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x2640",
+      "category": "Route-specific"
+    },
+    "d0ff7757": {
+      "label": "Ringing Blades",
+      "evidence": "provisional-translation",
+      "name": "TUTO_刃鳴り",
+      "title_id": "MID_TUT_Root_Blade_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2670",
+      "category": "Route-specific"
+    },
+    "c022af37": {
+      "label": "Strengthening Combat Arts",
+      "evidence": "provisional-translation",
+      "name": "TUTO_戦技強化",
+      "title_id": "MID_TUT_Root_Reinforcement_t",
+      "source": "Tutorial.bin",
+      "offset": "0x26a0",
+      "category": "Route-specific"
+    },
+    "0946c1e0": {
+      "label": "The Arranger",
+      "evidence": "provisional-translation",
+      "name": "TUTO_手配屋",
+      "title_id": "MID_TUT_Root_Arrangement_t",
+      "source": "Tutorial.bin",
+      "offset": "0x26d0",
+      "category": "Route-specific"
+    },
+    "031d73f9": {
+      "label": "Passing On Techniques",
+      "evidence": "provisional-translation",
+      "name": "TUTO_伝授",
+      "title_id": "MID_TUT_Root_Initiation_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2700",
+      "category": "Route-specific"
+    },
+    "7aad68d3": {
+      "label": "Searching for the Sea King Cetus",
+      "evidence": "provisional-translation",
+      "name": "TUTO_海王ケートゥスの探索",
+      "title_id": "MID_TUT_Root_SeaKing_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2730",
+      "category": "Route-specific"
+    },
+    "0927cf08": {
+      "label": "Legionnaires",
+      "evidence": "provisional-translation",
+      "name": "TUTO_軍団兵",
+      "title_id": "MID_TUT_Root_Legionnaire_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2760",
+      "category": "Route-specific"
+    },
+    "4c6d9461": {
+      "label": "Sending Allowances",
+      "evidence": "provisional-translation",
+      "name": "TUTO_仕送り",
+      "title_id": "MID_TUT_Root_Allowance_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2790",
+      "category": "Route-specific"
+    },
+    "803493c9": {
+      "label": "Deploying Troops",
+      "evidence": "provisional-translation",
+      "name": "TUTO_派兵",
+      "title_id": "MID_TUT_Root_Deployment_t",
+      "source": "Tutorial.bin",
+      "offset": "0x27c0",
+      "category": "Route-specific"
+    },
+    "f7fe4597": {
+      "label": "Recruiting Soldiers",
+      "evidence": "provisional-translation",
+      "name": "TUTO_兵士募集",
+      "title_id": "MID_TUT_Root_RecruitingSoldiers_t",
+      "source": "Tutorial.bin",
+      "offset": "0x27f0",
+      "category": "Route-specific"
+    },
+    "27f08cdd": {
+      "label": "Large-Scale Soldier Recruitment",
+      "evidence": "provisional-translation",
+      "name": "TUTO_兵士大募集",
+      "title_id": "MID_TUT_Root_BigRecruitingSoldiers_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2820",
+      "category": "Route-specific"
+    },
+    "8cc6a386": {
+      "label": "Legionnaire Barracks",
+      "evidence": "provisional-translation",
+      "name": "TUTO_軍団兵舎",
+      "title_id": "MID_TUT_Root_MercenaryUnion_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2850",
+      "category": "Route-specific"
+    },
+    "2621a475": {
+      "label": "Encouragement Speeches",
+      "evidence": "provisional-translation",
+      "name": "TUTO_応援演説",
+      "title_id": "MID_TUT_Root_Speech_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2880",
+      "category": "Route-specific"
+    },
+    "4fce5bf9": {
+      "name": "TUTO_酒場興行1",
+      "label": "Tavern Performances (Leda)",
+      "title_id": "MID_TUT_Root_BarShow_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x28b0",
+      "category": "Route-specific"
+    },
+    "7e009cb0": {
+      "name": "TUTO_地方興行1",
+      "label": "Local Performances (Leda)",
+      "title_id": "MID_TUT_Root_LocalEntertainment_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x28e0",
+      "category": "Route-specific"
+    },
+    "7e009cb3": {
+      "name": "TUTO_地方興行2",
+      "label": "Secret Spots (Leda)",
+      "title_id": "MID_TUT_Root_LocalEntertainment2_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x2910",
+      "category": "Route-specific"
+    },
+    "9dfa38c7": {
+      "name": "TUTO_飲み物係",
+      "label": "The Drink Vendor (Leda)",
+      "title_id": "MID_TUT_Root_DrinkPerson_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial.bin",
+      "offset": "0x2940",
+      "category": "Route-specific"
+    },
+    "271a8b1e": {
+      "label": "Salvation: Cai",
+      "evidence": "provisional-translation",
+      "name": "TUTO_救世篇カイ",
+      "title_id": "MID_TUT_Root_SalvationKAI_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2970",
+      "category": "Route-specific"
+    },
+    "1aaa66ec": {
+      "label": "Salvation: Dietrich",
+      "evidence": "provisional-translation",
+      "name": "TUTO_救世篇ディートリヒ",
+      "title_id": "MID_TUT_Root_SalvationDIT_t",
+      "source": "Tutorial.bin",
+      "offset": "0x29a0",
+      "category": "Route-specific"
+    },
+    "c886faaa": {
+      "label": "Salvation: Theodora",
+      "evidence": "provisional-translation",
+      "name": "TUTO_救世篇セオドラ",
+      "title_id": "MID_TUT_Root_SalvationSEO_t",
+      "source": "Tutorial.bin",
+      "offset": "0x29d0",
+      "category": "Route-specific"
+    },
+    "7fe66e65": {
+      "label": "Salvation: Leda",
+      "evidence": "provisional-translation",
+      "name": "TUTO_救世篇レダ",
+      "title_id": "MID_TUT_Root_SalvationLED_t",
+      "source": "Tutorial.bin",
+      "offset": "0x2a00",
+      "category": "Route-specific"
+    },
+    "b0f48bad": {
+      "name": "TUTO_アプリ武器",
+      "label": "Extra Weapons",
+      "title_id": "MID_TUT_Hub_AppWeapon_t",
+      "evidence": "screenshot-and-save-restoration",
+      "source": "Tutorial_P0.bin",
+      "offset": "0x180",
+      "category": "Free time"
     }
-  }
+  },
+  "sources": [
+    {
+      "name": "Tutorial.bin",
+      "sha256": "89100509f433fc0ec7ee95b019b4d3cad97feefb427d4889b94f2c987c9f6c45",
+      "entries": 217
+    },
+    {
+      "name": "Tutorial_P0.bin",
+      "sha256": "5232e0f8f6c8e15d4a482123451e18d50760b3b5cf69fe47a751ef691f6bffb6",
+      "entries": 1
+    }
+  ]
 }

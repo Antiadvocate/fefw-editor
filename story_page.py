@@ -22,7 +22,7 @@ def warning_points(route):
     if route == 4:
         return WARNING_POINTS
     if route == 1:
-        return ('This is a Cai Part 1 save. Chapters 2, 3, 4 and 9 are available. Other Cai chapters are not yet supported.',
+        return ('This is a Cai Part 1 save. Chapters 1–12 are available. Chapters 1, 5–8 and 10–12 are Inferred targets awaiting game tests.',
                 'For Cai Chapter 3 and later, Sewers access is enabled automatically. Other facilities, features, tutorials, map points, side quests and party units from previous chapters must still be managed separately.',
                 'Cai Chapters 2 and 9 passed initial progression tests; Chapter 3 was completed. Chapter 4 Sewers entry and progression passed after natural Chapter 3 completion. Direct Chapter 4 entry with this fix still needs a game test. Editor-created Cai chapter files have not been tested through the Obelisk. Long term testing has not been carried out.',
                 *WARNING_POINTS[3:])
@@ -140,10 +140,14 @@ class StoryPageMixin:
                         variable=create_file).pack(anchor='w')
         ttk.Label(options, text='Written beside the selected save only when you Save. Existing chapter files require confirmation; a .bak (or numbered .bak) is kept first.',
                   wraplength=625, justify='left', style='CardMuted.TLabel').pack(anchor='w', pady=(4, 0))
-        tree = ttk.Treeview(frame, columns=('evidence',), show='tree headings', height=12, selectmode='browse')
+        table = ttk.Frame(frame); table.pack(fill='both', expand=True)
+        table.rowconfigure(0, weight=1); table.columnconfigure(0, weight=1)
+        tree = ttk.Treeview(table, columns=('evidence',), show='tree headings', height=12, selectmode='browse')
         tree.heading('#0', text=f'{lord} Part 1', anchor='w'); tree.column('#0', width=150, stretch=False)
         tree.heading('evidence', text='Evidence / limits', anchor='w'); tree.column('evidence', width=450)
-        tree.pack(fill='both', expand=True)
+        scroll = ttk.Scrollbar(table, orient='vertical', command=tree.yview)
+        tree.configure(yscrollcommand=scroll.set)
+        tree.grid(row=0, column=0, sticky='nsew'); scroll.grid(row=0, column=1, sticky='ns')
         for chapter in chapters:
             if chapter in story_start.TESTED_BY_ROUTE[info.route]:
                 text = 'Game-tested opening and progression'

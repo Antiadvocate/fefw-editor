@@ -21,6 +21,12 @@ SEWERS = 0x7d18367a
 SEWERS_DIALOGUE = 'MID_LGV_1KAI_c02_LG11_003_m06'
 HISTORY_MEMBER = 0xb631f2c1
 UNAVAILABLE = 'unavailable'
+GENERAL_MEMBER = 0x972fa7ee
+# The native Cai Chapter 1 checkpoint predates all general-map anchors. Its
+# complete 13-member flag-group layout is an independently captured identity.
+FLAG_GROUP_MEMBERS = frozenset((0x25207c4c, 0x58a0be00, GENERAL_MEMBER,
+    HISTORY_MEMBER, 0x06c136c7, 0xf56d6832, 0x2bed8663, 0x64aba34f,
+    0xe9bc5b65, 0xe5834a3c, 0x4ad575a2, 0x0802e120, 0x8186b481))
 
 
 class FacilityError(core.SaveError):
@@ -83,11 +89,48 @@ def locate(f):
     return fm
 
 
+def flag_group(f):
+    """Anchored group, or the complete native early-checkpoint layout.
+
+    This fallback identifies sibling stores only. It does not relax the
+    general function map's two-anchor guard.
+    """
+    try:
+        general = locate(f)
+    except FacilityError:
+        general = None
+    tree = core.SaveTree(f.payload)
+    if general is not None:
+        return tree, tree.nodes[tree.node_at(general.start)].parent, general.start
+    users = [b for b in f.blocks if b.name == 'GameUserData']
+    if len(users) != 1 or f.payload[users[0].start+4] != 23:
+        raise FacilityError('Unrecognised early flag group; editing is disabled.')
+    user = tree.node_at(users[0].start); hits = []
+    for index, node in enumerate(tree.nodes):
+        if node.parent != user or not node.struct: continue
+        count = f.u32(node.start) >> 24; table = f.ptr(node.start)
+        if count != len(FLAG_GROUP_MEMBERS) or table+8*count != node.end: continue
+        rows = [(f.u32(table+8*i), f.ptr(table+8*i+4)) for i in range(count)]
+        if ({k for k,v in rows} != FLAG_GROUP_MEMBERS
+                or len({v for k,v in rows}) != count
+                or {v for k,v in rows} != {n.start for n in tree.nodes if n.parent == index}): continue
+        general_start = dict(rows)[GENERAL_MEMBER]
+        general_node = tree.nodes[tree.node_at(general_start)]
+        maps = [m for m in core.flag_maps(f) if m.start == general_start]
+        if general_node.struct or len(maps) != 1: continue
+        keys = [v.hash for v in maps[0].flags]
+        # This is specifically the pre-free-time profile. Do not let the
+        # fallback bypass duplicate/sparse/ambiguous anchored-map refusals.
+        if len(set(keys)) != len(keys) or set(keys) & ANCHORS: continue
+        hits.append((index, general_start))
+    if len(hits) != 1:
+        raise FacilityError('No unique supported flag group; editing is disabled.')
+    return tree, hits[0][0], hits[0][1]
+
+
 def locate_history(f):
     """Find the history sibling by its structural key, never its map ordinal."""
-    general = locate(f)
-    tree = core.SaveTree(f.payload)
-    group = tree.nodes[tree.node_at(general.start)].parent
+    tree, group, general_start = flag_group(f)
     parent = tree.nodes[group]
     table = f.ptr(parent.start)
     count = f.u32(parent.start) >> 24
@@ -97,7 +140,7 @@ def locate_history(f):
             or {v for k, v in rows} != {n.start for n in tree.nodes if n.parent == group}):
         raise FacilityError('Unrecognised function flag group; Sewers is read-only.')
     targets = [v for k, v in rows if k == HISTORY_MEMBER]
-    if len(targets) != 1 or targets[0] == general.start:
+    if len(targets) != 1 or targets[0] == general_start:
         raise FacilityError('No unique dialogue-history member; Sewers is read-only.')
     at = targets[0]; index = tree.node_at(at); node = tree.nodes[index]
     if node.struct or node.parent != group or any(n.parent == index for n in tree.nodes):
@@ -147,7 +190,7 @@ def edited(f, edits):
     for h, state in edits.items():
         if type(h) is not int or h not in cat or type(state) is not bool:
             raise FacilityError('Choose known facility switches and an enable/disable action.')
-    general = locate(f)
+    general = locate(f) if any(h != SEWERS for h in edits) or not edits else None
     history = locate_history(f) if SEWERS in edits else None
     plans = {}
     for h, state in edits.items():

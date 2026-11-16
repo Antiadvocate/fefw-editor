@@ -26,9 +26,9 @@ class CaiStoryTest(unittest.TestCase):
     def test_independent_captured_checkpoint_ids_and_route_specific_targets(self):
         self.assertEqual(story.sequence(1,1),0x1c39b1f1e90b1ef6)
         self.assertEqual(story.sequence(2,1),0x1c36b1f1e908e8c1)
-        self.assertEqual(start.TARGETS[1],(2,3,4,9))
+        self.assertEqual(start.TARGETS[1],tuple(range(1,13)))
         self.assertEqual(start.TESTED_BY_ROUTE[1],frozenset((2,3,9)))
-        for chapter in (1,5,6,7,8,10,11,12,True,'2'):
+        for chapter in (0,13,True,'2'):
             with self.assertRaises(core.SaveError): start.edited(fixture(),chapter)
         for route in (0,2,3,9,True):
             with self.assertRaises(core.SaveError): story.sequence(2,route)
@@ -37,7 +37,10 @@ class CaiStoryTest(unittest.TestCase):
 
     def test_all_cai_targets_preserve_other_roots_and_use_cai_dates_and_ids(self):
         f=fixture();before=bytes(f.payload);original=start.normalized_blocks(f)
-        for chapter,clock in ((2,(1449,1,25,11,0,0)),(3,(1449,2,4,8,0,0)),(4,(1449,3,1,12,0,0)),(9,(1449,9,3,12,0,0))):
+        dates=((1,24,2),(1,25,11),(2,4,8),(3,1,12),(3,14,12),(4,19,10),
+               (6,9,12),(7,10,12),(9,3,12),(9,15,12),(10,16,8),(11,3,12))
+        for chapter,(month,day,hour) in enumerate(dates,1):
+            clock=(1449,month,day,hour,0,0)
             g=core.SaveFile(start.edited(f,chapter));i=start.validate(g)
             self.assertEqual((i.route,i.part,i.chapter,i.sequence),(1,1,chapter,story.sequence(chapter,1)))
             self.assertEqual(struct.unpack_from('<H5B',g.payload,i.header+22),clock)

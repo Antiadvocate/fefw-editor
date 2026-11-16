@@ -11,11 +11,12 @@ game-tested through the Obelisk; ordinary entry acceptance is a separate result.
 See [Test 5 results](test-results-story-test5.md). Full-campaign behavior remains
 untested.
 
-**Cai Part 1** offers Chapters **2, 3, 4 and 9**. Chapters 2/9 passed initial
+**Cai Part 1** offers Chapters **1–12**. Chapters **1, 5–8 and 10–12** are
+Inferred and awaiting the next game tests. Chapters 2/9 passed initial
 progression tests; Chapter 3 was completed into Chapter 4. Enabling the missing
 Sewers dialogue prerequisite fixed the Chapter 4 objective on that natural
 return. Direct Chapter 4 entry with the automatic prerequisite remains to be
-game-tested. Cai Obelisk use is untested; other Cai targets remain unavailable.
+game-tested. Cai Obelisk use is untested.
 See [Sewers results](test-results-sewers-functions.md).
 
 For every supported Cai Chapter 3+ selection, the chapter action also enables
@@ -67,7 +68,7 @@ that structural agreement does not establish game compatibility.
 | Header, GameUserData and outer summary | Target chapter and chapter-entry sequence |
 | GameUserData v23 body+58, u64 | Separate resume identifier: `d8588d186b3f9502` → `a2f3e9a7ff461708` |
 | Header state bytes, block+20/+21 | Observed chapter-start context `10 0b` |
-| Header and GameSchedule clocks | Selected entry date/time: Chapter 1 in 1444; Chapters 2–12 in 1449 |
+| Header and GameSchedule clocks | Route-specific entry date/time: Leda Chapter 1 in 1444; all Cai entries and later Leda chapters in 1449 |
 | Remaining GameSchedule / Calendar cache | Empty checkpoint form, retaining known version markers |
 | Eight internal restart slots | Validated Header/Data blobs cleared; the game rebuilds a target checkpoint during entry |
 | Outer raw+48..56 | State/clock mirrored from the current payload during serialization, including after Undo |
@@ -181,3 +182,16 @@ Historical diagnostics remain reproducible: [Test 1](testing-story-progression.m
 [Test 2](testing-story-entry-test2.md), [Test 3](testing-story-resume-test3.md).
 Their original sequence-only/probe functions are retained for research; the UI
 uses `story_start`, never the failed selector-only writer.
+
+## Remaining Cai test targets
+
+Cai Chapter 1 uses the native `Chapter_Kai_1_1` date, **1449-01-24 02:00**;
+it must not inherit Leda's 1444 prologue year. The other newly exposed dates
+come from Cai's chapter-title rows. The original Chapter 1 checkpoint has no
+free-time flags yet; a full captured flag-group signature allows the Sewers
+prerequisite and tutorial list to be located without weakening the general
+Functions guard. All chapter selections remain atomic.
+
+[The next test kit](testing-cai-tutorials-test5.md) uses the native Chapter 1
+checkpoint for C5-01, the original Chapter 2 Auto for the direct C5-04 retry,
+and the successful Sewers arrival for later chapters. Every case is independent.

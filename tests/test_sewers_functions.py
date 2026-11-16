@@ -85,7 +85,7 @@ class SewersFunctionsTest(unittest.TestCase):
             f=StoryHarness(route).core_of()
             for chapter in start.TARGETS[route]:
                 with self.subTest(route=route,chapter=chapter):
-                    base=core.SaveFile(start._edited_at_entry(f,chapter,start.ENTRY_YEARS[chapter],start.target(chapter,route)))
+                    base=core.SaveFile(start._edited_at_entry(f,chapter,1449 if route==1 else start.ENTRY_YEARS[chapter],start.target(chapter,route)))
                     g=core.SaveFile(start.edited(f,chapter))
                     if route==1 and chapter>=3:
                         self.assertEqual(fac.read(g)[fac.SEWERS],1)

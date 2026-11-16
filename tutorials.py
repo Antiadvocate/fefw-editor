@@ -11,9 +11,12 @@ from pathlib import Path
 import struct
 
 import fefw_core as core
+import facilities
 
 HERE = Path(__file__).resolve().parent
 AVAILABLE = 2
+MAP_MEMBER = 0xe9bc5b65
+CATEGORIES = ('General', 'Free time', 'World map', 'Combat', 'Route-specific')
 
 
 class TutorialError(core.SaveError):
@@ -29,7 +32,9 @@ def catalog() -> dict[int, dict]:
         entries = {int(h, 16): row for h, row in data["entries"].items()}
         for h, row in entries.items():
             if (not row["name"].startswith("TUTO_") or
-                    core.id_hash(row["name"]) != h or not row["label"]):
+                    core.id_hash(row["name"]) != h or not row["label"] or
+                    row.get('category') not in CATEGORIES or
+                    row.get('evidence') not in ('screenshot-and-save-restoration', 'provisional-translation')):
                 raise ValueError("invalid tutorial identity")
         if not entries:
             raise ValueError("empty catalogue")
@@ -44,8 +49,40 @@ def apply_labels(names: dict[int, dict]) -> None:
         previous = names.get(h, {})
         if previous.get("name", row["name"]) != row["name"]:
             raise TutorialError(f"Conflicting flag name for {h:08x}")
+        suffix = ' (provisional)' if row['evidence'] == 'provisional-translation' else ''
         names[h] = {**previous, "name": row["name"],
-                    "label": "Tutorial: " + row["label"], "kind": "tutorial"}
+                    "label": "Tutorial: " + row["label"] + suffix, "kind": "tutorial"}
+
+
+def evidence_label(row):
+    return 'Provisional name' if row['evidence'] == 'provisional-translation' else 'Previously checked'
+
+
+def _structural_map(f):
+    """Recognize even an empty list by its member in the anchored flag group."""
+    try:
+        tree, parent_index, general_start = facilities.flag_group(f)
+    except facilities.FacilityError:
+        return None  # Older supported layouts still use tutorial-name anchors.
+    parent = tree.nodes[parent_index]; table = f.ptr(parent.start)
+    count = f.u32(parent.start) >> 24
+    rows = [(f.u32(table+8*i), f.ptr(table+8*i+4)) for i in range(count)]
+    if (table+8*count != parent.end or len({k for k,v in rows}) != count
+            or len({v for k,v in rows}) != count
+            or {v for k,v in rows} != {n.start for n in tree.nodes if n.parent == parent_index}):
+        raise TutorialError('Unrecognised tutorial flag group; editing is disabled.')
+    targets = [v for k,v in rows if k == MAP_MEMBER]
+    if len(targets) != 1 or targets[0] == general_start:
+        raise TutorialError('No unique tutorial member; editing is disabled.')
+    at = targets[0]; index = tree.node_at(at); node = tree.nodes[index]
+    if node.struct or any(n.parent == index for n in tree.nodes):
+        raise TutorialError('Unexpected tutorial member structure; editing is disabled.')
+    maps = [m for m in core.flag_maps(f) if m.start == at]
+    if not maps and bytes(f.payload[at+4:node.end]) == bytes(4):
+        return core.FlagMap(-1, at, [])
+    if len(maps) != 1 or f.ptr(at) != node.end:
+        raise TutorialError('Invalid tutorial list; editing is disabled.')
+    return maps[0]
 
 
 @lru_cache(maxsize=1)
@@ -64,15 +101,21 @@ def _tutorial_hashes() -> frozenset[int]:
 
 
 def locate(f: core.SaveFile) -> core.FlagMap:
-    """Find a unique populated tutorial map, never guess a numbered list."""
+    """Find a structural member or a uniquely anchored older list."""
     hashes = _tutorial_hashes()
     candidates = [m for m in core.flag_maps(f)
                   if any(fl.hash in hashes for fl in m.flags)]
-    if len(candidates) != 1:
+    structural = _structural_map(f)
+    if structural is not None:
+        if any(m.start != structural.start for m in candidates):
+            raise TutorialError('Ambiguous tutorial lists; editing is disabled.')
+        fm = structural
+    elif len(candidates) != 1:
         raise TutorialError("No unique tutorial list found; this save is read-only here.")
-    fm = candidates[0]
+    else:
+        fm = candidates[0]
     known = {fl.hash for fl in fm.flags if fl.hash in hashes}
-    if core.id_hash("TUTO_オートセーブ") not in known and len(known) < 3:
+    if structural is None and core.id_hash("TUTO_オートセーブ") not in known and len(known) < 3:
         raise TutorialError("Too little evidence to identify the tutorial list safely.")
     if len({fl.hash for fl in fm.flags}) != len(fm.flags):
         raise TutorialError("Duplicate tutorial-list keys; editing is disabled.")
@@ -135,7 +178,8 @@ def edited(f: core.SaveFile, edits: dict[int, int | None]) -> bytearray:
     # ambiguous. Refuse rather than create a list the editor cannot locate.
     remaining = (present.keys() - effective.keys()) | {h for h, v in effective.items() if v is not None}
     known = remaining & _tutorial_hashes()
-    if core.id_hash("TUTO_オートセーブ") not in known and len(known) < 3:
+    if (_structural_map(f) is None and core.id_hash("TUTO_オートセーブ") not in known
+            and len(known) < 3):
         raise TutorialError("Keep Autosave or at least three identified tutorials so the list remains identifiable.")
     body = bytes([f.payload[fm.start + 4]]) + struct.pack("<H", len(records)) + b"".join(records)
     return core.replace_content(f, fm.start, body)

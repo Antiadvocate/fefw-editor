@@ -8,12 +8,19 @@ key or eight-digit hash. Ctrl+F focuses search; Ctrl/Shift selection and Ctrl+A
 work like the existing tables.
 
 Select one or more rows and choose **Make available** or **Remove selected**.
+Use category, saved-state and name-evidence filters, then **Select shown**
+for a batch. Filtering changes only which rows are selected, not save data.
+The detail panel explains each label's evidence. The original key and hash
+remain available by scrolling horizontally.
+
 Changes stay in memory until Ctrl+S. Ctrl+Z and Ctrl+Y undo and redo the whole
 selection. Reopen the save to check the exported result.
 
-The catalogue contains 115 identified names, not every tutorial in the game.
-Absent entries appear so they can be added. Unlisted records are counted and
-preserved. A tutorial describes a feature; adding it does not unlock the
+The catalogue covers all **218 identities** in the supplied `Tutorial.bin`
+and `Tutorial_P0.bin` tables. The 115 earlier labels remain checked; 103 new
+English names are **provisional translations**, not confirmed localized titles.
+Their availability is awaiting the Cai test run. Absent entries can be added;
+unknown records outside this catalogue are counted and preserved. A tutorial describes a feature; adding it does not unlock the
 facility, ability, quest or story event it describes.
 
 The **Flags** page also shows these English names with a `Tutorial:` prefix.
@@ -38,7 +45,12 @@ Removal deletes the record; writing zero is not an equivalent operation.
 Tutorial edits apply only to the selected slot. Mirroring is refused because
 the current undo stack snapshots only that slot. If the list is missing,
 ambiguous, duplicated or structurally unexpected, the page refuses to edit it.
-It cannot initialise an empty list or remove its last identifying anchors.
+In supported flag-group layouts it can clear all identified tutorials and
+repopulate an empty list. General free-time anchors or the complete captured
+13-member early-checkpoint layout establish the group; tutorial member
+`e9bc5b65` identifies the list independently of its contents. A missing or
+malformed list is not created. Older layouts recognized only by tutorial
+names still require Autosave or at least three anchors.
 
 ## Corrected identities
 
@@ -62,10 +74,10 @@ Keys use the low 32 bits of **FNV-1 64** over the UTF-8 internal name. This is
 neither FNV-1a nor FNV-1 32. `fefw_core.id_hash()` is the shared implementation.
 
 The tutorial list is one flag map inside the live `GameUserData` block. The
-enumerated list number can shift when another map is empty. `locate()` searches
-by known tutorial hashes and requires a unique candidate containing Autosave or
-at least three identified tutorial keys. It also rejects duplicate hashes and
-objects with children. This is conservative recognition, not universal format
+enumerated list number can shift when another map is empty. `locate()` first uses the supported structural member, allowing empty lists.
+On older layouts it requires a unique candidate containing Autosave or at least
+three identified tutorial keys. It rejects competing tutorial maps, duplicate
+hashes, malformed member tables and objects with children. This is conservative recognition, not universal format
 support or proof that arbitrary saves are valid.
 
 Relative to the list object's start:
@@ -102,3 +114,24 @@ record its exact key/hash, displayed English title, source and validation
 status. `build_flag_names.py` applies this overlay after rebuilding the general
 dictionary, so it survives regeneration. Synthetic tests need no game files.
 Follow [testing.md](testing.md) before claiming a new build works in game.
+
+## Complete catalogue update
+
+The source tables contain 217 entries plus one `Tutorial_P0` entry.
+`research/tutorial_catalog_report.py` checks every group/child identity and
+records exact title IDs without copying localized message bodies. An
+ideographic space (U+3000) inside the Eshmel tutorial key is preserved exactly.
+
+New labels carry `provisional-translation` evidence, appear as **Provisional
+name** in Tutorials, and have a **(provisional)** suffix in Flags. Category
+filters group General, Free time, World map, Combat and Route-specific entries
+using the source title ID. This categorization does not claim route eligibility.
+
+Make available still writes 2; Remove still deletes the record. Value 1 remains
+Present (1), and unknown values remain protected. No unsupported read/unread
+semantics have been invented. Bulk actions use the same whole-batch validation,
+Undo/Redo, selected-slot isolation and Save handling as individual edits.
+
+Use the [Cai and Tutorials test guide](testing-cai-tutorials-test5.md). Complete
+coverage of the supplied metadata is not confirmation that all 218 entries are
+visible or useful at every story stage.

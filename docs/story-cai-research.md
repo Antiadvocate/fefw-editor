@@ -44,10 +44,13 @@ unrelated normalized root. The source and natural checkpoints remain unchanged.
 ## Runtime scope
 
 The editor reads the route from the save; there is no route-conversion control.
-Cai offers 2/3/4/9. Chapters 2/3/9 are Game-tested; Chapter 4 has a conditional
+Cai offers 1–12. Chapters 1, 5–8 and 10–12 are Inferred targets for
+[the next test kit](testing-cai-tutorials-test5.md). Chapters 2/3/9 are Game-tested; Chapter 4 has a conditional
 pass after fixing Sewers on a natural Chapter 3 return. Direct entry with this
 fix remains untested. Leda retains its accepted 2–12 targets and
-Chapter 1 exclusion. Other routes/parts and unsupported contexts stay read-only.
+Chapter 1 exclusion. Other routes/parts and unsupported contexts stay read-only. Cai Chapter 1
+uses its captured 1449-01-24 02:00 clock; the later dates below are shared with
+the production selector.
 
 The shared entry engine selects the route-specific ID/date, sets the known
 chapter-start context, clears old schedule/calendar/restart state, and retains
