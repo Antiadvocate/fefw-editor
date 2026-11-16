@@ -13,7 +13,7 @@ import story_start
 BASELINE_SHA256 = '8675e054e082bd2b80cae318b9889326531d00f9fe3f8b366add5edf80de5663'
 
 
-def build(source, output, *, chapters=(5, 6, 7, 8, 10, 11, 12), prefix='ST4'):
+def build(source, output, *, chapters=(5, 6, 7, 8, 10, 11, 12), prefix='ST4', edit=story_start.edited):
     source, output = Path(source), Path(output)
     if output.exists():
         raise ValueError('Use a fresh output directory')
@@ -30,7 +30,7 @@ def build(source, output, *, chapters=(5, 6, 7, 8, 10, 11, 12), prefix='ST4'):
     # Freeze this historical Test 4 set as evidence labels change in the UI.
     for chapter in chapters:
         box = container.SaveFile(str(source))
-        box.payload = story_start.edited(f, chapter)
+        box.payload = edit(f, chapter)
         ready.append((chapter, box.to_bytes(), bytes(box.payload)))
     output.mkdir(parents=True)
     (output/'00-Control').mkdir()

@@ -193,7 +193,8 @@ class StoryFilesTest(unittest.TestCase):
         self.assertEqual(self.source.read_bytes(), self.target.read_bytes())
 
     def test_chapter_one_and_later_chapter_restore_their_own_year(self):
-        f = core.SaveFile(story_start.edited(fixture(), 1))
+        from research.story_early_probes import historical_edit
+        f = core.SaveFile(historical_edit(fixture(), 1))
         i = story.read(f)
         self.assertEqual(int.from_bytes(f.payload[i.header+22:i.header+24], 'little'), 1444)
         g = core.SaveFile(story_start.edited(f, 2)); j = story.read(g)

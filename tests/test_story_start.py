@@ -16,7 +16,7 @@ from test_story_resume_probe import fixture
 
 
 class StoryStartTest(unittest.TestCase):
-    def test_all_twelve_targets_use_entry_dates_preserve_unrelated_data_and_are_idempotent(self):
+    def test_all_eleven_targets_use_entry_dates_preserve_unrelated_data_and_are_idempotent(self):
         f = fixture()
         before = bytes(f.payload)
         original = start.normalized_blocks(f)
@@ -48,9 +48,24 @@ class StoryStartTest(unittest.TestCase):
             with self.assertRaises(core.SaveError):
                 start.edited(g,9)
             self.assertEqual(g.payload,before)
-        for chapter in (0,13,True,'9',None):
+        for chapter in (0,1,13,True,'9',None):
             with self.assertRaises(core.SaveError):
                 start.edited(f,chapter)
+
+    def test_unknown_context_refused_before_walking_unsupported_objects(self):
+        from unittest.mock import patch
+        f = fixture(); h = f.block('Header').start
+        f.payload[h+20:h+22] = b'\x12\x06'
+        with patch.object(core, 'SaveTree', side_effect=AssertionError('must not walk')):
+            with self.assertRaises(core.SaveError): start.validate(f)
+
+    def test_unrecognized_tree_fails_as_save_error_and_preserves_outer_summary(self):
+        from unittest.mock import patch
+        f = fixture(); box = box_for(f); out = bytearray(box.raw); before = bytes(out)
+        with patch.object(core, 'SaveTree', side_effect=RecursionError('unsupported object')):
+            with self.assertRaises(core.SaveError): story.read(f)
+            story.sync_outer_summary(f.payload, out)
+        self.assertEqual(bytes(out), before)
 
     def test_ui_apply_undo_redo_noop_and_slot_isolation(self):
         a = StoryHarness()

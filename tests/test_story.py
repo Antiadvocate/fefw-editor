@@ -187,10 +187,18 @@ class StoryPageTest(unittest.TestCase):
         a.undo();self.assertEqual(bytes(other.payload),before)
         a.undo();self.assertEqual(bytes(other.payload),before)
 
-    def test_early_targets_available_and_obelisk_warning_precedes_backup(self):
+    def test_failed_chapter_one_refused_while_two_and_three_are_available(self):
         import story_page
-        a = StoryHarness()
-        for chapter in (1, 2, 3):
+        import story_start
+        a = StoryHarness(); before = bytes(a.sv.payload)
+        a.apply_story_chapter(1, True)
+        self.assertEqual(bytes(a.sv.payload), before)
+        self.assertFalse(hasattr(a, '_undo_stack'))
+        self.assertIsNone(getattr(a.sv, '_pending_story_chapter', None))
+        self.assertNotIn(1, story_start.CHAPTERS)
+        self.assertIn('Chapter 1 cannot be selected', story_page.WARNING_POINTS[0])
+        self.assertEqual(story_start.TESTED, frozenset(range(2, 13)))
+        for chapter in (2, 3):
             a.apply_story_chapter(chapter)
             self.assertEqual(story.read(a.core_of()).chapter, chapter)
         self.assertIn('Create a chapter start file', story_page.WARNING_POINTS[-2])

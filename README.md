@@ -1,13 +1,13 @@
 # Fortune's Weave Save Editor
 
-**Story progression — Leda Part 1:** Player offers chapter starts 1–12 after a
-five-point caution warning. Chapters 4–12 passed opening and next-story-beat
-tests; Chapters 1–3 remain Inferred. An optional checkbox queues a chapter-start
-file for the Obelisk on Save, with overwrite confirmation and numbered backups.
-Editor-created Obelisk loading still needs game testing. Other routes and battle
-saves are read-only. See [scope](docs/story-progression.md),
-[Test 4 results](docs/test-results-story-test4.md) and
-[Test 5: early chapters and chapter files](docs/testing-story-test5.md).
+**Story progression — Leda Part 1:** Player offers **Chapters 2–12**, all tested
+through the opening and next main story beat. Chapter 1 is unavailable: its
+opening plays, but the first objective does not advance. Optional chapter-file
+creation on Save passed UI/backup checks and Obelisk loading for Chapters 8/9.
+Other chapter files remain untested through the Obelisk. Cai is the next research
+target; editing remains guarded to Leda until native Cai save evidence is supplied.
+See [scope](docs/story-progression.md), [Test 5 results](docs/test-results-story-test5.md)
+and [Cai preparation](docs/story-cai-research.md).
 
 **Facilities branch:** the UI and FAC-01–06 game tests passed on Leda Part 1
 Chapter 9. Ten services and six gates are Game-tested; Yu Phas additionally
@@ -39,7 +39,7 @@ library, or a ready-made Windows `.exe`.
 | | Class | Pick any class the game knows. It's added to the unit's own class list, the way the game does it |
 | **Convoy** | | Everything in storage, materials included: add a stack, stock every material at once, swap the item in any row, change its quantity, remove a row, and repair a list damaged by older versions |
 | **Gold** | | Set gold |
-| **Player** | | Experimental Leda Part 1 chapter starts 1–12, with warning and route/state guards; 4–12 game-tested, 1–3 inferred. Optional chapter file on Save with overwrite confirmation and backup. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
+| **Player** | | Leda Part 1 chapter starts 2–12, with warning and route/state guards; all offered targets game-tested. Chapter 1 unavailable. Optional chapter file on Save with overwrite confirmation and backup. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
 | **Classes** | | A unit's whole class list (set the current class, add, swap or remove one, set its exp) and its weapon masteries with their rank (E … S+) and exp — select several masteries (Ctrl+A, Shift+click or Shift+drag) and Set rank, Set exp or Remove changes all of them at once |
 | **Supports** | | Every character's support partners with the **points** this save holds for the pair, the highest rank the game defines, and which conversations this save has recorded. Set the points (0 … 3200) and the game works the level out from them. **Record conversation as seen** writes that conversation's flag |
 | **Mounts** | | The battalion and mount each unit carries, chosen from the save's pool |

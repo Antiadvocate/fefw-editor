@@ -1,6 +1,7 @@
 """Leda Part 1 chapter entry, using the game-tested Test 3 D profile.
 
-Chapters 4–12 have short-session game evidence. Chapters 1–3 remain inferred.
+Chapters 2–12 have short-session game evidence. Chapter 1 is unavailable:
+its opening plays but its first objective cannot be progressed.
 No private captures or GameData are required at runtime.
 """
 from datetime import datetime
@@ -9,11 +10,11 @@ import struct
 import fefw_core as core
 import story
 
-CHAPTERS = tuple(range(1, 13))
-TESTED = frozenset(range(4, 13))
+CHAPTERS = tuple(range(2, 13))
+TESTED = frozenset(CHAPTERS)
 # Chapter 1's title inherits its date; use the captured natural checkpoint.
 # Later chapters return to 1449, including when the source is Chapter 1.
-ENTRY_YEARS = {chapter: 1444 if chapter == 1 else 1449 for chapter in CHAPTERS}
+ENTRY_YEARS = {chapter: 1444 if chapter == 1 else 1449 for chapter in range(1, 13)}
 ENTRY_DATES = {1: (12, 1, 12, 0), 2: (1, 2, 12, 0), 3: (1, 20, 20, 0),
                4: (3, 1, 8, 0), 5: (4, 6, 12, 0), 6: (5, 8, 12, 0),
                7: (5, 28, 20, 0), 8: (6, 29, 11, 0), 9: (7, 10, 18, 0),
@@ -92,14 +93,20 @@ def normalized_blocks(f):
 
 def target(chapter):
     if type(chapter) is not int or chapter not in CHAPTERS:
-        raise story.StoryError('Choose a Leda Part 1 chapter from 1 to 12.')
+        raise story.StoryError('Choose a Leda Part 1 chapter from 2 to 12. Chapter 1 is unavailable because its first objective cannot be progressed.')
     return ENTRY_DATES[chapter]
 
 
 def validate(f):
+    # Reject unsupported resume contexts before walking their variable records.
+    # The Chapter 2 progression return has context 12 06 and a layout that the
+    # generic object-tree decoder cannot traverse; it is still a valid game save.
+    header = one_block(f, 'Header')
+    mode = bytes(f.payload[header.start+20:header.start+22])
+    if mode not in (b'\x12\x05', b'\x10\x0b'):
+        raise story.StoryError('Story editing needs a supported free-time or chapter-start save. Battle and unknown resume states are read-only.')
     info = story.require_leda(f)
     resume = struct.unpack_from('<Q', f.payload, info.user+RESUME_OFFSET)[0]
-    mode = bytes(f.payload[info.header+20:info.header+22])
     if (mode, resume) not in ((b'\x12\x05', FREE_TIME_ID), (b'\x10\x0b', CHECKPOINT_ID)):
         raise story.StoryError('Story editing needs a supported free-time or chapter-start save. Battle and unknown resume states are read-only.')
     schedule = one_block(f, 'GameSchedule')
@@ -120,11 +127,16 @@ def validate(f):
 
 
 def edited(f, chapter):
-    month, day, hour, minute = target(chapter)
+    date = target(chapter)
+    return _edited_at_entry(f, chapter, ENTRY_YEARS[chapter], date)
+
+
+def _edited_at_entry(f, chapter, year, date):
+    """Shared mechanics; research alone may reproduce the failed Chapter 1 probe."""
+    month, day, hour, minute = date
     info = validate(f)
     original = normalized_blocks(f)
     schedule, calendar = one_block(f, 'GameSchedule'), one_block(f, 'Calendar')
-    year = ENTRY_YEARS[chapter]
     clock = struct.pack('<H5B', year, month, day, hour, minute, 0)
     p = story.edited(f, chapter)
     p[info.header+20:info.header+22] = b'\x10\x0b'

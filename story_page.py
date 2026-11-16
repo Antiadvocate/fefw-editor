@@ -9,13 +9,13 @@ import story_start
 
 WARNING_TITLE = 'CAUTION - UNEXPECTED CONSEQUENCES POSSIBLE'
 WARNING_POINTS = (
-    "This feature currently only works with Leda's Part 1.",
+    "This feature currently only works with Leda's Part 1, Chapters 2–12. Chapter 1 cannot be selected because its first objective cannot be progressed.",
     'It will start you at the applicable chapter. It WILL NOT unlock facilities, features, tutorials, map points, side quests from previous chapters or give you units that should be in your party. That will need to be managed separately.',
     'This has only been tested that the chapter starts and can be progressed to the next story sequence or battle. Long term testing has not been carried out.',
     'The Obelisk Chamber relies on chapter save files. Select “Create a chapter start file using this state” to write the chosen chapter’s file when you Save. Other skipped chapters still need their own files. Existing files require overwrite confirmation and are backed up first.',
     'Back up your save into a fresh directory NOW before proceeding.',
 )
-EVIDENCE_NOTE = ('Chapters 4–12 passed opening and next-story-beat tests. Chapters 1–3 and editor-created Obelisk files remain inferred; game tests are pending. Entry resets the clock and internal restart state.')
+EVIDENCE_NOTE = ('Chapters 2–12 passed opening and next-story-beat tests. Editor-created chapter files passed Obelisk tests for Chapters 8 and 9; other chapters are untested through the Obelisk. Entry resets the clock and internal restart state.')
 
 
 class StoryPageMixin:
@@ -49,7 +49,7 @@ class StoryPageMixin:
             self.story_status.configure(text=label + str(exc)); return
         pending = getattr(self.sv, '_pending_story_chapter', None)
         note = f'\nChapter_Led_1_{pending} will be created on Save.' if pending else ''
-        self.story_status.configure(text=info.label + '\nChapters 4–12 game-tested; Chapters 1–3 inferred.' + note)
+        self.story_status.configure(text=info.label + '\nChapters 2–12 game-tested; Chapter 1 unavailable.' + note)
         self.story_button.state(['!disabled'])
 
     def _story_ready(self):
@@ -103,7 +103,7 @@ class StoryPageMixin:
         self.place_dialog(win, 680, 540); win.configure(background=self.p['bg'])
         frame = ttk.Frame(win, padding=18); frame.pack(fill='both', expand=True)
         ttk.Label(frame, text='Choose a chapter start', style='CardH3.TLabel').pack(anchor='w')
-        ttk.Label(frame, text='Selected save only. Apply stages the chapter start and date; Ctrl+S saves and Ctrl+Z undoes. Chapters 1–3 are experimental.',
+        ttk.Label(frame, text='Selected save only. Apply stages the chapter start and date; Ctrl+S saves and Ctrl+Z undoes. Chapter 1 is unavailable.',
                   wraplength=625, justify='left').pack(anchor='w', pady=(4, 10))
         buttons = ttk.Frame(frame); buttons.pack(side='bottom', fill='x', pady=(12, 0))
         options = ttk.Frame(frame); options.pack(side='bottom', fill='x', pady=(10, 0))
@@ -119,7 +119,7 @@ class StoryPageMixin:
         for chapter in story_start.CHAPTERS:
             text = 'Game-tested opening and next story beat' if chapter in story_start.TESTED else 'Inferred — game test pending'
             tree.insert('', 'end', iid=str(chapter), text=f'Chapter {chapter}', values=(text,))
-        current = str(story.require_leda(self.core_of()).chapter)
+        current = str(max(2, story.require_leda(self.core_of()).chapter))
         tree.selection_set(current); tree.see(current); tree.focus(current)
         result = [None]
         def apply():

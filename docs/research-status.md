@@ -63,7 +63,7 @@ The game data version was not separately reported.
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
 | 5 | Boons | All 31 groups / 81 tiers editable; broader mappings labelled Inferred | [BEDIT results](test-results-boon-editing-2026-11-15.md): +16 EXP Off / +17 On. [WEDIT-01–07 passed](test-results-weapon-boon-2026-11-15.md): discount Off/On persists in returned saves; player reports earlier 10% prices reproduced and backups through .bak4 |
-| 6 | Story | Warning-gated Leda P1 starts 1–12; optional chapter file on Save with confirmation/backups | Chapters 4–12 passed [Tests 3](test-results-story-test3.md) and [4](test-results-story-test4.md). Chapters 1–3 and editor-created Obelisk files are Inferred; [Test 5](testing-story-test5.md) pending |
+| 6 | Story | Leda P1 starts 2–12; optional chapter file on Save with confirmation/backups | [Test 5](test-results-story-test5.md) completes offered Leda targets. Chapter 1 failed and is unavailable. Obelisk files 8/9 passed. [Cai](story-cai-research.md) next; native saves needed |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
 test report before being called game-tested. Other routes are not covered by
@@ -270,13 +270,19 @@ and date initialization at Chapters 4 and 9 did not establish working transition
 but do not prove its exclusive data source. [Test 3](test-results-story-test3.md)
 passed for Chapters 4 and 9 after adding the separate resume identifier. HubSeq
 removal brought no benefit, so the editor retains it and uses the full D setup.
-[Test 4](test-results-story-test4.md) passed all UI checks and the seven remaining
-chapters. All 14 returned saves validate; Chapters 4–12 are now Game-tested for
-opening and the next story beat. [Test 5](testing-story-test5.md) opens Chapters
-1–3 as Inferred, with the natural Chapter 1 historical date and Chapter 2 date.
-The optional chapter-file checkbox queues a same-state checkpoint for Save;
-overwrite confirmation, numbered backups, cancellation/history and failures
-have automated coverage. Obelisk loading remains pending in-game testing.
+[Test 4](test-results-story-test4.md) passed the seven remaining later chapters.
+[Test 5](test-results-story-test5.md) passed Chapters 2/3 and all UI checks;
+editor-created Chapters 8/9 loaded through the Obelisk. Leda Chapters 2–12 are
+accepted for opening and next beat. Chapter 1's opening plays but its first
+objective blocks, with missing music after control resumes. It is removed from
+the picker and rejected by the public edit action; the warning explains why.
+The old candidate remains reproducible only through the historical research script.
+
+Cai is next. Its separate Part 1 timeline has 12 title rows and different entry
+dates. [Cai preparation](story-cai-research.md) records the extracted dates and
+required native saves. No native Cai save was located among current inputs;
+Cai editing and checkpoint creation remain disabled until route-specific entry
+identifiers, dates and layout can be anchored in real captures.
 
 The user observed no new external Chapter_Led_ files except 1_1 in the earlier
 Chapter 1 test. Creation at the previous chapter boundary is a hypothesis, not

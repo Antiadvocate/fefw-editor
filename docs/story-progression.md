@@ -1,13 +1,15 @@
 # Story progression — Leda Part 1
 
-Player → Story progression… offers chapter starts **1–12** after the requested
-five-point warning. Chapters **4–12** passed the opening and next-story-beat
-tests. Chapters **1–3 remain Inferred** and await [Test 5](testing-story-test5.md).
-The optional chapter-file checkbox is implemented; Obelisk discovery/loading
-of those editor-created files still requires the same game test.
+Player → Story progression… offers **Leda Part 1 Chapters 2–12**, all accepted
+for the chapter opening and next main story beat. **Chapter 1 cannot be selected**:
+its opening plays, but control resumes without music and reaching the objective
+does not advance. The user chose to exclude it rather than prolong this round.
 
-See [Test 3](test-results-story-test3.md) and [Test 4](test-results-story-test4.md)
-for the accepted short-session scope, not a full-campaign compatibility claim.
+All Test 5 UI checks passed. Editor-created chapter files loaded and worked
+through the Obelisk for **Chapters 8 and 9**. Other chapter files have not been
+game-tested through the Obelisk; ordinary entry acceptance is a separate result.
+See [Test 5 results](test-results-story-test5.md). Full-campaign behavior remains
+untested. [Cai is next](story-cai-research.md), pending native save evidence.
 Other routes/parts, battle saves and unsupported or inconsistent layouts remain
 read-only. The editor checks actual save contents, not filenames or party members.
 
@@ -33,8 +35,9 @@ its loaded save object; it cannot overwrite another slot or a reloaded object.
 The warning title remains **CAUTION - UNEXPECTED CONSEQUENCES POSSIBLE**. It
 retains the user's points about Leda Part 1, no previous unlock/unit grants,
 limited testing, the Obelisk Chamber and a fresh-directory backup. The Obelisk
-point is immediately above backup. The evidence note distinguishes Chapters 4–12
-from the untested early chapters and Obelisk loading, and mentions clock/restart reset.
+point is immediately above backup. The first bullet excludes Chapter 1. The evidence
+note distinguishes accepted Chapter 2–12 starts from Obelisk coverage limited to
+Chapters 8/9, and mentions clock/restart reset.
 
 ## What is changed
 
@@ -68,9 +71,9 @@ untouched save. Exact runtime enum/type names are still unrecovered.
 
 | Chapter | Entry date/time | Short-session evidence |
 |---|---|---|
-| 1 | December 1, 1444, 12:00 | Natural checkpoint date; restored entry inferred |
-| 2 | January 2, 1449, 12:00 | Natural checkpoint and title date; restored entry inferred |
-| 3 | January 20, 1449, 20:00 | Title date; restored entry inferred |
+| 1 | Historical probe: December 1, 1444, 12:00 | Failed first objective; unavailable |
+| 2 | January 2, 1449, 12:00 | Game-tested opening/next beat |
+| 3 | January 20, 1449, 20:00 | Game-tested opening/next battle |
 | 4 | March 1, 1449, 08:00 | Game-tested opening/location/next beat |
 | 5 | April 6, 1449, 12:00 | Game-tested opening/next beat |
 | 6 | May 8, 1449, 12:00 | Game-tested opening/next beat |
@@ -92,7 +95,7 @@ report with `python research/story_timeline_report.py /path/to/GameData`.
 Chapter sequence hashes remain the independently matching Chapter 1/2 FNV-1
 suffix pattern, with prefix state `fde8dadc5dfc1118` and suffix `<chapter>_1`.
 Chapter 9's entry is `b79bcc2aad7433e5`. The full symbolic key is unrecovered;
-real Chapter 4–12 progression now supplies behavioral evidence for those targets.
+real Chapter 2–12 progression now supplies behavioral evidence for those targets.
 
 ## External chapter files and the Obelisk Chamber
 
@@ -121,8 +124,8 @@ If the chapter write succeeds but the selected-slot write fails, the error is
 reported; retry saves the remaining slot without repeating the checkpoint write.
 This is per-file recovery, not a multi-file transaction.
 
-Obelisk discovery and loading remain **Inferred** until the user tests them.
-The checkbox supplies the named chapter file; it does not synthesize files for
+Obelisk discovery and loading passed for **Chapters 8 and 9**. Other chapter
+files remain untested in the Obelisk. The checkbox supplies the named chapter file; it does not synthesize files for
 other skipped chapters, unlock the Obelisk facility, or recreate past campaign
 progress. Internal restart snapshots and external chapter files are distinct.
 The user observed that skips had not created new external files except 1_1 in
@@ -141,7 +144,11 @@ The engine requires a unique Header (220 bytes, marker 15), GameUserData v23,
 agreeing route/part/chapter/sequence, and the recognized free-time or checkpoint
 resume/state pair. GameSchedule and Calendar sizes/versions, matching valid
 clocks and all eight restart members/blobs/checksums are checked before mutation.
-Unknown and battle states are refused; refusal does not create an Undo entry.
+Unknown and battle states are refused before traversing their variable objects;
+refusal does not create an Undo entry. The Chapter 2 progression capture uses
+context `12 06`, whose full tree is unsupported, so it stays read-only for story
+editing despite having valid container checksums. A decoder recursion failure
+is reported as a save-layout error rather than escaping into the story UI.
 
 Restart editing uses the existing pointer-relocation engine. Every unrelated
 root object and all other GameUserData bytes must match after pointer

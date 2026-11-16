@@ -1,8 +1,7 @@
-"""Experimental Leda Part 1 chapter entry; no prior-progression grants.
+"""Live story field validation and historical Leda sequence-only editing.
 
-The sequence hashes extend the independently matching Chapter 1/2 checkpoint
-suffix pattern. Chapter 9's earlier restoration loaded and progressed in game.
-The remaining entries are inferred, despite all 12 chapters existing in data.
+Production chapter-entry targets and acceptance live in story_start. The low-level
+sequence writer retains Chapter 1 for reproducing historical failed probes.
 """
 from dataclasses import dataclass
 import struct
@@ -51,7 +50,10 @@ def read(f):
     ud = u.start + 4
     if h.end - h.start != 220 or f.payload[h.start + 8] != 15 or core.user_data(f) != ud:
         raise StoryError('Unknown story field layout; no changes allowed.')
-    tree = core.SaveTree(f.payload)
+    try:
+        tree = core.SaveTree(f.payload)
+    except RecursionError as exc:
+        raise StoryError('Unsupported story object tree; no changes allowed.') from exc
     parent = tree.node_at(u.start)
     children = [n for n in tree.nodes if n.parent == parent]
     # In GameUserData v23 the current sequence is a 16-byte child object at
