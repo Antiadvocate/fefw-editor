@@ -21,7 +21,14 @@ def fixture(route=4, part=1, chapter=2, *, padding=0, seq=0xb7b9cc2aad8d3152):
     u=len(p);p.extend(bytes(80));ud=u+4;p[ud]=23;p[ud+3:ud+6]=bytes((route,part,chapter))
     struct.pack_into('<III',p,ud+6,1523,6640,410)
     child=leaf(bytes([0])+struct.pack('<Q',seq)+bytes(3))
-    extra=leaf(b'\xed'*20)
+    # Realistic sibling maps, including an initially empty dialogue history.
+    import facilities
+    extra=len(p);p.extend(bytes(4))
+    general=leaf(b'\0'+struct.pack('<H',len(facilities.ANCHORS))+
+                 b''.join(struct.pack('<IB',key,1) for key in sorted(facilities.ANCHORS)))
+    history=leaf(bytes(3))
+    t=len(p);p.extend(struct.pack('<IIII',0x972fa7ee,general+32,facilities.HISTORY_MEMBER,history+32))
+    struct.pack_into('<I',p,extra,(2<<24)|(t+32))
     t=len(p);p.extend(struct.pack('<IIII',0xabcdef01,child+32,0xabcdef02,extra+32))
     struct.pack_into('<I',p,u,(2<<24)|(t+32))
     t=len(p)

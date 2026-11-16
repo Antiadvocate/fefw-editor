@@ -6,13 +6,15 @@ not the game filename. All three container and payload checksums validate.
 They establish sufficient structural evidence to offer **Chapters 2, 4 and 9**
 as **Inferred** initial targets. The initial implementation was followed by
 [Test 1 results](test-results-story-cai-test1.md): Chapters 2/9 passed, Chapter 4
-opened but progression was blocked. The UI now shows that distinction;
+opened but progression was blocked. Those initial results are retained below;
 [Test 2](test-results-functions-cai-test2.md) restored Journal access but all
 four combinations still failed to advance Chapter 4.
 [Test 3](test-results-story-cai-test3.md) passed Chapter 3 and reached Chapter 4
 naturally, but its objective remained blocked. The screenshot then identified
 a Sewers entrance requiring a missing Chapter 2 dialogue-read record; a
-[one-record test](testing-cai-sewers.md) is prepared. The initial evidence below
+[one-record test](testing-cai-sewers.md) subsequently passed. The
+[production integration](test-results-sewers-functions.md) exposes the prerequisite
+in Functions and applies it to Cai Chapter 3+ selections. The initial evidence below
 is retained for provenance.
 
 ## Native save evidence
@@ -42,15 +44,16 @@ unrelated normalized root. The source and natural checkpoints remain unchanged.
 ## Runtime scope
 
 The editor reads the route from the save; there is no route-conversion control.
-Cai offers only 2/4/9; 2/9 are Game-tested and 4 is Inferred / blocked. Chapter 3
-is a research-only candidate, not an additional production target. Leda retains its accepted 2–12 targets and
+Cai offers 2/3/4/9. Chapters 2/3/9 are Game-tested; Chapter 4 has a conditional
+pass after fixing Sewers on a natural Chapter 3 return. Direct entry with this
+fix remains untested. Leda retains its accepted 2–12 targets and
 Chapter 1 exclusion. Other routes/parts and unsupported contexts stay read-only.
 
 The shared entry engine selects the route-specific ID/date, sets the known
 chapter-start context, clears old schedule/calendar/restart state, and retains
 current progression. The game is expected to establish the scene from that
-entry, with short-session confirmation for 2/9 and a progression failure for 4.
-No prior units, facilities, quests or other unlocks are manufactured.
+entry. Cai Chapter 3+ selections now enable the one tested Sewers dialogue
+prerequisite. Other prior units, facilities, quests and unlocks remain unchanged.
 
 An optional chapter-file request is bound to **both route and chapter**. Cai
 writes `Chapter_Kai_1_N`, never `Chapter_Led_1_N`. All writes wait for Save;

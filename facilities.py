@@ -1,4 +1,4 @@
-"""Allowlisted function and facility switches in the general GameUserData flag map.
+"""Allowlisted switches in GameUserData's general and dialogue-history maps.
 
 Service switches, temple-transfer registrations and ordinary travel flags are
 independent. Do not identify this map by its enumerated index.
@@ -17,6 +17,10 @@ ANCHORS = frozenset(core.id_hash(key) for key in (
     '拠点_進行_初回自由行動',
     '拠点_進行_ファストトラベルエリア解放許可', '拠点_進行_拠点地図表示許可'))
 MIN_ANCHORS = 2
+SEWERS = 0x7d18367a
+SEWERS_DIALOGUE = 'MID_LGV_1KAI_c02_LG11_003_m06'
+HISTORY_MEMBER = 0xb631f2c1
+UNAVAILABLE = 'unavailable'
 
 
 class FacilityError(core.SaveError):
@@ -33,7 +37,9 @@ def catalog():
         for h, row in cat.items():
             expected = '禁止_' if row['polarity'] == 'restriction' else (
                 '神殿_転移_' if row['kind'] == 'Gate registration' else '機能開放_')
-            if (core.id_hash(row['name']) != h or not row['name'].startswith(expected)
+            identity_ok = (row['name'] == SEWERS_DIALOGUE if h == SEWERS
+                           else row['name'].startswith(expected))
+            if (core.id_hash(row['name']) != h or not identity_ok
                     or row['kind'] not in ('Service', 'Gate registration', 'Journal', 'Area access')
                     or row['polarity'] not in ('unlock', 'restriction')
                     or row['coverage'] not in ('Inferred', 'Unlock tested', 'Registration tested', 'Game-tested', 'Conditional pass')
@@ -59,7 +65,7 @@ def apply_labels(names):
 
 def locate(f):
     users = [b for b in f.blocks if b.name == 'GameUserData']
-    identities = ANCHORS | catalog().keys()
+    identities = ANCHORS | (catalog().keys() - {SEWERS})
     candidates = [m for m in core.flag_maps(f) if any(v.hash in identities for v in m.flags)]
     if len(users) != 1 or len(candidates) != 1:
         raise FacilityError('No unique general facility map; these controls are read-only.')
@@ -77,8 +83,45 @@ def locate(f):
     return fm
 
 
+def locate_history(f):
+    """Find the history sibling by its structural key, never its map ordinal."""
+    general = locate(f)
+    tree = core.SaveTree(f.payload)
+    group = tree.nodes[tree.node_at(general.start)].parent
+    parent = tree.nodes[group]
+    table = f.ptr(parent.start)
+    count = f.u32(parent.start) >> 24
+    rows = [(f.u32(table+8*i), f.ptr(table+8*i+4)) for i in range(count)]
+    if (table+8*count != parent.end or len({k for k, v in rows}) != count
+            or len({v for k, v in rows}) != count
+            or {v for k, v in rows} != {n.start for n in tree.nodes if n.parent == group}):
+        raise FacilityError('Unrecognised function flag group; Sewers is read-only.')
+    targets = [v for k, v in rows if k == HISTORY_MEMBER]
+    if len(targets) != 1 or targets[0] == general.start:
+        raise FacilityError('No unique dialogue-history member; Sewers is read-only.')
+    at = targets[0]; index = tree.node_at(at); node = tree.nodes[index]
+    if node.struct or node.parent != group or any(n.parent == index for n in tree.nodes):
+        raise FacilityError('Unexpected dialogue-history structure; Sewers is read-only.')
+    maps = [m for m in core.flag_maps(f) if m.start == at]
+    if not maps and bytes(f.payload[at+4:node.end]) == bytes(4):
+        return core.FlagMap(-1, at, [])  # Empty kind-0 list plus alignment.
+    if (len(maps) != 1 or len({v.hash for v in maps[0].flags}) != len(maps[0].flags)
+            or f.ptr(at) != node.end):
+        raise FacilityError('Invalid dialogue-history records; Sewers is read-only.')
+    return maps[0]
+
+
 def read(f):
-    return {v.hash: v.value for v in locate(f).flags}
+    values = {v.hash: v.value for v in locate(f).flags}
+    # A same-hash record in another map must never stand in for dialogue history.
+    values.pop(SEWERS, None)
+    try:
+        history = locate_history(f)
+    except FacilityError:
+        values[SEWERS] = UNAVAILABLE
+    else:
+        values.update({v.hash: v.value for v in history.flags if v.hash == SEWERS})
+    return values
 
 
 def enabled(h, value):
@@ -90,6 +133,8 @@ def enabled(h, value):
 
 
 def state_label(h, value):
+    if value == UNAVAILABLE:
+        return 'Unavailable; read-only'
     state = enabled(h, value)
     if state is None:
         return f'Unknown ({value}); preserved'
@@ -102,18 +147,29 @@ def edited(f, edits):
     for h, state in edits.items():
         if type(h) is not int or h not in cat or type(state) is not bool:
             raise FacilityError('Choose known facility switches and an enable/disable action.')
-    fm = locate(f)
-    present = {v.hash: v.value for v in fm.flags}
-    effective = {}
+    general = locate(f)
+    history = locate_history(f) if SEWERS in edits else None
+    plans = {}
     for h, state in edits.items():
+        fm = history if h == SEWERS else general
+        present = {v.hash: v.value for v in fm.flags}
         old = enabled(h, present.get(h))
         if old is None:
             raise FacilityError(f'{cat[h]["label"]} has an unknown saved value; batch unchanged.')
         if old != state:
             active = not state if cat[h]['polarity'] == 'restriction' else state
-            effective[h] = 1 if active else None
-    if not effective:
-        return bytearray(f.payload)
+            plans.setdefault(fm.start, (fm, {}))[1][h] = 1 if active else None
+    # Validate the whole batch before rebuilding either map. Descending offsets
+    # keep the other map's addresses stable as the containing object is resized.
+    result = core.SaveFile(f.payload)
+    for at in sorted(plans, reverse=True):
+        fm, effective = plans[at]
+        result = core.SaveFile(_edit_map(result, fm, effective))
+    return bytearray(result.payload)
+
+
+def _edit_map(f, fm, effective):
+    present = {v.hash: v.value for v in fm.flags}
     records = []
     for fl in fm.flags:
         if fl.hash in effective:
@@ -126,6 +182,6 @@ def edited(f, edits):
         if h not in present and value is not None:
             records.append(struct.pack('<IB', h, 1))
     if len(records) > 65535:
-        raise FacilityError('The general flag map is full.')
+        raise FacilityError('The selected flag map is full.')
     body = bytes([f.payload[fm.start + 4]]) + struct.pack('<H', len(records)) + b''.join(records)
     return core.replace_content(f, fm.start, body)

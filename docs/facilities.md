@@ -11,8 +11,8 @@ The **Functions** tab (formerly Facilities) has **Saved switches** and **Access 
 views. Flags remains the rightmost tab; slightly tighter tab spacing keeps it
 visible at the existing minimum window width.
 
-Saved switches contains **36 switches**: 21 service switches, seven
-Gate of the Gods registrations, six Journal switches and two area-access switches. Select individual rows or a range, then
+Saved switches contains **37 switches**: 21 service switches, seven
+Gate of the Gods registrations, six Journal switches and three area-access switches. Select individual rows or a range, then
 Enable selected or Disable selected. Search accepts English, Japanese or a
 hash; the category filter separates services, gates, journal sections and area access.
 The selected row explains its evidence. Ctrl+Z/Ctrl+Y and normal saving/backups
@@ -59,7 +59,19 @@ Neither map 0 nor any enumerated child index is assumed.
   The structural writer relocates pointers; serialization refreshes embedded
   checksums. No-op edits preserve bytes and create no Undo entry.
 
-The seven gate switches live in this general map. They are independent of the
+Sewers access (Cai) uses the exact dialogue-read identity
+`MID_LGV_1KAI_c02_LG11_003_m06` (`7d18367a`), in the separate dialogue-history
+member `b631f2c1` of the same anchored flag group. It stores 1 when enabled
+and removes only that record when disabled. The map is found structurally,
+including when empty; a missing, duplicated or malformed member is read-only.
+Mixed general/history selections are validated before either map is changed.
+The entrance still requires Cai and an allowed story phase. Unlock and
+progression passed on the natural Chapter 4 return; disabling is not game-tested.
+Selecting a supported Cai Chapter 3+ automatically enables this one prerequisite.
+Chapter 2 and Leda selections preserve its current state. Other switches are
+not enabled automatically. See [results](test-results-sewers-functions.md).
+
+The seven gate switches live in the general map. They are independent of the
 ordinary temple destinations in the existing Fast travel tab. Kalla's gate is
 `3fdd2f30 / 神殿_転移_カーラ神殿`; ordinary Kalla travel is `b482d5dc`.
 The six non-Yu Phas gates passed listing, travel and portal checks on Leda

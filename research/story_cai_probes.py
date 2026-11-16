@@ -31,7 +31,8 @@ def build(source, output):
     ready = []
     for chapter in (2, 4, 9):
         target = container.SaveFile(str(source))
-        target.payload = story_start.edited(f, chapter)
+        # Freeze the original probes, before the automatic Sewers prerequisite.
+        target.payload = story_start._edited_at_entry(f, chapter, 1449, story_start.CAI_DATES[chapter])
         ready.append((chapter, target.to_bytes(), bytes(target.payload)))
     output.mkdir(parents=True)
     (output/'00-Control').mkdir()

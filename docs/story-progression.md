@@ -11,13 +11,18 @@ game-tested through the Obelisk; ordinary entry acceptance is a separate result.
 See [Test 5 results](test-results-story-test5.md). Full-campaign behavior remains
 untested.
 
-**Cai Part 1** offers Chapters **2, 4 and 9**. Chapters **2 and 9** passed
-[Test 1](test-results-story-cai-test1.md): Chapter 2's opening battle completed
-into free time, and Chapter 9 advanced beyond its opening task. Chapter **4**
-opens but progression is blocked and remains Inferred with that warning.
-[Functions Test 2](testing-functions-cai-test2.md) investigates prerequisites
-separately; chapter edits still do not grant earlier unlocks. Cai Obelisk use
-is untested. Other Cai targets remain unavailable; Chapter 1 is deferred.
+**Cai Part 1** offers Chapters **2, 3, 4 and 9**. Chapters 2/9 passed initial
+progression tests; Chapter 3 was completed into Chapter 4. Enabling the missing
+Sewers dialogue prerequisite fixed the Chapter 4 objective on that natural
+return. Direct Chapter 4 entry with the automatic prerequisite remains to be
+game-tested. Cai Obelisk use is untested; other Cai targets remain unavailable.
+See [Sewers results](test-results-sewers-functions.md).
+
+For every supported Cai Chapter 3+ selection, the chapter action also enables
+**Functions → Area access → Sewers access (Cai)**. Both changes share one
+Undo/Redo step and are saved to Auto and any requested chapter file. Reapplying
+a chapter restores the prerequisite if it was disabled. Selecting Chapter 2
+does not remove it. Ordinary Save never enables it by itself.
 
 Other routes/parts, battle saves and unsupported or inconsistent layouts remain
 read-only. The editor checks actual save contents, not filenames or party members.
@@ -46,12 +51,12 @@ The warning title remains **CAUTION - UNEXPECTED CONSEQUENCES POSSIBLE**. It
 retains the user's points about Leda Part 1, no previous unlock/unit grants,
 limited testing, the Obelisk Chamber and a fresh-directory backup. The Obelisk
 point is immediately above backup. Warning text follows the loaded route: Leda
-explains Chapter 1's exclusion and its tested scope; Cai distinguishes accepted 2/9 from blocked 4 and untested Obelisk use. Changing route while either
+explains Chapter 1's exclusion and its tested scope; Cai explains the automatic Sewers exception, Chapter 3 acceptance, Chapter 4 conditional pass and untested Obelisk use. Changing route while either
 dialog is open requires reopening it. The picker never chooses a different route.
 
 ## What is changed
 
-`story_start.edited` reproduces the successful **Test 3 D** setup. Its Chapter
+`story_start.edited` reproduces the successful **Test 3 D** setup. Its Leda Chapter
 4/9 payloads and serialized files match the delivered D candidates exactly.
 Removing HubSeq brought no observed improvement, so it is retained. Cai uses
 the same preparation mechanics with its own validated selector prefix and dates;
@@ -67,7 +72,7 @@ that structural agreement does not establish game compatibility.
 | Eight internal restart slots | Validated Header/Data blobs cleared; the game rebuilds a target checkpoint during entry |
 | Outer raw+48..56 | State/clock mirrored from the current payload during serialization, including after Undo |
 
-All current flag maps, units and unique unit numbers, inventories, currencies,
+Apart from the Cai Chapter 3+ Sewers dialogue record, current flag maps, units and unique unit numbers, inventories, currencies,
 Boons, Deeds, supports, facilities and fast-travel registrations are preserved
 by the edit. Hub/location, world-map and conversation records are also retained;
 the game's chapter scripts establish the new live scene. Those scripts may

@@ -289,6 +289,14 @@
       "polarity": "unlock",
       "coverage": "Inferred",
       "note": "Distinct from the Training flag. Listed in Cai Chapter 4 free-time permissions; added between the Chapter 9 opening and advancement returns. The precise in-game action and any Arena dependency remain unconfirmed. English label is a literal translation. Game test pending."
+    },
+    "7d18367a": {
+      "name": "MID_LGV_1KAI_c02_LG11_003_m06",
+      "label": "Sewers access (Cai)",
+      "kind": "Area access",
+      "polarity": "unlock",
+      "coverage": "Unlock tested",
+      "note": "Enables the dialogue prerequisite for Cai's Sewers entrance. Entering and progressing passed in Chapter 4 after natural Chapter 3 completion. The entrance still requires Cai and an allowed story phase. Disabling removes this dialogue record; the disable effect has not been game-tested. Cai Chapter 3+ selections enable this automatically."
     }
   }
 }

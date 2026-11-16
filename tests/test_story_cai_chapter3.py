@@ -15,7 +15,7 @@ from test_story import StoryHarness
 
 
 class CaiChapter3Test(unittest.TestCase):
-    def test_candidate_preserves_player_roots_and_is_not_a_production_target(self):
+    def test_historical_candidate_preserves_roots_and_production_now_enables_sewers(self):
         f = core.SaveFile(start.edited(StoryHarness(1).core_of(),2))
         original = bytes(f.payload)
         before = start.normalized_blocks(f)
@@ -26,8 +26,9 @@ class CaiChapter3Test(unittest.TestCase):
         after = start.normalized_blocks(g)
         for name in before.keys()-{'Header','GameUserData','GameSchedule','Calendar','GameRestartData'}:
             self.assertEqual(before[name], after[name])
-        self.assertEqual(start.TARGETS[1], (2,4,9))
-        with self.assertRaises(core.SaveError): start.edited(f,3)
+        self.assertEqual(start.TARGETS[1], (2,3,4,9))
+        current = core.SaveFile(start.edited(f,3))
+        self.assertEqual(facilities.read(current)[facilities.SEWERS],1)
         self.assertEqual(bytes(f.payload), original)
 
     def test_wrong_route_chapter_and_battle_source_are_refused_without_mutation(self):

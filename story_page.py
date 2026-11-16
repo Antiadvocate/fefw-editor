@@ -22,9 +22,9 @@ def warning_points(route):
     if route == 4:
         return WARNING_POINTS
     if route == 1:
-        return ('This is a Cai Part 1 save. Only Chapters 2, 4 and 9 are currently available as experimental targets. Other Cai chapters are not yet supported.',
-                WARNING_POINTS[1],
-                'Cai Chapters 2 and 9 passed opening and progression tests. Chapter 4 opens but progression is blocked; its missing prerequisites are under investigation. Editor-created Cai chapter files have not been tested through the Obelisk. Long term testing has not been carried out.',
+        return ('This is a Cai Part 1 save. Chapters 2, 3, 4 and 9 are available. Other Cai chapters are not yet supported.',
+                'For Cai Chapter 3 and later, Sewers access is enabled automatically. Other facilities, features, tutorials, map points, side quests and party units from previous chapters must still be managed separately.',
+                'Cai Chapters 2 and 9 passed initial progression tests; Chapter 3 was completed. Chapter 4 Sewers entry and progression passed after natural Chapter 3 completion. Direct Chapter 4 entry with this fix still needs a game test. Editor-created Cai chapter files have not been tested through the Obelisk. Long term testing has not been carried out.',
                 *WARNING_POINTS[3:])
     raise story.StoryError('Unsupported story route.')
 
@@ -32,7 +32,7 @@ def warning_points(route):
 def evidence_note(route):
     if route == 4:
         return EVIDENCE_NOTE
-    return ('Cai Chapters 2 and 9 passed the first game tests. Chapter 4 is Inferred / blocked: journal and access controls are being tested separately. Entry resets the clock and internal restart state. Cai Obelisk use remains untested.')
+    return ('Cai Chapters 2/3/9 passed. Chapter 4: Sewers fix passed after natural Chapter 3; direct entry remains untested. Cai Chapter 3+ enables Sewers access. Entry resets the clock and internal restart state. Cai Obelisk use remains untested.')
 
 
 class StoryPageMixin:
@@ -66,7 +66,7 @@ class StoryPageMixin:
             self.story_status.configure(text=label + str(exc)); return
         pending = getattr(self.sv, '_pending_story_chapter', None)
         note = f'\n{story.chapter_filename(pending.route, pending.chapter)} will be created on Save.' if pending else ''
-        evidence = 'Chapters 2–12 game-tested; Chapter 1 unavailable.' if info.route == 4 else 'Chapters 2 and 9 game-tested; Chapter 4 progression blocked.'
+        evidence = 'Chapters 2–12 game-tested; Chapter 1 unavailable.' if info.route == 4 else 'Chapters 2/3/9 game-tested; Chapter 4 Sewers fix passed after natural Chapter 3.'
         self.story_status.configure(text=info.label + '\n' + evidence + note)
         self.story_button.state(['!disabled'])
 
@@ -130,7 +130,7 @@ class StoryPageMixin:
         self.place_dialog(win, 680, 540); win.configure(background=self.p['bg'])
         frame = ttk.Frame(win, padding=18); frame.pack(fill='both', expand=True)
         ttk.Label(frame, text='Choose a chapter start', style='CardH3.TLabel').pack(anchor='w')
-        limit = 'Chapter 1 is unavailable.' if info.route == 4 else 'Cai Chapters 2 and 9 are tested; Chapter 4 is available for investigation.'
+        limit = 'Chapter 1 is unavailable.' if info.route == 4 else 'Cai Chapter 3+ also enables Sewers access.'
         ttk.Label(frame, text='Selected save only. Apply stages the chapter start and date; Ctrl+S saves and Ctrl+Z undoes. ' + limit,
                   wraplength=625, justify='left').pack(anchor='w', pady=(4, 10))
         buttons = ttk.Frame(frame); buttons.pack(side='bottom', fill='x', pady=(12, 0))
@@ -148,7 +148,7 @@ class StoryPageMixin:
             if chapter in story_start.TESTED_BY_ROUTE[info.route]:
                 text = 'Game-tested opening and progression'
             elif info.route == 1 and chapter == 4:
-                text = 'Inferred — progression blocked; prerequisites under test'
+                text = 'Conditional pass — Sewers fixed after natural Chapter 3'
             else:
                 text = 'Inferred — game test pending'
             tree.insert('', 'end', iid=str(chapter), text=f'Chapter {chapter}', values=(text,))
