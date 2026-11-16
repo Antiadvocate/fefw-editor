@@ -1,6 +1,6 @@
 """Leda Part 1 chapter entry, using the game-tested Test 3 D profile.
 
-Chapters 4/9 have short-session game evidence. Other targets remain inferred.
+Chapters 4–12 have short-session game evidence. Chapters 1–3 remain inferred.
 No private captures or GameData are required at runtime.
 """
 from datetime import datetime
@@ -9,9 +9,13 @@ import struct
 import fefw_core as core
 import story
 
-CHAPTERS = tuple(range(4, 13))
-TESTED = frozenset((4, 9))
-ENTRY_DATES = {4: (3, 1, 8, 0), 5: (4, 6, 12, 0), 6: (5, 8, 12, 0),
+CHAPTERS = tuple(range(1, 13))
+TESTED = frozenset(range(4, 13))
+# Chapter 1's title inherits its date; use the captured natural checkpoint.
+# Later chapters return to 1449, including when the source is Chapter 1.
+ENTRY_YEARS = {chapter: 1444 if chapter == 1 else 1449 for chapter in CHAPTERS}
+ENTRY_DATES = {1: (12, 1, 12, 0), 2: (1, 2, 12, 0), 3: (1, 20, 20, 0),
+               4: (3, 1, 8, 0), 5: (4, 6, 12, 0), 6: (5, 8, 12, 0),
                7: (5, 28, 20, 0), 8: (6, 29, 11, 0), 9: (7, 10, 18, 0),
                10: (9, 28, 2, 0), 11: (10, 16, 12, 0), 12: (11, 7, 12, 0)}
 RESUME_OFFSET = 58
@@ -88,7 +92,7 @@ def normalized_blocks(f):
 
 def target(chapter):
     if type(chapter) is not int or chapter not in CHAPTERS:
-        raise story.StoryError('Choose a Leda Part 1 chapter from 4 to 12. Chapters 1–3 are deferred.')
+        raise story.StoryError('Choose a Leda Part 1 chapter from 1 to 12.')
     return ENTRY_DATES[chapter]
 
 
@@ -120,7 +124,7 @@ def edited(f, chapter):
     info = validate(f)
     original = normalized_blocks(f)
     schedule, calendar = one_block(f, 'GameSchedule'), one_block(f, 'Calendar')
-    year = int.from_bytes(f.payload[info.header+22:info.header+24], 'little')
+    year = ENTRY_YEARS[chapter]
     clock = struct.pack('<H5B', year, month, day, hour, minute, 0)
     p = story.edited(f, chapter)
     p[info.header+20:info.header+22] = b'\x10\x0b'

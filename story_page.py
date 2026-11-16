@@ -12,11 +12,10 @@ WARNING_POINTS = (
     "This feature currently only works with Leda's Part 1.",
     'It will start you at the applicable chapter. It WILL NOT unlock facilities, features, tutorials, map points, side quests from previous chapters or give you units that should be in your party. That will need to be managed separately.',
     'This has only been tested that the chapter starts and can be progressed to the next story sequence or battle. Long term testing has not been carried out.',
-    'Skipping chapters will lock them out of being present in the Obelisk Chamber as this relies on chapter save files.',
+    'The Obelisk Chamber relies on chapter save files. Select “Create a chapter start file using this state” to write the chosen chapter’s file when you Save. Other skipped chapters still need their own files. Existing files require overwrite confirmation and are backed up first.',
     'Back up your save into a fresh directory NOW before proceeding.',
 )
-EVIDENCE_NOTE = ('Chapters 4 and 9 passed opening and next-story-beat tests with the current roster and facility state. '
-                 'Chapters 5–8 and 10–12 remain inferred; Chapters 1–3 are unavailable. Entry resets the clock and internal restart state.')
+EVIDENCE_NOTE = ('Chapters 4–12 passed opening and next-story-beat tests. Chapters 1–3 and editor-created Obelisk files remain inferred; game tests are pending. Entry resets the clock and internal restart state.')
 
 
 class StoryPageMixin:
@@ -48,7 +47,9 @@ class StoryPageMixin:
             story.check_outer(self.sv.raw, info)
         except core.SaveError as exc:
             self.story_status.configure(text=label + str(exc)); return
-        self.story_status.configure(text=info.label + '\nChapter starts 4–12. Chapters 4/9 game-tested; other targets inferred.')
+        pending = getattr(self.sv, '_pending_story_chapter', None)
+        note = f'\nChapter_Led_1_{pending} will be created on Save.' if pending else ''
+        self.story_status.configure(text=info.label + '\nChapters 4–12 game-tested; Chapters 1–3 inferred.' + note)
         self.story_button.state(['!disabled'])
 
     def _story_ready(self):
@@ -72,13 +73,13 @@ class StoryPageMixin:
             return
         if self.sv is not slot or not self._story_ready():
             return
-        chapter = self._choose_story_chapter()
-        if chapter is not None and self.sv is slot:
-            self.apply_story_chapter(chapter)
+        choice = self._choose_story_chapter()
+        if choice is not None and self.sv is slot:
+            self.apply_story_chapter(*choice)
 
     def _confirm_story_warning(self):
         win = tk.Toplevel(self); win.title(WARNING_TITLE); win.transient(self)
-        self.place_dialog(win, 720, 510)
+        self.place_dialog(win, 720, 570)
         win.configure(background=self.p['bg']); win.resizable(False, False)
         frame = ttk.Frame(win, padding=20); frame.pack(fill='both', expand=True)
         ttk.Label(frame, text=WARNING_TITLE, style='CardH3.TLabel', wraplength=670).pack(anchor='w', pady=(0, 12))
@@ -99,12 +100,18 @@ class StoryPageMixin:
 
     def _choose_story_chapter(self):
         win = tk.Toplevel(self); win.title('Leda · Part 1 — choose chapter'); win.transient(self)
-        self.place_dialog(win, 680, 470); win.configure(background=self.p['bg'])
+        self.place_dialog(win, 680, 540); win.configure(background=self.p['bg'])
         frame = ttk.Frame(win, padding=18); frame.pack(fill='both', expand=True)
         ttk.Label(frame, text='Choose a chapter start', style='CardH3.TLabel').pack(anchor='w')
-        ttk.Label(frame, text='Selected save only. Applying stages the chapter start and date; Ctrl+S saves and Ctrl+Z undoes. Chapters 1–3 are deferred.',
+        ttk.Label(frame, text='Selected save only. Apply stages the chapter start and date; Ctrl+S saves and Ctrl+Z undoes. Chapters 1–3 are experimental.',
                   wraplength=625, justify='left').pack(anchor='w', pady=(4, 10))
         buttons = ttk.Frame(frame); buttons.pack(side='bottom', fill='x', pady=(12, 0))
+        options = ttk.Frame(frame); options.pack(side='bottom', fill='x', pady=(10, 0))
+        create_file = tk.BooleanVar(value=getattr(self.sv, '_pending_story_chapter', None) is not None)
+        ttk.Checkbutton(options, text='Create a chapter start file using this state',
+                        variable=create_file).pack(anchor='w')
+        ttk.Label(options, text='Written beside the selected save only when you Save. Existing chapter files require confirmation; a .bak (or numbered .bak) is kept first.',
+                  wraplength=625, justify='left', style='CardMuted.TLabel').pack(anchor='w', pady=(4, 0))
         tree = ttk.Treeview(frame, columns=('evidence',), show='tree headings', height=12, selectmode='browse')
         tree.heading('#0', text='Leda Part 1', anchor='w'); tree.column('#0', width=150, stretch=False)
         tree.heading('evidence', text='Evidence / limits', anchor='w'); tree.column('evidence', width=450)
@@ -112,19 +119,19 @@ class StoryPageMixin:
         for chapter in story_start.CHAPTERS:
             text = 'Game-tested opening and next story beat' if chapter in story_start.TESTED else 'Inferred — game test pending'
             tree.insert('', 'end', iid=str(chapter), text=f'Chapter {chapter}', values=(text,))
-        current = str(max(4, story.require_leda(self.core_of()).chapter))
+        current = str(story.require_leda(self.core_of()).chapter)
         tree.selection_set(current); tree.see(current); tree.focus(current)
         result = [None]
         def apply():
             picked = tree.selection()
             if picked:
-                result[0] = int(picked[0]); win.destroy()
+                result[0] = (int(picked[0]), create_file.get()); win.destroy()
         ttk.Button(buttons, text='Apply chapter start', command=apply).pack(side='right')
         ttk.Button(buttons, text='Cancel', command=win.destroy).pack(side='right', padx=8)
         win.bind('<Escape>', lambda e: win.destroy()); win.grab_set(); self.wait_window(win)
         return result[0]
 
-    def apply_story_chapter(self, chapter):
+    def apply_story_chapter(self, chapter, create_file=False):
         if not self._story_ready():
             return
         try:
@@ -135,9 +142,11 @@ class StoryPageMixin:
             new = story_start.edited(core.SaveFile(self.sv.payload), chapter)
         except core.SaveError as exc:
             self.flash(str(exc), 'error'); return
-        if bytes(new) == bytes(self.sv.payload):
+        pending = chapter if create_file else None
+        if bytes(new) == bytes(self.sv.payload) and pending == getattr(self.sv, '_pending_story_chapter', None):
             self.flash('This chapter-start setup is already staged.', 'info'); return
         self.push_undo()
         self.sv.payload = bytearray(new); self.sv.scan(); self.sv._core_cache = None
+        self.sv._pending_story_chapter = pending
         self._touch([self.sv]); self.refresh_after_core()
         self.flash(f'Leda Part 1 Chapter {chapter} start staged — Ctrl+S saves; Ctrl+Z undoes.', 'ok')

@@ -63,7 +63,7 @@ The game data version was not separately reported.
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
 | 5 | Boons | All 31 groups / 81 tiers editable; broader mappings labelled Inferred | [BEDIT results](test-results-boon-editing-2026-11-15.md): +16 EXP Off / +17 On. [WEDIT-01–07 passed](test-results-weapon-boon-2026-11-15.md): discount Off/On persists in returned saves; player reports earlier 10% prices reproduced and backups through .bak4 |
-| 6 | Story | Warning-gated Leda P1 starts 4–12; other routes and battle states read-only | [Test 3](test-results-story-test3.md): 4/9 opening and next beat passed. Remaining seven targets inferred; [Test 4](testing-story-start-test4.md) pending |
+| 6 | Story | Warning-gated Leda P1 starts 1–12; optional chapter file on Save with confirmation/backups | Chapters 4–12 passed [Tests 3](test-results-story-test3.md) and [4](test-results-story-test4.md). Chapters 1–3 and editor-created Obelisk files are Inferred; [Test 5](testing-story-test5.md) pending |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
 test report before being called game-tested. Other routes are not covered by
@@ -270,15 +270,22 @@ and date initialization at Chapters 4 and 9 did not establish working transition
 but do not prove its exclusive data source. [Test 3](test-results-story-test3.md)
 passed for Chapters 4 and 9 after adding the separate resume identifier. HubSeq
 removal brought no benefit, so the editor retains it and uses the full D setup.
-The UI now offers 4–12, with only 4/9 Game-tested; the other seven entries stay
-Inferred pending [Test 4](testing-story-start-test4.md). Chapters 1–3 remain deferred.
+[Test 4](test-results-story-test4.md) passed all UI checks and the seven remaining
+chapters. All 14 returned saves validate; Chapters 4–12 are now Game-tested for
+opening and the next story beat. [Test 5](testing-story-test5.md) opens Chapters
+1–3 as Inferred, with the natural Chapter 1 historical date and Chapter 2 date.
+The optional chapter-file checkbox queues a same-state checkpoint for Save;
+overwrite confirmation, numbered backups, cancellation/history and failures
+have automated coverage. Obelisk loading remains pending in-game testing.
 
 The user observed no new external Chapter_Led_ files except 1_1 in the earlier
 Chapter 1 test. Creation at the previous chapter boundary is a hypothesis, not
 confirmed behavior. Type 84 precedes Chapters 2–12 in the timeline, but its
 function is unrecovered. Internal target restart snapshots do rebuild after
-successful entry. Keep the Obelisk warning; investigate a natural boundary
-before adding external checkpoint creation.
+successful entry. The new explicit file-creation option does not depend on
+identifying that natural boundary. The Obelisk warning now explains the option,
+Save-only writes, existing-file confirmation and backups. No natural creation
+trigger is claimed as confirmed.
 
 ## Other candidates and known limits
 

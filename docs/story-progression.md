@@ -1,13 +1,13 @@
 # Story progression — Leda Part 1
 
-Player → Story progression… offers chapter starts **4–12** after the requested
-five-point warning. Chapters **4 and 9** passed opening, correct location and
-next-story-beat tests from the accepted Chapter 9 baseline, with the reported
-roster/facility/travel state preserved. Chapters **5–8 and 10–12 remain Inferred**
-and await [Test 4](testing-story-start-test4.md). Chapters 1–3 are deferred.
+Player → Story progression… offers chapter starts **1–12** after the requested
+five-point warning. Chapters **4–12** passed the opening and next-story-beat
+tests. Chapters **1–3 remain Inferred** and await [Test 5](testing-story-test5.md).
+The optional chapter-file checkbox is implemented; Obelisk discovery/loading
+of those editor-created files still requires the same game test.
 
-See [Test 3 results](test-results-story-test3.md) for the accepted short-session
-scope. This is not a full save reconstruction or a long-term compatibility claim.
+See [Test 3](test-results-story-test3.md) and [Test 4](test-results-story-test4.md)
+for the accepted short-session scope, not a full-campaign compatibility claim.
 Other routes/parts, battle saves and unsupported or inconsistent layouts remain
 read-only. The editor checks actual save contents, not filenames or party members.
 
@@ -17,19 +17,24 @@ read-only. The editor checks actual save contents, not filenames or party member
 2. Turn off route mirroring, then click Story progression… on Player.
 3. Read the warning and back up the whole save folder into a fresh directory.
 4. Continue to the chapter list. Each target carries its evidence label.
-5. Apply stages the chapter start/date on the selected save. Ctrl+S writes it;
-   Ctrl+Z/Ctrl+Y undo/redo the full change. Numbered backups remain available.
-6. In the game, use Continue/Auto to test the new entry, then let its opening run.
+5. Optionally check **Create a chapter start file using this state**. It queues
+   `Chapter_Led_1_<chapter>` beside the selected save. Unchecked creates no file.
+6. Apply stages the chapter/date and file request. Ctrl+Z/Ctrl+Y undo/redo both.
+7. Save (Ctrl+S) writes the selected save and any requested chapter file. Existing
+   chapter files require confirmation first. No cancels the whole Save and keeps
+   the edits/request pending. Yes backs up the existing file before replacing it.
+8. Use Continue/Auto for the normal entry; separately check Obelisk discovery
+   and loading of the new chapter file. Let the chapter opening run.
 
-Cancellation changes nothing. Reapplying an identical staged entry is a no-op.
+Cancellation changes nothing. Reapplying an identical staged entry and checkbox choice is a no-op.
 Changing chapters after staging another entry is supported. Undo is confined to
 its loaded save object; it cannot overwrite another slot or a reloaded object.
 
 The warning title remains **CAUTION - UNEXPECTED CONSEQUENCES POSSIBLE**. It
 retains the user's points about Leda Part 1, no previous unlock/unit grants,
 limited testing, the Obelisk Chamber and a fresh-directory backup. The Obelisk
-point is immediately above backup. The evidence note identifies Chapters 4/9
-as tested and the other targets as inferred, and mentions clock/restart reset.
+point is immediately above backup. The evidence note distinguishes Chapters 4–12
+from the untested early chapters and Obelisk loading, and mentions clock/restart reset.
 
 ## What is changed
 
@@ -42,7 +47,7 @@ Removing HubSeq brought no observed improvement, so it is retained.
 | Header, GameUserData and outer summary | Target chapter and chapter-entry sequence |
 | GameUserData v23 body+58, u64 | Separate resume identifier: `d8588d186b3f9502` → `a2f3e9a7ff461708` |
 | Header state bytes, block+20/+21 | Observed chapter-start context `10 0b` |
-| Header and GameSchedule clocks | Selected title-row date/time, retaining the source year |
+| Header and GameSchedule clocks | Selected entry date/time: Chapter 1 in 1444; Chapters 2–12 in 1449 |
 | Remaining GameSchedule / Calendar cache | Empty checkpoint form, retaining known version markers |
 | Eight internal restart slots | Validated Header/Data blobs cleared; the game rebuilds a target checkpoint during entry |
 | Outer raw+48..56 | State/clock mirrored from the current payload during serialization, including after Undo |
@@ -63,19 +68,23 @@ untouched save. Exact runtime enum/type names are still unrecovered.
 
 | Chapter | Entry date/time | Short-session evidence |
 |---|---|---|
-| 4 | March 1, 08:00 | Game-tested opening/location/next beat |
-| 5 | April 6, 12:00 | Inferred; pending |
-| 6 | May 8, 12:00 | Inferred; pending |
-| 7 | May 28, 20:00 | Inferred; pending |
-| 8 | June 29, 11:00 | Inferred; pending |
-| 9 | July 10, 18:00 | Game-tested opening/location/next battle |
-| 10 | September 28, 02:00 | Inferred; pending |
-| 11 | October 16, 12:00 | Inferred; pending |
-| 12 | November 7, 12:00 | Inferred; pending |
+| 1 | December 1, 1444, 12:00 | Natural checkpoint date; restored entry inferred |
+| 2 | January 2, 1449, 12:00 | Natural checkpoint and title date; restored entry inferred |
+| 3 | January 20, 1449, 20:00 | Title date; restored entry inferred |
+| 4 | March 1, 1449, 08:00 | Game-tested opening/location/next beat |
+| 5 | April 6, 1449, 12:00 | Game-tested opening/next beat |
+| 6 | May 8, 1449, 12:00 | Game-tested opening/next beat |
+| 7 | May 28, 1449, 20:00 | Game-tested opening/next battle |
+| 8 | June 29, 1449, 11:00 | Game-tested opening/next beat |
+| 9 | July 10, 1449, 18:00 | Game-tested opening/location/next battle |
+| 10 | September 28, 1449, 02:00 | Game-tested opening/next battle |
+| 11 | October 16, 1449, 12:00 | Game-tested opening/next battle |
+| 12 | November 7, 1449, 12:00 | Game-tested opening/next battle |
 
 The opening can advance the clock: Chapter 9 settles on July 12; Chapter 4's
-returned opening saves are March 1 at noon. These entry dates come from title
-rows in `Timeline_Part1_Led.bin`, SHA-256
+returned opening saves are March 1 at noon. Chapter 1 inherits its title date, so its captured natural checkpoint supplies
+December 1, 1444 at noon. Chapter 2 independently matches its natural checkpoint.
+The other month/day/time values come from title rows in `Timeline_Part1_Led.bin`, SHA-256
 `8fd921c3dd2ca18af17fa54f22fd3b99fadbaffdacfcc28f8ef377435caab5d5`.
 The game data is not bundled or required at runtime. Reproduce the read-only
 report with `python research/story_timeline_report.py /path/to/GameData`.
@@ -83,22 +92,48 @@ report with `python research/story_timeline_report.py /path/to/GameData`.
 Chapter sequence hashes remain the independently matching Chapter 1/2 FNV-1
 suffix pattern, with prefix state `fde8dadc5dfc1118` and suffix `<chapter>_1`.
 Chapter 9's entry is `b79bcc2aad7433e5`. The full symbolic key is unrecovered;
-real Chapter 4/9 progression now supplies behavioral evidence for those targets.
+real Chapter 4–12 progression now supplies behavioral evidence for those targets.
 
 ## External chapter files and the Obelisk Chamber
 
-The editor only changes the selected save; it does not synthesize, overwrite or
-remove external `Chapter_Led_` files. The user observed that the skip tests did
-not create new chapter files, except `Chapter_Led_1_1` during the Chapter 1 test.
-Internal restart snapshots were rebuilt in successful Test 3 returns despite
-this absence of newly created external files. These are distinct observations.
+The checkbox defaults to off unless a file request is already pending for this
+loaded slot. It targets only the selected chapter. Changing chapter replaces
+the pending request; reapplying with the box unchecked removes it. No file is
+written by checking, Apply, Undo or Redo. Reload/discard drops unsaved requests.
+
+At Save, the requested file uses the current staged chapter-start payload,
+including subsequent ordinary edits made before Save. It is serialized in the
+same container format as natural chapter files. A stale request whose payload
+is no longer the matching entry is refused; reapply the chapter start to proceed.
+
+All target existence checks and overwrite confirmations happen before writes.
+Targets with competing dirty edits or duplicate requests are refused. The target
+is checked again before replacement. Existing bytes are preserved by the normal
+backup policy: `.bak` is the original, then `.bak1`, `.bak2`, etc.; the highest
+number is newest. A matching latest backup can be reused. Backup failure prevents
+replacement. Files are written through a temporary file and replaced atomically.
+
+After creation, the chapter slot appears in the editor's slot list. A completed
+request is consumed, including its history metadata: Undo after Save can undo
+the selected save's payload but never deletes or silently rewrites the external
+file. Check the box and Apply again for an intentional new checkpoint write.
+If the chapter write succeeds but the selected-slot write fails, the error is
+reported; retry saves the remaining slot without repeating the checkpoint write.
+This is per-file recovery, not a multi-file transaction.
+
+Obelisk discovery and loading remain **Inferred** until the user tests them.
+The checkbox supplies the named chapter file; it does not synthesize files for
+other skipped chapters, unlock the Obelisk facility, or recreate past campaign
+progress. Internal restart snapshots and external chapter files are distinct.
+The user observed that skips had not created new external files except 1_1 in
+the earlier Chapter 1 test, despite rebuilt internal snapshots.
 
 **Hypothesis, not confirmed:** external chapter-save creation happens at the
 previous chapter's completion/boundary. An unrecovered action type 84 immediately
 precedes title rows for Chapters 2–12; Chapter 1 has a different lead-in. This is
 consistent with a boundary operation skipped by direct title entry, but it does
-not prove type 84 writes files or establish the exact trigger. Keep the Obelisk
-warning and investigate a natural boundary before adding checkpoint creation.
+not prove type 84 writes files or establish the exact trigger. Explicit editor
+file creation does not establish the natural trigger.
 
 ## Guards and history
 

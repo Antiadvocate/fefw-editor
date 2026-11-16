@@ -1,11 +1,13 @@
 # Fortune's Weave Save Editor
 
-**Story progression — Leda Part 1:** Player offers chapter starts 4–12 after a
-five-point caution warning. Chapters 4 and 9 passed opening and next-story-beat
-tests with the current roster/facility state; other targets remain Inferred.
-Chapters 1–3, other routes and battle saves are unavailable. See
-[scope](docs/story-progression.md), [Test 3 passes](docs/test-results-story-test3.md)
-and [Test 4 remaining chapters](docs/testing-story-start-test4.md).
+**Story progression — Leda Part 1:** Player offers chapter starts 1–12 after a
+five-point caution warning. Chapters 4–12 passed opening and next-story-beat
+tests; Chapters 1–3 remain Inferred. An optional checkbox queues a chapter-start
+file for the Obelisk on Save, with overwrite confirmation and numbered backups.
+Editor-created Obelisk loading still needs game testing. Other routes and battle
+saves are read-only. See [scope](docs/story-progression.md),
+[Test 4 results](docs/test-results-story-test4.md) and
+[Test 5: early chapters and chapter files](docs/testing-story-test5.md).
 
 **Facilities branch:** the UI and FAC-01–06 game tests passed on Leda Part 1
 Chapter 9. Ten services and six gates are Game-tested; Yu Phas additionally
@@ -37,7 +39,7 @@ library, or a ready-made Windows `.exe`.
 | | Class | Pick any class the game knows. It's added to the unit's own class list, the way the game does it |
 | **Convoy** | | Everything in storage, materials included: add a stack, stock every material at once, swap the item in any row, change its quantity, remove a row, and repair a list damaged by older versions |
 | **Gold** | | Set gold |
-| **Player** | | Experimental Leda Part 1 chapter starts 4–12, with warning and route/state guards; 4/9 game-tested, others inferred. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
+| **Player** | | Experimental Leda Part 1 chapter starts 1–12, with warning and route/state guards; 4–12 game-tested, 1–3 inferred. Optional chapter file on Save with overwrite confirmation and backup. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
 | **Classes** | | A unit's whole class list (set the current class, add, swap or remove one, set its exp) and its weapon masteries with their rank (E … S+) and exp — select several masteries (Ctrl+A, Shift+click or Shift+drag) and Set rank, Set exp or Remove changes all of them at once |
 | **Supports** | | Every character's support partners with the **points** this save holds for the pair, the highest rank the game defines, and which conversations this save has recorded. Set the points (0 … 3200) and the game works the level out from them. **Record conversation as seen** writes that conversation's flag |
 | **Mounts** | | The battalion and mount each unit carries, chosen from the save's pool |
@@ -299,11 +301,13 @@ Otherwise use **Open folder…** and pick any slot file inside it.
   the live unit, convoy and gold; those copies keep their values, so rewinding
   still takes you back to what was really there. Run settings (difficulty, mode,
   playthrough number) are the exception: they apply to the whole run and are
-  written into every copy.
+  written into every copy. Story progression deliberately clears old internal
+  restart snapshots so the game can rebuild the selected chapter start.
 * **"Also edit this route's other saves"** (off by default) also writes each edit
   into the same route's other live saves, e.g. that lord's `Route_*`. Another
   lord's route and every `Chapter_*` checkpoint are never touched. Open a
-  checkpoint to edit it on its own.
+  checkpoint to edit it on its own. The separate Story progression checkbox can
+  create or replace its selected chapter file on Save, with confirmation and backup.
 * **Nothing is written until you press Save** (Ctrl+S). Slots with unsaved
   edits get a ● in the slot list, and quitting with unsaved edits asks first.
 * **Reload (F5)** re-reads every slot from disk. When you switch back to the

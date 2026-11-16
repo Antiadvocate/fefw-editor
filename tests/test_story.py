@@ -133,7 +133,7 @@ class StoryHarness(PageHarness):
         self.push_undo();self.sv.payload=p;self.sv._core_cache=None
         self._touch([self.sv]);self.refresh_after_core()
     def _confirm_story_warning(self):self.confirmed+=1;return self.confirm
-    def _choose_story_chapter(self):self.chosen+=1;return self.choice
+    def _choose_story_chapter(self):self.chosen+=1;return None if self.choice is None else (self.choice, False)
 
 
 class StoryPageTest(unittest.TestCase):
@@ -187,13 +187,12 @@ class StoryPageTest(unittest.TestCase):
         a.undo();self.assertEqual(bytes(other.payload),before)
         a.undo();self.assertEqual(bytes(other.payload),before)
 
-    def test_early_targets_refused_and_obelisk_warning_precedes_backup(self):
+    def test_early_targets_available_and_obelisk_warning_precedes_backup(self):
         import story_page
-        a=StoryHarness();before=bytes(a.sv.payload)
-        a.apply_story_chapter(1);a.apply_story_chapter(3)
-        self.assertEqual(bytes(a.sv.payload),before)
-        self.assertFalse(hasattr(a,'_undo_stack'))
-        self.assertIn('deferred',a.messages[-1][0])
-        self.assertEqual(story_page.WARNING_POINTS[-2],
-            'Skipping chapters will lock them out of being present in the Obelisk Chamber as this relies on chapter save files.')
-        self.assertIn('Back up',story_page.WARNING_POINTS[-1])
+        a = StoryHarness()
+        for chapter in (1, 2, 3):
+            a.apply_story_chapter(chapter)
+            self.assertEqual(story.read(a.core_of()).chapter, chapter)
+        self.assertIn('Create a chapter start file', story_page.WARNING_POINTS[-2])
+        self.assertIn('when you Save', story_page.WARNING_POINTS[-2])
+        self.assertIn('Back up', story_page.WARNING_POINTS[-1])

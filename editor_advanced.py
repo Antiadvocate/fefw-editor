@@ -1375,7 +1375,7 @@ def push_undo(self):
         stack = self._undo_stack = []
         self._redo_stack = []
         self._history_slot = self.sv
-    stack.append(bytes(self.sv.payload))
+    stack.append((bytes(self.sv.payload), getattr(self.sv, '_pending_story_chapter', None)))
     del stack[:-60]
     self._redo_stack.clear()
 
@@ -1385,8 +1385,9 @@ def undo(self):
     if not stack or not self.sv or getattr(self, "_history_slot", None) is not self.sv:
         self.flash("Nothing to undo.", "info")
         return
-    self._redo_stack.append(bytes(self.sv.payload))
-    self.sv.payload = bytearray(stack.pop())
+    self._redo_stack.append((bytes(self.sv.payload), getattr(self.sv, '_pending_story_chapter', None)))
+    payload, self.sv._pending_story_chapter = stack.pop()
+    self.sv.payload = bytearray(payload)
     self.sv.scan()
     self.sv._core_cache = None
     self._touch([self.sv])
@@ -1399,8 +1400,9 @@ def redo(self):
     if not stack or not self.sv or getattr(self, "_history_slot", None) is not self.sv:
         self.flash("Nothing to redo.", "info")
         return
-    self._undo_stack.append(bytes(self.sv.payload))
-    self.sv.payload = bytearray(stack.pop())
+    self._undo_stack.append((bytes(self.sv.payload), getattr(self.sv, '_pending_story_chapter', None)))
+    payload, self.sv._pending_story_chapter = stack.pop()
+    self.sv.payload = bytearray(payload)
     self.sv.scan()
     self.sv._core_cache = None
     self._touch([self.sv])

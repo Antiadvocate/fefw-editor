@@ -1853,6 +1853,23 @@ class App(AdvancedMixin, tk.Tk):
         if not self.dirty:
             self.flash("Nothing to save — no changes yet.")
             return True
+        import story_files
+        try:
+            chapter_writes = story_files.prepare(self.files, self.dirty)
+        except Exception as exc:  # noqa: BLE001 — preflight must not write anything
+            messagebox.showerror(APP_NAME, f"Nothing saved:\n\n{exc}", parent=self)
+            return False
+        for plan in chapter_writes.values():
+            if plan.previous is not None and not messagebox.askyesno(
+                    "Replace chapter start file?",
+                    f"{os.path.basename(plan.target)} already exists.\n\n"
+                    "Replace it with this staged chapter-start state? The existing "
+                    "file will first be kept as .bak, or the next numbered .bak "
+                    "if an earlier backup exists.\n\nNo cancels this Save; all edits "
+                    "and the chapter-file request remain pending.",
+                    parent=self, icon="warning"):
+                self.flash("Nothing saved — the existing chapter file was kept.", "warn")
+                return False
         newer = [p for p in self.dirty if self._changed_on_disk(p)]
         if newer and not messagebox.askyesno(
                 APP_NAME, "The game has saved " + ", ".join(os.path.basename(p) for p in newer)
@@ -1869,7 +1886,21 @@ class App(AdvancedMixin, tk.Tk):
             if not sv:
                 continue
             try:
+                plan = chapter_writes.get(pth)
+                if plan:
+                    story_files.check_unchanged(plan)
+                    if story_files.path_key(plan.target) != story_files.path_key(pth):
+                        story_files.write(plan)
+                        # A completed file is not repeated if the source save fails.
+                        story_files.completed(self, sv)
+                        self.files.pop(plan.target, None)
+                        self._get(plan.target)
+                        if plan.target not in self.slot_paths:
+                            self.slot_paths.append(plan.target)
+                        written.append(os.path.basename(plan.target))
                 sv.save(pth)
+                if plan:
+                    story_files.completed(self, sv)
                 self.mtimes[pth] = os.path.getmtime(pth)
                 self.dirty.discard(pth)
                 written.append(os.path.basename(pth))
@@ -1878,6 +1909,7 @@ class App(AdvancedMixin, tk.Tk):
         self._populate_slot_box()
         self._update_file_label()
         self._update_dirty()
+        self.refresh_story()
         if failed:
             messagebox.showerror(APP_NAME, "Some slots could not be written:\n\n"
                                  + "\n".join(failed) + "\n\nIs the game still running?")

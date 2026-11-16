@@ -16,7 +16,7 @@ from test_story_resume_probe import fixture
 
 
 class StoryStartTest(unittest.TestCase):
-    def test_all_nine_targets_use_entry_dates_preserve_unrelated_data_and_are_idempotent(self):
+    def test_all_twelve_targets_use_entry_dates_preserve_unrelated_data_and_are_idempotent(self):
         f = fixture()
         before = bytes(f.payload)
         original = start.normalized_blocks(f)
@@ -25,7 +25,7 @@ class StoryStartTest(unittest.TestCase):
             i = start.validate(g)
             self.assertEqual((i.chapter,i.sequence),(chapter,story.sequence(chapter)))
             month,day,hour,minute = start.ENTRY_DATES[chapter]
-            self.assertEqual(struct.unpack_from('<H5B',g.payload,i.header+22),(1449,month,day,hour,minute,0))
+            self.assertEqual(struct.unpack_from('<H5B',g.payload,i.header+22),(start.ENTRY_YEARS[chapter],month,day,hour,minute,0))
             result = start.normalized_blocks(g)
             for name in ('GameSound','HubSeq'):
                 self.assertEqual(original[name],result[name])
@@ -48,7 +48,7 @@ class StoryStartTest(unittest.TestCase):
             with self.assertRaises(core.SaveError):
                 start.edited(g,9)
             self.assertEqual(g.payload,before)
-        for chapter in (1,2,3,13,True,'9',None):
+        for chapter in (0,13,True,'9',None):
             with self.assertRaises(core.SaveError):
                 start.edited(f,chapter)
 
