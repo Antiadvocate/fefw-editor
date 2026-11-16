@@ -96,7 +96,7 @@ class FacilityPageMixin:
         tree.selection_set([i for i in keep if tree.exists(i)])
         if keep and any(tree.exists(i) for i in keep) and view:
             tree.yview_moveto(view[0])
-        self.facility_count.configure(text=f"{len(tree.get_children())} of {len(cat)} switches shown · {sum(r['coverage'] == 'Inferred' for r in cat.values())} inferred · game testing pending")
+        self.facility_count.configure(text=f"{len(tree.get_children())} of {len(cat)} switches shown · {sum(r['coverage'] == 'Inferred' for r in cat.values())} inferred · evidence scoped to Leda P1 Ch9")
         for b in self.facility_buttons: b.state(['!disabled'])
         self._facility_selected()
 
@@ -106,7 +106,10 @@ class FacilityPageMixin:
         rows = facilities.catalog()
         if len(picked) == 1:
             row = rows[int(picked[0], 16)]
-            self.facility_detail.configure(text=f"{row['label']} · {row['coverage']}\n{row['note']}")
+            text = f"{row['label']} · {row['coverage']}\n{row['note']}"
+            if int(picked[0], 16) == facility_access.YU_PHAS_GATE:
+                text += '\n' + facility_access.yu_phas_gate_status(self.core_of())
+            self.facility_detail.configure(text=text)
         else:
             self.facility_detail.configure(text=f'{len(picked)} selected switches will change together. Other switches, ordinary destinations and story progress are preserved.')
 

@@ -1,8 +1,8 @@
 # Facilities Test 1 — preparation and evidence
 
 Prepared 2026-11-15 from accepted main `da1486a` on
-`feature/facilities-access`. **Player testing is pending.** Main and the
-accepted B0-01 baseline remain unchanged.
+`feature/facilities-access`. **Player testing returned 2026-11-16.** FAC-UI01–05 and FAC-01–06 passed,
+with the Yu Phas condition below. Main and the accepted B0-01 baseline remain unchanged.
 
 ## Implementation checks
 
@@ -47,10 +47,75 @@ are described in [facilities.md](facilities.md). These are observations from
 typed game data, consistent with the earlier Leda outcomes. They do not prove
 that every condition on every route/version has been exhaustively recovered.
 
-## Acceptance still required
+## Player acceptance — 2026-11-16
 
-[FAC-UI01–05 and FAC-01–06](testing-facilities.md) cover the new interface,
-core lock/restore pairs, separate gate registrations, persistence and the
-route-filtered travel comparison. Individual results and returned game-resaved
-files will determine which evidence labels can be promoted. No arbitrary
-route/story/door writes were introduced to force the hidden destinations.
+| Tests | Reported outcome | Returned-save evidence |
+|---|---|---|
+| UI01–05 | Pass | Selection, editing, search/filter, undo/redo and persistence accepted by player |
+| FAC-01 | Pass | Armorer and Item shop restrictions present in disabled case; absent in restored case |
+| FAC-02 | Pass | Exams, drinks, local and tavern performance switches absent then 1 |
+| FAC-03 | Pass | Marketplace, Inn, Blacksmith and Training switches absent then 1 |
+| FAC-04 | Pass | Kalla gate registration absent then 1 |
+| FAC-05 | Pass with Yu Phas condition | Six new gate registrations persist then are removed; Yu Phas additionally needs its ordinary destination recorded in the tested setup |
+| FAC-06 | Pass | All four ordinary travel flags persist then are removed; no claim of bypassing route/entrance conditions |
+
+All 12 returned case files and the extra Yu Phas save pass container checksums
+and structural parsing. Every requested flag state persists. Each stays Leda
+Part 1 Chapter 9, with Gold 1523, Renown 6640, Karma 410, Stables locked and
+unique unit numbers `[47,48,1,2,3,4,5,6,7]`. Compared with the prepared cases,
+unit stats/items/masteries, Boons, Deeds, Blessings, audiences and tutorials
+are unchanged. The return files do not replace the accepted baseline.
+
+Ten tested services and six gates now say **Game-tested**, scoped to this Leda
+P1 Ch9 setup. Yu Phas says **Conditional pass**. The ten services not included
+in these game cases remain **Inferred**. Broad route/version coverage is not
+implied by these results.
+
+### Yu Phas follow-up
+
+The original gate case records `7d2c41eb = 1` but lacks ordinary temple travel
+`65411bed`. Yu Phas is absent from the supplied six-entry gate-list screenshot.
+The player then enabled **Yu Phas Temple** in **Fast travel**: the gate appeared
+and its portal returned to the world map. The extra returned file records both
+values as 1. Its SHA-256 is
+`73bb2ac6707db02a0e161990b4ef448b072de13bf792d02b1bffabddee6f6e7a`.
+
+There are four saved-flag differences from returned case 09: ordinary travel
+is added; location flags `3c6b4ee1` and `bcd41adb` are removed; unidentified
+`4cceb98e = 1` is added. This supports the successful combination, not proof
+that the ordinary travel flag is the only possible dependency in every state.
+Walking back into the temple is a separate, previously blocked condition and
+was not reclassified by the portal test.
+
+The editor now explains both switches in Yu Phas's row and read-only access
+diagnostics. Enabling either switch does not silently change the other.
+
+### Drinks-vendor introduction
+
+The player heard the drinks-vendor introduction after restoring drinks and
+tavern performance together; drinks alone had not replayed it in the earlier
+repair. Returned case 04 has no flag-map differences from prepared case 04.
+Record this as a dialogue observation: the combined action does not isolate a
+trigger or establish a mandatory performance dependency. No dialogue flags
+are written automatically.
+
+### Other incidental save changes
+
+Case 06 adds eight flag records during the game session: general-map
+`39077a4b = 128`; another map's `1da84238`, `1da84239`, `1da8423a`, `7480a80b`,
+`761be3f3`, `88880ef4` and `b9a1fd72`, all 1. Only the last has the recovered
+key `MID_LGV_1_Dagsion_Hotel01_m01`; the others remain unidentified. Case 08
+removes the Dagsion A1 location flag `3c6b4ee1`. No additional facility
+requirement is inferred from these incidental changes.
+
+Opt-in return regression checks use `FEFW_FACILITY_CAPTURE_DIR` with the twelve
+numbered folders and `FAC-05_Yu_Pha`. Personal saves/screenshots are not in Git.
+
+### Follow-up implementation checks
+
+All **143 local tests passed** (118 public, 25 opt-in private), including the
+13 returned captures, all four combinations of Yu Phas's two switches, unknown
+values and unavailable maps. Read-only diagnostics preserve bytes. The running
+UI passed guidance, selection/search/filter, Undo, save/reopen, backup,
+mirroring refusal and small-window Flags visibility checks. English labels
+are current. The release workflow now bundles the facility catalogue too.

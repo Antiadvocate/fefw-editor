@@ -43,3 +43,26 @@ class FacilityAccessTest(unittest.TestCase):
         names[h]['name']='wrong';before=dict(names)
         with self.assertRaises(core.SaveError):access.apply_labels(names)
         self.assertEqual(names,before)
+
+    def test_yu_phas_gate_reports_both_independent_switches_without_writing(self):
+        for registered in (False, True):
+            for recorded in (False, True):
+                general = facility_rows() + ([(0x7d2c41eb, 1, False)] if registered else [])
+                travel = rows() + ([(0x65411bed, 1, False)] if recorded else [])
+                f = fixture([general, travel]); before = bytes(f.payload)
+                status = access.yu_phas_gate_status(f)
+                expected = ('not enabled' if not registered else
+                            'both flags recorded' if recorded else 'also enable Yu Phas Temple')
+                self.assertIn(expected, status)
+                self.assertEqual(access.report(f)[-1]['gate_status'], status)
+                self.assertIn(status, access.diagnostics(f))
+                self.assertEqual(bytes(f.payload), before)
+        for gate, travel, expected in ((2, 1, 'unknown registration'),
+                                      (1, 0, 'unknown ordinary travel'),
+                                      (1, 2, 'unknown ordinary travel')):
+            f = fixture([facility_rows() + [(0x7d2c41eb, gate, False)],
+                         rows() + [(0x65411bed, travel, False)]])
+            self.assertIn(expected, access.yu_phas_gate_status(f))
+        self.assertIn('cannot identify', access.yu_phas_gate_status(fixture([rows()])))
+        self.assertIn('cannot check', access.yu_phas_gate_status(
+            fixture([facility_rows() + [(0x7d2c41eb, 1, False)]])))

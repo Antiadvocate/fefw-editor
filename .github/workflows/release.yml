@@ -56,6 +56,7 @@ jobs:
           --add-data "fast_travel_names.json;."
           --add-data "deed_names.json;."
           --add-data "boon_catalog.json;."
+          --add-data "facility_names.json;."
           editor.py
 
       - name: Check the data files load
@@ -119,6 +120,7 @@ jobs:
           --add-data "fast_travel_names.json:."
           --add-data "deed_names.json:."
           --add-data "boon_catalog.json:."
+          --add-data "facility_names.json:."
           editor.py
 
       - name: Check the binary starts

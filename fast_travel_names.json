@@ -178,7 +178,7 @@
       "label": "Yu Phas Temple",
       "area": "Dagsion",
       "label_source": "English in-game name reported by player in FTX-04, 2026-11-15",
-      "evidence": "FTX-04 on Leda Part I Chapter 9 / fefw-recomp-0.1.5: player reported new travel entry, arrival and walking out; walking back in was off limits. Supplied saves confirm value 1 before/after and absence in removed file. Other access conditions remain in force.",
+      "evidence": "FTX-04 on Leda Part I Chapter 9 / fefw-recomp-0.1.5: player reported new travel entry, arrival and walking out; walking back in was off limits. Supplied saves confirm value 1 before/after and absence in removed file. Other access conditions remain in force. FAC-06 passed again on 2026-11-16. FAC-05 follow-up: enabling this ordinary destination alongside the Yu Phas gate-registration flag revealed the gate and allowed portal exit to the world map on Leda P1 Ch9.",
       "locator_anchor": false,
       "coverage": "Travel tested"
     }

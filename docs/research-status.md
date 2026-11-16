@@ -276,21 +276,20 @@ No personal save, screenshots containing personal data, or game binary belongs
 in the public test fixtures. Use small synthetic payloads for CI and record
 private game-test outcomes separately.
 
-## Facilities Test 1 prepared
+## Facilities Test 1 accepted on the reported setup
 
-The two queued facility features now have a test implementation on
-`feature/facilities-access`: 20 service switches, seven Gate of the Gods
-registrations, and read-only access-condition diagnostics. The recovered
-protagonist filters explain why Aurora’s room/garden and Salamis stayed hidden
-on Leda; entrance conditions are separate. Broad story/route bypasses are not
-implemented. See [scope and evidence](facilities.md), [the player sequence](testing-facilities.md)
-and [preparation checks](test-results-facilities-test1.md). Main and the accepted
-baseline stay unchanged while the player tests. Stables remains locked in all
-13 supplied cases.
+FAC-UI01–05 and FAC-01–06 passed. Ten services and six gates are Game-tested;
+Yu Phas's Conditional pass requires its ordinary Fast travel destination in
+the tested setup. Ten untested services stay Inferred. The drinks-vendor
+introduction after combined restoration is recorded as an observation, not an
+isolated dependency. See [scope](facilities.md) and
+[returned-save analysis](test-results-facilities-test1.md).
 
-The next priorities are acceptance of facility switches and access diagnostics,
-then prioritization of new-unit creation with robust `unit_number` validation,
-followed by the earlier story/character-visibility work.
+The user has now prioritized **Story progression** next: a warning-gated Leda
+Part 1 chapter selector, with independent chapter-start saves for load and next
+story-beat tests. It must not grant prior facilities, units, tutorials, travel,
+quests or other progression. New-unit creation remains queued with the identity
+validation requirements below. Main and the accepted baseline remain unchanged.
 
 ## Requested Facilities scope
 
@@ -303,9 +302,8 @@ Preserve unrelated facilities, including the intentionally locked Stables.
 
 ## Feature backlog: create new unit entry
 
-Requested on 2026-11-15 for prioritization. Facility locking/unlocking remains
-the next queued feature; unit creation is an additional feature, not part of
-the current Deeds release.
+Requested on 2026-11-15 for prioritization. Unit creation remains queued after the now-prioritized Story progression
+experiment; it is not part of the current Deeds release.
 
 A new unit entry needs a unique `unit_number`. The earlier personal-save
 restoration duplicated unit identities: selecting Catania selected Buccar,

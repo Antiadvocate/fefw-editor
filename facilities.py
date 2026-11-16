@@ -35,7 +35,7 @@ def catalog():
             if (core.id_hash(row['name']) != h or not row['name'].startswith(expected)
                     or row['kind'] not in ('Service', 'Gate registration')
                     or row['polarity'] not in ('unlock', 'restriction')
-                    or row['coverage'] not in ('Inferred', 'Unlock tested', 'Registration tested')
+                    or row['coverage'] not in ('Inferred', 'Unlock tested', 'Registration tested', 'Game-tested', 'Conditional pass')
                     or not row['label'] or not row['note'] or h in ANCHORS):
                 raise ValueError('invalid facility identity')
         return cat

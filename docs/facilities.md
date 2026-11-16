@@ -2,7 +2,8 @@
 
 This feature branch adds two related parts of the roadmap: facility
 locking/unlocking and an explanation of the unresolved travel/entry conditions.
-It is prepared for player testing, not merged into main or game-accepted.
+FAC-UI01–05 and FAC-01–06 passed on Leda P1 Ch9, with the Yu Phas condition
+below. The feature remains on its branch pending a main merge.
 
 ## Controls
 
@@ -26,10 +27,10 @@ apply. Route mirroring must be off.
 
 **Enabled describes the saved switch, not guaranteed usability.** NPC
 placement, route, story, schedule and other conditions can still apply.
-The two shop restrictions have accepted removal/unlock evidence from the B0
-repair; Kalla has accepted registration evidence. The new UI and reverse
-operations need testing. The other 24 switches are Inferred. Original Japanese
-keys remain in Reads As and newly established English names appear in Flags.
+Ten tested services and six gates are Game-tested; Yu Phas has a Conditional
+pass. The ten services not included in the acceptance cases remain Inferred.
+Original Japanese keys remain in Reads As and established English names
+appear in Flags. See the [acceptance report](test-results-facilities-test1.md).
 
 No automatic all-facilities preset is applied. Stables stays unchanged unless
 the player explicitly selects it; none of the supplied game-test saves change
@@ -61,8 +62,11 @@ Neither map 0 nor any enumerated child index is assumed.
 The seven gate switches live in this general map. They are independent of the
 ordinary temple destinations in the existing Fast travel tab. Kalla's gate is
 `3fdd2f30 / 神殿_転移_カーラ神殿`; ordinary Kalla travel is `b482d5dc`.
-Registering other gates does not claim that their approach, menu, arrival or
-story event is available on this route.
+The six non-Yu Phas gates passed listing, travel and portal checks on Leda
+P1 Ch9. **Yu Phas also needs Yu Phas Temple enabled in Fast travel in the tested
+setup.** The row and Access conditions report whether both switches are stored.
+Neither switch edits the other automatically. Walking entrances and story
+events remain separate from the tested portal behavior.
 
 ## Why the earlier travel experiments behaved differently
 
@@ -108,4 +112,4 @@ The public regression fixtures are synthetic. The player's baseline and
 prebuilt game-test saves are supplied separately from Git.
 
 See [the test sequence](testing-facilities.md) and
-[the preparation report](test-results-facilities-test1.md).
+[the acceptance report](test-results-facilities-test1.md).

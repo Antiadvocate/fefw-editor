@@ -6,11 +6,13 @@ A matching route is necessary for a filtered locator, not a full access check.
 import fefw_core as core
 import fefw_layer as layer
 import fast_travel
+import facilities
 
 ROOM = 0x38574e83
 GARDEN = 0x1e4d4a23
 SALAMIS = 0xefb57d93
 YU_PHAS = 0x65411bed
+YU_PHAS_GATE = 0x7d2c41eb
 
 CONDITIONS = {
     '拠点_カイ篇1部2章_行動制限3': 'Story restriction: Cai P1 Ch2, group 3',
@@ -56,6 +58,27 @@ def route_info(f):
         return None
 
 
+def yu_phas_gate_status(f):
+    """Report the separately saved switches, without granting either one."""
+    try:
+        gate = facilities.read(f).get(YU_PHAS_GATE)
+    except core.SaveError:
+        return 'Yu Phas gate: cannot identify the facility map.'
+    if gate not in (None, 0, 1):
+        return f'Yu Phas gate: unknown registration value ({gate}); preserved.'
+    if gate != 1:
+        return 'Yu Phas gate: registration is not enabled.'
+    try:
+        travel = fast_travel.read(f).get(YU_PHAS)
+    except core.SaveError:
+        return 'Yu Phas gate: registered; cannot check its ordinary travel flag.'
+    if travel is None:
+        return 'Yu Phas gate: registered; also enable Yu Phas Temple in Fast travel.'
+    if travel != 1:
+        return f'Yu Phas gate: registered; unknown ordinary travel value ({travel}); preserved.'
+    return 'Yu Phas gate: both flags recorded. Listing and portal use passed on Leda P1 Ch9.'
+
+
 def report(f):
     route = route_info(f)
     try:
@@ -71,9 +94,12 @@ def report(f):
         value = values.get(h)
         stored = ('Unavailable' if error else 'Absent' if value is None else
                   'Recorded (1)' if value == 1 else f'Unknown ({value})')
+        gate_status = yu_phas_gate_status(f) if h == YU_PHAS else ''
+        if gate_status:
+            detail += '\n' + gate_status
         rows.append({'hash': h, 'label': fast_travel.catalog()[h]['label'],
                      'stored': stored, 'route_check': gate, 'entry': entry,
-                     'detail': detail, 'error': error})
+                     'detail': detail, 'error': error, 'gate_status': gate_status})
     return rows
 
 
@@ -84,6 +110,8 @@ def diagnostics(f):
         'Stored switches and data conditions are not a guarantee of game access.', '']
     for row in report(f):
         lines.append(f"{row['label']}: {row['stored']}; {row['route_check']}; {row['entry']}")
+        if row['gate_status']:
+            lines.append(row['gate_status'])
         if row['error']:
             lines.append(row['error'])
     lines += ['', 'Related saved flags (read-only; missing means no stored record):']

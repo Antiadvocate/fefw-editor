@@ -1,38 +1,38 @@
 {
   "schema": 1,
-  "scope": "20 service switches and 7 temple-transfer registrations. Individual service/entrance availability still depends on game conditions. Test build; not an exhaustive facility catalogue.",
+  "scope": "20 service switches and 7 temple-transfer registrations. FAC-UI01–05 and FAC-01–06 passed on Leda P1 Ch9; 10 untested switches remain Inferred. Yu Phas requires its ordinary travel flag in the tested setup. Not an exhaustive facility catalogue.",
   "entries": {
     "b9a0e16b": {
       "name": "禁止_武器屋",
       "label": "Armorer",
       "kind": "Service",
       "polarity": "restriction",
-      "coverage": "Unlock tested",
-      "note": "Removing this restriction restored the shop in the accepted Leda Chapter 9 baseline. Re-locking and this new control still need game testing; stock and prices are unchanged by this switch."
+      "coverage": "Game-tested",
+      "note": "FAC-01 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered."
     },
     "5e9748e0": {
       "name": "禁止_道具屋",
       "label": "Item shop",
       "kind": "Service",
       "polarity": "restriction",
-      "coverage": "Unlock tested",
-      "note": "Removing this restriction restored the shop in the accepted Leda Chapter 9 baseline. Re-locking and this new control still need game testing; stock and prices are unchanged by this switch."
+      "coverage": "Game-tested",
+      "note": "FAC-01 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered."
     },
     "8244b3ea": {
       "name": "機能開放_市場",
       "label": "Marketplace",
       "kind": "Service",
       "polarity": "unlock",
-      "coverage": "Inferred",
-      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+      "coverage": "Game-tested",
+      "note": "FAC-03 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered."
     },
     "9399b963": {
       "name": "機能開放_宿屋",
       "label": "Inn",
       "kind": "Service",
       "polarity": "unlock",
-      "coverage": "Inferred",
-      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+      "coverage": "Game-tested",
+      "note": "FAC-03 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered."
     },
     "e0f3191e": {
       "name": "機能開放_止まり木",
@@ -63,16 +63,16 @@
       "label": "Training",
       "kind": "Service",
       "polarity": "unlock",
-      "coverage": "Inferred",
-      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+      "coverage": "Game-tested",
+      "note": "FAC-03 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered."
     },
     "0be47d8b": {
       "name": "機能開放_資格試験",
       "label": "Certification exams",
       "kind": "Service",
       "polarity": "unlock",
-      "coverage": "Inferred",
-      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+      "coverage": "Game-tested",
+      "note": "FAC-02 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered."
     },
     "f0c779ce": {
       "name": "機能開放_饗宴",
@@ -87,8 +87,8 @@
       "label": "Blacksmith",
       "kind": "Service",
       "polarity": "unlock",
-      "coverage": "Inferred",
-      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+      "coverage": "Game-tested",
+      "note": "FAC-03 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered."
     },
     "a78e9de8": {
       "name": "機能開放_ヴァンダル商会",
@@ -135,24 +135,24 @@
       "label": "Local performances (Leda)",
       "kind": "Service",
       "polarity": "unlock",
-      "coverage": "Inferred",
-      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+      "coverage": "Game-tested",
+      "note": "FAC-02 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered."
     },
     "970ba7f8": {
       "name": "機能開放_酒場興行",
       "label": "Tavern performances (Leda)",
       "kind": "Service",
       "polarity": "unlock",
-      "coverage": "Inferred",
-      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+      "coverage": "Game-tested",
+      "note": "FAC-02 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered. Restoring drinks and performances together replayed the drink-vendor introduction. The exact trigger is not isolated; no dialogue flags are written by this control."
     },
     "2e270aa7": {
       "name": "機能開放_飲み物係",
       "label": "Drink vendor (Leda)",
       "kind": "Service",
       "polarity": "unlock",
-      "coverage": "Inferred",
-      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+      "coverage": "Game-tested",
+      "note": "FAC-02 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered. Restoring drinks and performances together replayed the drink-vendor introduction. The exact trigger is not isolated; no dialogue flags are written by this control."
     },
     "63fc6b22": {
       "name": "機能開放_厩舎",
@@ -167,56 +167,56 @@
       "label": "Gate of the Gods: Kalla",
       "kind": "Gate registration",
       "polarity": "unlock",
-      "coverage": "Registration tested",
-      "note": "Registering this flag restored Kalla’s missing Gate of the Gods destination. Removal and this new control need testing. This is separate from the ordinary temple destination and does not bypass entrance or story conditions."
+      "coverage": "Game-tested",
+      "note": "Listing, travel and portal use passed on Leda Part I Chapter 9 (2026-11-16); removal also passed. Ordinary temple travel and story entrance conditions remain separate. Other routes/chapters are untested."
     },
     "c125a07e": {
       "name": "神殿_転移_マーズ神殿",
       "label": "Gate of the Gods: Mars",
       "kind": "Gate registration",
       "polarity": "unlock",
-      "coverage": "Inferred",
-      "note": "Inferred registration from the same temple-transfer flag family as the accepted Kalla repair. Test the listing, arrival, exit and reload separately. This is separate from the ordinary temple destination and does not bypass entrance or story conditions."
+      "coverage": "Game-tested",
+      "note": "Listing, travel and portal use passed on Leda Part I Chapter 9 (2026-11-16); removal also passed. Ordinary temple travel and story entrance conditions remain separate. Other routes/chapters are untested."
     },
     "f2d863f0": {
       "name": "神殿_転移_ジュラ神殿",
       "label": "Gate of the Gods: Jurah",
       "kind": "Gate registration",
       "polarity": "unlock",
-      "coverage": "Inferred",
-      "note": "Inferred registration from the same temple-transfer flag family as the accepted Kalla repair. Test the listing, arrival, exit and reload separately. This is separate from the ordinary temple destination and does not bypass entrance or story conditions."
+      "coverage": "Game-tested",
+      "note": "Listing, travel and portal use passed on Leda Part I Chapter 9 (2026-11-16); removal also passed. Ordinary temple travel and story entrance conditions remain separate. Other routes/chapters are untested."
     },
     "515e9031": {
       "name": "神殿_転移_スミルノス神殿",
       "label": "Gate of the Gods: Smyrnos",
       "kind": "Gate registration",
       "polarity": "unlock",
-      "coverage": "Inferred",
-      "note": "Inferred registration from the same temple-transfer flag family as the accepted Kalla repair. Test the listing, arrival, exit and reload separately. This is separate from the ordinary temple destination and does not bypass entrance or story conditions."
+      "coverage": "Game-tested",
+      "note": "Listing, travel and portal use passed on Leda Part I Chapter 9 (2026-11-16); removal also passed. Ordinary temple travel and story entrance conditions remain separate. Other routes/chapters are untested."
     },
     "2574b004": {
       "name": "神殿_転移_クレール神殿",
       "label": "Gate of the Gods: Credna",
       "kind": "Gate registration",
       "polarity": "unlock",
-      "coverage": "Inferred",
-      "note": "Inferred registration from the same temple-transfer flag family as the accepted Kalla repair. Test the listing, arrival, exit and reload separately. This is separate from the ordinary temple destination and does not bypass entrance or story conditions."
+      "coverage": "Game-tested",
+      "note": "Listing, travel and portal use passed on Leda Part I Chapter 9 (2026-11-16); removal also passed. Ordinary temple travel and story entrance conditions remain separate. Other routes/chapters are untested."
     },
     "d2f2cb2f": {
       "name": "神殿_転移_アウロラ神殿",
       "label": "Gate of the Gods: Aurora",
       "kind": "Gate registration",
       "polarity": "unlock",
-      "coverage": "Inferred",
-      "note": "Inferred registration from the same temple-transfer flag family as the accepted Kalla repair. Test the listing, arrival, exit and reload separately. This is separate from the ordinary temple destination and does not bypass entrance or story conditions."
+      "coverage": "Game-tested",
+      "note": "Listing, travel and portal use passed on Leda Part I Chapter 9 (2026-11-16); removal also passed. Ordinary temple travel and story entrance conditions remain separate. Other routes/chapters are untested."
     },
     "7d2c41eb": {
       "name": "神殿_転移_ユ・ファス神殿",
       "label": "Gate of the Gods: Yu Phas",
       "kind": "Gate registration",
       "polarity": "unlock",
-      "coverage": "Inferred",
-      "note": "Inferred registration from the same temple-transfer flag family as the accepted Kalla repair. Test the listing, arrival, exit and reload separately. This is separate from the ordinary temple destination and does not bypass entrance or story conditions."
+      "coverage": "Conditional pass",
+      "note": "On Leda P1 Ch9, also enable Yu Phas Temple in the Fast travel tab. With both flags recorded, the player confirmed the gate listing, travel and portal exit to the world map. Gate registration alone did not reveal it. The two switches remain separately editable; walking entrance restrictions can still apply."
     }
   }
 }

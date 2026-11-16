@@ -1,9 +1,10 @@
 # Fortune's Weave Save Editor
 
-**Facilities Test 1 branch:** 27 service/gate switches and a read-only access
-conditions view are ready for player testing. See [Facilities](docs/facilities.md),
-[the test sequence](docs/testing-facilities.md), and [preparation results](docs/test-results-facilities-test1.md).
-The accepted main baseline is unchanged; these controls are not yet game-accepted.
+**Facilities branch:** the UI and FAC-01–06 game tests passed on Leda Part 1
+Chapter 9. Ten services and six gates are Game-tested; Yu Phas additionally
+needs its ordinary Fast travel destination, and ten untested services remain
+Inferred. See [Facilities](docs/facilities.md) and the
+[acceptance report](docs/test-results-facilities-test1.md).
 
 A save editor for **Fire Emblem: Fortune's Weave** saves made by the Eden
 Switch emulator. It edits your playthrough (units, items, convoy, gold, skills,
@@ -38,6 +39,7 @@ library, or a ready-made Windows `.exe`.
 | **Tutorials** | | 115 identified help entries; make selected tutorials available or remove them from the selected save. English names, original Japanese keys, explicit raw states and undo/redo. See [tutorials.md](docs/tutorials.md) |
 | **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Six level previews tested in Leda Chapter 9; Fortuna's EXP effect remains unknown. Selection and Divine Sand are read-only. Six tested first-audience toggles; Fortuna has no audience condition. See [blessings.md](docs/blessings.md) |
 | **Fast travel** | | Add/remove 20 identified Dagsion destination flags in the selected save, with original keys and undo/redo. The original 16 have screenshot-confirmed English names. Four additional flags persisted in Chapter 9 tests; only Yu Phas Temple appeared and allowed travel, while walking back in stayed blocked. See [fast-travel.md](docs/fast-travel.md) |
+| **Facilities** | | 20 service switches and seven gate registrations, with evidence labels and read-only route/access diagnostics. See [facilities.md](docs/facilities.md) |
 | **Boons** | | All 31 Boons / 81 tiers: set a tier, remove ownership, switch On/Off or set all to max. Karma and progression preserved; undo/redo. Game-tested and inferred mappings labelled. See [boons.md](docs/boons.md) |
 | **Notable Deeds** | | 350 milestones; 47 editable totals; the 14 newly enabled counters are labelled Inferred. Hours Played passed its 20-hour game test. Targets/rewards and stored claim states shown separately; no currency or claim writes. See [notable-deeds.md](docs/notable-deeds.md) |
 
