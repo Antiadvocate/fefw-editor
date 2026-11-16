@@ -25,8 +25,10 @@ field semantics have not been independently decoded. The zero-turn symptom
 therefore cannot be explained simply as current time exceeding that timestamp.
 
 All twelve also retain the same embedded Chapter 9 restart payload, including
-sequence `b79bcc2aad7433e5`. This directly explains why changing only the live
-chapter cannot make Restart chapter load a different checkpoint.
+sequence `b79bcc2aad7433e5`. That is consistent with the old restart context.
+The [Test 2 follow-up](test-results-story-test2-return.md) establishes an
+availability dependency but cannot distinguish embedded from external source
+selection; the supplied chapter file shares the same older world/roster data.
 
 ## Why the original Chapter 9 experiment differed
 
@@ -59,7 +61,8 @@ five-point warning now includes the requested Obelisk Chamber sentence directly
 above the backup note. This warning records the user's limitation about chapter
 save files; this experiment neither creates nor deletes those files.
 
-See [Test 2 comparison guide](testing-story-entry-test2.md). Private captures
+The [Test 2 comparison](testing-story-entry-test2.md) has now returned failures;
+see [its report](test-results-story-test2-return.md). Private captures
 remain outside Git. `FEFW_STORY_RETURN_DIR` enables the read-only regression
 check of all twelve selectors, clocks and embedded Chapter 9 snapshots.
 
@@ -75,4 +78,4 @@ check of all twelve selectors, clocks and embedded Chapter 9 snapshots.
   Chapters 4–12 research list, disabled Apply, direct-call refusal, dark/light
   layout at 1000×640, Flags last, and unchanged source save.
 - These checks validate file structure and UI behavior, not in-game progression.
-  Test 2 game results remain pending.
+  These were preparation checks; the subsequent Test 2 game results are linked above.

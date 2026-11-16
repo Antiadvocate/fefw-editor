@@ -1,10 +1,11 @@
 # Fortune's Weave Save Editor
 
-**Story progression investigation:** Test 1's UI passed, but progression failed
-in all twelve chapter cases. The general chapter writer is paused; Player shows
-a warning and read-only research list. Chapters 4–12 are the next scope, starting
-with four Chapter 4/9 diagnostics. See [returned results](docs/test-results-story-test1-return.md)
-and [Test 2](docs/testing-story-entry-test2.md).
+**Story progression investigation:** Test 1's UI passed, but Tests 1 and 2 did
+not establish working chapter transitions. The general chapter writer is paused;
+Player shows a warning and read-only research list. Chapters 4–12 remain the scope,
+with four Chapter 4/9 resume-state diagnostics next. See
+[Test 2 returns](docs/test-results-story-test2-return.md) and
+[Test 3](docs/testing-story-resume-test3.md).
 
 **Facilities branch:** the UI and FAC-01–06 game tests passed on Leda Part 1
 Chapter 9. Ten services and six gates are Game-tested; Yu Phas additionally

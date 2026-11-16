@@ -1,5 +1,9 @@
 # Story entry — Test 2 comparison
 
+**Archived test plan:** none of these four cases established working progression.
+See [returned results](test-results-story-test2-return.md) and use the
+[Test 3 guide](testing-story-resume-test3.md) for the next diagnostic set.
+
 These four independent Auto files investigate why Test 1 did not start a fresh
 chapter. They are **diagnostic candidates, not proven fixes or new baselines**.
 The editor's general chapter writer is paused; no editor changes are needed

@@ -1,9 +1,10 @@
 # Story progression — Leda Part 1 experiment
 
 **Current status: general chapter editing is paused.** UI01–06 passed, but
-all twelve Test 1 progression cases failed. See the
-[returned evidence](test-results-story-test1-return.md) and
-[Test 2 diagnostic comparison](testing-story-entry-test2.md).
+all twelve Test 1 progression cases failed. Test 2's four candidates also failed
+to establish a working transition. See the
+[latest returned evidence](test-results-story-test2-return.md) and
+[Test 3 resume comparison](testing-story-resume-test3.md).
 
 Player → Story progression… still shows the caution warning and a read-only
 research list for Chapters 4–12. Apply is disabled and direct UI edit calls are

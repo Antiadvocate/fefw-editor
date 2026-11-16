@@ -14,8 +14,8 @@ WARNING_POINTS = (
     'Skipping chapters will lock them out of being present in the Obelisk Chamber as this relies on chapter save files.',
     'Back up your save into a fresh directory NOW before proceeding.',
 )
-EVIDENCE_NOTE = ('The earlier Chapter 9 restoration progressed, but Test 1 failed progression in all 12 cases. '
-                 'Chapter editing is paused while the supplied Test 2 saves investigate entry, restart and date state.')
+EVIDENCE_NOTE = ('The earlier Chapter 9 restoration progressed, but Tests 1 and 2 did not establish working chapter transitions. '
+                 'Chapter editing is paused while the supplied Test 3 saves investigate a separate resume identifier and hub state.')
 
 
 class StoryPageMixin:
@@ -47,7 +47,7 @@ class StoryPageMixin:
             story.check_outer(self.sv.raw, info)
         except core.SaveError as exc:
             self.story_status.configure(text=label + str(exc)); return
-        self.story_status.configure(text=info.label + '\nEditing paused after failed game tests; Test 2 diagnostics supplied separately.')
+        self.story_status.configure(text=info.label + '\nEditing paused after failed game tests; Test 3 diagnostics supplied separately.')
         self.story_button.state(['!disabled'])
 
     def _story_ready(self):
@@ -101,7 +101,7 @@ class StoryPageMixin:
         self.place_dialog(win, 680, 470); win.configure(background=self.p['bg'])
         frame = ttk.Frame(win, padding=18); frame.pack(fill='both', expand=True)
         ttk.Label(frame, text='Chapter research · editing paused', style='CardH3.TLabel').pack(anchor='w')
-        ttk.Label(frame, text='Chapters 4–12 are the next research scope. Chapters 1–3 need location work. Use the supplied Test 2 saves first.',
+        ttk.Label(frame, text='Chapters 4–12 are the next research scope. Chapters 1–3 need location work. Use the supplied Test 3 saves first.',
                   wraplength=625, justify='left').pack(anchor='w', pady=(4, 10))
         buttons = ttk.Frame(frame); buttons.pack(side='bottom', fill='x', pady=(12, 0))
         tree = ttk.Treeview(frame, columns=('evidence',), show='tree headings', height=12, selectmode='browse')
@@ -109,7 +109,7 @@ class StoryPageMixin:
         tree.heading('evidence', text='Evidence / limits', anchor='w'); tree.column('evidence', width=450)
         tree.pack(fill='both', expand=True)
         for chapter in range(4, 13):
-            text = 'Test 1 progression failed; entry setup under investigation'
+            text = 'Progression unverified; entry setup under investigation'
             tree.insert('', 'end', iid=str(chapter), text=f'Chapter {chapter}', values=(text,))
         current = str(max(4, story.require_leda(self.core_of()).chapter))
         tree.selection_set(current); tree.see(current); tree.focus(current)
@@ -122,4 +122,4 @@ class StoryPageMixin:
     def apply_story_chapter(self, chapter):
         if not self._story_ready():
             return
-        self.flash('Story editing is paused after Test 1 progression failures. Use the supplied Test 2 diagnostic saves.', 'warn')
+        self.flash('Story editing is paused after failed progression tests. Use the supplied Test 3 diagnostic saves.', 'warn')
