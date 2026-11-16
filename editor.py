@@ -904,7 +904,7 @@ class App(AdvancedMixin, tk.Tk):
         self.pages.add(self.tutorials_page, text="Tutorials")
         self.pages.add(self.blessings_page, text="Blessings")
         self.pages.add(self.fast_travel_page, text="Fast travel")
-        self.pages.add(self.facilities_page, text="Facilities")
+        self.pages.add(self.facilities_page, text="Functions")
         self.pages.add(self.deeds_page, text="Notable Deeds")
         self.pages.add(self.boons_page, text="Boons")
         self.pages.add(self.flags_page, text="Flags")

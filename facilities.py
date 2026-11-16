@@ -1,4 +1,4 @@
-"""Allowlisted facility switches in the general GameUserData flag map.
+"""Allowlisted function and facility switches in the general GameUserData flag map.
 
 Service switches, temple-transfer registrations and ordinary travel flags are
 independent. Do not identify this map by its enumerated index.
@@ -11,9 +11,10 @@ import struct
 import fefw_core as core
 
 HERE = Path(__file__).resolve().parent
-# These progression/journal identities are never edited by this module.
+# These progression identities are never edited by this module.
+# Journal sections are editable and must not identify the map after removal.
 ANCHORS = frozenset(core.id_hash(key) for key in (
-    '機能開放_冒険手帳_クエスト一覧', '拠点_進行_初回自由行動',
+    '拠点_進行_初回自由行動',
     '拠点_進行_ファストトラベルエリア解放許可', '拠点_進行_拠点地図表示許可'))
 MIN_ANCHORS = 2
 
@@ -33,7 +34,7 @@ def catalog():
             expected = '禁止_' if row['polarity'] == 'restriction' else (
                 '神殿_転移_' if row['kind'] == 'Gate registration' else '機能開放_')
             if (core.id_hash(row['name']) != h or not row['name'].startswith(expected)
-                    or row['kind'] not in ('Service', 'Gate registration')
+                    or row['kind'] not in ('Service', 'Gate registration', 'Journal', 'Area access')
                     or row['polarity'] not in ('unlock', 'restriction')
                     or row['coverage'] not in ('Inferred', 'Unlock tested', 'Registration tested', 'Game-tested', 'Conditional pass')
                     or not row['label'] or not row['note'] or h in ANCHORS):
@@ -50,7 +51,8 @@ def apply_labels(names):
         if names.get(h, {}).get('name', key) != key:
             raise FacilityError(f'Conflicting facility identity for {h:08x}')
         prefix = ('Disabled: ' if row['polarity'] == 'restriction' else
-                  'Registered: ' if row['kind'] == 'Gate registration' else 'Facility unlocked: ')
+                  'Registered: ' if row['kind'] == 'Gate registration' else
+                  'Function unlocked: ' if row['kind'] in ('Journal', 'Area access') else 'Facility unlocked: ')
         updates[h] = {**names.get(h, {}), 'name': key, 'label': prefix + row['label'], 'kind': 'facility'}
     names.update(updates)
 

@@ -63,7 +63,7 @@ The game data version was not separately reported.
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
 | 5 | Boons | All 31 groups / 81 tiers editable; broader mappings labelled Inferred | [BEDIT results](test-results-boon-editing-2026-11-15.md): +16 EXP Off / +17 On. [WEDIT-01–07 passed](test-results-weapon-boon-2026-11-15.md): discount Off/On persists in returned saves; player reports earlier 10% prices reproduced and backups through .bak4 |
-| 6 | Story | Leda P1 starts 2–12; inferred Cai P1 starts 2/4/9; route-bound chapter files on Save | Leda offered targets accepted; Obelisk 8/9 passed. [Cai Test 1](testing-story-cai-test1.md) pending from native Cai Auto and two matching checkpoints |
+| 6 | Story | Leda P1 starts 2–12; Cai P1 starts 2/9 accepted; 4 blocked; route-bound chapter files on Save | Leda offered targets accepted; Obelisk 8/9 passed. [Cai Test 1](test-results-story-cai-test1.md): 2/9 pass, 4 blocked. Functions Test 2 investigates prerequisites |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
 test report before being called game-tested. Other routes are not covered by
@@ -281,8 +281,8 @@ The old candidate remains reproducible only through the historical research scri
 Native Cai Auto and Chapter 1/2 checkpoints have now been supplied. Both natural
 checkpoints independently recover prefix `eab884585a706f5d`; source route, resume,
 calendar and restart layouts validate. The editor offers Cai Chapters 2, 4 and 9
-as Inferred, using Cai dates and file names. [Cai Test 1](testing-story-cai-test1.md)
-uses three independent copies of the supplied Auto. Leda support is unchanged.
+with Cai dates and file names. [Cai Test 1](test-results-story-cai-test1.md)
+accepted 2/9 and found Chapter 4 blocked; the UI carries those distinctions. Leda support is unchanged.
 No Route_Kai file is required or synthesized; its natural creation trigger is
 unconfirmed. [Cai evidence](story-cai-research.md) records the inputs and limits.
 
@@ -363,3 +363,13 @@ together and check selection, movement, cancellation and tile occupancy for
 each, explicitly covering the earlier Catania/Buccar and Olympia/Sirocco
 failure pattern. A parseable save or correct roster list alone is insufficient
 acceptance. Use synthetic fixtures publicly and keep personal saves private.
+
+### Cai Test 1 and Functions Test 2 (2026-11-16)
+
+All five Cai returns validate; Chapters 2/9 and all UI checks passed. Chapter 4
+opens but cannot reach its objective, and the journal is unavailable. The
+Functions tab adds separate journal sections/permission, Practice and Dagsion
+area switches, with inferred evidence. Training already had a control. Arena
+uses a distinct facility definition but lacks an established saved switch;
+read-only diagnostics and isolated probes avoid assuming a shared flag.
+[Test 2](testing-functions-cai-test2.md) targets this gap before more Cai chapters.

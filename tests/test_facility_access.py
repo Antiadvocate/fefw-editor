@@ -14,7 +14,7 @@ class FacilityAccessTest(unittest.TestCase):
         for route in ('Cai','Dietrich','Theodora','Leda','Eshmel'):
             with patch.object(access,'route_info',return_value=(route,1,9)):
                 result={r['hash']:r for r in access.report(f)}
-                self.assertTrue(all(r['stored']=='Recorded (1)' for r in result.values()))
+                self.assertTrue(all(r['stored']=='Recorded (1)' for r in result.values() if r['hash'] is not None))
                 for h,required in ((access.ROOM,'Cai'),(access.GARDEN,'Cai'),(access.SALAMIS,'Theodora')):
                     self.assertIn('Route matches' if route==required else 'Route mismatch', result[h]['route_check'])
                 self.assertEqual(result[access.YU_PHAS]['route_check'],'No locator route filter')
@@ -29,9 +29,9 @@ class FacilityAccessTest(unittest.TestCase):
             result={r['hash']:r for r in access.report(f)}
             self.assertEqual(result[access.ROOM]['stored'],'Unknown (2)')
             self.assertEqual(result[access.SALAMIS]['stored'],'Absent')
-            self.assertTrue(all(r['route_check']=='Unknown route' for r in result.values()))
+            self.assertTrue(all(r['route_check']=='Unknown route' for r in result.values() if r['hash'] is not None))
             broken=access.report(fixture([[]]))
-            self.assertTrue(all(r['stored']=='Unavailable' and r['error'] for r in broken))
+            self.assertTrue(all(r['stored']=='Unavailable' and r['error'] for r in broken if r['hash'] is not None))
 
     def test_diagnostics_preserves_duplicate_condition_records_and_label_identity(self):
         key='拠点_Hub_000_A60_アウロラ神殿側ドア開放';h=core.id_hash(key)
@@ -54,7 +54,7 @@ class FacilityAccessTest(unittest.TestCase):
                 expected = ('not enabled' if not registered else
                             'both flags recorded' if recorded else 'also enable Yu Phas Temple')
                 self.assertIn(expected, status)
-                self.assertEqual(access.report(f)[-1]['gate_status'], status)
+                self.assertEqual(next(r for r in access.report(f) if r['hash']==access.YU_PHAS)['gate_status'], status)
                 self.assertIn(status, access.diagnostics(f))
                 self.assertEqual(bytes(f.payload), before)
         for gate, travel, expected in ((2, 1, 'unknown registration'),

@@ -3,7 +3,7 @@
 Leda Chapters 2–12 have short-session game evidence. Chapter 1 is unavailable:
 its opening plays but its first objective cannot be progressed.
 No private captures or GameData are required at runtime.
-Cai Part 1 Chapters 2/4/9 are offered as inferred initial probes.
+Cai Part 1 Chapters 2/9 passed short-session tests; Chapter 4 remains blocked.
 """
 from datetime import datetime
 import struct
@@ -22,7 +22,7 @@ ENTRY_DATES = {1: (12, 1, 12, 0), 2: (1, 2, 12, 0), 3: (1, 20, 20, 0),
                10: (9, 28, 2, 0), 11: (10, 16, 12, 0), 12: (11, 7, 12, 0)}
 CAI_DATES = {2: (1, 25, 11, 0), 4: (3, 1, 12, 0), 9: (9, 3, 12, 0)}
 TARGETS = {4: CHAPTERS, 1: tuple(CAI_DATES)}
-TESTED_BY_ROUTE = {4: TESTED, 1: frozenset()}
+TESTED_BY_ROUTE = {4: TESTED, 1: frozenset((2, 9))}
 RESUME_OFFSET = 58
 FREE_TIME_ID = 0xd8588d186b3f9502
 CHECKPOINT_ID = 0xa2f3e9a7ff461708

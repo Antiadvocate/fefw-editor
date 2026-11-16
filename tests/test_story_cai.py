@@ -27,7 +27,7 @@ class CaiStoryTest(unittest.TestCase):
         self.assertEqual(story.sequence(1,1),0x1c39b1f1e90b1ef6)
         self.assertEqual(story.sequence(2,1),0x1c36b1f1e908e8c1)
         self.assertEqual(start.TARGETS[1],(2,4,9))
-        self.assertEqual(start.TESTED_BY_ROUTE[1],frozenset())
+        self.assertEqual(start.TESTED_BY_ROUTE[1],frozenset((2,9)))
         for chapter in (1,3,5,6,7,8,10,11,12,True,'2'):
             with self.assertRaises(core.SaveError): start.edited(fixture(),chapter)
         for route in (0,2,3,9,True):
@@ -83,7 +83,7 @@ class CaiStoryTest(unittest.TestCase):
         a.undo();self.assertEqual(bytes(a.sv.payload),before);self.assertIsNone(a.sv._pending_story_chapter)
         a.redo();self.assertEqual(a.sv._pending_story_chapter,story.ChapterFileRequest(1,9))
         self.assertIn('Cai',a.messages[-3][0])
-        self.assertIn('not yet been tested in game',story_page.warning_points(1)[2])
+        self.assertIn('Chapter 4 opens but progression is blocked',story_page.warning_points(1)[2])
         self.assertIn('Inferred',story_page.evidence_note(1))
         self.assertIn('Chapter 1 cannot be selected',story_page.warning_points(4)[0])
 

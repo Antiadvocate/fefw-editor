@@ -100,12 +100,23 @@ def report(f):
         rows.append({'hash': h, 'label': fast_travel.catalog()[h]['label'],
                      'stored': stored, 'route_check': gate, 'entry': entry,
                      'detail': detail, 'error': error, 'gate_status': gate_status})
+    try:
+        values = facilities.read(f)
+        training = facilities.state_label(0xd70afcb2, values.get(0xd70afcb2))
+        practice = facilities.state_label(0x728ccd68, values.get(0x728ccd68))
+        detail = f'Training switch: {training}. Practice switch: {practice}. '
+    except core.SaveError:
+        detail = 'Related saved switches could not be read. '
+    rows.append({'id': 'arena', 'hash': None, 'label': 'Arena',
+                 'stored': 'Switch not mapped', 'route_check': 'Distinct from Training',
+                 'entry': 'Story and opening hours apply', 'error': '', 'gate_status': '',
+                 'detail': detail + 'Game data defines Arena and Training separately. The ordinary arena receptionist checks Arena access; both facility schedules close from 00:00 to 06:00. No independent Arena save flag has been established, and Training is not a proven substitute. Chapter 9 enabled multiple functions together, so that observation does not isolate the cause. The Chapter 4 objective is in the underground area, not proof that the spectating service is required.'})
     return rows
 
 
 def diagnostics(f):
     route = route_info(f)
-    lines = ['Facility access diagnostics', 'Route: ' + (
+    lines = ['Function access diagnostics', 'Route: ' + (
         f'{route[0]} P{route[1]} Ch{route[2]}' if route else 'unknown'),
         'Stored switches and data conditions are not a guarantee of game access.', '']
     for row in report(f):

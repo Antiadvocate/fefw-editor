@@ -31,8 +31,8 @@ def outside(f):
 class FacilityTest(unittest.TestCase):
     def test_catalog_and_labels_preserve_original_identity(self):
         cat = fac.catalog()
-        self.assertEqual(len(cat), 27)
-        self.assertEqual(sum(r['polarity'] == 'restriction' for r in cat.values()), 2)
+        self.assertEqual(len(cat), 36)
+        self.assertEqual(sum(r['polarity'] == 'restriction' for r in cat.values()), 3)
         self.assertEqual(sum(r['kind'] == 'Gate registration' for r in cat.values()), 7)
         self.assertEqual(cat[KALLA]['name'], '神殿_転移_カーラ神殿')
         self.assertNotIn(0xb482d5dc, cat)  # Ordinary Kalla travel is a different map.

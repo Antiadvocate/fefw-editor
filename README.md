@@ -6,13 +6,18 @@ opening plays, but the first objective does not advance. Optional chapter-file
 creation on Save passed UI/backup checks and Obelisk loading for Chapters 8/9.
 Other Leda chapter files remain untested through the Obelisk.
 
-**Cai Part 1 — first tests:** native Cai saves now support experimental targets
-**2, 4 and 9**, all labelled Inferred. The selector follows the loaded save's
-route; it cannot convert Leda into Cai. Optional chapter files use
-`Chapter_Kai_1_*`, with the same Save-only confirmation/backup behavior.
-See [scope](docs/story-progression.md), [Cai evidence](docs/story-cai-research.md)
-and [Cai Test 1](docs/testing-story-cai-test1.md). No Route_Kai file is required.
+**Cai Part 1:** Chapters **2 and 9** passed opening/progression tests. Chapter
+**4** opens but progression is blocked; it stays Inferred with that limit
+shown in the selector. [Results](docs/test-results-story-cai-test1.md) distinguish
+Chapter 2's opening battle → free time from Chapter 9's next story beat.
+Cai Obelisk use remains untested. No Route_Kai file is required.
 
+**Functions** replaces the Facilities tab. It adds six Adventure Journal
+switches, two Dagsion area permissions and a separate Practice flag, all Inferred.
+Training remains available with its earlier Leda evidence. Arena is distinct
+from Training, but its saved switch is not yet established; read-only access
+notes and [focused Test 2 probes](docs/testing-functions-cai-test2.md) cover the
+remaining investigation. Story edits do not automatically grant these functions.
 
 **Facilities branch:** the UI and FAC-01–06 game tests passed on Leda Part 1
 Chapter 9. Ten services and six gates are Game-tested; Yu Phas additionally
@@ -44,7 +49,7 @@ library, or a ready-made Windows `.exe`.
 | | Class | Pick any class the game knows. It's added to the unit's own class list, the way the game does it |
 | **Convoy** | | Everything in storage, materials included: add a stack, stock every material at once, swap the item in any row, change its quantity, remove a row, and repair a list damaged by older versions |
 | **Gold** | | Set gold |
-| **Player** | | Leda Part 1 starts 2–12 (game-tested) and Cai Part 1 starts 2/4/9 (Inferred), selected from the save route. Other targets/routes guarded. Optional chapter file on Save with overwrite confirmation and backup. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
+| **Player** | | Leda Part 1 starts 2–12 (game-tested) and Cai Part 1 starts 2/9 (game-tested) and 4 (blocked/Inferred), selected from the save route. Other targets/routes guarded. Optional chapter file on Save with overwrite confirmation and backup. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
 | **Classes** | | A unit's whole class list (set the current class, add, swap or remove one, set its exp) and its weapon masteries with their rank (E … S+) and exp — select several masteries (Ctrl+A, Shift+click or Shift+drag) and Set rank, Set exp or Remove changes all of them at once |
 | **Supports** | | Every character's support partners with the **points** this save holds for the pair, the highest rank the game defines, and which conversations this save has recorded. Set the points (0 … 3200) and the game works the level out from them. **Record conversation as seen** writes that conversation's flag |
 | **Mounts** | | The battalion and mount each unit carries, chosen from the save's pool |
@@ -53,7 +58,7 @@ library, or a ready-made Windows `.exe`.
 | **Tutorials** | | 115 identified help entries; make selected tutorials available or remove them from the selected save. English names, original Japanese keys, explicit raw states and undo/redo. See [tutorials.md](docs/tutorials.md) |
 | **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Six level previews tested in Leda Chapter 9; Fortuna's EXP effect remains unknown. Selection and Divine Sand are read-only. Six tested first-audience toggles; Fortuna has no audience condition. See [blessings.md](docs/blessings.md) |
 | **Fast travel** | | Add/remove 20 identified Dagsion destination flags in the selected save, with original keys and undo/redo. The original 16 have screenshot-confirmed English names. Four additional flags persisted in Chapter 9 tests; only Yu Phas Temple appeared and allowed travel, while walking back in stayed blocked. See [fast-travel.md](docs/fast-travel.md) |
-| **Facilities** | | 20 service switches and seven gate registrations, with evidence labels and read-only route/access diagnostics. See [facilities.md](docs/facilities.md) |
+| **Functions** | | 36 service, gate, journal and area switches, with evidence labels and read-only Arena/route/access diagnostics. See [facilities.md](docs/facilities.md) |
 | **Boons** | | All 31 Boons / 81 tiers: set a tier, remove ownership, switch On/Off or set all to max. Karma and progression preserved; undo/redo. Game-tested and inferred mappings labelled. See [boons.md](docs/boons.md) |
 | **Notable Deeds** | | 350 milestones; 47 editable totals; the 14 newly enabled counters are labelled Inferred. Hours Played passed its 20-hour game test. Targets/rewards and stored claim states shown separately; no currency or claim writes. See [notable-deeds.md](docs/notable-deeds.md) |
 

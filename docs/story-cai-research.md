@@ -1,11 +1,14 @@
-# Cai Part 1 — native evidence and first implementation
+# Cai Part 1 — native evidence and progression tests
 
 The user supplied native `Auto`, `Chapter_Kai_1_1` and `Chapter_Kai_1_2` on
 2026-11-16. The uploaded Auto is named `Auto(3)`; the suffix is an upload name,
 not the game filename. All three container and payload checksums validate.
 They establish sufficient structural evidence to offer **Chapters 2, 4 and 9**
-as **Inferred** initial targets. Game compatibility remains pending
-[Cai Test 1](testing-story-cai-test1.md).
+as **Inferred** initial targets. The initial implementation was followed by
+[Test 1 results](test-results-story-cai-test1.md): Chapters 2/9 passed, Chapter 4
+opened but progression was blocked. The UI now shows that distinction;
+[Test 2](testing-functions-cai-test2.md) investigates missing function/access
+prerequisites. The initial evidence below is retained for provenance.
 
 ## Native save evidence
 
@@ -34,13 +37,13 @@ unrelated normalized root. The source and natural checkpoints remain unchanged.
 ## Runtime scope
 
 The editor reads the route from the save; there is no route-conversion control.
-Cai offers only 2/4/9, all Inferred. Leda retains its accepted 2–12 targets and
+Cai offers only 2/4/9; 2/9 are Game-tested and 4 is Inferred / blocked. Leda retains its accepted 2–12 targets and
 Chapter 1 exclusion. Other routes/parts and unsupported contexts stay read-only.
 
 The shared entry engine selects the route-specific ID/date, sets the known
 chapter-start context, clears old schedule/calendar/restart state, and retains
 current progression. The game is expected to establish the scene from that
-entry, but this remains an inference for Cai until the opening/next-beat tests.
+entry, with short-session confirmation for 2/9 and a progression failure for 4.
 No prior units, facilities, quests or other unlocks are manufactured.
 
 An optional chapter-file request is bound to **both route and chapter**. Cai
@@ -59,14 +62,14 @@ its whole title date, now observed in the native checkpoint above.
 | Chapter | Title-row month/day/time | Offered in first build |
 |---|---|---|
 | 1 | Inherited | No; separate testing deferred |
-| 2 | 01-25 11:00 | Yes, Inferred |
+| 2 | 01-25 11:00 | Yes; accepted in Test 1 |
 | 3 | 02-04 08:00 | No |
-| 4 | 03-01 12:00 | Yes, Inferred |
+| 4 | 03-01 12:00 | Yes; blocked / Inferred |
 | 5 | 03-14 12:00 | No |
 | 6 | 04-19 10:00 | No |
 | 7 | 06-09 12:00 | No |
 | 8 | 07-10 12:00 | No |
-| 9 | 09-03 12:00 | Yes, Inferred |
+| 9 | 09-03 12:00 | Yes; accepted in Test 1 |
 | 10 | 09-15 12:00 | No |
 | 11 | 10-16 08:00 | No |
 | 12 | 11-03 12:00 | No |

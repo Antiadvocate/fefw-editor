@@ -11,11 +11,13 @@ game-tested through the Obelisk; ordinary entry acceptance is a separate result.
 See [Test 5 results](test-results-story-test5.md). Full-campaign behavior remains
 untested.
 
-**Cai Part 1** now offers Chapters **2, 4 and 9**, all **Inferred**. Native Auto
-and two natural checkpoints validate the route-specific entry pattern and
-shared layout. Cai openings, progression and editor-created chapter files still
-need [Test 1](testing-story-cai-test1.md). Other Cai targets remain unavailable.
-Chapter 1 is deferred for Cai, not assumed to share Leda's failure.
+**Cai Part 1** offers Chapters **2, 4 and 9**. Chapters **2 and 9** passed
+[Test 1](test-results-story-cai-test1.md): Chapter 2's opening battle completed
+into free time, and Chapter 9 advanced beyond its opening task. Chapter **4**
+opens but progression is blocked and remains Inferred with that warning.
+[Functions Test 2](testing-functions-cai-test2.md) investigates prerequisites
+separately; chapter edits still do not grant earlier unlocks. Cai Obelisk use
+is untested. Other Cai targets remain unavailable; Chapter 1 is deferred.
 
 Other routes/parts, battle saves and unsupported or inconsistent layouts remain
 read-only. The editor checks actual save contents, not filenames or party members.
@@ -44,8 +46,7 @@ The warning title remains **CAUTION - UNEXPECTED CONSEQUENCES POSSIBLE**. It
 retains the user's points about Leda Part 1, no previous unlock/unit grants,
 limited testing, the Obelisk Chamber and a fresh-directory backup. The Obelisk
 point is immediately above backup. Warning text follows the loaded route: Leda
-explains Chapter 1's exclusion and its tested scope; Cai explicitly says its
-edits and chapter files have not been game-tested. Changing route while either
+explains Chapter 1's exclusion and its tested scope; Cai distinguishes accepted 2/9 from blocked 4 and untested Obelisk use. Changing route while either
 dialog is open requires reopening it. The picker never chooses a different route.
 
 ## What is changed

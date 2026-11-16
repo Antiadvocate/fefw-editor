@@ -1,4 +1,4 @@
-# Facilities and access conditions — Test 1
+# Functions, facilities and access conditions
 
 This feature branch adds two related parts of the roadmap: facility
 locking/unlocking and an explanation of the unresolved travel/entry conditions.
@@ -7,14 +7,14 @@ below. The feature remains on its branch pending a main merge.
 
 ## Controls
 
-The **Facilities** tab has **Services and gates** and **Access conditions**
+The **Functions** tab (formerly Facilities) has **Saved switches** and **Access conditions**
 views. Flags remains the rightmost tab; slightly tighter tab spacing keeps it
 visible at the existing minimum window width.
 
-Services and gates contains **27 switches**: 20 service switches and seven
-Gate of the Gods registrations. Select individual rows or a range, then
+Saved switches contains **36 switches**: 21 service switches, seven
+Gate of the Gods registrations, six Journal switches and two area-access switches. Select individual rows or a range, then
 Enable selected or Disable selected. Search accepts English, Japanese or a
-hash; the category filter separates services from gate registrations.
+hash; the category filter separates services, gates, journal sections and area access.
 The selected row explains its evidence. Ctrl+Z/Ctrl+Y and normal saving/backups
 apply. Route mirroring must be off.
 
@@ -28,7 +28,7 @@ apply. Route mirroring must be off.
 **Enabled describes the saved switch, not guaranteed usability.** NPC
 placement, route, story, schedule and other conditions can still apply.
 Ten tested services and six gates are Game-tested; Yu Phas has a Conditional
-pass. The ten services not included in the acceptance cases remain Inferred.
+pass. The ten original untested services and nine new controls remain Inferred.
 Original Japanese keys remain in Reads As and established English names
 appear in Flags. See the [acceptance report](test-results-facilities-test1.md).
 
@@ -42,7 +42,7 @@ units or story progression. The test baseline retains Weapons Discount 10%.
 
 `facility_names.json` holds exact names, hashes, polarity and evidence.
 `facilities.py` locates a unique general flag map inside a struct group directly
-under GameUserData. At least two unchanged journal/free-time/map-permission
+under GameUserData. At least two unchanged free-time/map-permission
 anchors must be present; their hashes are not writable through this page.
 Neither map 0 nor any enumerated child index is assumed.
 
@@ -113,3 +113,23 @@ prebuilt game-test saves are supplied separately from Git.
 
 See [the test sequence](testing-facilities.md) and
 [the acceptance report](test-results-facilities-test1.md).
+
+## Journal and area controls (Cai Test 2)
+
+The six journal controls separate its global permission from five section
+unlocks. Enabling permission clears `禁止_冒険手帳`; it does not grant sections.
+Enable the sections separately. Their labels preserve the Japanese identifiers
+in Reads As; translated section names are pending in-game confirmation.
+
+The quest-list flag is no longer an identity anchor. Two of the unchanged
+first-free-time/map/travel permissions still identify the general map, so
+disabling all journal sections does not disable the controls themselves.
+
+Training and Practice are separate switches. Dagsion upper/lower permissions
+are separately editable; none removes chapter restrictions or registers travel.
+Arena has no verified saved switch. Access conditions exposes the distinction
+and the relevant activity switch states without making an Arena write.
+See [Test 1 evidence](test-results-story-cai-test1.md) and the
+[Test 2 guide](testing-functions-cai-test2.md). No automatic grant occurs on a
+chapter change. First-free-time manipulation remains confined to named research
+probes, never the production switch allowlist.

@@ -12,12 +12,12 @@ class FacilityPageMixin:
         self.facility_views.pack(fill='both', expand=True)
         switches = ttk.Frame(self.facility_views)
         access = ttk.Frame(self.facility_views)
-        self.facility_views.add(switches, text='Services and gates')
+        self.facility_views.add(switches, text='Saved switches')
         self.facility_views.add(access, text='Access conditions')
         top = ttk.Frame(switches, style='Card.TFrame', padding=(14, 10))
         top.pack(fill='x', pady=(8, 0))
         row = ttk.Frame(top, style='Card.TFrame'); row.pack(fill='x')
-        ttk.Label(row, text='Facility switches', style='CardH3.TLabel').pack(side='left')
+        ttk.Label(row, text='Function switches', style='CardH3.TLabel').pack(side='left')
         self.facility_buttons = []
         for label, state in (('Disable selected', False), ('Enable selected', True)):
             b = ttk.Button(row, text=label, style='Small.TButton',
@@ -27,7 +27,7 @@ class FacilityPageMixin:
         self.facility_count.pack(anchor='w', pady=(6, 0))
         search_row = ttk.Frame(top, style='Card.TFrame'); search_row.pack(fill='x', pady=(8, 0))
         self.facility_kind = ttk.Combobox(search_row, state='readonly', width=19,
-                                        values=('All switches', 'Service', 'Gate registration'))
+                                        values=('All switches', 'Service', 'Gate registration', 'Journal', 'Area access'))
         self.facility_kind.current(0); self.facility_kind.pack(side='left', padx=(0, 8))
         self.facility_kind.bind('<<ComboboxSelected>>', lambda e: self.refresh_facilities())
         self.facility_search = ttk.Entry(search_row); self.facility_search.pack(fill='x', expand=True)
@@ -41,7 +41,7 @@ class FacilityPageMixin:
                                          justify='left', padding=(12, 8), text='Select a switch to see its evidence and limits.')
         self.facility_detail.pack(side='bottom', fill='x', pady=(8, 0))
         self.facility_tree = self._facility_table(switches, (
-            ('#0', 'Facility / gate', 245), ('kind', 'Kind', 125), ('state', 'Saved switch', 160),
+            ('#0', 'Function / facility', 245), ('kind', 'Kind', 125), ('state', 'Saved switch', 160),
             ('evidence', 'Evidence', 135), ('jp', 'Reads As', 390), ('hash', 'Hash', 90)))
         self.facility_tree.bind('<<TreeviewSelect>>', lambda e: self._facility_selected())
 
@@ -49,14 +49,14 @@ class FacilityPageMixin:
         ttk.Button(top, text='Copy diagnostics', style='Small.TButton', command=self.copy_facility_diagnostics).pack(side='right')
         self.facility_route = ttk.Label(top, text='Open a save to inspect access conditions.', style='CardH3.TLabel')
         self.facility_route.pack(anchor='w')
-        ttk.Label(top, text='Read-only data conditions. A recorded destination does not guarantee visibility or entry.',
+        ttk.Label(top, text='Read-only data conditions. Arena has no verified saved switch yet. Recorded flags do not guarantee access.',
                   style='CardMuted.TLabel', wraplength=920).pack(anchor='w', pady=(6, 0))
         self.access_detail = ttk.Label(access, style='CardMuted.TLabel', wraplength=950, justify='left',
                                       padding=(12, 10), text='Select a destination for the known conditions.')
         self.access_detail.pack(side='bottom', fill='x', pady=(8, 0))
         self.facility_access_tree = self._facility_table(access, (
-            ('#0', 'Destination', 200), ('stored', 'Travel flag', 120),
-            ('route', 'Locator route condition', 285), ('entry', 'Walking entrance', 330)))
+            ('#0', 'Destination', 200), ('stored', 'Saved evidence', 140),
+            ('route', 'Route / prerequisite', 265), ('entry', 'Access / entrance', 330)))
         self.facility_access_tree.configure(selectmode='browse')
         self.facility_access_tree.bind('<<TreeviewSelect>>', lambda e: self._facility_access_selected())
 
@@ -83,7 +83,7 @@ class FacilityPageMixin:
         try:
             cat = facilities.catalog(); f = self.core_of()
             if f is None:
-                self.facility_count.configure(text='Open a save to see its saved facility switches.'); return
+                self.facility_count.configure(text='Open a save to see its saved function switches.'); return
             values = facilities.read(f)
         except core.SaveError as exc:
             self.facility_count.configure(text=str(exc)); return
@@ -96,7 +96,7 @@ class FacilityPageMixin:
         tree.selection_set([i for i in keep if tree.exists(i)])
         if keep and any(tree.exists(i) for i in keep) and view:
             tree.yview_moveto(view[0])
-        self.facility_count.configure(text=f"{len(tree.get_children())} of {len(cat)} switches shown · {sum(r['coverage'] == 'Inferred' for r in cat.values())} inferred · evidence scoped to Leda P1 Ch9")
+        self.facility_count.configure(text=f"{len(tree.get_children())} of {len(cat)} switches shown · {sum(r['coverage'] == 'Inferred' for r in cat.values())} inferred · select a row for its tested scope")
         for b in self.facility_buttons: b.state(['!disabled'])
         self._facility_selected()
 
@@ -116,10 +116,10 @@ class FacilityPageMixin:
     def set_facilities(self, state):
         if not self.sv: return
         if self.mirror.get():
-            self.flash('Turn off “Also edit this route’s other saves” for facility edits.', 'warn'); return
+            self.flash('Turn off “Also edit this route’s other saves” for function edits.', 'warn'); return
         picked = self.facility_tree.selection()
         if not picked:
-            self.flash('Select one or more facility switches first.', 'info'); return
+            self.flash('Select one or more function switches first.', 'info'); return
         self._commit_form()
         try:
             edits = {int(i, 16): state for i in picked}
@@ -130,7 +130,7 @@ class FacilityPageMixin:
             self.flash('Selected switches already have that state.', 'info'); return
         self.push_undo()
         self._core_edit(lambda f: facilities.edited(f, edits),
-                        f"{'Enabled' if state else 'Disabled'} {len(edits)} facility switch(es)")
+                        f"{'Enabled' if state else 'Disabled'} {len(edits)} function switch(es)")
 
     def _refresh_facility_access(self):
         tree = self.facility_access_tree; keep = tree.selection(); tree.delete(*tree.get_children())
@@ -143,7 +143,7 @@ class FacilityPageMixin:
         self.facility_route.configure(text=(f'Access conditions · {route[0]} P{route[1]} Ch{route[2]}' if route else 'Access conditions · unknown route'))
         try:
             for row in facility_access.report(f):
-                iid = f"{row['hash']:08x}"; self._access_rows[iid] = row
+                iid = row.get('id') or f"{row['hash']:08x}"; self._access_rows[iid] = row
                 tree.insert('', 'end', iid=iid, text=row['label'], values=(row['stored'], row['route_check'], row['entry']))
         except core.SaveError as exc:
             self.access_detail.configure(text=str(exc)); return
