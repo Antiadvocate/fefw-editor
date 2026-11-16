@@ -48,8 +48,10 @@ class StoryFilesTest(unittest.TestCase):
         self.source = self.root/'Auto'
         self.original = self.source.read_bytes()
         self.target = self.root/'Chapter_Led_1_4'
-        self.errors = self.enterContext(patch.object(editor.messagebox, 'showerror'))
-        self.confirm = self.enterContext(patch.object(editor.messagebox, 'askyesno', return_value=True))
+        errors = patch.object(editor.messagebox, 'showerror')
+        confirm = patch.object(editor.messagebox, 'askyesno', return_value=True)
+        self.errors = errors.start(); self.addCleanup(errors.stop)
+        self.confirm = confirm.start(); self.addCleanup(confirm.stop)
 
     def test_apply_undo_redo_wait_for_save_then_write_same_state_and_consume_request(self):
         a = self.app
