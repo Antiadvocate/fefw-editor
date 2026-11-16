@@ -141,7 +141,7 @@ def edited(f, chapter):
 
 
 def _edited_at_entry(f, chapter, year, date):
-    """Shared mechanics; research alone may reproduce the failed Chapter 1 probe."""
+    """Shared mechanics; guarded research probes may use non-production targets."""
     month, day, hour, minute = date
     info = validate(f)
     original = normalized_blocks(f)

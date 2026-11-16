@@ -63,7 +63,7 @@ The game data version was not separately reported.
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
 | 5 | Boons | All 31 groups / 81 tiers editable; broader mappings labelled Inferred | [BEDIT results](test-results-boon-editing-2026-11-15.md): +16 EXP Off / +17 On. [WEDIT-01–07 passed](test-results-weapon-boon-2026-11-15.md): discount Off/On persists in returned saves; player reports earlier 10% prices reproduced and backups through .bak4 |
-| 6 | Story | Leda P1 starts 2–12; Cai P1 starts 2/9 accepted; 4 blocked; route-bound chapter files on Save | Leda offered targets accepted; Obelisk 8/9 passed. [Cai Test 1](test-results-story-cai-test1.md): 2/9 pass, 4 blocked. Functions Test 2 investigates prerequisites |
+| 6 | Story | Leda P1 starts 2–12; Cai P1 starts 2/9 accepted; 4 blocked; route-bound chapter files on Save | Leda offered targets accepted; Obelisk 8/9 passed. [Functions Test 2](test-results-functions-cai-test2.md): Journal restored, Chapter 4 still blocked. [Cai Test 3](testing-story-cai-test3.md) prepares Chapter 3 for a natural Chapter 4 transition |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
 test report before being called game-tested. Other routes are not covered by

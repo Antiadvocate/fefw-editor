@@ -7,8 +7,10 @@ They establish sufficient structural evidence to offer **Chapters 2, 4 and 9**
 as **Inferred** initial targets. The initial implementation was followed by
 [Test 1 results](test-results-story-cai-test1.md): Chapters 2/9 passed, Chapter 4
 opened but progression was blocked. The UI now shows that distinction;
-[Test 2](testing-functions-cai-test2.md) investigates missing function/access
-prerequisites. The initial evidence below is retained for provenance.
+[Test 2](test-results-functions-cai-test2.md) restored Journal access but all
+four combinations still failed to advance Chapter 4. The next
+[save-only Chapter 3 test](testing-story-cai-test3.md) seeks a natural Chapter 4
+transition for comparison. The initial evidence below is retained for provenance.
 
 ## Native save evidence
 
@@ -37,7 +39,8 @@ unrelated normalized root. The source and natural checkpoints remain unchanged.
 ## Runtime scope
 
 The editor reads the route from the save; there is no route-conversion control.
-Cai offers only 2/4/9; 2/9 are Game-tested and 4 is Inferred / blocked. Leda retains its accepted 2–12 targets and
+Cai offers only 2/4/9; 2/9 are Game-tested and 4 is Inferred / blocked. Chapter 3
+is a research-only candidate, not an additional production target. Leda retains its accepted 2–12 targets and
 Chapter 1 exclusion. Other routes/parts and unsupported contexts stay read-only.
 
 The shared entry engine selects the route-specific ID/date, sets the known
