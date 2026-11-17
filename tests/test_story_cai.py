@@ -30,7 +30,7 @@ class CaiStoryTest(unittest.TestCase):
         self.assertEqual(start.TESTED_BY_ROUTE[1],frozenset(range(1,13)))
         for chapter in (0,13,True,'2'):
             with self.assertRaises(core.SaveError): start.edited(fixture(),chapter)
-        for route in (0,3,9,True):
+        for route in (0,9,True):
             with self.assertRaises(core.SaveError): story.sequence(2,route)
         self.assertEqual(story.chapter_filename(1,9),'Chapter_Kai_1_9')
         self.assertEqual(story.chapter_filename(4,9),'Chapter_Led_1_9')

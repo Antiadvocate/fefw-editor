@@ -7,6 +7,8 @@ Cai Part 1 Chapters 1–12 passed short-session game tests.
 Dietrich Chapters 3–12 passed short-session checks, including integrated
 prerequisites for 5–7. Chapters 1/2 are unavailable: Chapter 2 replay remains
 blocked, and Chapter 1 leads into that block. Native saves still load normally.
+Theodora Chapters 1–12 are inferred and await game tests. Chapters 1–2 use
+1446; Chapter 3 and later return to 1449, regardless of the source year.
 """
 from datetime import datetime
 import struct
@@ -34,9 +36,14 @@ DIETRICH_DATES = {1: (2, 10, 9, 0), 2: (2, 10, 14, 0), 3: (2, 11, 12, 0),
                   7: (5, 29, 20, 0), 8: (6, 21, 12, 0), 9: (8, 10, 12, 0),
                   10: (9, 29, 12, 0), 11: (10, 5, 12, 0), 12: (11, 4, 12, 0)}
 DIETRICH_CHAPTERS = tuple(range(3, 13))
-TARGETS = {4: CHAPTERS, 1: tuple(CAI_DATES), 2: DIETRICH_CHAPTERS}
+THEODORA_DATES = {1: (2, 1, 12, 0), 2: (2, 13, 12, 0), 3: (2, 4, 7, 0),
+                  4: (3, 1, 12, 0), 5: (3, 7, 20, 0), 6: (3, 21, 23, 0),
+                  7: (4, 21, 5, 0), 8: (6, 1, 12, 0), 9: (7, 1, 12, 0),
+                  10: (8, 25, 12, 0), 11: (9, 17, 12, 0), 12: (10, 16, 10, 0)}
+THEODORA_YEARS = {chapter: 1446 if chapter <= 2 else 1449 for chapter in range(1, 13)}
+TARGETS = {4: CHAPTERS, 1: tuple(CAI_DATES), 2: DIETRICH_CHAPTERS, 3: tuple(THEODORA_DATES)}
 TESTED_BY_ROUTE = {4: TESTED, 1: frozenset(CAI_DATES),
-                   2: frozenset(DIETRICH_CHAPTERS)}
+                   2: frozenset(DIETRICH_CHAPTERS), 3: frozenset()}
 DIETRICH_BLOCKERS = {
     1: 'Battle works, but leads into the Chapter 2 rescue block',
     2: 'Replay cannot progress the rescue proximity event',
@@ -115,14 +122,16 @@ def normalized_blocks(f):
 
 def target(chapter, route=4):
     if type(route) is not int or route not in TARGETS:
-        raise story.StoryError('Story editing supports Leda, Cai and Dietrich Part 1 only.')
+        raise story.StoryError('Story editing supports Leda, Cai, Dietrich and Theodora Part 1 only.')
     if type(chapter) is not int or chapter not in TARGETS[route]:
         if route == 2:
             raise story.StoryError('Choose a Dietrich Part 1 chapter from 3 to 12. Chapters 1 and 2 are unavailable because the Chapter 2 rescue cannot be progressed on replay.')
         if route == 1:
             raise story.StoryError('Choose a Cai Part 1 chapter from 1 to 12.')
+        if route == 3:
+            raise story.StoryError('Choose a Theodora Part 1 chapter from 1 to 12.')
         raise story.StoryError('Choose a Leda Part 1 chapter from 2 to 12. Chapter 1 is unavailable because its first objective cannot be progressed.')
-    return {1: CAI_DATES, 2: DIETRICH_DATES, 4: ENTRY_DATES}[route][chapter]
+    return {1: CAI_DATES, 2: DIETRICH_DATES, 3: THEODORA_DATES, 4: ENTRY_DATES}[route][chapter]
 
 
 def validate(f):
@@ -157,7 +166,9 @@ def validate(f):
 def edited(f, chapter):
     info = validate(f)
     date = target(chapter, info.route)
-    p = _edited_at_entry(f, chapter, 1449 if info.route in (1, 2) else ENTRY_YEARS[chapter], date)
+    year = (THEODORA_YEARS[chapter] if info.route == 3 else
+            ENTRY_YEARS[chapter] if info.route == 4 else 1449)
+    p = _edited_at_entry(f, chapter, year, date)
     if info.route == 1 and chapter >= 3:
         p = facilities.edited(core.SaveFile(p), {facilities.SEWERS: True})
     if info.route == 2:

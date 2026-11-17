@@ -1,4 +1,4 @@
-# Story progression — Leda, Cai and Dietrich Part 1
+# Story progression — Leda, Cai, Dietrich and Theodora Part 1
 
 Player → Story progression… offers **Leda Part 1 Chapters 2–12**, all accepted
 for the chapter opening and next main story beat. **Chapter 1 cannot be selected**:
@@ -16,14 +16,21 @@ in the player's tests. Direct Chapter 4 entry passed with the automatic Sewers
 prerequisite. Cai Obelisk use and full-campaign behavior remain untested.
 See [Cai/Tutorials Test 5 results](test-results-cai-tutorials-test5.md).
 
-**Dietrich Part 1** offers Chapters **1–12**. Chapters **1, 3, 4 and 8–12**
-passed short-session checks; all Test 1 UI checks passed. Chapters **2, 5, 6
-and 7** open but have reported progression blocks, shown individually in the
-picker. Chapter 1's battle/transition pass does not accept Chapter 2's rescue.
-See [Test 1 results](test-results-story-dietrich-test1.md) and
-[isolated Test 2 probes](testing-story-dietrich-test2.md). Experimental repairs
-are not applied by ordinary chapter editing. Dietrich Obelisk use remains
-untested. All entry years are 1449.
+**Dietrich Part 1** offers Chapters **3–12**, all accepted for short-session
+opening/progression. Chapters **1/2 are unavailable** because Chapter 2 replay
+blocks at the rescue and Chapter 1 leads into it. Selection applies the tested
+prerequisites for Chapters 5–7; direct 5/6 entry and Chapter 7 teaching plus its
+next checkpoint passed. All Test 1 UI checks passed. See
+[Test 3 results](test-results-story-dietrich-test3.md). Dietrich Obelisk use
+remains untested. All entry years are 1449.
+
+**Theodora Part 1** offers Chapters **1–12**, all **Inferred — game test pending**.
+Native Chapters 1–3 anchor the sequence rule and early dates; later dates come
+from the timeline. Chapters 1/2 use **1446**, and Chapter 3+ uses **1449**, even
+when the source was an earlier chapter. Party, flags and tutorials are preserved.
+Native Chapter 1 has an empty roster; replay from an existing party is untested.
+No prerequisite flags are added for this route. See the
+[Theodora Test 1 guide](testing-story-theodora-test1.md).
 
 For every supported Cai Chapter 3+ selection, the chapter action also enables
 **Functions → Area access → Sewers access (Cai)**. Both changes share one
@@ -36,13 +43,13 @@ read-only. The editor checks actual save contents, not filenames or party member
 
 ## Using the editor
 
-1. Open a disposable, supported Leda, Cai or Dietrich Part 1 free-time or chapter-start save.
+1. Open a disposable, supported Leda, Cai, Dietrich or Theodora Part 1 free-time or chapter-start save.
 2. Turn off route mirroring, then click Story progression… on Player.
 3. Read the warning and back up the whole save folder into a fresh directory.
 4. Continue to the chapter list. Each target carries its evidence label.
 5. Optionally check **Create a chapter start file using this state**. It queues
    `Chapter_Led_1_<chapter>`, `Chapter_Kai_1_<chapter>` or
-   `Chapter_Dit_1_<chapter>` beside the selected save,
+   `Chapter_Dit_1_<chapter>` or `Chapter_Seo_1_<chapter>` beside the selected save,
    according to the actual route. Unchecked creates no file.
 6. Apply stages the chapter/date and file request. Ctrl+Z/Ctrl+Y undo/redo both.
 7. Save (Ctrl+S) writes the selected save and any requested chapter file. Existing
@@ -184,7 +191,7 @@ Cai dates, capture evidence and the Route_Kai observation are detailed in
 chapter-file creation requires a Route_* file. The editor does not create one.
 
 The engine requires a unique Header (220 bytes, marker 15), GameUserData v23,
-agreeing route/part/chapter/sequence for Leda, Cai or Dietrich Part 1, and the recognized free-time or checkpoint
+agreeing route/part/chapter/sequence for Leda, Cai, Dietrich or Theodora Part 1, and the recognized free-time or checkpoint
 resume/state pair. GameSchedule and Calendar sizes/versions, matching valid
 clocks and all eight restart members/blobs/checksums are checked before mutation.
 Unknown and battle states are refused before traversing their variable objects;

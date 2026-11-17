@@ -43,7 +43,8 @@ implementation, not a claim that untested chapters can be entered or progressed.
 
 At the time of this reference update, story editing supported Leda and Cai only.
 The subsequent [Dietrich Test 1](testing-story-dietrich-test1.md) uses these anchors
-for inferred chapter entries. Theodora remains read-only.
+for inferred chapter entries. Theodora now has experimental Chapters 1–12,
+with no game acceptance yet; see [Theodora Test 1](testing-story-theodora-test1.md).
 
 ## Fingerprints
 

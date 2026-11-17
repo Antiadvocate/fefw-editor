@@ -31,6 +31,11 @@ def warning_points(route):
                 'Chapter 5 clears the upper movement restriction. Chapter 6 clears the lower restriction and enables upper/lower access and Vandahl Trading Company. Chapter 7 permits Hidden Windpierce teaching. Other unlocks and party units must be managed separately.',
                 'Direct entry and progression for Chapters 5/6 passed with these prerequisites. Chapter 7 teaching and its next checkpoint also passed. Obelisk and long term progression remain untested.',
                 *WARNING_POINTS[3:])
+    if route == 3:
+        return ('This is a Theodora Part 1 save. Chapters 1–12 are experimental: their openings and progression have not been game-tested.',
+                'Chapters 1–2 return to 1446; Chapter 3 and later use 1449. Your current party is kept, including when replaying the opening chapters. Earlier units, facilities, features, tutorials, map points and side quests are not restored automatically.',
+                'Chapter 1 normally starts with an empty roster. Replaying it with an existing party may fail. Other chapter objectives may also need prerequisites. Obelisk use and long term progression remain untested.',
+                *WARNING_POINTS[3:])
     raise story.StoryError('Unsupported story route.')
 
 
@@ -41,6 +46,8 @@ def evidence_note(route):
         return ('Cai Chapters 1–12 passed opening and progression tests, including direct Chapter 4 entry. Cai Chapter 3+ enables Sewers access. Entry resets the clock and internal restart state. Cai Obelisk use remains untested.')
     if route == 2:
         return ('Dietrich Chapters 3–12 and Test 1 UI passed. Only the native Chapter 2 control worked; replay repairs failed. Targeted prerequisites for 5–7 preserve party and tutorials.')
+    if route == 3:
+        return ('Theodora: Inferred — game test pending. Native checkpoints anchor Chapters 1–3; the timeline supplies later dates. Entry resets the clock and internal restart state while preserving party, flags and tutorials.')
     raise story.StoryError('Unsupported story route.')
 
 
@@ -73,12 +80,12 @@ class StoryPageMixin:
             return
         self.story_button.state(['disabled'])
         if not self.sv:
-            self.story_status.configure(text='Open a Leda, Cai or Dietrich Part 1 save. Other routes remain read-only.')
+            self.story_status.configure(text='Open a Leda, Cai, Dietrich or Theodora Part 1 save. Other routes remain read-only.')
             return
         route = layer.route_info(self.sv.payload)
         label = f'{route[0]} · Part {route[1]} · Chapter {route[2]}\n' if route else ''
-        if route and (route[0], route[1]) not in (('Leda', 1), ('Cai', 1), ('Dietrich', 1)):
-            self.story_status.configure(text=label + 'Read-only. Story editing supports Leda, Cai and Dietrich Part 1 only.')
+        if route and (route[0], route[1]) not in (('Leda', 1), ('Cai', 1), ('Dietrich', 1), ('Theodora', 1)):
+            self.story_status.configure(text=label + 'Read-only. Story editing supports Leda, Cai, Dietrich and Theodora Part 1 only.')
             return
         try:
             info = story_start.validate(self.core_of())
@@ -89,13 +96,14 @@ class StoryPageMixin:
         note = f'\n{story.chapter_filename(pending.route, pending.chapter)} will be created on Save.' if pending else ''
         evidence = {4: 'Chapters 2–12 game-tested; Chapter 1 unavailable.',
                     1: 'Chapters 1–12 game-tested; Chapter 3+ enables Sewers access.',
-                    2: 'Chapters 3–12 game-tested, including direct entry for 5/6. Chapters 1/2 unavailable because of the Chapter 2 rescue block.'}[info.route]
+                    2: 'Chapters 3–12 game-tested, including direct entry for 5/6. Chapters 1/2 unavailable because of the Chapter 2 rescue block.',
+                    3: 'Chapters 1–12 inferred — game test pending. Chapters 1–2 use 1446; Chapter 3+ uses 1449.'}[info.route]
         self.story_status.configure(text=info.label + '\n' + evidence + note)
         self.story_button.state(['!disabled'])
 
     def _story_ready(self):
         if not self.sv:
-            self.flash('Open a Leda, Cai or Dietrich Part 1 save first.', 'warn'); return False
+            self.flash('Open a Leda, Cai, Dietrich or Theodora Part 1 save first.', 'warn'); return False
         if self.mirror.get():
             self.flash('Turn off “Also edit this route’s other saves” before editing story progression.', 'warn')
             return False
@@ -154,7 +162,8 @@ class StoryPageMixin:
         frame = ttk.Frame(win, padding=18); frame.pack(fill='both', expand=True)
         ttk.Label(frame, text='Choose a chapter start', style='CardH3.TLabel').pack(anchor='w')
         limit = {4: 'Chapter 1 is unavailable.', 1: 'Cai Chapter 3+ also enables Sewers access.',
-                 2: 'Dietrich Chapters 1/2 are unavailable because of the Chapter 2 rescue block. Chapters 5–7 apply targeted prerequisites; party and tutorials are preserved.'}[info.route]
+                 2: 'Dietrich Chapters 1/2 are unavailable because of the Chapter 2 rescue block. Chapters 5–7 apply targeted prerequisites; party and tutorials are preserved.',
+                 3: 'Theodora targets are inferred. Chapters 1–2 use 1446; Chapter 3+ uses 1449. Party, flags and tutorials are preserved.'}[info.route]
         ttk.Label(frame, text='Selected save only. Apply stages the chapter start and date; Ctrl+S saves and Ctrl+Z undoes. ' + limit,
                   wraplength=625, justify='left').pack(anchor='w', pady=(4, 10))
         buttons = ttk.Frame(frame); buttons.pack(side='bottom', fill='x', pady=(12, 0))
