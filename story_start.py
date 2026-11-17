@@ -3,8 +3,9 @@
 Leda Chapters 2–12 have short-session game evidence. Chapter 1 is unavailable:
 its opening plays but its first objective cannot be progressed.
 No private captures or GameData are required at runtime.
-Cai Part 2 Chapters 1–6 are provisional: only Chapter 1 has a captured
-checkpoint sequence. Later sequence IDs and inherited year need game tests.
+Cai Part 2 Chapters 1–4 and 6 passed opening and next-battle checks.
+Chapter 5 has a provisional upper-city movement repair; retest pending.
+Part 1-to-2 entry is a separate untested experiment.
 Cai Part 1 Chapters 1–12 passed short-session game tests.
 Dietrich Chapters 3–12 passed short-session checks, including integrated
 prerequisites for 5–7. Chapters 1/2 are unavailable: Chapter 2 replay remains
@@ -135,6 +136,8 @@ def normalized_blocks(f):
 
 # Part 2 title dates from the private timeline; Chapter 1/year from the native
 # checkpoint. Year 1450 for later chapters is provisional until game-tested.
+PART2_TESTED = frozenset((1, 2, 3, 4, 6))
+PART2_UPPER_MOVEMENT = core.id_hash("行動範囲制限_上層")
 PART2_DATES = {1: (1, 1, 12, 0), 2: (2, 1, 12, 0), 3: (3, 1, 12, 0),
                4: (4, 3, 12, 0), 5: (4, 30, 9, 30), 6: (4, 30, 12, 0)}
 
@@ -201,7 +204,10 @@ def edited(f, chapter):
     info = validate(f)
     date = target(chapter, info.route, info.part)
     if info.part == 2:
-        return _edited_at_entry(f, chapter, 1450, date)
+        p = _edited_at_entry(f, chapter, 1450, date)
+        if chapter == 5:
+            p = repair_cai_part2_chapter5(core.SaveFile(p))
+        return p
     year = (THEODORA_YEARS[chapter] if info.route == 3 else
             ENTRY_YEARS[chapter] if info.route == 4 else 1449)
     p = _edited_at_entry(f, chapter, year, date)
@@ -241,3 +247,41 @@ def _edited_at_entry(f, chapter, year, date):
     if bytes(user) != after['GameUserData'] or check.chapter != chapter:
         raise story.StoryError('Unexpected player or flag changes; the chapter edit was refused.')
     return p
+
+
+def repair_cai_part2_chapter5(f):
+    """Provisional: the A30 access event rejects the observed upper restriction."""
+    info = validate(f)
+    if (info.route, info.part, info.chapter) != (1, 2, 5):
+        raise story.StoryError('The temple-access repair requires Cai Part 2 Chapter 5.')
+    return facilities.edited(f, {PART2_UPPER_MOVEMENT: True})
+
+
+def enter_cai_part2(f):
+    """Experimental direct entry; preserve Part 1 party, flags and world state.
+
+    This deliberately tests whether chapter entry suffices without importing the
+    native transition's flag changes. Native 1208 handoff/battle states remain
+    unsupported. The caller must opt its container into part-summary syncing.
+    """
+    info = validate(f)
+    if (info.route, info.part) != (1, 1):
+        raise story.StoryError('Start this experiment from a Cai Part 1 free-time or chapter-start save.')
+    original = normalized_blocks(f)
+    p = bytearray(f.payload)
+    for part_at, chapter_at, seq_at in ((info.header+13, info.header+14, info.header+45),
+                                       (info.user+4, info.user+5, info.user+81)):
+        p[part_at] = 2; p[chapter_at] = 1
+        struct.pack_into('<Q', p, seq_at, story.sequence(1, 1, 2))
+    result = core.SaveFile(_edited_at_entry(core.SaveFile(p), 1, 1450, PART2_DATES[1]))
+    after = normalized_blocks(result)
+    allowed = {'Header','GameUserData','GameSchedule','Calendar','GameRestartData'}
+    if original.keys() != after.keys() or any(original[n] != after[n] for n in original.keys()-allowed):
+        raise story.StoryError('Unexpected changes during Part 2 entry; no changes applied.')
+    expected = bytearray(original['GameUserData'])
+    expected[8:10] = bytes((2, 1))
+    struct.pack_into('<Q', expected, 85, story.sequence(1, 1, 2))
+    struct.pack_into('<Q', expected, 4+RESUME_OFFSET, CHECKPOINT_ID)
+    if expected != after['GameUserData']:
+        raise story.StoryError('Part 2 entry unexpectedly changed player data or flags.')
+    return bytearray(result.payload)

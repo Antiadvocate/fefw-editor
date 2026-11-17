@@ -32,7 +32,7 @@ def build(source, output):
     ready=[]
     for chapter in story.PART2_CHAPTERS:
         candidate=container.SaveFile(str(source))
-        candidate.payload=story_start.edited(f,chapter)
+        candidate.payload=story_start._edited_at_entry(f,chapter,1450,story_start.PART2_DATES[chapter])
         data=candidate.to_bytes()
         ready.append((chapter,data,bytes(candidate.payload)))
     output.mkdir(parents=True)

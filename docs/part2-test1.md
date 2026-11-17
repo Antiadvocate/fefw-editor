@@ -1,5 +1,8 @@
 # Cai Part 2 — Test 1
 
+Historical test instructions. Chapters 1–4/6 and editor checks passed; Chapter 5
+was blocked. See [Test 2](part2-test2.md) for the repair and conversion experiment.
+
 This test build enables **Cai Part 2 chapters 1–6**, all provisional. It works
 from a save already in Part 2. It does not convert Part 1 saves or enable other
 routes' Part 2 selectors. The existing Part 1 targets are unchanged.
