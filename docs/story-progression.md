@@ -16,11 +16,14 @@ in the player's tests. Direct Chapter 4 entry passed with the automatic Sewers
 prerequisite. Cai Obelisk use and full-campaign behavior remain untested.
 See [Cai/Tutorials Test 5 results](test-results-cai-tutorials-test5.md).
 
-**Dietrich Part 1** offers Chapters **1–12** as **Inferred — game test pending**.
-Four native checkpoints agree on the selector rule and early clocks; Chapters
-5–12 use timeline title dates. All entry years are 1449. Native checkpoints and
-successful exports do not establish that skipping chapters works in game.
-See [Dietrich evidence and Test 1](testing-story-dietrich-test1.md).
+**Dietrich Part 1** offers Chapters **1–12**. Chapters **1, 3, 4 and 8–12**
+passed short-session checks; all Test 1 UI checks passed. Chapters **2, 5, 6
+and 7** open but have reported progression blocks, shown individually in the
+picker. Chapter 1's battle/transition pass does not accept Chapter 2's rescue.
+See [Test 1 results](test-results-story-dietrich-test1.md) and
+[isolated Test 2 probes](testing-story-dietrich-test2.md). Experimental repairs
+are not applied by ordinary chapter editing. Dietrich Obelisk use remains
+untested. All entry years are 1449.
 
 For every supported Cai Chapter 3+ selection, the chapter action also enables
 **Functions → Area access → Sewers access (Cai)**. Both changes share one
@@ -56,7 +59,7 @@ The warning title remains **CAUTION - UNEXPECTED CONSEQUENCES POSSIBLE**. It
 retains the user's points about Leda Part 1, no previous unlock/unit grants,
 limited testing, the Obelisk Chamber and a fresh-directory backup. The Obelisk
 point is immediately above backup. Warning text follows the loaded route: Leda
-explains Chapter 1's exclusion and its tested scope; Cai explains the automatic Sewers exception and its accepted chapter tests; Dietrich states that every target awaits game testing. Changing route while either
+explains Chapter 1's exclusion and its tested scope; Cai explains the automatic Sewers exception and its accepted chapter tests; Dietrich identifies the eight passes and four blocked chapters. Changing route while either
 dialog is open requires reopening it. The picker never chooses a different route.
 
 ## What is changed

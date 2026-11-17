@@ -15,6 +15,8 @@ YU_PHAS = 0x65411bed
 YU_PHAS_GATE = 0x7d2c41eb
 
 CONDITIONS = {
+    '行動範囲制限_上層': 'Movement restricted: Dagsion upper area (separate from function unlock)',
+    '行動範囲制限_下層': 'Movement restricted: Dagsion lower area / port (separate from function unlock)',
     '拠点_カイ篇1部2章_行動制限3': 'Story restriction: Cai P1 Ch2, group 3',
     '拠点_カイ篇1部11章_行動制限2': 'Story restriction: Cai P1 Ch11, group 2',
     '拠点_カイ篇1部11章_行動制限3': 'Story restriction: Cai P1 Ch11, group 3',

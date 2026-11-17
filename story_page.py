@@ -27,9 +27,9 @@ def warning_points(route):
                 'Direct Chapter 4 entry passed with the Sewers fix. Editor-created Cai chapter files have not been tested through the Obelisk. Long term testing has not been carried out.',
                 *WARNING_POINTS[3:])
     if route == 2:
-        return ('This is a Dietrich Part 1 save. Chapters 1–12 are Inferred targets awaiting game tests.',
+        return ('This is a Dietrich Part 1 save. Chapters 1, 3, 4 and 8–12 passed short-session tests. Chapters 2, 5, 6 and 7 have known progression blocks.',
                 WARNING_POINTS[1],
-                'Four native checkpoints support the sequence rule and early dates. This does not establish that editor-created starts can be progressed. Dietrich progression and Obelisk use are untested.',
+                'Chapter 1 reaches Chapter 2, where a separate rescue block can occur. Chapter 5 stops at certification, Chapter 6 at Trading Company access, and Chapter 7 at Teach Secrets. Obelisk use and long term progression remain untested.',
                 *WARNING_POINTS[3:])
     raise story.StoryError('Unsupported story route.')
 
@@ -40,8 +40,18 @@ def evidence_note(route):
     if route == 1:
         return ('Cai Chapters 1–12 passed opening and progression tests, including direct Chapter 4 entry. Cai Chapter 3+ enables Sewers access. Entry resets the clock and internal restart state. Cai Obelisk use remains untested.')
     if route == 2:
-        return ('Dietrich Chapters 1–12: Inferred — game test pending. Entry resets the clock and internal restart state; party, tutorials and feature flags are preserved. Test Chapter 4 first, then Chapter 3.')
+        return ('Dietrich: eight chapter checks and all Test 1 UI checks passed. Chapters 2, 5, 6 and 7 remain blocked. Entry preserves party, tutorials and feature flags; experimental repairs are separate test saves.')
     raise story.StoryError('Unsupported story route.')
+
+
+def chapter_evidence(route, chapter):
+    if route == 2 and chapter in story_start.DIETRICH_BLOCKERS:
+        return 'Blocked — ' + story_start.DIETRICH_BLOCKERS[chapter]
+    if route == 2 and chapter == 1:
+        return 'Battle and transition passed; Chapter 2 separately blocked'
+    if chapter in story_start.TESTED_BY_ROUTE[route]:
+        return 'Game-tested opening and progression'
+    return 'Inferred — game test pending'
 
 
 class StoryPageMixin:
@@ -77,7 +87,7 @@ class StoryPageMixin:
         note = f'\n{story.chapter_filename(pending.route, pending.chapter)} will be created on Save.' if pending else ''
         evidence = {4: 'Chapters 2–12 game-tested; Chapter 1 unavailable.',
                     1: 'Chapters 1–12 game-tested; Chapter 3+ enables Sewers access.',
-                    2: 'Chapters 1–12 Inferred — game test pending.'}[info.route]
+                    2: 'Chapters 1, 3, 4 and 8–12 game-tested; 2, 5, 6 and 7 have known blocks.'}[info.route]
         self.story_status.configure(text=info.label + '\n' + evidence + note)
         self.story_button.state(['!disabled'])
 
@@ -142,7 +152,7 @@ class StoryPageMixin:
         frame = ttk.Frame(win, padding=18); frame.pack(fill='both', expand=True)
         ttk.Label(frame, text='Choose a chapter start', style='CardH3.TLabel').pack(anchor='w')
         limit = {4: 'Chapter 1 is unavailable.', 1: 'Cai Chapter 3+ also enables Sewers access.',
-                 2: 'Dietrich targets are Inferred; party, tutorials and feature flags are preserved.'}[info.route]
+                 2: 'Dietrich Chapters 2, 5, 6 and 7 have known progression blocks. Party, tutorials and feature flags are preserved.'}[info.route]
         ttk.Label(frame, text='Selected save only. Apply stages the chapter start and date; Ctrl+S saves and Ctrl+Z undoes. ' + limit,
                   wraplength=625, justify='left').pack(anchor='w', pady=(4, 10))
         buttons = ttk.Frame(frame); buttons.pack(side='bottom', fill='x', pady=(12, 0))
@@ -161,10 +171,7 @@ class StoryPageMixin:
         tree.configure(yscrollcommand=scroll.set)
         tree.grid(row=0, column=0, sticky='nsew'); scroll.grid(row=0, column=1, sticky='ns')
         for chapter in chapters:
-            if chapter in story_start.TESTED_BY_ROUTE[info.route]:
-                text = 'Game-tested opening and progression'
-            else:
-                text = 'Inferred — game test pending'
+            text = chapter_evidence(info.route, chapter)
             tree.insert('', 'end', iid=str(chapter), text=f'Chapter {chapter}', values=(text,))
         current = str(info.chapter if info.chapter in chapters else chapters[0])
         tree.selection_set(current); tree.see(current); tree.focus(current)

@@ -1,5 +1,10 @@
 # Dietrich story progression — Test 1
 
+**Results received:** eight chapter checks and all UI checks passed. Chapters
+2, 5, 6 and 7 remain blocked; see [results](test-results-story-dietrich-test1.md).
+Use [Test 2](testing-story-dietrich-test2.md) for the focused retries. The original
+Test 1 instructions and their pre-test evidence status are preserved below.
+
 This kit adds Dietrich Part 1 Chapters 1–12 as **Inferred — game test pending**.
 Cai's chapter/UI/tutorial results are already accepted. No further tutorial
 screenshots are needed unless an unresolved title appears during normal play.

@@ -63,7 +63,7 @@ The game data version was not separately reported.
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
 | 5 | Boons | All 31 groups / 81 tiers editable; broader mappings labelled Inferred | [BEDIT results](test-results-boon-editing-2026-11-15.md): +16 EXP Off / +17 On. [WEDIT-01–07 passed](test-results-weapon-boon-2026-11-15.md): discount Off/On persists in returned saves; player reports earlier 10% prices reproduced and backups through .bak4 |
-| 6 | Story | Leda P1 starts 2–12 and Cai P1 starts 1–12 accepted; Dietrich P1 starts 1–12 Inferred; route-bound chapter files on Save | [Cai/Tutorials Test 5](test-results-cai-tutorials-test5.md) passed; [Dietrich Test 1](testing-story-dietrich-test1.md) awaits game results |
+| 6 | Story | Leda P1 starts 2–12 and Cai P1 starts 1–12 accepted; Dietrich P1 starts 1–12 with eight passes and four blocks; route-bound chapter files on Save | [Cai/Tutorials Test 5](test-results-cai-tutorials-test5.md) passed; [Dietrich Test 1 results](test-results-story-dietrich-test1.md): 1/3/4/8–12 and UI pass; 2/5/6/7 blocked |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
 test report before being called game-tested. Other routes are not covered by
@@ -421,3 +421,17 @@ recovered data and the issue's linked bonds reference. Distinguish a level earne
 from points from a conversation/unlock state if the save stores them separately.
 Define maximum-level and unknown-state displays; preserve existing point editing
 and Undo/Redo. This item is queued, not implemented or game-tested.
+
+
+## Dietrich Test 1 accepted scope and Test 2 — 2026-11-17
+
+Eight chapter checks and all UI checks passed. Chapters 2, 5, 6 and 7 have
+reported progression blocks. All 20 returned captures validate; no Chapter 7
+return was possible. The picker now distinguishes blocked chapters from passes.
+
+[The investigation](test-results-story-dietrich-test1.md) identifies a rescue
+proximity event with retained history, separate upper/lower movement restrictions
+left over from skipped story steps, and absent teachable-secret permissions.
+[The next kit](testing-story-dietrich-test2.md) isolates these hypotheses without
+adding recruits or changing automatic chapter preparation. Broader HubData reset
+and an Esmerelda class change are labelled fallback experiments only.

@@ -24,12 +24,15 @@ DATES = ((2,10,9),(2,10,14),(2,11,12),(3,8,12),(4,11,6),(5,4,12),
 
 
 class DietrichStoryTest(unittest.TestCase):
-    def test_native_sequence_anchors_and_all_inferred_targets(self):
+    def test_native_sequence_anchors_and_reported_target_evidence(self):
         self.assertEqual(tuple(story.sequence(n,2) for n in range(1,5)),NATIVE_IDS)
         self.assertEqual(start.TARGETS[2],tuple(range(1,13)))
-        self.assertEqual(start.TESTED_BY_ROUTE[2],frozenset())
-        self.assertIn('Inferred',story_page.warning_points(2)[0])
-        self.assertIn('game test pending',story_page.evidence_note(2))
+        self.assertEqual(start.TESTED_BY_ROUTE[2],frozenset((1,3,4,8,9,10,11,12)))
+        self.assertIn('known progression blocks',story_page.warning_points(2)[0])
+        self.assertIn('remain blocked',story_page.evidence_note(2))
+        for chapter in (2,5,6,7):
+            self.assertTrue(story_page.chapter_evidence(2,chapter).startswith('Blocked'))
+        self.assertIn('Chapter 2 separately blocked',story_page.chapter_evidence(2,1))
         self.assertEqual(story.chapter_filename(2,12),'Chapter_Dit_1_12')
         for chapter in (0,13,True,'4'):
             with self.assertRaises(core.SaveError): start.edited(StoryHarness(2).core_of(),chapter)

@@ -4,7 +4,8 @@ Leda Chapters 2–12 have short-session game evidence. Chapter 1 is unavailable:
 its opening plays but its first objective cannot be progressed.
 No private captures or GameData are required at runtime.
 Cai Part 1 Chapters 1–12 passed short-session game tests.
-Dietrich Part 1 Chapters 1–12 are inferred targets awaiting game tests.
+Dietrich Chapters 1, 3, 4 and 8–12 passed short-session tests. Chapters 2, 5,
+6 and 7 open but have reported progression blocks under investigation.
 """
 from datetime import datetime
 import struct
@@ -31,7 +32,14 @@ DIETRICH_DATES = {1: (2, 10, 9, 0), 2: (2, 10, 14, 0), 3: (2, 11, 12, 0),
                   7: (5, 29, 20, 0), 8: (6, 21, 12, 0), 9: (8, 10, 12, 0),
                   10: (9, 29, 12, 0), 11: (10, 5, 12, 0), 12: (11, 4, 12, 0)}
 TARGETS = {4: CHAPTERS, 1: tuple(CAI_DATES), 2: tuple(DIETRICH_DATES)}
-TESTED_BY_ROUTE = {4: TESTED, 1: frozenset(CAI_DATES), 2: frozenset()}
+TESTED_BY_ROUTE = {4: TESTED, 1: frozenset(CAI_DATES),
+                   2: frozenset((1, 3, 4, 8, 9, 10, 11, 12))}
+DIETRICH_BLOCKERS = {
+    2: 'Opening works; rescue proximity event blocked',
+    5: 'Training works; certification objective blocked',
+    6: 'Opening works; Trading Company access blocked',
+    7: 'Opening works; Teach Secrets selection blocked',
+}
 RESUME_OFFSET = 58
 FREE_TIME_ID = 0xd8588d186b3f9502
 CHECKPOINT_ID = 0xa2f3e9a7ff461708
