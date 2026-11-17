@@ -548,7 +548,48 @@ def copy_unit_in(payload: bytearray, origin, uid: int) -> bool:
     if u is None:
         return False
     payload[:] = core.copy_unit(src, u, dst)
+    renumber_unit(payload, -1)
     return True
+
+
+def renumber_unit(payload: bytearray, index: int) -> int | None:
+    """Give unit ``index`` of the pool a unit number no other unit uses.
+
+    Every unit carries a number the game identifies it by (Cai 1, Peter 7, ...;
+    battalions and mounts name their owner by it).  A unit copied in from another
+    slot brings the number it had *there*, which another unit here may already
+    own - the game then treats both as the same unit: selecting one activates the
+    other (issue #33).  Returns the new number, or None if it was already unique.
+    """
+    f = core.SaveFile(bytes(payload))
+    units = f.units()
+    u = units[index]
+    g = core.gear(f, u)
+    if g is None:
+        return None
+    taken = set()
+    for o in units:
+        if o.start == u.start:
+            continue
+        og = core.gear(f, o)
+        if og is not None:
+            taken.add(og.unit_number)
+    st = core.party_store(f)
+    if st:
+        taken.update(l.owner for l in core.legions(f, st[2]) if l.owner != g.unit_number)
+    if g.unit_number not in taken:
+        return None
+    new = next(n for n in range(1, 256) if n not in taken)
+    p = f.payload
+    p[core.tail_at(p, u.start, u.end) - 9] = new
+    if g.ride or g.legion:
+        ride = g.ride and core.Ride(g.ride.id, new, g.ride.serial, g.ride.flag, g.ride.date,
+                                    g.ride.name, g.ride.allies, g.ride.last)
+        legion = g.legion and core.Legion(g.legion.row, new, g.legion.id)
+        g2 = core.gear(f, u)
+        p[:] = core.with_gear(f, u, g2, ride, legion)
+    payload[:] = f.payload
+    return new
 
 
 def remove_unit(payload: bytearray, uid: int) -> bool:
