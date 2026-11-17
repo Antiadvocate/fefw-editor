@@ -1177,8 +1177,10 @@ class App(AdvancedMixin, tk.Tk):
         ctl = ttk.Frame(left, style="Card.TFrame")
         ctl.pack(side="bottom", fill="x", pady=(10, 0))
         ttk.Label(left, style="CardFaint.TLabel", wraplength=420, justify="left",
-                  text="Every item has its own convoy slot. Add item… puts a stack in it and "
-                       "Remove empties a slot; the list keeps its slot count and everything "
+                  text="Every stackable item has its own convoy slot. Add item… puts a stack in it; "
+                       "gear that doesn't stack (weapons, tomes, shields, potions with "
+                       "several uses) gets one slot per copy, and Add refuses if they "
+                       "won't fit. Remove empties a slot; the list keeps its slot count and everything "
                        "after it is moved safely. All materials… stocks every ore, meat, "
                        "fish and plant at one quantity."
                   ).pack(side="bottom", anchor="w", pady=(8, 0))
@@ -2589,6 +2591,22 @@ class App(AdvancedMixin, tk.Tk):
         qty = self._qty()
         if qty is None:
             return
+        # gear (weapons, tomes, shields…) never stacks: its quantity is the number of
+        # slots holding a copy, so those rows are handled by adding/removing slots
+        gear = sorted({self._conv_row(s).iid for s in slots
+                       if self._conv_row(s) and not layer.stacks(self._conv_row(s).iid)})
+        if gear:
+            self.push_undo()
+            for iid in gear:
+                if not self._core_edit(
+                        lambda f, i=iid: (layer.set_convoy_copies(f.payload, i, qty)
+                                          and f.payload) or None,
+                        f"Convoy: {item_label(iid)} ×{qty} (one slot per copy)"):
+                    break
+            slots = [s for s in slots if self._conv_row(s) and layer.stacks(self._conv_row(s).iid)]
+            if not slots:
+                self.refresh_convoy()
+                return
         n = self._convoy_edit(slots, lambda p, r: set_convoy_qty(p, r, qty))
         self.refresh_convoy(select=slots)
         self.flash(f"Quantity → {qty} on {len(slots)} row(s)" + (f" in {n} saves" if n > 1 else ""))

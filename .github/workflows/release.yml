@@ -50,7 +50,7 @@ jobs:
         run: >
           pyinstaller --noconfirm --onefile --windowed --name "FEFW Save Editor"
           --add-data "unit_ids.json;." --add-data "item_ids.json;." --add-data "job_ids.json;."
-          --add-data "supports.json;." --add-data "support_points.json;."
+          --add-data "supports.json;." --add-data "support_points.json;." --add-data "item_stack.json;."
           --add-data "flag_names.json;." --add-data "skill_ids.json;." --add-data "map_spots.json;."
           --add-data "tutorial_names.json;."
           --add-data "fast_travel_names.json;."
@@ -114,7 +114,7 @@ jobs:
         run: >
           pyinstaller --noconfirm --onefile --windowed --name fefw-save-editor
           --add-data "unit_ids.json:." --add-data "item_ids.json:." --add-data "job_ids.json:."
-          --add-data "supports.json:." --add-data "support_points.json:."
+          --add-data "supports.json:." --add-data "support_points.json:." --add-data "item_stack.json:."
           --add-data "flag_names.json:." --add-data "skill_ids.json:." --add-data "map_spots.json:."
           --add-data "tutorial_names.json:."
           --add-data "fast_travel_names.json:."
