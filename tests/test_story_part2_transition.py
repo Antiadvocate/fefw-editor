@@ -32,21 +32,21 @@ class Part2TransitionTest(unittest.TestCase):
         f.payload[i.header+20:i.header+22]=b'\x12\x08'
         with self.assertRaises(core.SaveError):start.enter_cai_part2(f)
 
-    def test_opt_in_is_required_and_only_cai_part_one_two_allowed(self):
+    def test_opt_in_is_required_and_route_and_part_bounds_are_preserved(self):
         original=fixture(part=1);box=box_for(original)
         converted=core.SaveFile(start.enter_cai_part2(original));i=story.read(converted)
         with self.assertRaises(core.SaveError):story.check_outer(box.raw,i)
-        story.check_outer(box.raw,i,allow_cai_part_change=True)
+        story.check_outer(box.raw,i,allow_part_change=True)
         for at,value in ((40,4),(41,3),(36,14)):
             raw=bytearray(box.raw);raw[at]=value
-            with self.assertRaises(core.SaveError):story.check_outer(raw,i,allow_cai_part_change=True)
+            with self.assertRaises(core.SaveError):story.check_outer(raw,i,allow_part_change=True)
 
     def test_ui_save_undo_redo_keeps_outer_part_consistent_and_slot_isolated(self):
         a=StoryHarness(1);a.sv=box_for(fixture(part=1));original=bytes(a.sv.payload)
         raw=bytes(a.sv.raw)
-        a.apply_cai_part2_entry();converted=bytes(a.sv.payload)
+        a.apply_part2_entry();converted=bytes(a.sv.payload)
         self.assertNotEqual(original,converted);self.assertEqual(a.sv.raw,raw)
-        self.assertTrue(a.sv._allow_cai_part_transition)
+        self.assertTrue(a.sv._allow_part_transition)
         with tempfile.TemporaryDirectory() as tmp:
             path=Path(tmp)/'Auto';a.sv.path=str(path)
             for part,action in ((2,None),(1,a.undo),(2,a.redo)):
@@ -60,7 +60,7 @@ class Part2TransitionTest(unittest.TestCase):
             plan=story_files.prepare({str(path):a.sv},{str(path)})[str(path)]
             self.assertEqual(Path(plan.target).name,'Chapter_Kai_2_2')
         other=StoryHarness(1).sv;a.sv=other;a.undo();a.redo()
-        self.assertFalse(getattr(other,'_allow_cai_part_transition',False))
+        self.assertFalse(getattr(other,'_allow_part_transition',False))
 
     def test_chapter5_repair_changes_only_the_upper_restriction(self):
         f=core.SaveFile(start.edited(fixture(),5))

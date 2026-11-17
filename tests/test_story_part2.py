@@ -54,7 +54,7 @@ class Part2Test(unittest.TestCase):
         self.assertEqual(f.payload, before)
 
     def test_unsupported_routes_contexts_and_targets_refused(self):
-        for route, part in ((2,2),(3,2),(4,2),(9,2),(1,3)):
+        for route, part in ((9,2),(1,3)):
             with self.assertRaises(core.SaveError): start.edited(fixture(route,part),1)
         for value in (0,7,True,'1',None):
             with self.assertRaises(core.SaveError): start.edited(fixture(),value)

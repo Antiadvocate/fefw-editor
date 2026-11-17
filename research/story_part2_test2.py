@@ -34,7 +34,7 @@ def build(part1, part2, blocked, output):
         box=container.SaveFile(str(paths[key]));original=core.SaveFile(box.payload)
         before=start.normalized_blocks(original)
         box.payload=edit(original)
-        box._allow_cai_part_transition=conversion
+        box._allow_part_transition=conversion
         data=box.to_bytes();after=start.normalized_blocks(core.SaveFile(box.payload))
         allowed={'GameUserData'} if name.startswith('05A') else {
             'Header','GameUserData','GameSchedule','Calendar','GameRestartData'}

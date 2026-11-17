@@ -1,4 +1,4 @@
-"""Live story validation for Part 1 and provisional Cai Part 2 chapter tests.
+"""Live story validation for Part 1 and provisional Part 2 chapter tests.
 
 Production chapter-entry targets and acceptance live in story_start. The low-level
 sequence writer retains Chapter 1 for reproducing historical failed probes.
@@ -22,7 +22,9 @@ class StoryError(core.SaveError):
     pass
 
 
-PART2_PREFIX = 0x6462d9c33a114480  # Reverse-FNV of captured Cai checkpoint + inferred 1_1 suffix.
+# Shared Timeline_Part2 (戦争篇); target IDs captured/tested on Cai. Reuse for
+# other routes is inferred until their game tests pass; route identity is retained.
+PART2_PREFIX = 0x6462d9c33a114480
 PART2_CHAPTERS = tuple(range(1, 7))
 
 
@@ -30,8 +32,8 @@ def sequence(chapter, route=4, part=1):
     if type(part) is not int or part not in (1, 2):
         raise StoryError('Unsupported story part.')
     if part == 2:
-        if type(route) is not int or route != 1 or type(chapter) is not int or chapter not in PART2_CHAPTERS:
-            raise StoryError('Provisional Part 2 editing supports Cai chapters 1–6 only.')
+        if type(route) is not int or route not in PREFIXES or type(chapter) is not int or chapter not in PART2_CHAPTERS:
+            raise StoryError('Provisional Part 2 editing supports the four main routes, chapters 1–6 only.')
         value = PART2_PREFIX
         for byte in f'{chapter}_1'.encode('ascii'):
             value = ((value * 0x100000001b3) & 0xffffffffffffffff) ^ byte
@@ -118,21 +120,21 @@ def require_leda(f):
 
 def require_supported(f):
     info = read(f)
-    if (info.route, info.part) == (1, 2) and info.chapter in PART2_CHAPTERS:
+    if info.route in PREFIXES and info.part == 2 and info.chapter in PART2_CHAPTERS:
         return info
     if info.route not in PREFIXES or info.part != 1 or info.chapter not in CHAPTERS:
-        raise StoryError(f'{info.label}. Story editing supports the four Part 1 routes and provisional Cai Part 2 chapters 1–6.')
+        raise StoryError(f'{info.label}. Story editing supports the four Part 1 routes and provisional Part 2 chapters 1–6.')
     return info
 
 
-def check_outer(raw, info, *, allow_cai_part_change=False):
-    """Require matching route/part, except an explicitly staged Cai 1↔2 edit.
+def check_outer(raw, info, *, allow_part_change=False):
+    """Require matching route/part, except an explicitly staged same-route Part 1↔2 edit.
 
     The opt-in belongs to the selected container session and permits Undo after
     saving. Ordinary opens and unrelated saves still require exact agreement.
     """
-    eligible_change = (allow_cai_part_change is True and len(raw) >= 81
-                       and raw[40] == info.route == 1
+    eligible_change = (allow_part_change is True and len(raw) >= 81
+                       and raw[40] == info.route and info.route in PREFIXES
                        and raw[41] in (1, 2) and info.part in (1, 2))
     if len(raw) < 81 or raw[36] != 15 or (tuple(raw[40:42]) != (info.route, info.part) and not eligible_change):
         raise StoryError('The outer save summary disagrees with the live route/part.')
@@ -153,7 +155,7 @@ def edited(f, chapter, *, route=4):
     return p
 
 
-def sync_outer_summary(payload, out, *, allow_cai_part_change=False):
+def sync_outer_summary(payload, out, *, allow_part_change=False):
     """Derive chapter, sequence, entry state and clock mirrors when serializing.
 
 Only known, consistent supported story layouts are eligible. Other routes/formats and
@@ -162,7 +164,7 @@ at edit time; the payload in Undo history remains authoritative.
 """
     try:
         info = require_supported(core.SaveFile(payload))
-        check_outer(out, info, allow_cai_part_change=allow_cai_part_change)
+        check_outer(out, info, allow_part_change=allow_part_change)
     except (core.SaveError, IndexError, struct.error):
         return
     out[41] = info.part

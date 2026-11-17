@@ -47,8 +47,8 @@ def prepare(files, dirty):
         chapter = request.chapter
         f = core.SaveFile(sv.payload)
         info = story_start.validate(f)
-        story.check_outer(sv.raw, info, allow_cai_part_change=
-                          getattr(sv, "_allow_cai_part_transition", False))
+        story.check_outer(sv.raw, info, allow_part_change=
+                          getattr(sv, "_allow_part_transition", False))
         # Reject stale requests after a snapshot restore or unrelated story edit.
         if (info.route != request.route or info.part != request.part or info.chapter != chapter
                 or bytes(story_start.edited(f, chapter)) != bytes(f.payload)):

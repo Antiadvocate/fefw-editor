@@ -1,4 +1,4 @@
-"""Chapter entry for tested Part 1 routes and provisional Cai Part 2.
+"""Chapter entry for tested Part 1 routes and provisional Part 2.
 
 Leda Chapters 2–12 have short-session game evidence. Chapter 1 is unavailable:
 its opening plays but its first objective cannot be progressed.
@@ -7,6 +7,8 @@ Cai Part 2 Chapters 1–6 passed opening and next-battle checks.
 Chapter 5 upper-city movement repair passed both resumed and fresh entry.
 Part 1 Chapter 4-to-Part 2 Chapter 1 entry passed short-session checks;
 other conversion starting states and long-term progression remain untested.
+Leda, Dietrich and Theodora Part 2 use the shared timeline targets and Chapter 5
+repair provisionally. Their game checks are pending.
 Cai Part 1 Chapters 1–12 passed short-session game tests.
 Dietrich Chapters 3–12 passed short-session checks, including integrated
 prerequisites for 5–7. Chapters 1/2 are unavailable: Chapter 2 replay remains
@@ -136,8 +138,9 @@ def normalized_blocks(f):
 
 
 # Part 2 title dates from the private timeline; Chapter 1/year from the native
-# checkpoint. Chapters 1–6 subsequently passed short-session game checks.
-PART2_TESTED = frozenset(range(1, 7))
+# checkpoint. Cai Chapters 1–6 subsequently passed short-session game checks.
+PART2_TESTED = frozenset(range(1, 7))  # Cai only.
+PART2_TESTED_BY_ROUTE = {1: PART2_TESTED, 2: frozenset(), 3: frozenset(), 4: frozenset()}
 PART2_UPPER_MOVEMENT = core.id_hash("行動範囲制限_上層")
 PART2_DATES = {1: (1, 1, 12, 0), 2: (2, 1, 12, 0), 3: (3, 1, 12, 0),
                4: (4, 3, 12, 0), 5: (4, 30, 9, 30), 6: (4, 30, 12, 0)}
@@ -146,7 +149,7 @@ PART2_DATES = {1: (1, 1, 12, 0), 2: (2, 1, 12, 0), 3: (3, 1, 12, 0),
 def chapters_for(route, part=1):
     if type(part) is not int or type(route) is not int:
         raise story.StoryError('Unsupported story route or part.')
-    if part == 2 and route == 1:
+    if part == 2 and route in story.PREFIXES:
         return story.PART2_CHAPTERS
     if part == 1 and route in TARGETS:
         return TARGETS[route]
@@ -207,7 +210,7 @@ def edited(f, chapter):
     if info.part == 2:
         p = _edited_at_entry(f, chapter, 1450, date)
         if chapter == 5:
-            p = repair_cai_part2_chapter5(core.SaveFile(p))
+            p = repair_part2_chapter5(core.SaveFile(p))
         return p
     year = (THEODORA_YEARS[chapter] if info.route == 3 else
             ENTRY_YEARS[chapter] if info.route == 4 else 1449)
@@ -250,15 +253,15 @@ def _edited_at_entry(f, chapter, year, date):
     return p
 
 
-def repair_cai_part2_chapter5(f):
-    """Provisional: the A30 access event rejects the observed upper restriction."""
+def repair_part2_chapter5(f):
+    """Shared A30 gate repair; tested on Cai, inferred for the other routes."""
     info = validate(f)
-    if (info.route, info.part, info.chapter) != (1, 2, 5):
-        raise story.StoryError('The temple-access repair requires Cai Part 2 Chapter 5.')
+    if info.route not in story.PREFIXES or (info.part, info.chapter) != (2, 5):
+        raise story.StoryError('The temple-access repair requires Part 2 Chapter 5.')
     return facilities.edited(f, {PART2_UPPER_MOVEMENT: True})
 
 
-def enter_cai_part2(f):
+def enter_part2(f):
     """Experimental direct entry; preserve Part 1 party, flags and world state.
 
     This deliberately tests whether chapter entry suffices without importing the
@@ -266,14 +269,14 @@ def enter_cai_part2(f):
     unsupported. The caller must opt its container into part-summary syncing.
     """
     info = validate(f)
-    if (info.route, info.part) != (1, 1):
-        raise story.StoryError('Start this experiment from a Cai Part 1 free-time or chapter-start save.')
+    if info.route not in story.PREFIXES or info.part != 1:
+        raise story.StoryError('Start this experiment from a supported Part 1 free-time or chapter-start save.')
     original = normalized_blocks(f)
     p = bytearray(f.payload)
     for part_at, chapter_at, seq_at in ((info.header+13, info.header+14, info.header+45),
                                        (info.user+4, info.user+5, info.user+81)):
         p[part_at] = 2; p[chapter_at] = 1
-        struct.pack_into('<Q', p, seq_at, story.sequence(1, 1, 2))
+        struct.pack_into('<Q', p, seq_at, story.sequence(1, info.route, 2))
     result = core.SaveFile(_edited_at_entry(core.SaveFile(p), 1, 1450, PART2_DATES[1]))
     after = normalized_blocks(result)
     allowed = {'Header','GameUserData','GameSchedule','Calendar','GameRestartData'}
@@ -281,8 +284,22 @@ def enter_cai_part2(f):
         raise story.StoryError('Unexpected changes during Part 2 entry; no changes applied.')
     expected = bytearray(original['GameUserData'])
     expected[8:10] = bytes((2, 1))
-    struct.pack_into('<Q', expected, 85, story.sequence(1, 1, 2))
+    struct.pack_into('<Q', expected, 85, story.sequence(1, info.route, 2))
     struct.pack_into('<Q', expected, 4+RESUME_OFFSET, CHECKPOINT_ID)
     if expected != after['GameUserData']:
         raise story.StoryError('Part 2 entry unexpectedly changed player data or flags.')
     return bytearray(result.payload)
+
+
+def enter_cai_part2(f):
+    """Keep historical Cai-only research probes bounded to their original route."""
+    if validate(f).route != 1:
+        raise story.StoryError('This historical probe requires Cai.')
+    return enter_part2(f)
+
+
+def repair_cai_part2_chapter5(f):
+    """Keep the original Cai-only repair probe reproducible."""
+    if validate(f).route != 1:
+        raise story.StoryError('This historical probe requires Cai.')
+    return repair_part2_chapter5(f)

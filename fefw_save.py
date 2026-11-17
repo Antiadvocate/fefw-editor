@@ -260,8 +260,8 @@ class SaveFile:
             out[38] = st[2] & 0xFF          # mode first
             out[39] = st[1] & 0xFF          # then difficulty
         import story
-        story.sync_outer_summary(payload, out, allow_cai_part_change=
-                                 getattr(self, "_allow_cai_part_transition", False))
+        story.sync_outer_summary(payload, out, allow_part_change=
+                                 getattr(self, "_allow_part_transition", False))
         struct.pack_into("<I", out, 0x100, len(out) - 0x104)
         struct.pack_into("<I", out, 0x104, MAGIC)
         struct.pack_into("<I", out, 0x108, len(out) - self.zstd_offset)

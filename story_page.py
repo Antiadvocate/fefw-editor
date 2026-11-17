@@ -20,8 +20,14 @@ EVIDENCE_NOTE = ('Chapters 2–12 passed opening and next-story-beat tests. Edit
 
 def warning_points(route, part=1):
     if part == 2:
+        if route not in story.PREFIXES:
+            raise story.StoryError('Part 2 supports the four main routes only.')
         if route != 1:
-            raise story.StoryError('Only Cai Part 2 has provisional targets.')
+            return (f'{story.ROUTES[route]} Part 2 Chapters 1–6 are inferred from the shared Part 2 timeline and Cai tests. This route has not been game-tested.',
+                    'Chapter 5 clears the upper-city movement restriction using the repair tested on Cai. Other route-specific prerequisites may still block progress.',
+                    'Party, items and prior progression are retained. Missing units, rewards, facilities and map unlocks are not granted. Entry, Obelisk loading and long-term progression need testing.',
+                    f'This does not create the separate Part_{story.FILE_CODES[route]}_2 handoff file. Optional chapter files are different.',
+                    *WARNING_POINTS[3:])
         return ('Cai Part 2 Chapters 1–6 passed opening and next-battle checks from a natural Part 2 baseline.',
                 'Chapter 5 enables upper-city movement to reach Dagda’s temple. Both repairing the blocked save and entering the chapter afresh passed.',
                 'Separate conversion from Cai Part 1 Chapter 4 to Part 2 Chapter 1 passed its opening and next-battle checks. Other starting states, Obelisk loading and long-term progression remain untested. Party and prior progression are retained; missing prerequisites can still block objectives.',
@@ -48,6 +54,8 @@ def warning_points(route, part=1):
 
 def evidence_note(route, part=1):
     if part == 2:
+        if route != 1:
+            return f'{story.ROUTES[route]} Part 2 Chapters 1–6: inferred from the shared timeline; game tests pending. Chapter 5 applies the Cai-tested access repair. Entry from Part 1, Obelisk loading and long-term progression are untested.'
         return 'Cai only: Chapters 1–6, Chapter 5 repair and editor checks passed. Part 1 Chapter 4 → Part 2 Chapter 1 passed short-session checks. Obelisk loading, other conversion starting states and long-term progression remain untested.'
     if route == 4:
         return EVIDENCE_NOTE
@@ -62,7 +70,7 @@ def evidence_note(route, part=1):
 
 def chapter_evidence(route, chapter, part=1):
     if part == 2:
-        return ('Game-tested opening and progression from native Part 2' if chapter in story_start.PART2_TESTED
+        return ('Game-tested opening and progression from native Part 2' if chapter in story_start.PART2_TESTED_BY_ROUTE.get(route, ())
                 else 'Inferred — game test pending')
     if route == 3 and chapter in story_start.THEODORA_REPAIRS:
         return story_start.THEODORA_REPAIRS[chapter]
@@ -84,8 +92,8 @@ class StoryPageMixin:
         self.story_button = ttk.Button(card, text='Story progression…',
                                        command=self.open_story_progression)
         self.story_button.pack(side='right', padx=(12, 0))
-        self.part2_button = ttk.Button(card, text='Try Cai Part 2 entry…',
-                                      command=self.open_cai_part2_entry)
+        self.part2_button = ttk.Button(card, text='Try Part 2 entry…',
+                                      command=self.open_part2_entry)
         self.part2_button.pack(side='right', padx=(12, 0))
         ttk.Label(card, text='Story progression · Experimental', style='CardH3.TLabel').pack(anchor='w')
         self.story_status = ttk.Label(card, style='CardMuted.TLabel', wraplength=690, justify='left')
@@ -99,17 +107,17 @@ class StoryPageMixin:
         if hasattr(self, 'part2_button'):
             self.part2_button.state(['disabled'])
         if not self.sv:
-            self.story_status.configure(text='Open a supported Part 1 save or a Cai Part 2 save (provisional).')
+            self.story_status.configure(text='Open a supported Part 1 save or a supported Part 2 save (provisional).')
             return
         route = layer.route_info(self.sv.payload)
         label = f'{route[0]} · Part {route[1]} · Chapter {route[2]}\n' if route else ''
-        if route and (route[0], route[1]) not in (('Leda', 1), ('Cai', 1), ('Dietrich', 1), ('Theodora', 1), ('Cai', 2)):
-            self.story_status.configure(text=label + 'Read-only. Supported: the four Part 1 routes and provisional Cai Part 2.')
+        if route and (route[0], route[1]) not in (('Leda', 1), ('Cai', 1), ('Dietrich', 1), ('Theodora', 1), ('Cai', 2), ('Leda', 2), ('Dietrich', 2), ('Theodora', 2)):
+            self.story_status.configure(text=label + 'Read-only. Supported: the four Part 1 routes and provisional Part 2 for those routes.')
             return
         try:
             info = story_start.validate(self.core_of())
-            story.check_outer(self.sv.raw, info, allow_cai_part_change=
-                              getattr(self.sv, "_allow_cai_part_transition", False))
+            story.check_outer(self.sv.raw, info, allow_part_change=
+                              getattr(self.sv, "_allow_part_transition", False))
         except core.SaveError as exc:
             self.story_status.configure(text=label + str(exc)); return
         pending = getattr(self.sv, '_pending_story_chapter', None)
@@ -119,24 +127,24 @@ class StoryPageMixin:
                     2: 'Chapters 3–12 game-tested, including direct entry for 5/6. Chapters 1/2 unavailable because of the Chapter 2 rescue block.',
                     3: 'Chapters 1–12 passed; targeted repairs for 4/6/8/9. Chapter 6 uses alternate traversal.'}[info.route]
         if info.part == 2:
-            evidence = 'Chapters 1–6 passed, including the Chapter 5 upper-city movement repair.'
-        if info.part == 2 and getattr(self.sv, '_allow_cai_part_transition', False):
+            evidence = evidence_note(info.route, 2)
+        if info.part == 2 and getattr(self.sv, '_allow_part_transition', False):
             evidence += ' This session used experimental Part 1-to-2 entry.'
         self.story_status.configure(text=info.label + '\n' + evidence + note)
         self.story_button.state(['!disabled'])
-        if hasattr(self, 'part2_button') and (info.route, info.part) == (1, 1):
+        if hasattr(self, 'part2_button') and info.route in story.PREFIXES and info.part == 1:
             self.part2_button.state(['!disabled'])
 
     def _story_ready(self):
         if not self.sv:
-            self.flash('Open a supported Part 1 save or a Cai Part 2 save first.', 'warn'); return False
+            self.flash('Open a supported Part 1 save or a supported Part 2 save first.', 'warn'); return False
         if self.mirror.get():
             self.flash('Turn off “Also edit this route’s other saves” before editing story progression.', 'warn')
             return False
         try:
             info = story_start.validate(core.SaveFile(self.sv.payload))
-            story.check_outer(self.sv.raw, info, allow_cai_part_change=
-                              getattr(self.sv, "_allow_cai_part_transition", False))
+            story.check_outer(self.sv.raw, info, allow_part_change=
+                              getattr(self.sv, "_allow_part_transition", False))
         except core.SaveError as exc:
             self.flash(str(exc), 'error'); return False
         return True
@@ -196,7 +204,7 @@ class StoryPageMixin:
                  2: 'Dietrich Chapters 1/2 are unavailable because of the Chapter 2 rescue block. Chapters 5–7 apply targeted prerequisites; party and tutorials are preserved.',
                  3: 'Theodora 4/6/8/9 apply targeted access repairs. Chapter 6 uses an alternate route around the NPC barrier. Chapters 1–2 use 1446; Chapter 3+ uses 1449. Party and tutorials are preserved.'}[info.route]
         if info.part == 2:
-            limit = 'Cai Chapters 1–6 passed from native Part 2. Chapter 5 applies the tested upper-city movement repair. Part 1-to-2 entry remains experimental outside the tested Chapter 4 baseline.'
+            limit = evidence_note(info.route, 2)
         ttk.Label(frame, text='Selected save only. Apply stages the chapter start and date; Ctrl+S saves and Ctrl+Z undoes. ' + limit,
                   wraplength=625, justify='left').pack(anchor='w', pady=(4, 10))
         buttons = ttk.Frame(frame); buttons.pack(side='bottom', fill='x', pady=(12, 0))
@@ -255,46 +263,48 @@ class StoryPageMixin:
         self.flash(f'{story.ROUTES[route]} Part {part} Chapter {chapter} start staged — Ctrl+S saves; Ctrl+Z undoes.', 'ok')
 
 
-    def open_cai_part2_entry(self):
+    def open_part2_entry(self):
         if not self._story_ready():
             return
         info = story_start.validate(self.core_of())
-        if (info.route, info.part) != (1, 1):
-            self.flash('Use a Cai Part 1 free-time or chapter-start save.', 'warn'); return
+        if info.route not in story.PREFIXES or info.part != 1:
+            self.flash('Use a supported Part 1 free-time or chapter-start save.', 'warn'); return
         slot = self.sv
         snapshot = bytes(slot.payload)
-        if not messagebox.askyesno('Experimental Cai Part 2 entry',
-                'Start this Cai Part 1 save at Part 2 Chapter 1?\n\n'
+        if not messagebox.askyesno('Experimental Part 2 entry',
+                f'Start this {story.ROUTES[info.route]} Part 1 save at Part 2 Chapter 1?\n\n'
                 'Conversion from Cai Part 1 Chapter 4 passed opening and next-battle checks. '
+                'Leda, Dietrich and Theodora entry is inferred and not yet game-tested. '
                 'Other starting states and long-term progression remain untested. '
                 'It keeps your current units, items, '
                 'flags and world state; it does not grant missing transition rewards '
                 'or unlocks. Objectives may be blocked.\n\n'
                 'This changes the selected save to Part 2, but does not create the '
-                'separate Part_Kai_2 handoff file. An optional Chapter_Kai_2_N '
+                f'separate Part_{story.FILE_CODES[info.route]}_2 handoff file. An optional '
+                f'Chapter_{story.FILE_CODES[info.route]}_2_N '
                 'chapter file is different and does not replace it.\n\n'
                 'Use a disposable copy. Apply changes only this slot; Ctrl+S saves '
                 'and Ctrl+Z undoes. Chapter files are not created automatically.', parent=self):
             return
         if self.sv is not slot or bytes(slot.payload) != snapshot:
             self.flash('The selected save changed. Reopen Part 2 entry.', 'warn'); return
-        self.apply_cai_part2_entry()
+        self.apply_part2_entry()
 
-    def apply_cai_part2_entry(self):
+    def apply_part2_entry(self):
         if not self._story_ready():
             return
         try:
             self._commit_form()
             if not self._story_ready():
                 return
-            new = story_start.enter_cai_part2(self.core_of())
+            new = story_start.enter_part2(self.core_of())
         except core.SaveError as exc:
             self.flash(str(exc), 'error'); return
         self.push_undo()
         # Session-only permission for the explicit conversion and its Undo/Redo.
         # Keep raw untouched: serialization derives the part mirror from payload.
-        self.sv._allow_cai_part_transition = True
+        self.sv._allow_part_transition = True
         self.sv.payload = bytearray(new); self.sv.scan(); self.sv._core_cache = None
         self.sv._pending_story_chapter = None
         self._touch([self.sv]); self.refresh_after_core()
-        self.flash('Experimental Cai Part 2 Chapter 1 entry staged — Ctrl+S saves; Ctrl+Z undoes.', 'ok')
+        self.flash(f'Experimental {story.ROUTES[story.read(self.core_of()).route]} Part 2 Chapter 1 entry staged — Ctrl+S saves; Ctrl+Z undoes.', 'ok')

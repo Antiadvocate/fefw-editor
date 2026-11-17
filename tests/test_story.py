@@ -118,7 +118,7 @@ class StoryTest(unittest.TestCase):
             self.assertTrue({n for n in range(256) if initial[n]!=actual[n]}<=allowed)
 
     def test_serializer_preserves_other_routes_unknown_and_ambiguous_summaries(self):
-        for f in (fixture(3,2),fixture(9),fixture(4,2)):
+        for f in (fixture(3,3),fixture(9),fixture(4,2,7)):
             out=raw_for(f);out[42]=99;before=bytes(out);story.sync_outer_summary(f.payload,out)
             self.assertEqual(bytes(out),before)
         f=fixture();out=raw_for(f);out[40]=1;before=bytes(out)
