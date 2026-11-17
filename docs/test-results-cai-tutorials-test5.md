@@ -33,3 +33,10 @@ The 38 scenario-specific entries absent from the screenshots remain provisional.
 No repeat checks of the 180 ordered matches are needed. Only capture an unseen
 provisional title if it appears during normal progression. See the
 [complete title crosswalk](tutorial-title-reconciliation.md).
+
+## Follow-up: stored records are not menu visibility
+
+The later [Leda category investigation](tutorial-menu-visibility.md) corrects
+the 38 unseen entries from Battle to a separate Scenario-specific category.
+The full-catalogue test above confirms stored records and reported browsing
+without crashes, not that every one of the 218 records appeared in the menus.

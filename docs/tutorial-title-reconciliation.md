@@ -3,6 +3,11 @@
 The category screenshots and overlapping All list establish 180 visible titles.
 The 38 absent scenario-specific entries keep provisional names and table-relative order.
 Extra Weapons belongs after Merging Causality despite residing in Tutorial_P0.bin.
+
+Follow-up: the 38 unseen entries use game-data category 6, not ordinary Battle
+(category 1). They are now labelled Scenario-specific in the editor. The 180
+screenshot-checked categories below remain unchanged. See
+[tutorial-menu-visibility.md](tutorial-menu-visibility.md).
 All 218 original keys, hashes, title IDs and offsets are unchanged.
 
 ## Corrected labels

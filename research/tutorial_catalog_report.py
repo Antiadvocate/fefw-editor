@@ -38,10 +38,12 @@ def report(gamedata):
                 raise ValueError('Tutorial child identity mismatch')
             title = string(q(row+40))
             if not title.startswith('MID_TUT_'): raise ValueError('Unknown title identifier')
+            category_id = struct.unpack_from('<I', b, row+32)[0]
+            if category_id not in range(1, 7): raise ValueError('Unknown tutorial category')
             h = f'{core.id_hash(name):08x}'
             if h in entries: raise ValueError('Duplicate tutorial identity')
             entries[h] = {'name': name, 'title_id': title, 'source': filename,
-                          'offset': f'0x{at:x}'}
+                          'offset': f'0x{at:x}', 'category_id': category_id}
             count += 1
         sources.append({'name': filename, 'sha256': hashlib.sha256(b).hexdigest(), 'entries': count})
     return {'sources': sources, 'entries': entries,

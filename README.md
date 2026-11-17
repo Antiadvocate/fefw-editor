@@ -34,7 +34,11 @@ and chapter entry skips rebuilding already-empty restart blobs. See the
 
 **Tutorial names:** 180 titles, categories and their visible order now match the
 supplied game screenshots. This corrects 61 labels, including **Mentoring (Cai)**;
-38 unseen scenario-specific titles remain provisional. Exact keys are unchanged.
+38 scenario-specific titles remain provisional. They use a separate game-data
+category and are absent from the tested Leda menus even with their records saved.
+Tutorials now distinguishes stored records from menu visibility; natural game
+unlocks can add entries again. Exact keys are unchanged. See the
+[category investigation](docs/tutorial-menu-visibility.md).
 
 **Functions** replaces the Facilities tab. Its 41 switches include
 **Sewers access (Cai)** under Area access. Selecting Cai Chapter 3 or later

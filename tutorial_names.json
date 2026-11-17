@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "scope": "218 recovered identities. 180 English titles, categories and visible order checked against category and All screenshots on 2026-11-17; 38 unseen scenario titles remain provisional. Original identifiers, title IDs and source offsets are unchanged. Naming evidence is separate from route-specific availability.",
+  "scope": "218 recovered identities. Categories use the first Tutorial child category field: 1–5 match 180 screenshot-checked menu titles; category 6 contains 38 scenario-specific entries absent from the tested menus. Scenario-specific is an editor description, not a confirmed game tab name. Their titles remain provisional; storing a record does not guarantee menu visibility. Original identifiers, title IDs and source offsets are unchanged.",
   "entries": {
     "82394787": {
       "name": "TUTO_オートセーブ",
@@ -9,7 +9,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x180",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "07eb05cf": {
       "name": "TUTO_マウス操作①",
@@ -18,7 +19,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1b0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "07eb05ce": {
       "name": "TUTO_マウス操作②",
@@ -27,7 +29,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1e0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "80932e08": {
       "name": "TUTO_目的地",
@@ -36,7 +39,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x210",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "f7630579": {
       "name": "TUTO_自由行動",
@@ -45,7 +49,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x240",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "759963c2": {
       "name": "TUTO_自由行動とメインクエスト①",
@@ -54,7 +59,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x270",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "759963c3": {
       "label": "Out of Time",
@@ -63,7 +69,8 @@
       "title_id": "MID_TUT_Hub_DueDate2_t",
       "source": "Tutorial.bin",
       "offset": "0x2a0",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "020939bf": {
       "name": "TUTO_施設リセット",
@@ -72,7 +79,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x2d0",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "de4c728f": {
       "label": "Battle Preparation Phase",
@@ -81,7 +89,8 @@
       "title_id": "MID_TUT_Hub_PreparationMarch_t",
       "source": "Tutorial.bin",
       "offset": "0x300",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "1f99df25": {
       "label": "Dispatch Officer",
@@ -90,7 +99,8 @@
       "title_id": "MID_TUT_Hub_MarchingOfficer_t",
       "source": "Tutorial.bin",
       "offset": "0x330",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "fb7cfe44": {
       "label": "Promised One's Preparations",
@@ -99,7 +109,8 @@
       "title_id": "MID_TUT_Hub_SectionFree3_t",
       "source": "Tutorial.bin",
       "offset": "0x360",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "84c33a51": {
       "name": "TUTO_冒険手帳",
@@ -108,7 +119,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x390",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "08373a0e": {
       "name": "TUTO_戦いの助言",
@@ -117,7 +129,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x3c0",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "1cfa3e7a": {
       "name": "TUTO_名声",
@@ -126,7 +139,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x3f0",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "cab4ec3b": {
       "name": "TUTO_クエスト",
@@ -135,7 +149,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x420",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "7b102c4f": {
       "name": "TUTO_拠点地図",
@@ -144,7 +159,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x450",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "8868aa83": {
       "name": "TUTO_スカウト",
@@ -153,7 +169,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x480",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "ff8874da": {
       "name": "TUTO_贈り物",
@@ -162,7 +179,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x4b0",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "70980a6f": {
       "name": "TUTO_案内板",
@@ -171,7 +189,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x4e0",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "cd28cfa5": {
       "name": "TUTO_白鴉の止まり木",
@@ -180,7 +199,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x510",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "935aafea": {
       "name": "TUTO_絆の降臨",
@@ -189,7 +209,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x540",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "ae04a09a": {
       "name": "TUTO_運命の記録・因果の扉",
@@ -198,7 +219,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x570",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "a3142903": {
       "name": "TUTO_宿屋",
@@ -207,7 +229,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x5a0",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "b56f10a2": {
       "name": "TUTO_食事",
@@ -216,7 +239,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x5d0",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "51892c9c": {
       "name": "TUTO_個別行動",
@@ -225,7 +249,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x600",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "b8ad3a62": {
       "name": "TUTO_武器屋",
@@ -234,7 +259,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x630",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "a2e06171": {
       "name": "TUTO_道具屋",
@@ -243,7 +269,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x660",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "cd32158a": {
       "name": "TUTO_市場",
@@ -252,7 +279,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x690",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "c2d5b701": {
       "name": "TUTO_訓練",
@@ -261,7 +289,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x6c0",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "98fbdd67": {
       "name": "TUTO_闘技場",
@@ -270,7 +299,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x6f0",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "1965109f": {
       "name": "TUTO_神殿",
@@ -279,7 +309,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x720",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "acb522fb": {
       "name": "TUTO_加護編成",
@@ -288,7 +319,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x750",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "7abf7631": {
       "name": "TUTO_奉仕活動",
@@ -297,7 +329,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x780",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "3659245e": {
       "name": "TUTO_神の道の門",
@@ -306,7 +339,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x7b0",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "c4801ceb": {
       "name": "TUTO_資格試験",
@@ -315,7 +349,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x7e0",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "12558a41": {
       "name": "TUTO_兵種変更",
@@ -324,7 +359,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x810",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "e8b98788": {
       "name": "TUTO_ヴァンダル商会",
@@ -333,7 +369,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x840",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "17351901": {
       "name": "TUTO_鍛冶屋",
@@ -342,7 +379,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x870",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "af3a4f61": {
       "name": "TUTO_観劇",
@@ -351,7 +389,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x8a0",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "1c2b4d00": {
       "label": "Acting",
@@ -360,7 +399,8 @@
       "title_id": "MID_TUT_Hub_Theater_t",
       "source": "Tutorial.bin",
       "offset": "0x8d0",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "91fc9e12": {
       "label": "Thermae",
@@ -369,7 +409,8 @@
       "title_id": "MID_TUT_Hub_Thermae_t",
       "source": "Tutorial.bin",
       "offset": "0x900",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "f92596de": {
       "label": "Paralogues",
@@ -378,7 +419,8 @@
       "title_id": "MID_TUT_Hub_SideStory_t",
       "source": "Tutorial.bin",
       "offset": "0x930",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "ab0eee36": {
       "label": "Return Certification",
@@ -387,7 +429,8 @@
       "title_id": "MID_TUT_Bmap_ReturnQualification_t",
       "source": "Tutorial.bin",
       "offset": "0x960",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "cf0ad5b8": {
       "label": "Relief Lv",
@@ -396,7 +439,8 @@
       "title_id": "MID_TUT_Hub_HonorPart3_t",
       "source": "Tutorial.bin",
       "offset": "0x990",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "1bb681b4": {
       "label": "The Temple of the Diadem",
@@ -405,7 +449,8 @@
       "title_id": "MID_TUT_Hub_TempleCrown_t",
       "source": "Tutorial.bin",
       "offset": "0x9c0",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "88b83088": {
       "label": "Divine License Items",
@@ -414,7 +459,8 @@
       "title_id": "MID_TUT_Hub_LegendPass_t",
       "source": "Tutorial.bin",
       "offset": "0x9f0",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "c2a2c517": {
       "name": "TUTO_塔のアクセス",
@@ -423,7 +469,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0xa20",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "2b0739cc": {
       "name": "TUTO_方尖塔倉庫",
@@ -432,7 +479,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0xa50",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "0f8f2af5": {
       "label": "Merging Causality",
@@ -441,7 +489,8 @@
       "title_id": "MID_TUT_Hub_Merge_t",
       "source": "Tutorial.bin",
       "offset": "0xa80",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "b0f48bad": {
       "name": "TUTO_アプリ武器",
@@ -450,7 +499,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial_P0.bin",
       "offset": "0x180",
-      "category": "Bases"
+      "category": "Bases",
+      "category_id": 2
     },
     "61c5f443": {
       "name": "TUTO_ワールドマップ",
@@ -459,7 +509,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0xab0",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "ef31175a": {
       "name": "TUTO_勢力出現",
@@ -468,7 +519,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0xae0",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "91927401": {
       "name": "TUTO_HP継続",
@@ -477,7 +529,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0xb10",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "efe8cf90": {
       "name": "TUTO_スポット：拠点",
@@ -486,7 +539,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0xb40",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "7ff54e21": {
       "name": "TUTO_探索",
@@ -495,7 +549,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0xb70",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "ee2ed6a6": {
       "name": "TUTO_スポット：駅",
@@ -504,7 +559,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0xba0",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "08c25f09": {
       "name": "TUTO_スポット：ダンジョン",
@@ -513,7 +569,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0xbd0",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "cadd84e3": {
       "name": "TUTO_スポット：簡易拠点",
@@ -522,7 +579,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0xc00",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "de253fb8": {
       "name": "TUTO_スポット：神殿",
@@ -531,7 +589,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0xc30",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "32d32716": {
       "name": "TUTO_遭遇戦",
@@ -540,7 +599,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0xc60",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "e357a466": {
       "name": "TUTO_商人",
@@ -549,7 +609,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0xc90",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "1a2c014b": {
       "name": "TUTO_関",
@@ -558,7 +619,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0xcc0",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "3bb4016e": {
       "name": "TUTO_饗宴",
@@ -567,7 +629,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0xcf0",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "255f6e46": {
       "label": "Underworld Gates",
@@ -576,7 +639,8 @@
       "title_id": "MID_TUT_Gmap_UnderworldGateStatus_t",
       "source": "Tutorial.bin",
       "offset": "0xd20",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "64a29ef7": {
       "label": "Forming Squads",
@@ -585,7 +649,8 @@
       "title_id": "MID_TUT_Gmap_TroopFormation_t",
       "source": "Tutorial.bin",
       "offset": "0xd50",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "7d1133c7": {
       "label": "Controlling Multiple Squads",
@@ -594,7 +659,8 @@
       "title_id": "MID_TUT_Gmap_MultipleTroops_t",
       "source": "Tutorial.bin",
       "offset": "0xd80",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "e78e1337": {
       "label": "Exp for Reserve Members",
@@ -603,7 +669,8 @@
       "title_id": "MID_TUT_Gmap_StandbyUnit_t",
       "source": "Tutorial.bin",
       "offset": "0xdb0",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "0254bf3d": {
       "label": "Eshmel's Presence",
@@ -612,7 +679,8 @@
       "title_id": "MID_TUT_Gmap_IshmalComing_t",
       "source": "Tutorial.bin",
       "offset": "0xde0",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "0f5f74d4": {
       "label": "Rebuilding Destroyed Locations",
@@ -621,7 +689,8 @@
       "title_id": "MID_TUT_Gmap_Reconstruction_t",
       "source": "Tutorial.bin",
       "offset": "0xe10",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "449f40fa": {
       "label": "Fortresses",
@@ -630,7 +699,8 @@
       "title_id": "MID_TUT_Gmap_Fort_t",
       "source": "Tutorial.bin",
       "offset": "0xe40",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "b703d84e": {
       "label": "Miasma",
@@ -639,7 +709,8 @@
       "title_id": "MID_TUT_Gmap_Miasma_t",
       "source": "Tutorial.bin",
       "offset": "0xe70",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "602a0c11": {
       "label": "Underworld Gate Battles",
@@ -648,7 +719,8 @@
       "title_id": "MID_TUT_Gmap_UnderworldGate_t",
       "source": "Tutorial.bin",
       "offset": "0xea0",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "11214616": {
       "label": "Destroying Underworld Gates",
@@ -657,7 +729,8 @@
       "title_id": "MID_TUT_Gmap_GateDestruction_t",
       "source": "Tutorial.bin",
       "offset": "0xed0",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "59126734": {
       "label": "Assault of the Underworld Armies",
@@ -666,7 +739,8 @@
       "title_id": "MID_TUT_Gmap_Defense_t",
       "source": "Tutorial.bin",
       "offset": "0xf00",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "b2acbc14": {
       "label": "Defending Dagsion",
@@ -675,7 +749,8 @@
       "title_id": "MID_TUT_Gmap_DefenseBattle_t",
       "source": "Tutorial.bin",
       "offset": "0xf30",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "bf878870": {
       "label": "Defending Citizens",
@@ -684,7 +759,8 @@
       "title_id": "MID_TUT_Gmap_DefenseBattle2_t",
       "source": "Tutorial.bin",
       "offset": "0xf60",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "1ef156e1": {
       "label": "Multiple Underworld Gates",
@@ -693,7 +769,8 @@
       "title_id": "MID_TUT_Gmap_MultipleGate_t",
       "source": "Tutorial.bin",
       "offset": "0xf90",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "0a0f8a2f": {
       "label": "Major Underworld Gates",
@@ -702,7 +779,8 @@
       "title_id": "MID_TUT_Gmap_BigGate_t",
       "source": "Tutorial.bin",
       "offset": "0xfc0",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "eb6c1fa5": {
       "label": "Deploying to Rebuild",
@@ -711,7 +789,8 @@
       "title_id": "MID_TUT_Gmap_ReconstructionShorten_t",
       "source": "Tutorial.bin",
       "offset": "0xff0",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "f5e3ef21": {
       "label": "Demon God Balor",
@@ -720,7 +799,8 @@
       "title_id": "MID_TUT_Gmap_LastGate_t",
       "source": "Tutorial.bin",
       "offset": "0x1020",
-      "category": "The World Map"
+      "category": "The World Map",
+      "category_id": 3
     },
     "1fe9adeb": {
       "name": "TUTO_ダンジョン探索",
@@ -729,7 +809,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1050",
-      "category": "Dungeons"
+      "category": "Dungeons",
+      "category_id": 4
     },
     "138613de": {
       "name": "TUTO_ショートバトル",
@@ -738,7 +819,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1080",
-      "category": "Dungeons"
+      "category": "Dungeons",
+      "category_id": 4
     },
     "ce37b008": {
       "name": "TUTO_連携",
@@ -747,7 +829,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x10b0",
-      "category": "Dungeons"
+      "category": "Dungeons",
+      "category_id": 4
     },
     "baa67558": {
       "name": "TUTO_イベントバトル",
@@ -756,7 +839,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x10e0",
-      "category": "Dungeons"
+      "category": "Dungeons",
+      "category_id": 4
     },
     "ec0d9634": {
       "name": "TUTO_おまかせ",
@@ -765,7 +849,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1110",
-      "category": "Dungeons"
+      "category": "Dungeons",
+      "category_id": 4
     },
     "d26efb9f": {
       "name": "TUTO_破壊物品",
@@ -774,7 +859,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1140",
-      "category": "Dungeons"
+      "category": "Dungeons",
+      "category_id": 4
     },
     "6622071d": {
       "name": "TUTO_ダンジョン「宝箱」",
@@ -783,7 +869,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1170",
-      "category": "Dungeons"
+      "category": "Dungeons",
+      "category_id": 4
     },
     "037e5a5d": {
       "name": "TUTO_ダンジョン「休憩」",
@@ -792,7 +879,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x11a0",
-      "category": "Dungeons"
+      "category": "Dungeons",
+      "category_id": 4
     },
     "1909d68d": {
       "name": "TUTO_MVP",
@@ -801,7 +889,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x11d0",
-      "category": "Dungeons"
+      "category": "Dungeons",
+      "category_id": 4
     },
     "2c0c9318": {
       "label": "Striking to Skip Clashes",
@@ -810,7 +899,8 @@
       "title_id": "MID_TUT_ShortBattle_FieldKill_t",
       "source": "Tutorial.bin",
       "offset": "0x1200",
-      "category": "Dungeons"
+      "category": "Dungeons",
+      "category_id": 4
     },
     "c9afad83": {
       "name": "TUTO_ブレイズアーツ",
@@ -819,7 +909,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1230",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "33556643": {
       "name": "TUTO_オーバーブレイズ",
@@ -828,7 +919,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1260",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "5d5a38bc": {
       "name": "TUTO_移動",
@@ -837,7 +929,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1290",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "32b41814": {
       "name": "TUTO_ユニットコマンド",
@@ -846,7 +939,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x12c0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "26c22fbf": {
       "name": "TUTO_攻撃方法",
@@ -855,7 +949,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x12f0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "6bde17b4": {
       "label": "Weapon Type Properties",
@@ -864,7 +959,8 @@
       "title_id": "MID_TUT_Bmap_WeaponType_t",
       "source": "Tutorial.bin",
       "offset": "0x1320",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "606d8841": {
       "name": "TUTO_経験値",
@@ -873,7 +969,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1350",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "d00c3b90": {
       "name": "TUTO_フェイズチェンジ",
@@ -882,7 +979,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1380",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "9884c095": {
       "name": "TUTO_増援",
@@ -891,7 +989,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x13b0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "5c6f187a": {
       "name": "TUTO_回復",
@@ -900,7 +999,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x13e0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "075cb5c5": {
       "name": "TUTO_地形",
@@ -909,7 +1009,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1410",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "1bd2c0d1": {
       "name": "TUTO_射程",
@@ -918,7 +1019,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1440",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "8f83d3a6": {
       "name": "TUTO_特効／有効",
@@ -927,7 +1029,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1470",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "a40e72f2": {
       "name": "TUTO_戦技",
@@ -936,7 +1039,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x14a0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "a8d606b3": {
       "name": "TUTO_詳細情報",
@@ -945,7 +1049,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x14d0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "5a6abf3a": {
       "name": "TUTO_魔法",
@@ -954,7 +1059,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1500",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "47e2250f": {
       "name": "TUTO_危険範囲",
@@ -963,7 +1069,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1530",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "ceb5f8c1": {
       "name": "TUTO_ターゲットライン",
@@ -972,7 +1079,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1560",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "17f65c17": {
       "name": "TUTO_ターゲットライン②",
@@ -981,7 +1089,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1590",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "a35c8d43": {
       "name": "TUTO_出撃準備",
@@ -990,7 +1099,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x15c0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "d427056e": {
       "name": "TUTO_ユニット選択",
@@ -999,7 +1109,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x15f0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "bf990cc5": {
       "name": "TUTO_身支度",
@@ -1008,7 +1119,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1620",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "e9837746": {
       "name": "TUTO_配置変更",
@@ -1017,7 +1129,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1650",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "f16b3dd0": {
       "name": "TUTO_補助「回復魔法」",
@@ -1026,7 +1139,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1680",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "5f662be0": {
       "name": "TUTO_支援効果",
@@ -1035,7 +1149,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x16b0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "c5157ce9": {
       "name": "TUTO_フォトナの能力",
@@ -1044,7 +1159,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x16e0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "046f8016": {
       "name": "TUTO_会話",
@@ -1053,7 +1169,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1710",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "6072e625": {
       "name": "TUTO_ゲスト参戦",
@@ -1062,7 +1179,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1740",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "ce7a727a": {
       "name": "TUTO_地形破壊",
@@ -1071,7 +1189,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1770",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "57c0d2bd": {
       "name": "TUTO_離脱",
@@ -1080,7 +1199,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x17a0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "0e862608": {
       "name": "TUTO_巨大敵",
@@ -1089,7 +1209,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x17d0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "5dd0a4f5": {
       "name": "TUTO_HPストック",
@@ -1098,7 +1219,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1800",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "3660d150": {
       "name": "TUTO_宝箱",
@@ -1107,7 +1229,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1830",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "5c17c5f1": {
       "name": "TUTO_索敵マップ",
@@ -1116,7 +1239,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1860",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "8c3852f0": {
       "name": "TUTO_雨天マップ",
@@ -1125,7 +1249,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1890",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "700bd0b7": {
       "name": "TUTO_弓砲台",
@@ -1134,7 +1259,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x18c0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "6c55bdbc": {
       "label": "Explosives",
@@ -1143,7 +1269,8 @@
       "title_id": "MID_TUT_Bmap_Explosives_t",
       "source": "Tutorial.bin",
       "offset": "0x18f0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "29043d8a": {
       "name": "TUTO_特殊効果床",
@@ -1152,7 +1279,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1920",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "380c15b1": {
       "label": "Burning Terrain",
@@ -1161,7 +1289,8 @@
       "title_id": "MID_TUT_Bmap_Flame_t",
       "source": "Tutorial.bin",
       "offset": "0x1950",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "5c370bea": {
       "name": "TUTO_復活について",
@@ -1170,7 +1299,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1980",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "79ce0990": {
       "label": "Warp Spots",
@@ -1179,7 +1309,8 @@
       "title_id": "MID_TUT_Bmap_ShiftingDevice_t",
       "source": "Tutorial.bin",
       "offset": "0x19b0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "26373fe0": {
       "name": "TUTO_呪宝",
@@ -1188,7 +1319,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x19e0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "47000957": {
       "label": "Damage to the Carriage",
@@ -1197,7 +1329,8 @@
       "title_id": "MID_TUT_Bmap_Carriage_t",
       "source": "Tutorial.bin",
       "offset": "0x1a10",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "840b4808": {
       "label": "Pillars",
@@ -1206,7 +1339,8 @@
       "title_id": "MID_TUT_Bmap_Pillar_t",
       "source": "Tutorial.bin",
       "offset": "0x1a40",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "e16628f5": {
       "label": "Onslaught",
@@ -1215,7 +1349,8 @@
       "title_id": "MID_TUT_Bmap_Onslaught_t",
       "source": "Tutorial.bin",
       "offset": "0x1a70",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "a7438cb4": {
       "label": "The Battle Against Castor",
@@ -1224,7 +1359,8 @@
       "title_id": "MID_TUT_Bmap_BattleOfCastor_t",
       "source": "Tutorial.bin",
       "offset": "0x1aa0",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "ed42b094": {
       "label": "Control Devices (Cai)",
@@ -1233,7 +1369,8 @@
       "title_id": "MID_TUT_Bmap_ControllerKaiEdited_t",
       "source": "Tutorial.bin",
       "offset": "0x1ad0",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "2607e925": {
       "label": "Destroying the Bell Tower",
@@ -1242,7 +1379,8 @@
       "title_id": "MID_TUT_Bmap_BellTower_t",
       "source": "Tutorial.bin",
       "offset": "0x1b00",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "25598468": {
       "label": "The Battle Against the Sea God Cetus",
@@ -1251,7 +1389,8 @@
       "title_id": "MID_TUT_Bmap_SeaGod_t",
       "source": "Tutorial.bin",
       "offset": "0x1b30",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "65a2293f": {
       "label": "Fabio's Magic Traps",
@@ -1260,7 +1399,8 @@
       "title_id": "MID_TUT_Bmap_MagicTrap_t",
       "source": "Tutorial.bin",
       "offset": "0x1b60",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "7e7bcb93": {
       "label": "Sandstorm Removal Devices",
@@ -1269,7 +1409,8 @@
       "title_id": "MID_TUT_Bmap_RemovalDevice_t",
       "source": "Tutorial.bin",
       "offset": "0x1b90",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "868cb875": {
       "label": "Fog Removal Devices",
@@ -1278,7 +1419,8 @@
       "title_id": "MID_TUT_Bmap_FogRemoval_t",
       "source": "Tutorial.bin",
       "offset": "0x1bc0",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "94d1d59a": {
       "label": "Enemies with Weak Points",
@@ -1287,7 +1429,8 @@
       "title_id": "MID_TUT_Bmap_Weakness_t",
       "source": "Tutorial.bin",
       "offset": "0x1bf0",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "5db6a9e6": {
       "label": "Treasure Hunting",
@@ -1296,7 +1439,8 @@
       "title_id": "MID_TUT_Bmap_TreasureHunt_t",
       "source": "Tutorial.bin",
       "offset": "0x1c20",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "0adf6331": {
       "label": "Lanterns",
@@ -1305,7 +1449,8 @@
       "title_id": "MID_TUT_Bmap_Lantern_t",
       "source": "Tutorial.bin",
       "offset": "0x1c50",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "2de752c7": {
       "label": "Lanterns II",
@@ -1314,7 +1459,8 @@
       "title_id": "MID_TUT_Bmap_Lantern2_t",
       "source": "Tutorial.bin",
       "offset": "0x1c80",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "9609eed6": {
       "name": "TUTO_SC14_06_聖水",
@@ -1323,7 +1469,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x1cb0",
-      "category": "Battle"
+      "category": "Battle",
+      "category_id": 1
     },
     "9406b3a8": {
       "label": "Humidity Control Devices",
@@ -1332,7 +1479,8 @@
       "title_id": "MID_TUT_Bmap_HumidityRegulator_t",
       "source": "Tutorial.bin",
       "offset": "0x1ce0",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "a9e6824a": {
       "label": "The Wall Around Theodora",
@@ -1341,7 +1489,8 @@
       "title_id": "MID_TUT_Bmap_EnclosingWall_t",
       "source": "Tutorial.bin",
       "offset": "0x1d10",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "f7c17308": {
       "label": "Control Devices (Leda)",
@@ -1350,7 +1499,8 @@
       "title_id": "MID_TUT_Bmap_ControllerL_t",
       "source": "Tutorial.bin",
       "offset": "0x1d40",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "5b6c29b8": {
       "label": "Stomach Acid",
@@ -1359,7 +1509,8 @@
       "title_id": "MID_TUT_Bmap_StomachAcid_t",
       "source": "Tutorial.bin",
       "offset": "0x1d70",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "e69c117c": {
       "label": "Stomach Acid II",
@@ -1368,7 +1519,8 @@
       "title_id": "MID_TUT_Bmap_StomachAcid2_t",
       "source": "Tutorial.bin",
       "offset": "0x1da0",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "3662b39a": {
       "label": "Lantern Ashes",
@@ -1377,7 +1529,8 @@
       "title_id": "MID_TUT_Bmap_LanternAshes_t",
       "source": "Tutorial.bin",
       "offset": "0x1dd0",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "38b9d2ee": {
       "label": "Giants",
@@ -1386,7 +1539,8 @@
       "title_id": "MID_TUT_Bmap_Giant_t",
       "source": "Tutorial.bin",
       "offset": "0x1e00",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "aa53bc21": {
       "label": "Food for Giants",
@@ -1395,7 +1549,8 @@
       "title_id": "MID_TUT_Bmap_GiantFood_t",
       "source": "Tutorial.bin",
       "offset": "0x1e30",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "869e8f18": {
       "label": "The Trading Company's Cargo",
@@ -1404,7 +1559,8 @@
       "title_id": "MID_TUT_Bmap_ChamberCargo_t",
       "source": "Tutorial.bin",
       "offset": "0x1e60",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "ce28839d": {
       "label": "Catapults and Control Devices",
@@ -1413,7 +1569,8 @@
       "title_id": "MID_TUT_Bmap_Trebuchet_t",
       "source": "Tutorial.bin",
       "offset": "0x1e90",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "5799891c": {
       "label": "The People of Kunlun and Withdrawal",
@@ -1422,7 +1579,8 @@
       "title_id": "MID_TUT_Bmap_People_t",
       "source": "Tutorial.bin",
       "offset": "0x1ec0",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "a738ce98": {
       "label": "The People of Kunlun and Confusion",
@@ -1431,7 +1589,8 @@
       "title_id": "MID_TUT_Bmap_Confusion_t",
       "source": "Tutorial.bin",
       "offset": "0x1ef0",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "a1a275a6": {
       "label": "Orichalcum and Giants",
@@ -1440,7 +1599,8 @@
       "title_id": "MID_TUT_Bmap_Orichalcum_t",
       "source": "Tutorial.bin",
       "offset": "0x1f20",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "2d431270": {
       "label": "Miasma Terrain: First Gate",
@@ -1449,7 +1609,8 @@
       "title_id": "MID_TUT_Bmap_FirstGate_t",
       "source": "Tutorial.bin",
       "offset": "0x1f50",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "ef5e9e3b": {
       "label": "Miasma Terrain: Second Gate",
@@ -1458,7 +1619,8 @@
       "title_id": "MID_TUT_Bmap_SecondGate_t",
       "source": "Tutorial.bin",
       "offset": "0x1f80",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "79893a19": {
       "label": "Miasma Terrain: Second Gate II",
@@ -1467,7 +1629,8 @@
       "title_id": "MID_TUT_Bmap_SecondGate2_t",
       "source": "Tutorial.bin",
       "offset": "0x1fb0",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "13e0cf7e": {
       "label": "Miasma Terrain: Third Gate",
@@ -1476,7 +1639,8 @@
       "title_id": "MID_TUT_Bmap_ThirdGate_t",
       "source": "Tutorial.bin",
       "offset": "0x1fe0",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "6e88dae1": {
       "label": "Miasma Terrain: Fourth Gate",
@@ -1485,7 +1649,8 @@
       "title_id": "MID_TUT_Bmap_FourthGate_t",
       "source": "Tutorial.bin",
       "offset": "0x2010",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "3d10cca4": {
       "label": "Miasma Terrain: Fifth Gate",
@@ -1494,7 +1659,8 @@
       "title_id": "MID_TUT_Bmap_FifthGate_t",
       "source": "Tutorial.bin",
       "offset": "0x2040",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "b5ecf88f": {
       "label": "Miasma Terrain: Sixth Gate",
@@ -1503,7 +1669,8 @@
       "title_id": "MID_TUT_Bmap_SixthGate_t",
       "source": "Tutorial.bin",
       "offset": "0x2070",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "53b04b62": {
       "label": "Miasma Terrain: Seventh Gate",
@@ -1512,7 +1679,8 @@
       "title_id": "MID_TUT_Bmap_SeventhGate_t",
       "source": "Tutorial.bin",
       "offset": "0x20a0",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "9ad30835": {
       "label": "Miasma Terrain: Eighth Gate",
@@ -1521,7 +1689,8 @@
       "title_id": "MID_TUT_Bmap_EighthGate_t",
       "source": "Tutorial.bin",
       "offset": "0x20d0",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "3637f398": {
       "label": "Miasma Terrain: Ninth Gate",
@@ -1530,7 +1699,8 @@
       "title_id": "MID_TUT_Bmap_NinthGate_t",
       "source": "Tutorial.bin",
       "offset": "0x2100",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "4bce9c7b": {
       "label": "Balor and the Underworld Gate",
@@ -1539,7 +1709,8 @@
       "title_id": "MID_TUT_Bmap_LastBattle_t",
       "source": "Tutorial.bin",
       "offset": "0x2130",
-      "category": "Battle"
+      "category": "Scenario-specific",
+      "category_id": 6
     },
     "759e15fb": {
       "name": "TUTO_ブレイズアーツ「白鴉ノ槍　壱式」",
@@ -1548,7 +1719,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x2160",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "5c02f403": {
       "name": "TUTO_真焔将カイ",
@@ -1557,7 +1729,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x2190",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "e458c1a3": {
       "name": "TUTO_真焔将セオドラ",
@@ -1566,7 +1739,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x21c0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "20e0a93c": {
       "name": "TUTO_真焔将レダ",
@@ -1575,7 +1749,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x21f0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "fdf3931d": {
       "name": "TUTO_真焔将ディートリヒ",
@@ -1584,7 +1759,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x2220",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "10cd1ae2": {
       "name": "TUTO_真焔将アナトリア",
@@ -1593,7 +1769,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x2250",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "207baf02": {
       "label": "Bertrand's Awakening",
@@ -1602,7 +1779,8 @@
       "title_id": "MID_TUT_Root_SalvationBEL_t",
       "source": "Tutorial.bin",
       "offset": "0x2280",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "3b8ef61b": {
       "name": "TUTO_真焔将タリムーン",
@@ -1611,7 +1789,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x22b0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "a5404637": {
       "label": "Orhel's Guardian Angel",
@@ -1620,7 +1799,8 @@
       "title_id": "MID_TUT_Root_SalvationORH_t",
       "source": "Tutorial.bin",
       "offset": "0x22e0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "dfab9a9a": {
       "label": "Limited Allies",
@@ -1629,7 +1809,8 @@
       "title_id": "MID_TUT_Bmap_BondsParticipation_t",
       "source": "Tutorial.bin",
       "offset": "0x2310",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "8e7c0d4c": {
       "name": "TUTO_ブレイズタイプ「冥府」",
@@ -1638,7 +1819,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x2340",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "bda2cb4d": {
       "name": "TUTO_ブレイズタイプ「天柱」",
@@ -1647,7 +1829,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x2370",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "53b39ed9": {
       "name": "TUTO_ブレイズタイプ「機構」",
@@ -1656,7 +1839,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x23a0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "4964b558": {
       "label": "Blaze Ability: Control",
@@ -1665,7 +1849,8 @@
       "title_id": "MID_TUT_Bmap_Grasp_t",
       "source": "Tutorial.bin",
       "offset": "0x23d0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "6d9f2553": {
       "name": "TUTO_ブレイズスキル「暴走」",
@@ -1674,7 +1859,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x2400",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "74d369a6": {
       "label": "Blaze Ability: Unyielding",
@@ -1683,7 +1869,8 @@
       "title_id": "MID_TUT_Bmap_Resistance_t",
       "source": "Tutorial.bin",
       "offset": "0x2430",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "3a5f6e04": {
       "label": "Blaze Ability: Guardian Angel",
@@ -1692,7 +1879,8 @@
       "title_id": "MID_TUT_Bmap_MechanicalSkills_t",
       "source": "Tutorial.bin",
       "offset": "0x2460",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "82cae550": {
       "label": "Blaze Ability: Grasp Truths",
@@ -1701,7 +1889,8 @@
       "title_id": "MID_TUT_Bmap_HeavenlyPillarSkills_t",
       "source": "Tutorial.bin",
       "offset": "0x2490",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "dd3556d5": {
       "label": "Kindness Quests (Cai)",
@@ -1710,7 +1899,8 @@
       "title_id": "MID_TUT_Root_HelpePeople_t",
       "source": "Tutorial.bin",
       "offset": "0x24c0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "168a0508": {
       "label": "Mentoring (Cai)",
@@ -1719,7 +1909,8 @@
       "title_id": "MID_TUT_Root_Practice_t",
       "source": "Tutorial.bin",
       "offset": "0x24f0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "7cfdcc02": {
       "label": "Farming (Cai)",
@@ -1728,7 +1919,8 @@
       "title_id": "MID_TUT_Root_Field_t",
       "source": "Tutorial.bin",
       "offset": "0x2520",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "7cfdcc03": {
       "label": "Crop Rotations (Cai)",
@@ -1737,7 +1929,8 @@
       "title_id": "MID_TUT_Root_Fertilizer_t",
       "source": "Tutorial.bin",
       "offset": "0x2550",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "2bbf64b3": {
       "label": "Luring (Cai)",
@@ -1746,7 +1939,8 @@
       "title_id": "MID_TUT_Root_Capture_t",
       "source": "Tutorial.bin",
       "offset": "0x2580",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "5e08fc77": {
       "label": "Mounts",
@@ -1755,7 +1949,8 @@
       "title_id": "MID_TUT_Root_AnimalDeployment_t",
       "source": "Tutorial.bin",
       "offset": "0x25b0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "765756c2": {
       "label": "Tending Animals (Cai)",
@@ -1764,7 +1959,8 @@
       "title_id": "MID_TUT_Root_Stable_t",
       "source": "Tutorial.bin",
       "offset": "0x25e0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "045dbde6": {
       "label": "Stables (Cai)",
@@ -1773,7 +1969,8 @@
       "title_id": "MID_TUT_Root_Stable2_t",
       "source": "Tutorial.bin",
       "offset": "0x2610",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "f501dfbc": {
       "name": "TUTO_透視",
@@ -1782,7 +1979,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x2640",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "d0ff7757": {
       "label": "Answerer's Cry (Dietrich)",
@@ -1791,7 +1989,8 @@
       "title_id": "MID_TUT_Root_Blade_t",
       "source": "Tutorial.bin",
       "offset": "0x2670",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "c022af37": {
       "label": "Boost Combat Arts (Dietrich)",
@@ -1800,7 +1999,8 @@
       "title_id": "MID_TUT_Root_Reinforcement_t",
       "source": "Tutorial.bin",
       "offset": "0x26a0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "0946c1e0": {
       "label": "The Headhunter (Dietrich)",
@@ -1809,7 +2009,8 @@
       "title_id": "MID_TUT_Root_Arrangement_t",
       "source": "Tutorial.bin",
       "offset": "0x26d0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "031d73f9": {
       "label": "Teach Secrets (Dietrich)",
@@ -1818,7 +2019,8 @@
       "title_id": "MID_TUT_Root_Initiation_t",
       "source": "Tutorial.bin",
       "offset": "0x2700",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "7aad68d3": {
       "label": "Hunting for Cetus",
@@ -1827,7 +2029,8 @@
       "title_id": "MID_TUT_Root_SeaKing_t",
       "source": "Tutorial.bin",
       "offset": "0x2730",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "0927cf08": {
       "label": "Battalions (Theodora)",
@@ -1836,7 +2039,8 @@
       "title_id": "MID_TUT_Root_Legionnaire_t",
       "source": "Tutorial.bin",
       "offset": "0x2760",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "4c6d9461": {
       "label": "Send Supplies (Theodora)",
@@ -1845,7 +2049,8 @@
       "title_id": "MID_TUT_Root_Allowance_t",
       "source": "Tutorial.bin",
       "offset": "0x2790",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "803493c9": {
       "label": "Deploy to Search (Theodora)",
@@ -1854,7 +2059,8 @@
       "title_id": "MID_TUT_Root_Deployment_t",
       "source": "Tutorial.bin",
       "offset": "0x27c0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "f7fe4597": {
       "label": "Recruit Soldiers (Theodora)",
@@ -1863,7 +2069,8 @@
       "title_id": "MID_TUT_Root_RecruitingSoldiers_t",
       "source": "Tutorial.bin",
       "offset": "0x27f0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "27f08cdd": {
       "label": "Recruiting Drive (Theodora)",
@@ -1872,7 +2079,8 @@
       "title_id": "MID_TUT_Root_BigRecruitingSoldiers_t",
       "source": "Tutorial.bin",
       "offset": "0x2820",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "8cc6a386": {
       "label": "Transport Chief (Theodora)",
@@ -1881,7 +2089,8 @@
       "title_id": "MID_TUT_Root_MercenaryUnion_t",
       "source": "Tutorial.bin",
       "offset": "0x2850",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "2621a475": {
       "label": "Rousing Speech (Theodora)",
@@ -1890,7 +2099,8 @@
       "title_id": "MID_TUT_Root_Speech_t",
       "source": "Tutorial.bin",
       "offset": "0x2880",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "4fce5bf9": {
       "name": "TUTO_酒場興行1",
@@ -1899,7 +2109,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x28b0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "7e009cb0": {
       "name": "TUTO_地方興行1",
@@ -1908,7 +2119,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x28e0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "7e009cb3": {
       "name": "TUTO_地方興行2",
@@ -1917,7 +2129,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x2910",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "9dfa38c7": {
       "name": "TUTO_飲み物係",
@@ -1926,7 +2139,8 @@
       "evidence": "screenshot-title-and-order",
       "source": "Tutorial.bin",
       "offset": "0x2940",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "271a8b1e": {
       "label": "Hell's-Eye Cai",
@@ -1935,7 +2149,8 @@
       "title_id": "MID_TUT_Root_SalvationKAI_t",
       "source": "Tutorial.bin",
       "offset": "0x2970",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "1aaa66ec": {
       "label": "Dietrich, the Ravishing Shadow",
@@ -1944,7 +2159,8 @@
       "title_id": "MID_TUT_Root_SalvationDIT_t",
       "source": "Tutorial.bin",
       "offset": "0x29a0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "c886faaa": {
       "label": "Theodora, Breaker of Armies",
@@ -1953,7 +2169,8 @@
       "title_id": "MID_TUT_Root_SalvationSEO_t",
       "source": "Tutorial.bin",
       "offset": "0x29d0",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     },
     "7fe66e65": {
       "label": "Leda, Siren of the Six-String",
@@ -1962,7 +2179,8 @@
       "title_id": "MID_TUT_Root_SalvationLED_t",
       "source": "Tutorial.bin",
       "offset": "0x2a00",
-      "category": "Flame Lords"
+      "category": "Flame Lords",
+      "category_id": 5
     }
   },
   "sources": [

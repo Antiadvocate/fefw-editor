@@ -1,5 +1,11 @@
 # Save-editing contribution roadmap and evidence
 
+**Tutorial category correction, 17 November:** the 38 provisional entries use
+game-data category 6, distinct from ordinary Battle. They remain stored but
+absent from the tested Leda Chapter 9 menus. The player confirmed that Free Time
+unlocked naturally on loading the 40-record test save. The editor now separates
+stored state from menu visibility; see [the investigation](tutorial-menu-visibility.md).
+
 This records a staged contribution based on a Leda Part I Chapter 9 restoration.
 
 **All Deed counters enabled for main at the user's request.** The 14 formerly

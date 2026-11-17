@@ -1,6 +1,6 @@
 """Identified tutorial flags, conservative reads, and atomic list edits.
 
-Only availability (2) and removal are writable here. Other stored states are
+Only stored state 2 and removal are writable here. Other stored states are
 reported verbatim. See docs/tutorials.md for the evidence and limitations.
 """
 from __future__ import annotations
@@ -16,7 +16,9 @@ import facilities
 HERE = Path(__file__).resolve().parent
 AVAILABLE = 2
 MAP_MEMBER = 0xe9bc5b65
-CATEGORIES = ('Battle', 'Bases', 'The World Map', 'Dungeons', 'Flame Lords')
+CATEGORY_NAMES = {1: 'Battle', 2: 'Bases', 3: 'The World Map',
+                  4: 'Dungeons', 5: 'Flame Lords', 6: 'Scenario-specific'}
+CATEGORIES = tuple(CATEGORY_NAMES.values())
 
 
 class TutorialError(core.SaveError):
@@ -33,7 +35,9 @@ def catalog() -> dict[int, dict]:
         for h, row in entries.items():
             if (not row["name"].startswith("TUTO_") or
                     core.id_hash(row["name"]) != h or not row["label"] or
-                    row.get('category') not in CATEGORIES or
+                    type(row.get('category_id')) is not int or
+                    row.get('category_id') not in CATEGORY_NAMES or
+                    row.get('category') != CATEGORY_NAMES[row['category_id']] or
                     row.get('evidence') not in ('screenshot-and-save-restoration', 'screenshot-title-and-order', 'provisional-translation')):
                 raise ValueError("invalid tutorial identity")
         if not entries:
@@ -56,6 +60,15 @@ def apply_labels(names: dict[int, dict]) -> None:
 
 def evidence_label(row):
     return 'Provisional name' if row['evidence'] == 'provisional-translation' else 'Game title checked'
+
+
+def visibility_note(row):
+    if row['category_id'] == 6:
+        return ('Scenario-specific is an editor category, separate from Battle. '
+                'These records are absent from the tested in-game Tutorials menus even when saved as 2. '
+                'Whether they appear during their matching scenarios is unverified.')
+    return ('Stored state does not guarantee menu visibility in every context, '
+            'and adding a tutorial does not unlock the feature it describes.')
 
 
 def _structural_map(f):
@@ -135,7 +148,7 @@ def state_label(value: int | None) -> str:
     if value is None:
         return "Absent"
     if value == AVAILABLE:
-        return "Available (2)"
+        return "Stored (2)"
     if value == 1:
         return "Present (1)"
     return f"Unknown ({value}); preserved"
@@ -151,7 +164,7 @@ def edited(f: core.SaveFile, edits: dict[int, int | None]) -> bytearray:
     cat = catalog()
     for h, value in edits.items():
         if h not in cat or (value is not None and (type(value) is not int or value != AVAILABLE)):
-            raise TutorialError("Only identified tutorials and availability/removal are supported.")
+            raise TutorialError("Only identified tutorials and stored state 2/removal are supported.")
     fm = locate(f)
     present = {fl.hash: fl.value for fl in fm.flags}
     for h in edits:

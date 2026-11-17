@@ -5,6 +5,7 @@ import os
 import struct
 import tempfile
 import unittest
+from collections import Counter
 
 import facilities
 import fefw_core as core
@@ -41,6 +42,33 @@ class CompleteTutorialTest(unittest.TestCase):
         self.assertNotIn('provisional',labels[AUTO]['label'])
         self.assertEqual({r['category'] for r in cat.values()},set(tut.CATEGORIES))
 
+    def test_scenario_records_are_not_ordinary_battle_menu_entries(self):
+        cat=tut.catalog()
+        self.assertEqual(Counter(r['category_id'] for r in cat.values()),
+                         {1:45, 2:48, 3:30, 4:10, 5:47, 6:38})
+        self.assertEqual({h for h,r in cat.items() if r['category_id']==6},
+                         {h for h,r in cat.items() if r['evidence']=='provisional-translation'})
+        scenario=cat[core.id_hash('TUTO_SC11_03_馬車へのダメージ')]
+        self.assertEqual(scenario['category'], 'Scenario-specific')
+        self.assertIn('unverified', tut.visibility_note(scenario))
+        self.assertEqual(cat[core.id_hash('TUTO_マウス操作①')]['category_id'],1)
+        self.assertEqual(tut.state_label(2), 'Stored (2)')
+
+    def test_only_scenario_and_mouse_records_survive_exact_selection(self):
+        cat=tut.catalog()
+        desired={h for h,r in cat.items() if r['category_id']==6}
+        desired.update(core.id_hash(n) for n in ('TUTO_マウス操作①','TUTO_マウス操作②'))
+        full=structured([(h,2,False) for h in cat])
+        original=bytes(full.payload)
+        edits={h:2 if h in desired else None for h in cat}
+        result=core.SaveFile(tut.edited(full,edits))
+        self.assertEqual(tut.read(result),dict.fromkeys(desired,2))
+        self.assertEqual(len(desired),40)
+        self.assertEqual(full.payload,original)
+        self.assertEqual(raw_map(full,facilities.locate(full)),
+                         raw_map(result,facilities.locate(result)))
+        self.assertEqual(tut.edited(result,edits),result.payload)
+
     def test_all_entries_add_clear_and_restore_empty_member(self):
         f=structured([]);original=bytes(f.payload)
         self.assertEqual(tut.read(f),{})
@@ -76,7 +104,7 @@ class TutorialTablesTest(unittest.TestCase):
         self.assertEqual(set(actual['entries']),{f'{h:08x}' for h in cat})
         self.assertEqual([s['entries'] for s in actual['sources']],[217,1])
         for key,row in actual['entries'].items():
-            for field in ('name','title_id','source','offset'):
+            for field in ('name','title_id','source','offset','category_id'):
                 self.assertEqual(cat[int(key,16)][field],row[field])
         self.assertIn('\u3000',cat[0x759e15fb]['name'])
 

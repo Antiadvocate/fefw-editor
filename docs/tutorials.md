@@ -7,9 +7,13 @@ route's other saves**, then open **Tutorials**. Search by English name, Japanese
 key or eight-digit hash. Ctrl+F focuses search; Ctrl/Shift selection and Ctrl+A
 work like the existing tables.
 
-Select one or more rows and choose **Make available** or **Remove selected**.
+Select one or more rows and choose **Add to save** or **Remove selected**.
 Use category, saved-state and name-evidence filters, then **Select shown**
-for a batch. Filtering changes only which rows are selected, not save data.
+for a batch. Filters limit rows available for selection, not save data. Removing
+a filtered selection leaves other records untouched. The counter shows saved
+records inside and outside filters. To remove all identified records, clear the
+search, choose All categories / All states / All names, then Select shown and
+Remove selected.
 The detail panel explains each label's evidence. The original key and hash
 remain available by scrolling horizontally.
 
@@ -19,8 +23,14 @@ selection. Reopen the save to check the exported result.
 The catalogue covers all **218 identities** in the supplied `Tutorial.bin`
 and `Tutorial_P0.bin` tables. **180 titles** now match the supplied category and All-order screenshots,
 correcting 61 labels. **38 unseen scenario titles** remain provisional.
-The focused, full-catalogue and empty-list game tests passed; not every entry
-is visible at every story stage. Absent entries can be added;
+The focused, full-catalogue and empty-list game tests passed their reported
+scope; they did not establish visibility for all 218 records. The 38 provisional
+entries have category 6 in the game tables, separate from ordinary Battle
+(category 1). They are now grouped under **Scenario-specific**, an editor
+description rather than a confirmed in-game tab title. Both supplied Leda
+Chapter 9 examples retain all 38 at value 2 without displaying them in the
+observed menus. Whether they appear during their matching scenarios is unverified.
+Absent records can be added;
 unknown records outside this catalogue are counted and preserved. A tutorial describes a feature; adding it does not unlock the
 facility, ability, quest or story event it describes.
 
@@ -33,13 +43,18 @@ The raw Flags page remains an advanced editor with fewer restrictions.
 
 | Display | Stored representation | Guided action |
 |---|---|---|
-| Absent | No record | Make available inserts value 2 |
-| Available (2) | Record with value 2 | Keep or remove |
+| Absent | No record | Add to save inserts value 2 |
+| Stored (2) | Record with value 2 | Keep or remove |
 | Present (1) | Record with value 1 | Preserve, explicitly change to 2, or remove |
 | Unknown (value); preserved | Any other stored value, including 0 | Editing that selection is refused |
 
 Value 2 successfully restored visible help entries in the tested Leda Chapter 9
-save. Value 1 exists in a working save; its complete semantics have not been
+save, but is not a universal menu-visibility switch. The 40-record Leda sample
+contains only 38 scenario records and two mouse tutorials. Its paired screenshot
+also shows Free Time; the player confirmed that its tutorial popped up and was
+unlocked naturally on loading the save. Editing this map does not stop natural
+tutorial unlocks or guarantee an exact in-game menu.
+Value 1 exists in a working save; its complete semantics have not been
 established. The editor does not label either value as “read” or “unread”.
 Removal deletes the record; writing zero is not an equivalent operation.
 
@@ -125,14 +140,16 @@ ideographic space (U+3000) inside the Eshmel tutorial key is preserved exactly.
 
 The 180 visible labels carry `screenshot-title-and-order` evidence and appear
 as **Game title checked**. The 38 absent labels retain `provisional-translation`,
-**Provisional name**, and a **(provisional)** suffix in Flags. Category filters
-match Battle, Bases, The World Map, Dungeons and Flame Lords. Ordering follows
+**Provisional name**, and a **(provisional)** suffix in Flags. The first child row’s u32 field at +32 supplies `category_id`. Values 1–5
+match Battle, Bases, The World Map, Dungeons and Flame Lords across all 180
+screenshot-checked titles. Value 6 accounts for all 38 scenario-specific entries;
+their earlier Battle classification was an editor error. Ordering follows
 the All screenshots, including Extra Weapons after Merging Causality; unseen
 scenario entries retain their table-relative positions. Categorization does
 not establish route eligibility. See the [61 corrections and 180-title
 crosswalk](tutorial-title-reconciliation.md).
 
-Make available still writes 2; Remove still deletes the record. Value 1 remains
+Add to save still writes 2; Remove still deletes the record. Value 1 remains
 Present (1), and unknown values remain protected. No unsupported read/unread
 semantics have been invented. Bulk actions use the same whole-batch validation,
 Undo/Redo, selected-slot isolation and Save handling as individual edits.
@@ -142,3 +159,6 @@ Further title screenshots are only needed for provisional entries encountered
 during normal progression; do not repeat the 180 confirmed titles. Complete
 coverage of the supplied metadata is not confirmation that all 218 entries are
 visible or useful at every story stage.
+
+See [the category and visibility investigation](tutorial-menu-visibility.md)
+for the two Leda Chapter 9 samples and the limits of the findings.
