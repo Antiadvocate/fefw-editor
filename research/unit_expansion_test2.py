@@ -108,7 +108,8 @@ def build(directory, baseline, output):
     original_catalogue = read_json('unit_catalog.json')
     if source.report(directory) != original_catalogue:
         raise ValueError('Source tables do not reproduce the current catalogue')
-    expanded = source.report(directory, extra_profiles=PROFILES)['entries']
+    # Preserve the historical Test 2 profiles, including mounted Anna.
+    expanded = source.report(directory, extra_profiles=PROFILES, accepted_defaults=False)['entries']
     coverage = audit(directory)
     (output/'catalogue-audit.json').write_text(json.dumps(coverage, ensure_ascii=False, indent=2)+'\n', encoding='utf8')
     with (output/'all-person-records.csv').open('w', newline='', encoding='utf-8-sig') as fp:

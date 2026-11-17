@@ -5,7 +5,7 @@
 | X1 Cai | Pass, including a battle against enemy Cai | Cross-route same-character enemy encounter works in this case |
 | S1 Hong Hua | Pass | Tested Leda Chapter 9 profile |
 | S2 Troy | Pass | Tested Leda Chapter 9 profile |
-| S3 Anna | Cannot deploy as Elephant Rider | Retest pending; do not enable this default yet |
+| S3 Anna / A1 retest | Mounted fails; dismounted passes | Accepted dismounted-only; user confirms she cannot remount |
 | S4 Centurio | Pass | Tested Leda Chapter 9 profile |
 | S5 Mars | Pass | Tested chosen class/profile, not a natural recruitment event |
 | N1 Castor | Pass after switching to Chosen Lance | Supplied Halberd is not usable with his starting ranks |
@@ -65,7 +65,18 @@ class and registered-class list. Her identity, unit number, level, stats,
 inventory, skills, recruitment flags and every other character are preserved.
 Reversing those two edits restores the complete original payload exactly.
 
-Anna remains restricted while testing. If A1/A2 works, adopt a clearly described
-playable default after confirmation. If these reasonable approaches fail and
-no supported fix emerges, remove her from the Add unit list as the user asked;
-retain duplicate recognition for any existing Anna record. No main merge yet.
+## A1 acceptance and editor default
+
+The user confirmed the dismounted case worked perfectly, then clarified that
+Anna cannot remount. The returned container validates and contains Anna in
+Leda Chapter 9 battle context1202 with class `482b7740` (dismounted Elephant
+Rider), level1 and the Bronze Spear. This supports the reported deployment
+pass; it does not validate mounted gameplay. A2 Soldier need not be tested.
+
+Add unit now enables Anna using the exact accepted A1 starting profile: own
+level1 defaults, dismounted class, Bronze Spear, and the same two registered
+classes as the tested input. The preview explicitly says **Dismounted-only**
+and **Cannot remount**. The registered mounted class is retained to match A1;
+it is not a claim that mounting works. Existing records are left unchanged.
+Serialized production creation on the original Leda baseline reproduces the
+tested A1 input byte-for-byte. Anna stays in the list; no main merge yet.

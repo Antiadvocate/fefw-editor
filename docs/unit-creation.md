@@ -9,8 +9,12 @@ parsed record does not establish working deployment.
 ## Catalogue and creation
 
 The picker has 67 named character identities with PID-derived recruitment keys.
-54 ordinary candidates are enabled. Twelve special-character entries and the
-custom protagonist remain visible but disabled pending their own validation.
+54 ordinary candidates and Anna are enabled (55 total). Eleven other
+special-character entries and the custom protagonist remain visible but
+disabled pending promotion/validation of their individual profiles.
+Anna uses her accepted **dismounted-only** class and Bronze Spear. Her Add unit
+preview states that she cannot remount; the mounted class failed deployment in
+the tested battle. Existing Anna records are not automatically reclassed.
 An [audit of all 2,923 Person rows](unit-catalogue-coverage.md) accounts for all
 55 entries with source flag byte 39: 54 enabled plus the custom protagonist.
 That heuristic is not proof of an exhaustive natural-recruitment list.

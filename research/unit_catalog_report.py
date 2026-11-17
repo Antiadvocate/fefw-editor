@@ -38,7 +38,7 @@ def array(data, at):
     return result
 
 
-def report(directory, *, extra_profiles=None):
+def report(directory, *, extra_profiles=None, accepted_defaults=True):
     # Research-only explicit overrides; the normal catalogue remains identical.
     # Passing these does not enable any candidate in the editor.
     extra_profiles = extra_profiles or {}
@@ -123,6 +123,21 @@ def report(directory, *, extra_profiles=None):
             entries[h]['evidence'] = 'Experimental profile; game test pending'
             entries[h]['restriction'] = 'Research-only candidate; not enabled in the editor.'
             entries[h]['experimental_overrides'] = profile
+    if accepted_defaults and 'PID_アンナ' not in extra_profiles:
+        # A1 game acceptance, 17 November 2026: reproduce the tested input,
+        # including its original class registration and carried Bronze Spear.
+        anna = entries[f'{core.id_hash("PID_アンナ"):08x}']
+        mounted = anna['class']
+        dismounted = 'JID_戦象兵下馬'
+        weapon = 'IID_青銅の槍'
+        if dismounted not in jrows or f'{core.id_hash(weapon):08x}' not in items:
+            raise ValueError('Missing accepted Anna defaults')
+        anna.update(class_key=dismounted, **{'class': f'{core.id_hash(dismounted):08x}'})
+        anna['registered_classes'] = [mounted, anna['class']]
+        anna['items'] = [f'{core.id_hash(weapon):08x}']
+        anna['restriction'] = ''
+        anna['evidence'] = ('Dismounted-only: passed Leda Chapter 9 deployment/control tests. '
+                            'Cannot remount; mounted Elephant Rider could not deploy in that battle')
     return {'schema':1, 'scope':'Level-one defaults, not chapter-scaled natural recruits. No story rewards, conditional skills or shared mounts are granted.',
             'sources':{n:hashlib.sha256((Path(directory)/n).read_bytes()).hexdigest()
                        for n in ('Person.bin','Growth.bin','Job.bin','Skill.bin')},

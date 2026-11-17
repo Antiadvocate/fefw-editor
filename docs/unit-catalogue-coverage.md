@@ -1,5 +1,9 @@
 # Catalogue coverage audit
 
+**Update:** Anna's dismounted-only profile is now enabled after the A1 pass.
+The picker has 55 enabled and 12 restricted identities. She cannot remount.
+The original Test 2 audit snapshot below retains its earlier counts/lists.
+
 Audited 2923 Person rows from the supplied game tables.
 The current catalogue has 54 enabled and 13 restricted identities.
 All 55 rows with source flag byte 39 are accounted for:

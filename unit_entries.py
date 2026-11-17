@@ -29,6 +29,10 @@ def catalog():
                 raise ValueError('invalid identity/defaults')
             if not 1 <= r['hp'] <= 999 or len(r['skills']) != 6:
                 raise ValueError('invalid unit defaults')
+            classes = r.get('registered_classes', [r['class']])
+            if (not 1 <= len(classes) <= 255 or len(set(classes)) != len(classes)
+                    or r['class'] not in classes or any(not 0 < int(c,16) <= 0xffffffff for c in classes)):
+                raise ValueError('invalid registered classes')
             for a in [h, *(int(a,16) for a in r['aliases'])]:
                 if a in aliases and aliases[a] != h: raise ValueError('ambiguous character alias')
                 aliases[a] = h
@@ -224,7 +228,8 @@ def _record(row,number,at):
         start=len(b);b.extend(bytes(4)+body);b.extend(bytes(-len(b)%4))
         struct.pack_into('<I',b,start,at+len(b)+32)
     mastery=bytes([len(row['masteries'])])+b''.join(struct.pack('<BH',i,v) for i,v in row['masteries'])
-    leaf(mastery+b'\1'+struct.pack('<IBB',int(row['class'],16),0,4))
+    classes = row.get('registered_classes', [row['class']])
+    leaf(mastery+bytes([len(classes)])+b''.join(struct.pack('<IBB',int(c,16),0,4) for c in classes))
     b.extend(b'\xff\xff\xff\xff\0\0\0\0')
     inventory=row['items']+row['magic']
     leaf(bytes([0,len(row['items']),len(row['magic'])])+b''.join(b'\x41'+struct.pack('<I',int(h,16)) for h in inventory))

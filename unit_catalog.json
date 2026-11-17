@@ -3745,8 +3745,8 @@
       "source_offset": "0xeb40",
       "person_serial": 72,
       "source_flags": 57,
-      "class": "bbead586",
-      "class_key": "JID_戦象兵",
+      "class": "482b7740",
+      "class_key": "JID_戦象兵下馬",
       "level": 1,
       "hp": 22,
       "masteries": [
@@ -3767,7 +3767,9 @@
           35
         ]
       ],
-      "items": [],
+      "items": [
+        "01b158ba"
+      ],
       "magic": [],
       "skills": [
         [
@@ -3809,9 +3811,13 @@
       "recruit_flag": "加入_アンナ",
       "met_flag": "面識_アンナ",
       "default_mount": "",
-      "evidence": "Data-derived; game test pending",
-      "restriction": "Special-character defaults need validation.",
-      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+      "evidence": "Dismounted-only: passed Leda Chapter 9 deployment/control tests. Cannot remount; mounted Elephant Rider could not deploy in that battle",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event.",
+      "registered_classes": [
+        "bbead586",
+        "482b7740"
+      ]
     },
     "55d2f013": {
       "pid": "PID_グラディウス",

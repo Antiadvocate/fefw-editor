@@ -54,6 +54,17 @@ def fixture(people=((CAI,12),), equipped=False):
 
 
 class UnitEntryTest(unittest.TestCase):
+    def test_anna_uses_accepted_dismounted_profile(self):
+        f=fixture();person=core.id_hash('PID_アンナ')
+        g=core.SaveFile(entries.add(f,person));u=g.units()[-1]
+        mounted=core.id_hash('JID_戦象兵');dismounted=core.id_hash('JID_戦象兵下馬')
+        self.assertEqual(u.klass,dismounted)
+        self.assertEqual(u.classes,[(mounted,0,4),(dismounted,0,4)])
+        self.assertEqual(u.items,[core.id_hash('IID_青銅の槍')])
+        self.assertIn('Cannot remount',entries.catalog()[person]['evidence'])
+        self.assertEqual(entries.status(g,person),'Already in party')
+        with self.assertRaises(core.SaveError):entries.add(g,person)
+
     def test_creation_uses_own_defaults_and_preserves_existing_records(self):
         f=fixture(equipped=True);before=bytes(f.payload);old=story_start.normalized_blocks(f)
         original=f.tree().copy_object(f.tree().node_at(f.units()[0].start),0)
