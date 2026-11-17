@@ -20,6 +20,18 @@ import fefw_core as core
 import supports
 from fefw_save import item_ids, item_label, unit_ids
 from map_page import MapPageMixin
+from tutorial_page import TutorialPageMixin
+from blessing_page import BlessingPageMixin
+from fast_travel_page import FastTravelPageMixin
+import fast_travel
+import deeds
+from deed_page import DeedPageMixin
+from boon_page import BoonPageMixin
+from facility_page import FacilityPageMixin
+from story_page import StoryPageMixin
+import audiences
+import tutorials
+import flag_labels
 from ui_util import enable_multi_select
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -93,10 +105,12 @@ def flag_names() -> dict:
     global _FLAG_NAMES
     if _FLAG_NAMES is None:
         try:
-            raw = json.load(open(os.path.join(HERE, "flag_names.json"), encoding="utf8"))
+            with open(os.path.join(HERE, "flag_names.json"), encoding="utf8") as fh:
+                raw = json.load(fh)
             _FLAG_NAMES = {int(k, 16): v for k, v in raw.items()}
         except Exception:                     # noqa: BLE001 — the page still works
             _FLAG_NAMES = {}
+        flag_labels.apply_labels(_FLAG_NAMES, strict=False)
     return _FLAG_NAMES
 
 
@@ -123,16 +137,16 @@ def rank_of(exp: int) -> int:
     return r
 
 
-class AdvancedMixin(MapPageMixin):
+class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTravelPageMixin, DeedPageMixin, BoonPageMixin, FacilityPageMixin, StoryPageMixin):
     # ------------------------------------------------------------- helpers
     def core_of(self, sv=None):
-        """fefw_core.SaveFile for a slot (cached on the payload object)."""
+        """Decoded slot, reused only while its source bytes are unchanged."""
         sv = sv or self.sv
         if sv is None:
             return None
         key = (sv.path, id(sv.payload))
         cache = getattr(sv, "_core_cache", None)
-        if cache and cache[0] == key:
+        if cache and cache[0] == key and cache[1].payload == sv.payload:
             return cache[1]
         f = core.SaveFile(bytes(sv.payload))
         sv._core_cache = (key, f)
@@ -179,12 +193,24 @@ class AdvancedMixin(MapPageMixin):
         self.refresh_flags()
         self.refresh_supports()
         self.refresh_world_map()
+        self.refresh_tutorials()
+        self.refresh_blessings()
+        self.refresh_fast_travel()
+        self.refresh_facilities()
+        self.refresh_deeds()
+        self.refresh_boons()
 
     def refresh_core_pages(self):
         self.refresh_player()
         self.refresh_classes_page()
         self.refresh_flags()
         self.refresh_world_map()
+        self.refresh_tutorials()
+        self.refresh_blessings()
+        self.refresh_fast_travel()
+        self.refresh_facilities()
+        self.refresh_deeds()
+        self.refresh_boons()
 
     # -------------------------------------------------------- pick a value
     def _picker(self, title: str, rows, current: int | None = None):
@@ -248,7 +274,7 @@ class AdvancedMixin(MapPageMixin):
     # ============================================================ PLAYER
     def _build_player(self):
         page = self.player_page
-        card = ttk.Frame(page, style="Card.TFrame", padding=(16, 14))
+        card = ttk.Frame(page, style="Card.TFrame", padding=(16, 10))
         card.pack(fill="x")
         ttk.Label(card, text="Player", style="CardH3.TLabel").pack(anchor="w")
         ttk.Label(card, text="Army-wide values, stored in GameUserData at the start of the save.",
@@ -273,7 +299,7 @@ class AdvancedMixin(MapPageMixin):
                                      justify="left")
         self.player_note.grid(row=3, column=0, columnspan=3, sticky="w", pady=(10, 0))
 
-        card2 = ttk.Frame(page, style="Card.TFrame", padding=(16, 14))
+        card2 = ttk.Frame(page, style="Card.TFrame", padding=(16, 10))
         card2.pack(fill="x", pady=(10, 0))
         ttk.Label(card2, text="Run settings", style="CardH3.TLabel").pack(anchor="w")
         ttk.Label(card2, text="Written into every copy the save keeps, and into every slot in this "
@@ -295,8 +321,10 @@ class AdvancedMixin(MapPageMixin):
         cb2.bind("<<ComboboxSelected>>", lambda e: self.apply_settings())
         self.play_lbl = ttk.Label(card2, text="", style="CardFaint.TLabel")
         self.play_lbl.pack(anchor="w", pady=(10, 0))
+        self._build_story(page)
 
     def refresh_player(self):
+        self.refresh_story()
         if not hasattr(self, "player_vars"):
             return
         f = self.core_of()
@@ -957,6 +985,7 @@ class AdvancedMixin(MapPageMixin):
         quick.pack(fill="x")
         for text, prefix in (("All", ""), ("Supports", "支援会話_"), ("Recruited", "加入_"),
                              ("Met", "面識_"), ("Achievements", "実績_"),
+                             ("Tutorials", "TUTO_"),
                              ("Expansion classes", "兵種解放_")):
             ttk.Button(quick, text=text, style="Small.TButton",
                        command=lambda p=prefix: self.set_flag_filter(p)).pack(side="left",
@@ -965,7 +994,7 @@ class AdvancedMixin(MapPageMixin):
         self.flag_tree = scrolled_tree(page, columns=("label", "value", "map"),
                                        show="tree headings", selectmode="browse")
         self.flag_tree.heading("#0", text="Name", anchor="w")
-        self.flag_tree.heading("label", text="Reads as", anchor="w")
+        self.flag_tree.heading("label", text="Reads As", anchor="w")
         self.flag_tree.heading("value", text="Value", anchor="e")
         self.flag_tree.heading("map", text="List", anchor="e")
         self.flag_tree.column("#0", width=260)
@@ -1342,21 +1371,23 @@ def push_undo(self):
     if not self.sv:
         return
     stack = getattr(self, "_undo_stack", None)
-    if stack is None:
+    if stack is None or getattr(self, "_history_slot", None) is not self.sv:
         stack = self._undo_stack = []
         self._redo_stack = []
-    stack.append(bytes(self.sv.payload))
+        self._history_slot = self.sv
+    stack.append((bytes(self.sv.payload), getattr(self.sv, '_pending_story_chapter', None)))
     del stack[:-60]
     self._redo_stack.clear()
 
 
 def undo(self):
     stack = getattr(self, "_undo_stack", None)
-    if not stack or not self.sv:
+    if not stack or not self.sv or getattr(self, "_history_slot", None) is not self.sv:
         self.flash("Nothing to undo.", "info")
         return
-    self._redo_stack.append(bytes(self.sv.payload))
-    self.sv.payload = bytearray(stack.pop())
+    self._redo_stack.append((bytes(self.sv.payload), getattr(self.sv, '_pending_story_chapter', None)))
+    payload, self.sv._pending_story_chapter = stack.pop()
+    self.sv.payload = bytearray(payload)
     self.sv.scan()
     self.sv._core_cache = None
     self._touch([self.sv])
@@ -1366,11 +1397,12 @@ def undo(self):
 
 def redo(self):
     stack = getattr(self, "_redo_stack", None)
-    if not stack or not self.sv:
+    if not stack or not self.sv or getattr(self, "_history_slot", None) is not self.sv:
         self.flash("Nothing to redo.", "info")
         return
-    self._undo_stack.append(bytes(self.sv.payload))
-    self.sv.payload = bytearray(stack.pop())
+    self._undo_stack.append((bytes(self.sv.payload), getattr(self.sv, '_pending_story_chapter', None)))
+    payload, self.sv._pending_story_chapter = stack.pop()
+    self.sv.payload = bytearray(payload)
     self.sv.scan()
     self.sv._core_cache = None
     self._touch([self.sv])

@@ -1,0 +1,2558 @@
+{
+  "schema": 1,
+  "source": "Mapped Reward table identities and thresholds; Leda Chapter 9 restoration and before/after claim comparison. See docs/notable-deeds.md.",
+  "entries": {
+    "ac891429": {
+      "name": "実績_外伝クリア数",
+      "label": "Paralogues cleared",
+      "category": "Story",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_外伝をクリア",
+          "hash": "ccc4bad6",
+          "target": 1,
+          "reward": 25
+        },
+        {
+          "name": "実績状態_外伝をクリア_1",
+          "hash": "b2da48d6",
+          "target": 2,
+          "reward": 25
+        },
+        {
+          "name": "実績状態_外伝をクリア_2",
+          "hash": "b2da48d5",
+          "target": 3,
+          "reward": 25
+        },
+        {
+          "name": "実績状態_外伝をクリア_3",
+          "hash": "b2da48d4",
+          "target": 4,
+          "reward": 25
+        },
+        {
+          "name": "実績状態_外伝をクリア_4",
+          "hash": "b2da48d3",
+          "target": 5,
+          "reward": 25
+        },
+        {
+          "name": "実績状態_外伝をクリア_5",
+          "hash": "b2da48d2",
+          "target": 6,
+          "reward": 25
+        },
+        {
+          "name": "実績状態_外伝をクリア_6",
+          "hash": "b2da48d1",
+          "target": 7,
+          "reward": 25
+        },
+        {
+          "name": "実績状態_外伝をクリア_7",
+          "hash": "b2da48d0",
+          "target": 8,
+          "reward": 25
+        },
+        {
+          "name": "実績状態_外伝をクリア_8",
+          "hash": "b2da48df",
+          "target": 9,
+          "reward": 25
+        }
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
+    },
+    "6e05ea11": {
+      "name": "実績_支援会話C再生数",
+      "label": "C support conversations viewed",
+      "category": "Supports",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_支援会話Cを見た",
+          "hash": "cb038130",
+          "target": 5,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_支援会話Cを見た_1",
+          "hash": "a17dab8c",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_支援会話Cを見た_2",
+          "hash": "a17dab8f",
+          "target": 15,
+          "reward": 15
+        },
+        {
+          "name": "実績状態_支援会話Cを見た_3",
+          "hash": "a17dab8e",
+          "target": 20,
+          "reward": 20
+        },
+        {
+          "name": "実績状態_支援会話Cを見た_4",
+          "hash": "a17dab89",
+          "target": 25,
+          "reward": 25
+        },
+        {
+          "name": "実績状態_支援会話Cを見た_5",
+          "hash": "a17dab88",
+          "target": 30,
+          "reward": 30
+        },
+        {
+          "name": "実績状態_支援会話Cを見た_6",
+          "hash": "a17dab8b",
+          "target": 35,
+          "reward": 35
+        },
+        {
+          "name": "実績状態_支援会話Cを見た_7",
+          "hash": "a17dab8a",
+          "target": 40,
+          "reward": 40
+        },
+        {
+          "name": "実績状態_支援会話Cを見た_8",
+          "hash": "a17dab85",
+          "target": 45,
+          "reward": 45
+        },
+        {
+          "name": "実績状態_支援会話Cを見た_9",
+          "hash": "a17dab84",
+          "target": 50,
+          "reward": 50
+        }
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
+    },
+    "cc4a3b3a": {
+      "name": "実績_支援会話B再生数",
+      "label": "B support conversations viewed",
+      "category": "Supports",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_支援会話Bを見た",
+          "hash": "5ed7a67b",
+          "target": 5,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_支援会話Bを見た_1",
+          "hash": "b61f588b",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_支援会話Bを見た_2",
+          "hash": "b61f5888",
+          "target": 15,
+          "reward": 15
+        },
+        {
+          "name": "実績状態_支援会話Bを見た_3",
+          "hash": "b61f5889",
+          "target": 20,
+          "reward": 20
+        },
+        {
+          "name": "実績状態_支援会話Bを見た_4",
+          "hash": "b61f588e",
+          "target": 25,
+          "reward": 25
+        },
+        {
+          "name": "実績状態_支援会話Bを見た_5",
+          "hash": "b61f588f",
+          "target": 30,
+          "reward": 30
+        },
+        {
+          "name": "実績状態_支援会話Bを見た_6",
+          "hash": "b61f588c",
+          "target": 35,
+          "reward": 35
+        },
+        {
+          "name": "実績状態_支援会話Bを見た_7",
+          "hash": "b61f588d",
+          "target": 40,
+          "reward": 40
+        },
+        {
+          "name": "実績状態_支援会話Bを見た_8",
+          "hash": "b61f5882",
+          "target": 45,
+          "reward": 45
+        },
+        {
+          "name": "実績状態_支援会話Bを見た_9",
+          "hash": "b61f5883",
+          "target": 50,
+          "reward": 50
+        }
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
+    },
+    "01aca43b": {
+      "name": "実績_支援会話A再生数",
+      "label": "A support conversations viewed",
+      "category": "Supports",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_支援会話Aを見た",
+          "hash": "88516f72",
+          "target": 5,
+          "reward": 100
+        },
+        {
+          "name": "実績状態_支援会話Aを見た_1",
+          "hash": "e9c145da",
+          "target": 10,
+          "reward": 200
+        },
+        {
+          "name": "実績状態_支援会話Aを見た_2",
+          "hash": "e9c145d9",
+          "target": 15,
+          "reward": 300
+        },
+        {
+          "name": "実績状態_支援会話Aを見た_3",
+          "hash": "e9c145d8",
+          "target": 20,
+          "reward": 400
+        },
+        {
+          "name": "実績状態_支援会話Aを見た_4",
+          "hash": "e9c145df",
+          "target": 25,
+          "reward": 500
+        },
+        {
+          "name": "実績状態_支援会話Aを見た_5",
+          "hash": "e9c145de",
+          "target": 30,
+          "reward": 600
+        },
+        {
+          "name": "実績状態_支援会話Aを見た_6",
+          "hash": "e9c145dd",
+          "target": 35,
+          "reward": 700
+        },
+        {
+          "name": "実績状態_支援会話Aを見た_7",
+          "hash": "e9c145dc",
+          "target": 40,
+          "reward": 800
+        },
+        {
+          "name": "実績状態_支援会話Aを見た_8",
+          "hash": "e9c145d3",
+          "target": 45,
+          "reward": 900
+        },
+        {
+          "name": "実績状態_支援会話Aを見た_9",
+          "hash": "e9c145d2",
+          "target": 50,
+          "reward": 1000
+        }
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
+    },
+    "eb92a0f6": {
+      "name": "実績_プレイ時間",
+      "label": "Hours played",
+      "category": "Time",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_合計時間プレイ",
+          "hash": "e0de8be2",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_合計時間プレイ_1",
+          "hash": "71725a0a",
+          "target": 20,
+          "reward": 20
+        },
+        {
+          "name": "実績状態_合計時間プレイ_2",
+          "hash": "71725a09",
+          "target": 30,
+          "reward": 30
+        },
+        {
+          "name": "実績状態_合計時間プレイ_3",
+          "hash": "71725a08",
+          "target": 40,
+          "reward": 40
+        },
+        {
+          "name": "実績状態_合計時間プレイ_4",
+          "hash": "71725a0f",
+          "target": 50,
+          "reward": 50
+        },
+        {
+          "name": "実績状態_合計時間プレイ_5",
+          "hash": "71725a0e",
+          "target": 60,
+          "reward": 50
+        },
+        {
+          "name": "実績状態_合計時間プレイ_6",
+          "hash": "71725a0d",
+          "target": 70,
+          "reward": 50
+        },
+        {
+          "name": "実績状態_合計時間プレイ_7",
+          "hash": "71725a0c",
+          "target": 80,
+          "reward": 50
+        },
+        {
+          "name": "実績状態_合計時間プレイ_8",
+          "hash": "71725a03",
+          "target": 90,
+          "reward": 50
+        },
+        {
+          "name": "実績状態_合計時間プレイ_9",
+          "hash": "71725a02",
+          "target": 100,
+          "reward": 50
+        },
+        {
+          "name": "実績状態_合計時間プレイ_10",
+          "hash": "c54efece",
+          "target": 150,
+          "reward": 50
+        },
+        {
+          "name": "実績状態_合計時間プレイ_11",
+          "hash": "c54efecf",
+          "target": 200,
+          "reward": 50
+        },
+        {
+          "name": "実績状態_合計時間プレイ_12",
+          "hash": "c54efecc",
+          "target": 250,
+          "reward": 50
+        },
+        {
+          "name": "実績状態_合計時間プレイ_13",
+          "hash": "c54efecd",
+          "target": 300,
+          "reward": 50
+        }
+      ],
+      "editing_note": "20-hour completion, reward and save/load tested. Later real-hour updates and higher milestones remain untested."
+    },
+    "c6f4cfe6": {
+      "name": "実績_技能レベルC成長数",
+      "label": "Skill levels raised to C",
+      "category": "Growth",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_技能レベルCを成長",
+          "hash": "5a567e79",
+          "target": 3,
+          "reward": 10
+        }
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
+    },
+    "05413e55": {
+      "name": "実績_技能レベルB成長数",
+      "label": "Skill levels raised to B",
+      "category": "Growth",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_技能レベルBを成長",
+          "hash": "f53498f6",
+          "target": 3,
+          "reward": 20
+        }
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
+    },
+    "69c3bd94": {
+      "name": "実績_技能レベルA成長数",
+      "label": "Skill levels raised to A",
+      "category": "Growth",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_技能レベルAを成長",
+          "hash": "4db9cfb7",
+          "target": 3,
+          "reward": 30
+        }
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
+    },
+    "0c174336": {
+      "name": "実績_技能レベルS成長数",
+      "label": "Skill levels raised to S",
+      "category": "Growth",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_技能レベルSを成長",
+          "hash": "c09f41a9",
+          "target": 3,
+          "reward": 40
+        }
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
+    },
+    "0cd50d11": {
+      "name": "実績_技能レベル最大成長数",
+      "label": "Skill levels raised to maximum",
+      "category": "Growth",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_技能レベル最大を成長",
+          "hash": "5a79e76c",
+          "target": 3,
+          "reward": 50
+        }
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
+    },
+    "da109aa3": {
+      "name": "実績_加護レベル2達成数",
+      "label": "Blessings raised to level 2",
+      "category": "Growth",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_加護レベル2を達成",
+          "hash": "da8ad7f2",
+          "target": 1,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_加護レベル2を達成_1",
+          "hash": "cd9c825a",
+          "target": 3,
+          "reward": 30
+        },
+        {
+          "name": "実績状態_加護レベル2を達成_2",
+          "hash": "cd9c8259",
+          "target": 6,
+          "reward": 100
+        }
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
+    },
+    "b8892bfd": {
+      "name": "実績_加護レベル最大達成数",
+      "label": "Blessings raised to maximum",
+      "category": "Growth",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_加護レベル最大を達成",
+          "hash": "3ef2cbd6",
+          "target": 1,
+          "reward": 30
+        },
+        {
+          "name": "実績状態_加護レベル最大を達成_1",
+          "hash": "f74e01d6",
+          "target": 3,
+          "reward": 100
+        },
+        {
+          "name": "実績状態_加護レベル最大を達成_2",
+          "hash": "f74e01d5",
+          "target": 6,
+          "reward": 200
+        }
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
+    },
+    "2adbdfbf": {
+      "name": "実績_訓練回数",
+      "label": "Training sessions",
+      "category": "Base activities",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_訓練を実行",
+          "hash": "dbb579a7",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_訓練を実行_1",
+          "hash": "0e3d479f",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_訓練を実行_2",
+          "hash": "0e3d479c",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_訓練を実行_3",
+          "hash": "0e3d479d",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_訓練を実行_4",
+          "hash": "0e3d479a",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_訓練を実行_5",
+          "hash": "0e3d479b",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_訓練を実行_6",
+          "hash": "0e3d4798",
+          "target": 100,
+          "reward": 10
+        }
+      ]
+    },
+    "c01c6da3": {
+      "name": "実績_観劇回数",
+      "label": "Theatre visits",
+      "category": "Base activities",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_観劇を実行",
+          "hash": "b9659b47",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_観劇を実行_1",
+          "hash": "008463ff",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_観劇を実行_2",
+          "hash": "008463fc",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_観劇を実行_3",
+          "hash": "008463fd",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_観劇を実行_4",
+          "hash": "008463fa",
+          "target": 50,
+          "reward": 10
+        }
+      ]
+    },
+    "b693004d": {
+      "name": "実績_奉仕回数",
+      "label": "Temple services performed",
+      "category": "Base activities",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_奉仕を実行",
+          "hash": "42a71131",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_奉仕を実行_1",
+          "hash": "f361f1a5",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_奉仕を実行_2",
+          "hash": "f361f1a6",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_奉仕を実行_3",
+          "hash": "f361f1a7",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_奉仕を実行_4",
+          "hash": "f361f1a0",
+          "target": 50,
+          "reward": 10
+        }
+      ]
+    },
+    "e14e0e21": {
+      "name": "実績_宿泊回数",
+      "label": "Rooms rented at inns",
+      "category": "Base activities",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_宿泊を実行",
+          "hash": "32bab6a9",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_宿泊を実行_1",
+          "hash": "1d31982d",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_宿泊を実行_2",
+          "hash": "1d31982e",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_宿泊を実行_3",
+          "hash": "1d31982f",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_宿泊を実行_4",
+          "hash": "1d319828",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_宿泊を実行_5",
+          "hash": "1d319829",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_宿泊を実行_6",
+          "hash": "1d31982a",
+          "target": 100,
+          "reward": 10
+        }
+      ]
+    },
+    "dbc7c723": {
+      "name": "実績_個別行動周期数",
+      "label": "Turns performing individual actions",
+      "category": "Base activities",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_個別行動を実行",
+          "hash": "101c9db0",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_個別行動を実行_1",
+          "hash": "2fc8bc0c",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_個別行動を実行_2",
+          "hash": "2fc8bc0f",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_個別行動を実行_3",
+          "hash": "2fc8bc0e",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_個別行動を実行_4",
+          "hash": "2fc8bc09",
+          "target": 50,
+          "reward": 10
+        }
+      ]
+    },
+    "4baccce0": {
+      "name": "実績_食事回数",
+      "label": "Meals at inns",
+      "category": "Base activities",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_食事を実行",
+          "hash": "23c044f6",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_食事を実行_1",
+          "hash": "c0ddc836",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_食事を実行_2",
+          "hash": "c0ddc835",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_食事を実行_3",
+          "hash": "c0ddc834",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_食事を実行_4",
+          "hash": "c0ddc833",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_食事を実行_5",
+          "hash": "c0ddc832",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_食事を実行_6",
+          "hash": "c0ddc831",
+          "target": 100,
+          "reward": 10
+        }
+      ]
+    },
+    "23a7a96e": {
+      "name": "実績_贈り物回数",
+      "label": "Gifts given",
+      "category": "Base activities",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_贈り物を実行",
+          "hash": "1d27e65e",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_贈り物を実行_1",
+          "hash": "d965882e",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_贈り物を実行_2",
+          "hash": "d965882d",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_贈り物を実行_3",
+          "hash": "d965882c",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_贈り物を実行_4",
+          "hash": "d965882b",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_贈り物を実行_5",
+          "hash": "d965882a",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_贈り物を実行_6",
+          "hash": "d9658829",
+          "target": 100,
+          "reward": 10
+        }
+      ]
+    },
+    "971d3e40": {
+      "name": "実績_パーフェクト回数",
+      "label": "Perfect interactions at the perch",
+      "category": "Base activities",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_パーフェクトを実行",
+          "hash": "e0f46bda",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_パーフェクトを実行_1",
+          "hash": "9a7b2c72",
+          "target": 20,
+          "reward": 20
+        },
+        {
+          "name": "実績状態_パーフェクトを実行_2",
+          "hash": "9a7b2c71",
+          "target": 30,
+          "reward": 30
+        },
+        {
+          "name": "実績状態_パーフェクトを実行_3",
+          "hash": "9a7b2c70",
+          "target": 40,
+          "reward": 40
+        },
+        {
+          "name": "実績状態_パーフェクトを実行_4",
+          "hash": "9a7b2c77",
+          "target": 50,
+          "reward": 50
+        }
+      ]
+    },
+    "ef1833d1": {
+      "name": "実績_白鴉絆回数",
+      "label": "Bonds deepened with the Pale Raven",
+      "category": "Base activities",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_白鴉絆を実行",
+          "hash": "eab37f7f",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_白鴉絆を実行_1",
+          "hash": "bfcaa427",
+          "target": 20,
+          "reward": 20
+        },
+        {
+          "name": "実績状態_白鴉絆を実行_2",
+          "hash": "bfcaa424",
+          "target": 30,
+          "reward": 30
+        },
+        {
+          "name": "実績状態_白鴉絆を実行_3",
+          "hash": "bfcaa425",
+          "target": 40,
+          "reward": 40
+        },
+        {
+          "name": "実績状態_白鴉絆を実行_4",
+          "hash": "bfcaa422",
+          "target": 50,
+          "reward": 50
+        }
+      ]
+    },
+    "2f6582a3": {
+      "name": "実績_資格試験成功回数",
+      "label": "Certification exams passed",
+      "category": "Base activities",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_資格試験を成功",
+          "hash": "dd0a314c",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_資格試験を成功_1",
+          "hash": "d2f0dd30",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_資格試験を成功_2",
+          "hash": "d2f0dd33",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_資格試験を成功_3",
+          "hash": "d2f0dd32",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_資格試験を成功_4",
+          "hash": "d2f0dd35",
+          "target": 50,
+          "reward": 10
+        }
+      ]
+    },
+    "37d2ac86": {
+      "name": "実績_ヴァンダル商会交換数",
+      "label": "Vandahl Trading Company exchanges",
+      "category": "Base activities",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_ヴァンダル商会で交換",
+          "hash": "2888f541",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_ヴァンダル商会で交換_1",
+          "hash": "d9e971f5",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_ヴァンダル商会で交換_2",
+          "hash": "d9e971f6",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_ヴァンダル商会で交換_3",
+          "hash": "d9e971f7",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_ヴァンダル商会で交換_4",
+          "hash": "d9e971f0",
+          "target": 50,
+          "reward": 10
+        }
+      ]
+    },
+    "71015890": {
+      "name": "実績_買い物消費金額",
+      "label": "Gold spent at shops in bases",
+      "category": "Spending",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_買い物で消費",
+          "hash": "3cfcfda4",
+          "target": 10000,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_買い物で消費_1",
+          "hash": "14b583d8",
+          "target": 30000,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_買い物で消費_2",
+          "hash": "14b583db",
+          "target": 50000,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_買い物で消費_3",
+          "hash": "14b583da",
+          "target": 100000,
+          "reward": 20
+        },
+        {
+          "name": "実績状態_買い物で消費_4",
+          "hash": "14b583dd",
+          "target": 200000,
+          "reward": 20
+        },
+        {
+          "name": "実績状態_買い物で消費_5",
+          "hash": "14b583dc",
+          "target": 300000,
+          "reward": 20
+        }
+      ]
+    },
+    "50126cb8": {
+      "name": "実績_敵撃破数",
+      "label": "Foes defeated in battle",
+      "category": "Battle",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_敵を撃破",
+          "hash": "15491583",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_1",
+          "hash": "61cde743",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_2",
+          "hash": "61cde740",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_3",
+          "hash": "61cde741",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_4",
+          "hash": "61cde746",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_5",
+          "hash": "61cde747",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_6",
+          "hash": "61cde744",
+          "target": 100,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_7",
+          "hash": "61cde745",
+          "target": 150,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_8",
+          "hash": "61cde74a",
+          "target": 200,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_9",
+          "hash": "61cde74b",
+          "target": 250,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_10",
+          "hash": "30dff6e9",
+          "target": 300,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_11",
+          "hash": "30dff6e8",
+          "target": 350,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_12",
+          "hash": "30dff6eb",
+          "target": 400,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_13",
+          "hash": "30dff6ea",
+          "target": 450,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_14",
+          "hash": "30dff6ed",
+          "target": 500,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_15",
+          "hash": "30dff6ec",
+          "target": 600,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_16",
+          "hash": "30dff6ef",
+          "target": 700,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_17",
+          "hash": "30dff6ee",
+          "target": 800,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_18",
+          "hash": "30dff6e1",
+          "target": 900,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_敵を撃破_19",
+          "hash": "30dff6e0",
+          "target": 1000,
+          "reward": 10
+        }
+      ]
+    },
+    "1be28238": {
+      "name": "実績_冥魔敵撃破数",
+      "label": "Undead foes defeated in battle",
+      "category": "Battle",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_冥魔敵を撃破",
+          "hash": "9cf47dbf",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_冥魔敵を撃破_1",
+          "hash": "ea26f5e7",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_冥魔敵を撃破_2",
+          "hash": "ea26f5e4",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_冥魔敵を撃破_3",
+          "hash": "ea26f5e5",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_冥魔敵を撃破_4",
+          "hash": "ea26f5e2",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_冥魔敵を撃破_5",
+          "hash": "ea26f5e3",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_冥魔敵を撃破_6",
+          "hash": "ea26f5e0",
+          "target": 100,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_冥魔敵を撃破_7",
+          "hash": "ea26f5e1",
+          "target": 150,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_冥魔敵を撃破_8",
+          "hash": "ea26f5ee",
+          "target": 200,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_冥魔敵を撃破_9",
+          "hash": "ea26f5ef",
+          "target": 250,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_冥魔敵を撃破_10",
+          "hash": "e033d7b5",
+          "target": 300,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_冥魔敵を撃破_11",
+          "hash": "e033d7b4",
+          "target": 350,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_冥魔敵を撃破_12",
+          "hash": "e033d7b7",
+          "target": 400,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_冥魔敵を撃破_13",
+          "hash": "e033d7b6",
+          "target": 450,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_冥魔敵を撃破_14",
+          "hash": "e033d7b1",
+          "target": 500,
+          "reward": 10
+        }
+      ]
+    },
+    "84f61022": {
+      "name": "実績_巨大敵撃破数",
+      "label": "Giant foes defeated (translation)",
+      "category": "Battle",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_巨大敵を撃破",
+          "hash": "e2c74c19",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_巨大敵を撃破_1",
+          "hash": "a296c71d",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_巨大敵を撃破_2",
+          "hash": "a296c71e",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_巨大敵を撃破_3",
+          "hash": "a296c71f",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_巨大敵を撃破_4",
+          "hash": "a296c718",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_巨大敵を撃破_5",
+          "hash": "a296c719",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_巨大敵を撃破_6",
+          "hash": "a296c71a",
+          "target": 100,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_巨大敵を撃破_7",
+          "hash": "a296c71b",
+          "target": 150,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_巨大敵を撃破_8",
+          "hash": "a296c714",
+          "target": 200,
+          "reward": 10
+        }
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
+    },
+    "9bd7c8ca": {
+      "name": "実績_野生敵撃破数",
+      "label": "Beasts defeated in battle",
+      "category": "Battle",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_野生敵を撃破",
+          "hash": "f04d71d5",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_野生敵を撃破_1",
+          "hash": "0c00af21",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_野生敵を撃破_2",
+          "hash": "0c00af22",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_野生敵を撃破_3",
+          "hash": "0c00af23",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_野生敵を撃破_4",
+          "hash": "0c00af24",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_野生敵を撃破_5",
+          "hash": "0c00af25",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_野生敵を撃破_6",
+          "hash": "0c00af26",
+          "target": 100,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_野生敵を撃破_7",
+          "hash": "0c00af27",
+          "target": 150,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_野生敵を撃破_8",
+          "hash": "0c00af28",
+          "target": 200,
+          "reward": 10
+        }
+      ]
+    },
+    "550f13b3": {
+      "name": "実績_家畜敵撃破数",
+      "label": "Livestock defeated in battle",
+      "category": "Battle",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_家畜敵を撃破",
+          "hash": "c5f6ea38",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_家畜敵を撃破_1",
+          "hash": "7aabb104",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_家畜敵を撃破_2",
+          "hash": "7aabb107",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_家畜敵を撃破_3",
+          "hash": "7aabb106",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_家畜敵を撃破_4",
+          "hash": "7aabb101",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_家畜敵を撃破_5",
+          "hash": "7aabb100",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_家畜敵を撃破_6",
+          "hash": "7aabb103",
+          "target": 100,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_家畜敵を撃破_7",
+          "hash": "7aabb102",
+          "target": 150,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_家畜敵を撃破_8",
+          "hash": "7aabb10d",
+          "target": 200,
+          "reward": 10
+        }
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
+    },
+    "e203feff": {
+      "name": "実績_特別敵撃破数",
+      "label": "Golden or silver mummies defeated",
+      "category": "Battle",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_特別敵を撃破",
+          "hash": "e97babe4",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特別敵を撃破_1",
+          "hash": "66015298",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特別敵を撃破_2",
+          "hash": "6601529b",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特別敵を撃破_3",
+          "hash": "6601529a",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特別敵を撃破_4",
+          "hash": "6601529d",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特別敵を撃破_5",
+          "hash": "6601529c",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特別敵を撃破_6",
+          "hash": "6601529f",
+          "target": 100,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特別敵を撃破_7",
+          "hash": "6601529e",
+          "target": 150,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特別敵を撃破_8",
+          "hash": "66015291",
+          "target": 200,
+          "reward": 10
+        }
+      ],
+      "inferred": true,
+      "editing_note": "Inferred: this counter has not been tested in game. Only its Deed total changes; check progress after loading."
+    },
+    "6614ae03": {
+      "name": "実績_回避回数",
+      "label": "Attacks avoided",
+      "category": "Battle",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_回避を実行",
+          "hash": "e91290c7",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_回避を実行_1",
+          "hash": "ebe8357f",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_回避を実行_2",
+          "hash": "ebe8357c",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_回避を実行_3",
+          "hash": "ebe8357d",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_回避を実行_4",
+          "hash": "ebe8357a",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_回避を実行_5",
+          "hash": "ebe8357b",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_回避を実行_6",
+          "hash": "ebe83578",
+          "target": 100,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_回避を実行_7",
+          "hash": "ebe83579",
+          "target": 150,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_回避を実行_8",
+          "hash": "ebe83576",
+          "target": 200,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_回避を実行_9",
+          "hash": "ebe83577",
+          "target": 250,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_回避を実行_10",
+          "hash": "db92e6fd",
+          "target": 300,
+          "reward": 10
+        }
+      ]
+    },
+    "e997585d": {
+      "name": "実績_必殺回数",
+      "label": "Critical attacks performed",
+      "category": "Battle",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_必殺を実行",
+          "hash": "52306e85",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_必殺を実行_1",
+          "hash": "f8cb00d1",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_必殺を実行_2",
+          "hash": "f8cb00d2",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_必殺を実行_3",
+          "hash": "f8cb00d3",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_必殺を実行_4",
+          "hash": "f8cb00d4",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_必殺を実行_5",
+          "hash": "f8cb00d5",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_必殺を実行_6",
+          "hash": "f8cb00d6",
+          "target": 100,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_必殺を実行_7",
+          "hash": "f8cb00d7",
+          "target": 150,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_必殺を実行_8",
+          "hash": "f8cb00d8",
+          "target": 200,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_必殺を実行_9",
+          "hash": "f8cb00d9",
+          "target": 250,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_必殺を実行_10",
+          "hash": "c0f26313",
+          "target": 300,
+          "reward": 10
+        }
+      ]
+    },
+    "c12cf155": {
+      "name": "実績_補助回数",
+      "label": "Assists performed",
+      "category": "Battle",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_補助を実行",
+          "hash": "362bf7ad",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_補助を実行_1",
+          "hash": "99028b49",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_補助を実行_2",
+          "hash": "99028b4a",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_補助を実行_3",
+          "hash": "99028b4b",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_補助を実行_4",
+          "hash": "99028b4c",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_補助を実行_5",
+          "hash": "99028b4d",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_補助を実行_6",
+          "hash": "99028b4e",
+          "target": 100,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_補助を実行_7",
+          "hash": "99028b4f",
+          "target": 150,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_補助を実行_8",
+          "hash": "99028b40",
+          "target": 200,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_補助を実行_9",
+          "hash": "99028b41",
+          "target": 250,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_補助を実行_10",
+          "hash": "ff52ad3b",
+          "target": 300,
+          "reward": 10
+        }
+      ]
+    },
+    "d423a64f": {
+      "name": "実績_特技回数",
+      "label": "Blaze Arts used",
+      "category": "Battle",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_特技を実行",
+          "hash": "854d6c27",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特技を実行_1",
+          "hash": "d89a9e1f",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特技を実行_2",
+          "hash": "d89a9e1c",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特技を実行_3",
+          "hash": "d89a9e1d",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特技を実行_4",
+          "hash": "d89a9e1a",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特技を実行_5",
+          "hash": "d89a9e1b",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特技を実行_6",
+          "hash": "d89a9e18",
+          "target": 100,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特技を実行_7",
+          "hash": "d89a9e19",
+          "target": 150,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特技を実行_8",
+          "hash": "d89a9e16",
+          "target": 200,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特技を実行_9",
+          "hash": "d89a9e17",
+          "target": 250,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_特技を実行_10",
+          "hash": "0ebaae9d",
+          "target": 300,
+          "reward": 10
+        }
+      ]
+    },
+    "444e1de9": {
+      "name": "実績_計略回数",
+      "label": "Gambits used",
+      "category": "Battle",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_計略を実行",
+          "hash": "9e78dad1",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_計略を実行_1",
+          "hash": "4104f585",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_計略を実行_2",
+          "hash": "4104f586",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_計略を実行_3",
+          "hash": "4104f587",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_計略を実行_4",
+          "hash": "4104f580",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_計略を実行_5",
+          "hash": "4104f581",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_計略を実行_6",
+          "hash": "4104f582",
+          "target": 100,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_計略を実行_7",
+          "hash": "4104f583",
+          "target": 150,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_計略を実行_8",
+          "hash": "4104f58c",
+          "target": 200,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_計略を実行_9",
+          "hash": "4104f58d",
+          "target": 250,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_計略を実行_10",
+          "hash": "7b6d30cf",
+          "target": 300,
+          "reward": 10
+        }
+      ]
+    },
+    "8a922825": {
+      "name": "実績_援護回数",
+      "label": "Support Salvations performed",
+      "category": "Battle",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_援護を実行",
+          "hash": "a536f229",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_援護を実行_1",
+          "hash": "12d99fad",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_援護を実行_2",
+          "hash": "12d99fae",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_援護を実行_3",
+          "hash": "12d99faf",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_援護を実行_4",
+          "hash": "12d99fa8",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_援護を実行_5",
+          "hash": "12d99fa9",
+          "target": 75,
+          "reward": 25
+        },
+        {
+          "name": "実績状態_援護を実行_6",
+          "hash": "12d99faa",
+          "target": 100,
+          "reward": 25
+        },
+        {
+          "name": "実績状態_援護を実行_7",
+          "hash": "12d99fab",
+          "target": 150,
+          "reward": 50
+        },
+        {
+          "name": "実績状態_援護を実行_8",
+          "hash": "12d99fa4",
+          "target": 200,
+          "reward": 50
+        }
+      ]
+    },
+    "c989a067": {
+      "name": "実績_遭遇戦勝利数",
+      "label": "Skirmishes won",
+      "category": "Battle",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_遭遇戦を勝利",
+          "hash": "38fb4b5e",
+          "target": 5,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_遭遇戦を勝利_1",
+          "hash": "8acfb52e",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_遭遇戦を勝利_2",
+          "hash": "8acfb52d",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_遭遇戦を勝利_3",
+          "hash": "8acfb52c",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_遭遇戦を勝利_4",
+          "hash": "8acfb52b",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_遭遇戦を勝利_5",
+          "hash": "8acfb52a",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_遭遇戦を勝利_6",
+          "hash": "8acfb529",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_遭遇戦を勝利_7",
+          "hash": "8acfb528",
+          "target": 100,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_遭遇戦を勝利_8",
+          "hash": "8acfb527",
+          "target": 150,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_遭遇戦を勝利_9",
+          "hash": "8acfb526",
+          "target": 200,
+          "reward": 10
+        }
+      ]
+    },
+    "c449c893": {
+      "name": "実績_ショートバトル勝利数",
+      "label": "Clashes won",
+      "category": "Battle",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_ショートバトルを勝利",
+          "hash": "b00c5b56",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_ショートバトルを勝利_1",
+          "hash": "dda47d56",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_ショートバトルを勝利_2",
+          "hash": "dda47d55",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_ショートバトルを勝利_3",
+          "hash": "dda47d54",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_ショートバトルを勝利_4",
+          "hash": "dda47d53",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_ショートバトルを勝利_5",
+          "hash": "dda47d52",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_ショートバトルを勝利_6",
+          "hash": "dda47d51",
+          "target": 100,
+          "reward": 10
+        }
+      ]
+    },
+    "f222c6fe": {
+      "name": "実績_攻撃連携回数",
+      "label": "Attack Links performed",
+      "category": "Battle",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_攻撃連携を実行",
+          "hash": "45568214",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_攻撃連携を実行_1",
+          "hash": "d459f9c8",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_攻撃連携を実行_2",
+          "hash": "d459f9cb",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_攻撃連携を実行_3",
+          "hash": "d459f9ca",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_攻撃連携を実行_4",
+          "hash": "d459f9cd",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_攻撃連携を実行_5",
+          "hash": "d459f9cc",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_攻撃連携を実行_6",
+          "hash": "d459f9cf",
+          "target": 100,
+          "reward": 10
+        }
+      ]
+    },
+    "d4e84b3a": {
+      "name": "実績_回復連携回数",
+      "label": "Recovery Links performed",
+      "category": "Battle",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_回復連携を実行",
+          "hash": "62cd7e14",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_回復連携を実行_1",
+          "hash": "05dc55c8",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_回復連携を実行_2",
+          "hash": "05dc55cb",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_回復連携を実行_3",
+          "hash": "05dc55ca",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_回復連携を実行_4",
+          "hash": "05dc55cd",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_回復連携を実行_5",
+          "hash": "05dc55cc",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_回復連携を実行_6",
+          "hash": "05dc55cf",
+          "target": 100,
+          "reward": 10
+        }
+      ]
+    },
+    "73f4db16": {
+      "name": "実績_攻防連携回数",
+      "label": "Mixed Links performed",
+      "category": "Battle",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_攻防連携を実行",
+          "hash": "5e2d5158",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_攻防連携を実行_1",
+          "hash": "e7139564",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_攻防連携を実行_2",
+          "hash": "e7139567",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_攻防連携を実行_3",
+          "hash": "e7139566",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_攻防連携を実行_4",
+          "hash": "e7139561",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_攻防連携を実行_5",
+          "hash": "e7139560",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_攻防連携を実行_6",
+          "hash": "e7139563",
+          "target": 100,
+          "reward": 10
+        }
+      ]
+    },
+    "160b2bb2": {
+      "name": "実績_商人消費金額",
+      "label": "Gold spent with travelling merchants",
+      "category": "Spending",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_商人で消費",
+          "hash": "45bf7ad8",
+          "target": 10000,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_商人で消費_1",
+          "hash": "eb48bae4",
+          "target": 20000,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_商人で消費_2",
+          "hash": "eb48bae7",
+          "target": 30000,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_商人で消費_3",
+          "hash": "eb48bae6",
+          "target": 50000,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_商人で消費_4",
+          "hash": "eb48bae1",
+          "target": 100000,
+          "reward": 20
+        },
+        {
+          "name": "実績状態_商人で消費_5",
+          "hash": "eb48bae0",
+          "target": 200000,
+          "reward": 20
+        }
+      ]
+    },
+    "a0b99107": {
+      "name": "実績_探索回数",
+      "label": "Spots searched",
+      "category": "Exploration",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_探索を実行",
+          "hash": "b94ad607",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_探索を実行_1",
+          "hash": "b4d2333f",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_探索を実行_2",
+          "hash": "b4d2333c",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_探索を実行_3",
+          "hash": "b4d2333d",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_探索を実行_4",
+          "hash": "b4d2333a",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_探索を実行_5",
+          "hash": "b4d2333b",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_探索を実行_6",
+          "hash": "b4d23338",
+          "target": 100,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_探索を実行_7",
+          "hash": "b4d23339",
+          "target": 150,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_探索を実行_8",
+          "hash": "b4d23336",
+          "target": 200,
+          "reward": 10
+        }
+      ]
+    },
+    "16f518a2": {
+      "name": "実績_レア素材入手数",
+      "label": "Rare materials obtained through searches",
+      "category": "Exploration",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_レア素材を入手",
+          "hash": "1f0dadf1",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_レア素材を入手_1",
+          "hash": "765025e5",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_レア素材を入手_2",
+          "hash": "765025e6",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_レア素材を入手_3",
+          "hash": "765025e7",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_レア素材を入手_4",
+          "hash": "765025e0",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_レア素材を入手_5",
+          "hash": "765025e1",
+          "target": 75,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_レア素材を入手_6",
+          "hash": "765025e2",
+          "target": 100,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_レア素材を入手_7",
+          "hash": "765025e3",
+          "target": 150,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_レア素材を入手_8",
+          "hash": "765025ec",
+          "target": 200,
+          "reward": 10
+        }
+      ]
+    },
+    "730acddc": {
+      "name": "実績_饗宴回数",
+      "label": "Feasts held",
+      "category": "Exploration",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_饗宴を実行",
+          "hash": "fdf654fa",
+          "target": 5,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_饗宴を実行_1",
+          "hash": "c3c0e252",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_饗宴を実行_2",
+          "hash": "c3c0e251",
+          "target": 15,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_饗宴を実行_3",
+          "hash": "c3c0e250",
+          "target": 20,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_饗宴を実行_4",
+          "hash": "c3c0e257",
+          "target": 25,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_饗宴を実行_5",
+          "hash": "c3c0e256",
+          "target": 30,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_饗宴を実行_6",
+          "hash": "c3c0e255",
+          "target": 35,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_饗宴を実行_7",
+          "hash": "c3c0e254",
+          "target": 40,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_饗宴を実行_8",
+          "hash": "c3c0e25b",
+          "target": 50,
+          "reward": 10
+        }
+      ]
+    },
+    "e7d753ab": {
+      "name": "実績_興行回数",
+      "label": "Local performances given",
+      "category": "Exploration",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_興行を実行",
+          "hash": "92c88cd7",
+          "target": 5,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_興行を実行_1",
+          "hash": "70aeb3cf",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_興行を実行_2",
+          "hash": "70aeb3cc",
+          "target": 15,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_興行を実行_3",
+          "hash": "70aeb3cd",
+          "target": 20,
+          "reward": 10
+        }
+      ]
+    },
+    "c2f3210d": {
+      "name": "実績_鉱石入手数",
+      "label": "Pieces of ore obtained",
+      "category": "Exploration",
+      "editable": true,
+      "read_only_reason": "",
+      "milestones": [
+        {
+          "name": "実績状態_鉱石を入手",
+          "hash": "9d75970a",
+          "target": 10,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_鉱石を入手_1",
+          "hash": "aad670a2",
+          "target": 50,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_鉱石を入手_2",
+          "hash": "aad670a1",
+          "target": 100,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_鉱石を入手_3",
+          "hash": "aad670a0",
+          "target": 200,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_鉱石を入手_4",
+          "hash": "aad670a7",
+          "target": 300,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_鉱石を入手_5",
+          "hash": "aad670a6",
+          "target": 400,
+          "reward": 10
+        },
+        {
+          "name": "実績状態_鉱石を入手_6",
+          "hash": "aad670a5",
+          "target": 500,
+          "reward": 10
+        }
+      ]
+    }
+  }
+}

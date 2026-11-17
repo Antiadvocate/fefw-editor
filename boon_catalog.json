@@ -1,0 +1,742 @@
+{
+  "schema": 1,
+  "source": "Reward table reference data; descriptive English labels, not verified official names. This catalogue does not map purchase or activation state. See docs/boons.md.",
+  "groups": [
+    {
+      "name": "経験値",
+      "label": "Experience",
+      "effect_code": 1,
+      "operation_code": 4,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 10,
+          "clear_count": 0,
+          "cost": 500
+        },
+        {
+          "tier": 2,
+          "value": 20,
+          "clear_count": 1,
+          "cost": 500
+        },
+        {
+          "tier": 3,
+          "value": 30,
+          "clear_count": 1,
+          "cost": 1000
+        },
+        {
+          "tier": 4,
+          "value": 40,
+          "clear_count": 2,
+          "cost": 1000
+        },
+        {
+          "tier": 5,
+          "value": 50,
+          "clear_count": 3,
+          "cost": 1000
+        }
+      ],
+      "game_label": "Increased Exp"
+    },
+    {
+      "name": "兵種経験",
+      "label": "Class experience",
+      "effect_code": 2,
+      "operation_code": 2,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 1,
+          "clear_count": 1,
+          "cost": 1000
+        },
+        {
+          "tier": 2,
+          "value": 2,
+          "clear_count": 3,
+          "cost": 2000
+        }
+      ]
+    },
+    {
+      "name": "技能経験剣",
+      "label": "Sword skill experience",
+      "effect_code": 3,
+      "operation_code": 2,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 1,
+          "clear_count": 0,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 2,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 3,
+          "value": 3,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "技能経験槍",
+      "label": "Lance skill experience",
+      "effect_code": 4,
+      "operation_code": 2,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 1,
+          "clear_count": 0,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 2,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 3,
+          "value": 3,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "技能経験斧",
+      "label": "Axe skill experience",
+      "effect_code": 5,
+      "operation_code": 2,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 1,
+          "clear_count": 0,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 2,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 3,
+          "value": 3,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "技能経験弓",
+      "label": "Bow skill experience",
+      "effect_code": 6,
+      "operation_code": 2,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 1,
+          "clear_count": 0,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 2,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 3,
+          "value": 3,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "技能経験格闘",
+      "label": "Brawling skill experience",
+      "effect_code": 7,
+      "operation_code": 2,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 1,
+          "clear_count": 0,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 2,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 3,
+          "value": 3,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "技能経験黒魔法",
+      "label": "Black magic skill experience",
+      "effect_code": 8,
+      "operation_code": 2,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 1,
+          "clear_count": 0,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 2,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 3,
+          "value": 3,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "技能経験白魔法",
+      "label": "White magic skill experience",
+      "effect_code": 9,
+      "operation_code": 2,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 1,
+          "clear_count": 0,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 2,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 3,
+          "value": 3,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "技能経験歩兵",
+      "label": "Infantry skill experience",
+      "effect_code": 10,
+      "operation_code": 2,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 1,
+          "clear_count": 0,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 2,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 3,
+          "value": 3,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "技能経験騎兵",
+      "label": "Cavalry skill experience",
+      "effect_code": 11,
+      "operation_code": 2,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 1,
+          "clear_count": 0,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 2,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 3,
+          "value": 3,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "技能経験重装",
+      "label": "Armour skill experience",
+      "effect_code": 12,
+      "operation_code": 2,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 1,
+          "clear_count": 0,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 2,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 3,
+          "value": 3,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "技能経験飛行",
+      "label": "Flying skill experience",
+      "effect_code": 13,
+      "operation_code": 2,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 1,
+          "clear_count": 0,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 2,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 3,
+          "value": 3,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "技能経験指揮",
+      "label": "Command skill experience",
+      "effect_code": 14,
+      "operation_code": 2,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 1,
+          "clear_count": 0,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 2,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 3,
+          "value": 3,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "武器割引",
+      "label": "Weapon discount",
+      "effect_code": 15,
+      "operation_code": 5,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 10,
+          "clear_count": 0,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 20,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 3,
+          "value": 30,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ],
+      "game_label": "Weapons Discount"
+    },
+    {
+      "name": "道具割引",
+      "label": "Item discount",
+      "effect_code": 16,
+      "operation_code": 5,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 10,
+          "clear_count": 0,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 20,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 3,
+          "value": 30,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "贈答割引",
+      "label": "Gift discount",
+      "effect_code": 17,
+      "operation_code": 5,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 10,
+          "clear_count": 0,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 20,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 3,
+          "value": 30,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "宿泊割引",
+      "label": "Room rental discount",
+      "effect_code": 18,
+      "operation_code": 5,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 20,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 40,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "食事割引",
+      "label": "Meal discount",
+      "effect_code": 19,
+      "operation_code": 5,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 20,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 40,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "観劇割引",
+      "label": "Theatre discount",
+      "effect_code": 20,
+      "operation_code": 5,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 20,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 40,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "風呂割引",
+      "label": "Bath discount",
+      "effect_code": 21,
+      "operation_code": 5,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 20,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 40,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "鍛冶割引",
+      "label": "Blacksmith discount",
+      "effect_code": 22,
+      "operation_code": 5,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 10,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 20,
+          "clear_count": 2,
+          "cost": 300
+        },
+        {
+          "tier": 3,
+          "value": 30,
+          "clear_count": 3,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "馬車割引",
+      "label": "Carriage discount",
+      "effect_code": 23,
+      "operation_code": 5,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 20,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 40,
+          "clear_count": 2,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "迷宮回避",
+      "label": "Dungeon pursuit (effect unconfirmed)",
+      "effect_code": 24,
+      "operation_code": 1,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 1,
+          "clear_count": 3,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "迷宮素材",
+      "label": "Dungeon materials",
+      "effect_code": 25,
+      "operation_code": 1,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 10,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 20,
+          "clear_count": 2,
+          "cost": 300
+        },
+        {
+          "tier": 3,
+          "value": 30,
+          "clear_count": 3,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "加護消費_アウロラ",
+      "label": "Aurora blessing cost reduction",
+      "effect_code": 31,
+      "operation_code": 5,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 20,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 50,
+          "clear_count": 3,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "加護消費_マーズ",
+      "label": "Mars blessing cost reduction",
+      "effect_code": 26,
+      "operation_code": 5,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 20,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 50,
+          "clear_count": 3,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "加護消費_スミルノス",
+      "label": "Smyrnos blessing cost reduction",
+      "effect_code": 30,
+      "operation_code": 5,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 20,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 50,
+          "clear_count": 3,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "加護消費_ジュラ",
+      "label": "Jurah blessing cost reduction",
+      "effect_code": 29,
+      "operation_code": 5,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 20,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 50,
+          "clear_count": 3,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "加護消費_カーラ",
+      "label": "Kalla blessing cost reduction",
+      "effect_code": 28,
+      "operation_code": 5,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 20,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 50,
+          "clear_count": 3,
+          "cost": 300
+        }
+      ]
+    },
+    {
+      "name": "加護消費_クレール",
+      "label": "Credna blessing cost reduction",
+      "effect_code": 27,
+      "operation_code": 5,
+      "tiers": [
+        {
+          "tier": 1,
+          "value": 20,
+          "clear_count": 1,
+          "cost": 300
+        },
+        {
+          "tier": 2,
+          "value": 50,
+          "clear_count": 3,
+          "cost": 300
+        }
+      ]
+    }
+  ]
+}

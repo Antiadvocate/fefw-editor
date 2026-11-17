@@ -1,0 +1,338 @@
+{
+  "schema": 1,
+  "scope": "Functions: 21 service switches, 7 gate registrations, 6 journal switches and 7 area-access/movement controls. Movement restrictions use the progression map; ordinary access switches use the general map and Cai Sewers uses dialogue history. Evidence remains scoped to reported tests.",
+  "entries": {
+    "b9a0e16b": {
+      "name": "禁止_武器屋",
+      "label": "Armorer",
+      "kind": "Service",
+      "polarity": "restriction",
+      "coverage": "Game-tested",
+      "note": "FAC-01 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered."
+    },
+    "5e9748e0": {
+      "name": "禁止_道具屋",
+      "label": "Item shop",
+      "kind": "Service",
+      "polarity": "restriction",
+      "coverage": "Game-tested",
+      "note": "FAC-01 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered."
+    },
+    "8244b3ea": {
+      "name": "機能開放_市場",
+      "label": "Marketplace",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Game-tested",
+      "note": "FAC-03 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered."
+    },
+    "9399b963": {
+      "name": "機能開放_宿屋",
+      "label": "Inn",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Game-tested",
+      "note": "FAC-03 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered."
+    },
+    "e0f3191e": {
+      "name": "機能開放_止まり木",
+      "label": "Pale Raven perch",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "338bab8f": {
+      "name": "機能開放_案内板",
+      "label": "Bulletin boards",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "367c5dd1": {
+      "name": "機能開放_奉仕活動",
+      "label": "Temple service",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "d70afcb2": {
+      "name": "機能開放_訓練所",
+      "label": "Training",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Game-tested",
+      "note": "FAC-03 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered. Arena is a distinct facility definition; this flag must not be presented as a proven Arena switch. Cai Chapter.bin lists Training at Chapter 5 free time, later than the blocked Chapter 4 opening."
+    },
+    "0be47d8b": {
+      "name": "機能開放_資格試験",
+      "label": "Certification exams",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Game-tested",
+      "note": "FAC-02 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered."
+    },
+    "f0c779ce": {
+      "name": "機能開放_饗宴",
+      "label": "Feasts",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "0f4e5aa1": {
+      "name": "機能開放_鍛冶屋",
+      "label": "Blacksmith",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Game-tested",
+      "note": "FAC-03 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered."
+    },
+    "a78e9de8": {
+      "name": "機能開放_ヴァンダル商会",
+      "label": "Vandahl Trading Company",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Conditional pass",
+      "note": "Dietrich Chapter 6 direct entry and walking progression passed with upper/lower area access, Vandahl Trading Company and the lower movement restriction cleared together. This does not establish an isolated toggle test. Area movement controls are separate; other route, story and NPC conditions can still apply."
+    },
+    "efdc12db": {
+      "name": "機能開放_劇場",
+      "label": "Theatre",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "6769ad7f": {
+      "name": "機能開放_劇場出演",
+      "label": "Theatre performances",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "8c4805b2": {
+      "name": "機能開放_テルマエ",
+      "label": "Thermae (baths)",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "d96b06cc": {
+      "name": "機能開放_酒場贈り物売り",
+      "label": "Tavern gift vendor",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+    },
+    "e3d04d6c": {
+      "name": "機能開放_拠点興行",
+      "label": "Local performances (Leda)",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Game-tested",
+      "note": "FAC-02 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered."
+    },
+    "970ba7f8": {
+      "name": "機能開放_酒場興行",
+      "label": "Tavern performances (Leda)",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Game-tested",
+      "note": "FAC-02 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered. Restoring drinks and performances together replayed the drink-vendor introduction. The exact trigger is not isolated; no dialogue flags are written by this control."
+    },
+    "2e270aa7": {
+      "name": "機能開放_飲み物係",
+      "label": "Drink vendor (Leda)",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Game-tested",
+      "note": "FAC-02 lock/restore and reload passed on Leda Part I Chapter 9 (2026-11-16). Returned saves preserve the requested switch states. Other routes, story states and schedules are not covered. Restoring drinks and performances together replayed the drink-vendor introduction. The exact trigger is not isolated; no dialogue flags are written by this control."
+    },
+    "63fc6b22": {
+      "name": "機能開放_厩舎",
+      "label": "Stables",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "The accepted baseline intentionally keeps Stables locked. This switch is independent of the Stables fast-travel destination; changing it does not populate mounts or change unit mount assignments."
+    },
+    "3fdd2f30": {
+      "name": "神殿_転移_カーラ神殿",
+      "label": "Gate of the Gods: Kalla",
+      "kind": "Gate registration",
+      "polarity": "unlock",
+      "coverage": "Game-tested",
+      "note": "Listing, travel and portal use passed on Leda Part I Chapter 9 (2026-11-16); removal also passed. Ordinary temple travel and story entrance conditions remain separate. Other routes/chapters are untested."
+    },
+    "c125a07e": {
+      "name": "神殿_転移_マーズ神殿",
+      "label": "Gate of the Gods: Mars",
+      "kind": "Gate registration",
+      "polarity": "unlock",
+      "coverage": "Game-tested",
+      "note": "Listing, travel and portal use passed on Leda Part I Chapter 9 (2026-11-16); removal also passed. Ordinary temple travel and story entrance conditions remain separate. Other routes/chapters are untested."
+    },
+    "f2d863f0": {
+      "name": "神殿_転移_ジュラ神殿",
+      "label": "Gate of the Gods: Jurah",
+      "kind": "Gate registration",
+      "polarity": "unlock",
+      "coverage": "Game-tested",
+      "note": "Listing, travel and portal use passed on Leda Part I Chapter 9 (2026-11-16); removal also passed. Ordinary temple travel and story entrance conditions remain separate. Other routes/chapters are untested."
+    },
+    "515e9031": {
+      "name": "神殿_転移_スミルノス神殿",
+      "label": "Gate of the Gods: Smyrnos",
+      "kind": "Gate registration",
+      "polarity": "unlock",
+      "coverage": "Game-tested",
+      "note": "Listing, travel and portal use passed on Leda Part I Chapter 9 (2026-11-16); removal also passed. Ordinary temple travel and story entrance conditions remain separate. Other routes/chapters are untested."
+    },
+    "2574b004": {
+      "name": "神殿_転移_クレール神殿",
+      "label": "Gate of the Gods: Credna",
+      "kind": "Gate registration",
+      "polarity": "unlock",
+      "coverage": "Game-tested",
+      "note": "Listing, travel and portal use passed on Leda Part I Chapter 9 (2026-11-16); removal also passed. Ordinary temple travel and story entrance conditions remain separate. Other routes/chapters are untested."
+    },
+    "d2f2cb2f": {
+      "name": "神殿_転移_アウロラ神殿",
+      "label": "Gate of the Gods: Aurora",
+      "kind": "Gate registration",
+      "polarity": "unlock",
+      "coverage": "Game-tested",
+      "note": "Listing, travel and portal use passed on Leda Part I Chapter 9 (2026-11-16); removal also passed. Ordinary temple travel and story entrance conditions remain separate. Other routes/chapters are untested."
+    },
+    "7d2c41eb": {
+      "name": "神殿_転移_ユ・ファス神殿",
+      "label": "Gate of the Gods: Yu Phas",
+      "kind": "Gate registration",
+      "polarity": "unlock",
+      "coverage": "Conditional pass",
+      "note": "On Leda P1 Ch9, also enable Yu Phas Temple in the Fast travel tab. With both flags recorded, the player confirmed the gate listing, travel and portal exit to the world map. Gate registration alone did not reveal it. The two switches remain separately editable; walking entrance restrictions can still apply."
+    },
+    "78814e6e": {
+      "name": "禁止_冒険手帳",
+      "label": "Adventure Journal — access",
+      "kind": "Journal",
+      "polarity": "restriction",
+      "coverage": "Inferred",
+      "note": "Clears or sets the journal-wide blocking flag. This alone does not unlock journal sections; enable the sections you need separately. In the Cai Chapter 4 return the block was absent, but every section unlock was missing. Game test pending."
+    },
+    "31bdf33c": {
+      "name": "機能開放_冒険手帳_クエスト一覧",
+      "label": "Adventure Journal — quest list",
+      "kind": "Journal",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "Unlocks the quest-list section. Cai timeline explicitly sets this flag before Chapter 3; the supplied Chapter 4 return lacks it. Does not grant or complete quests, clear story restrictions, or remove the journal-wide block. Game test pending."
+    },
+    "43494355": {
+      "name": "機能開放_冒険手帳_カレンダー",
+      "label": "Adventure Journal — calendar",
+      "kind": "Journal",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "Independent journal section recorded in the Cai Chapter 3 timeline. Does not alter dates or deadlines. The journal-wide block can still prevent access. Game test pending."
+    },
+    "111cfade": {
+      "name": "機能開放_冒険手帳_冒険の手引き",
+      "label": "Adventure Journal — adventure guide",
+      "kind": "Journal",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "Independent journal section recorded in the Cai Chapter 3 timeline. Does not mark tutorials seen. English section label is a translation pending in-game confirmation. Game test pending."
+    },
+    "54c05e21": {
+      "name": "機能開放_冒険手帳_名声の記録",
+      "label": "Adventure Journal — renown records",
+      "kind": "Journal",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "Independent journal section recorded in the Cai Chapter 3 timeline. Does not alter renown or claim deed rewards. English section label is a translation pending in-game confirmation. Game test pending."
+    },
+    "b73afca4": {
+      "name": "機能開放_冒険手帳_戦いの助言",
+      "label": "Adventure Journal — battle advice",
+      "kind": "Journal",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "Independent journal section recorded in the Cai Chapter 3 timeline. Does not grant rewards or mark tutorials seen. English section label is a translation pending in-game confirmation. Game test pending."
+    },
+    "948de8dd": {
+      "name": "機能開放_ダグシオン上層",
+      "label": "Dagsion upper-area access",
+      "kind": "Area access",
+      "polarity": "unlock",
+      "coverage": "Conditional pass",
+      "note": "Dietrich Chapter 6 direct entry and walking progression passed with upper/lower area access, Vandahl Trading Company and the lower movement restriction cleared together. This does not establish an isolated toggle test. Area movement controls are separate; other route, story and NPC conditions can still apply."
+    },
+    "9402533e": {
+      "name": "機能開放_ダグシオン下層",
+      "label": "Dagsion lower-area access",
+      "kind": "Area access",
+      "polarity": "unlock",
+      "coverage": "Conditional pass",
+      "note": "Dietrich Chapter 6 direct entry and walking progression passed with upper/lower area access, Vandahl Trading Company and the lower movement restriction cleared together. This does not establish an isolated toggle test. Area movement controls are separate; other route, story and NPC conditions can still apply."
+    },
+    "728ccd68": {
+      "name": "機能開放_稽古",
+      "label": "Mentoring (Cai)",
+      "kind": "Service",
+      "polarity": "unlock",
+      "coverage": "Inferred",
+      "note": "Distinct from the Training flag. Listed in Cai Chapter 4 free-time permissions; added between the Chapter 9 opening and advancement returns. The player and in-game tutorial title identify this activity as Mentoring (Cai). The isolated effect of this saved switch and any Arena dependency remain unconfirmed; the behavior evidence stays Inferred."
+    },
+    "7d18367a": {
+      "name": "MID_LGV_1KAI_c02_LG11_003_m06",
+      "label": "Sewers access (Cai)",
+      "kind": "Area access",
+      "polarity": "unlock",
+      "coverage": "Unlock tested",
+      "note": "Enables the dialogue prerequisite for Cai's Sewers entrance. Entering and progressing passed in Chapter 4 after natural Chapter 3 completion. The entrance still requires Cai and an allowed story phase. Disabling removes this dialogue record; the disable effect has not been game-tested. Cai Chapter 3+ selections enable this automatically."
+    },
+    "89dc5a51": {
+      "name": "行動範囲制限_上層",
+      "label": "Dagsion upper-area movement",
+      "kind": "Area access",
+      "polarity": "restriction",
+      "store": "progression",
+      "coverage": "Unlock tested",
+      "note": "Enable clears the upper movement restriction; Disable restores it. Separate from Dagsion upper-area access. Clearing it passed Dietrich Chapter 5 training/certification. Other route and story barriers can still apply."
+    },
+    "16b679c4": {
+      "name": "行動範囲制限_中層",
+      "label": "Dagsion middle-area movement",
+      "kind": "Area access",
+      "polarity": "restriction",
+      "store": "progression",
+      "coverage": "Unlock tested",
+      "note": "Enable clears the middle movement restriction; Disable restores it. Theodora Chapter 4 arena access and progression passed with this single restriction removed. Also included in the combined Chapter 6/8 traversal repairs. The reverse Disable effect has not been game-tested."
+    },
+    "8386d712": {
+      "name": "行動範囲制限_下層",
+      "label": "Dagsion lower-area / port movement",
+      "kind": "Area access",
+      "polarity": "restriction",
+      "store": "progression",
+      "coverage": "Conditional pass",
+      "note": "Enable clears the lower movement restriction; Disable restores it. Dietrich Chapter 6 walking passed with its separate function unlocks. Theodora Chapter 6 passed via alternate traversal with middle/lower/district restrictions cleared; its NPC barrier remained. Chapter 8 also passed with the combined movement repair. This is not an isolated lower-toggle test."
+    },
+    "a9d310ac": {
+      "name": "行動範囲制限_富裕区-商業区",
+      "label": "Wealthy–commercial district passage",
+      "kind": "Area access",
+      "polarity": "restriction",
+      "store": "progression",
+      "coverage": "Conditional pass",
+      "note": "Enable clears the district movement restriction; Disable restores it. Theodora Chapter 8 removed the NPC barrier and progressed with middle/lower/district restrictions cleared together. Chapter 6 kept the NPCs in both test variants but progressed via alternate traversal. Other story, crate-display or timing conditions may apply; timing is unconfirmed. This is not an isolated district-toggle test."
+    }
+  }
+}

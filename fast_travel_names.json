@@ -1,0 +1,186 @@
+{
+  "schema": 1,
+  "scope": "20 Dagsion destination flags: 16 original entries, Yu Phas Temple with Chapter 9 travel/exit tested, and three additional entries with unknown effects. Not an exhaustive catalogue.",
+  "entries": {
+    "5a48ce35": {
+      "name": "拠点_FT_Hub_000_A1_ファストトラベル_闘技場前",
+      "label": "Arena Plaza",
+      "area": "Dagsion",
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry",
+      "locator_anchor": true,
+      "coverage": "Confirmed list"
+    },
+    "bb86129f": {
+      "name": "拠点_FT_Hub_000_A1_ファストトラベル_商店街",
+      "label": "Shopping Arcade",
+      "area": "Dagsion",
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry",
+      "locator_anchor": true,
+      "coverage": "Confirmed list"
+    },
+    "ad2b97e0": {
+      "name": "拠点_FT_Hub_000_A1_ファストトラベル_商業区画",
+      "label": "City Streets",
+      "area": "Dagsion",
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry",
+      "locator_anchor": true,
+      "coverage": "Confirmed list"
+    },
+    "387f1e5a": {
+      "name": "拠点_FT_Hub_000_A1_ファストトラベル_上参道",
+      "label": "Upper Temple Row",
+      "area": "Dagsion",
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry",
+      "locator_anchor": true,
+      "coverage": "Confirmed list"
+    },
+    "9b4262d7": {
+      "name": "拠点_FT_Hub_000_A1_ファストトラベル_下参道",
+      "label": "Lower Temple Row",
+      "area": "Dagsion",
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry",
+      "locator_anchor": true,
+      "coverage": "Confirmed list"
+    },
+    "90d7a0f8": {
+      "name": "拠点_FT_Hub_000_A1_ファストトラベル_富裕区画",
+      "label": "Entertainment District",
+      "area": "Dagsion",
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry",
+      "locator_anchor": true,
+      "coverage": "Confirmed list"
+    },
+    "2c475b48": {
+      "name": "拠点_FT_Hub_000_A110_ファストトラベル_ジュラ神殿",
+      "label": "Jurah's Temple",
+      "area": "Dagsion",
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry",
+      "locator_anchor": true,
+      "coverage": "Confirmed list"
+    },
+    "2d2ded41": {
+      "name": "拠点_FT_Hub_000_A120_ファストトラベル_マーズ神殿",
+      "label": "Mars's Temple",
+      "area": "Dagsion",
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry",
+      "locator_anchor": true,
+      "coverage": "Confirmed list"
+    },
+    "547cf68b": {
+      "name": "拠点_FT_Hub_000_A130_ファストトラベル_スミルノス神殿",
+      "label": "Smyrnos's Temple",
+      "area": "Dagsion",
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry",
+      "locator_anchor": true,
+      "coverage": "Confirmed list"
+    },
+    "16f93ab4": {
+      "name": "拠点_FT_Hub_000_A161_ファストトラベル_クレール神殿",
+      "label": "Credna's Temple",
+      "area": "Dagsion",
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry",
+      "locator_anchor": true,
+      "coverage": "Confirmed list"
+    },
+    "b482d5dc": {
+      "name": "拠点_FT_Hub_000_A150_ファストトラベル_カーラ神殿",
+      "label": "Kalla's Temple",
+      "area": "Dagsion",
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-reported add/remove, travel and persistence PASS on Leda Chapter 9",
+      "locator_anchor": true,
+      "coverage": "Confirmed list"
+    },
+    "00fe96da": {
+      "name": "拠点_FT_Hub_000_A102_ファストトラベル_アウロラ神殿",
+      "label": "Aurora's Temple",
+      "area": "Dagsion",
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry",
+      "locator_anchor": true,
+      "coverage": "Confirmed list"
+    },
+    "2478dd30": {
+      "name": "拠点_FT_Hub_000_A1_ファストトラベル_厩舎前",
+      "label": "Stables",
+      "area": "Dagsion",
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-reported add/remove, travel and persistence PASS on Leda Chapter 9",
+      "locator_anchor": true,
+      "coverage": "Confirmed list"
+    },
+    "1b5a4006": {
+      "name": "拠点_FT_Hub_000_A1_ファストトラベル_港",
+      "label": "Port",
+      "area": "Dagsion",
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-reported add/remove, travel and persistence PASS on Leda Chapter 9; FT-03/04 Port saves independently checked",
+      "locator_anchor": true,
+      "coverage": "Confirmed list"
+    },
+    "e86370a7": {
+      "name": "拠点_FT_Hub_000_A1_ファストトラベル_貧民街",
+      "label": "Lowtown",
+      "area": "Dagsion",
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry",
+      "locator_anchor": true,
+      "coverage": "Confirmed list"
+    },
+    "c1c872f8": {
+      "name": "拠点_FT_Hub_000_A70_ファストトラベル_酒場",
+      "label": "Tavern",
+      "area": "Dagsion",
+      "label_source": "English in-game Base Map screenshots supplied 2026-11-15",
+      "evidence": "player-confirmed list and label; individual add/remove not tested for this entry",
+      "locator_anchor": true,
+      "coverage": "Confirmed list"
+    },
+    "38574e83": {
+      "name": "拠点_FT_Hub_000_A100_ファストトラベル_アウロラの私室",
+      "label": "Aurora's private room",
+      "area": "Dagsion",
+      "label_source": "Provisional translation of the Japanese game key; English menu label not confirmed",
+      "evidence": "Exact scoped key in game data; FTX-01–03 on Leda Part I Chapter 9 / fefw-recomp-0.1.5: value 1 persisted in supplied before/after saves, but player reported no Base Map entry. Additional visibility conditions remain unidentified. HubDispos now identifies a Cai-only travel-locator condition. This explains the Leda absence; other-route gameplay remains untested.",
+      "locator_anchor": false,
+      "coverage": "Effect unknown"
+    },
+    "1e4d4a23": {
+      "name": "拠点_FT_Hub_000_A101_ファストトラベル_アウロラの庭園",
+      "label": "Aurora's garden",
+      "area": "Dagsion",
+      "label_source": "Provisional translation of the Japanese game key; English menu label not confirmed",
+      "evidence": "Exact scoped key in game data; FTX-01–03 on Leda Part I Chapter 9 / fefw-recomp-0.1.5: value 1 persisted in supplied before/after saves, but player reported no Base Map entry. Additional visibility conditions remain unidentified. HubDispos now identifies a Cai-only travel-locator condition. This explains the Leda absence; other-route gameplay remains untested.",
+      "locator_anchor": false,
+      "coverage": "Effect unknown"
+    },
+    "efb57d93": {
+      "name": "拠点_FT_Hub_000_A9_ファストトラベル_サラミス迎賓館",
+      "label": "Salamis Guesthouse",
+      "area": "Dagsion",
+      "label_source": "Provisional translation of the Japanese game key; English menu label not confirmed",
+      "evidence": "Exact scoped key in game data; FTX-01–03 on Leda Part I Chapter 9 / fefw-recomp-0.1.5: value 1 persisted in supplied before/after saves, but player reported no Base Map entry. Additional visibility conditions remain unidentified. HubDispos now identifies a Theodora-only travel-locator condition. This explains the Leda absence; other-route gameplay remains untested.",
+      "locator_anchor": false,
+      "coverage": "Effect unknown"
+    },
+    "65411bed": {
+      "name": "拠点_FT_Hub_000_A141_ファストトラベル_ユ・ファス神殿",
+      "label": "Yu Phas Temple",
+      "area": "Dagsion",
+      "label_source": "English in-game name reported by player in FTX-04, 2026-11-15",
+      "evidence": "FTX-04 on Leda Part I Chapter 9 / fefw-recomp-0.1.5: player reported new travel entry, arrival and walking out; walking back in was off limits. Supplied saves confirm value 1 before/after and absence in removed file. Other access conditions remain in force. FAC-06 passed again on 2026-11-16. FAC-05 follow-up: enabling this ordinary destination alongside the Yu Phas gate-registration flag revealed the gate and allowed portal exit to the world map on Leda P1 Ch9.",
+      "locator_anchor": false,
+      "coverage": "Travel tested"
+    }
+  }
+}

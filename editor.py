@@ -645,10 +645,12 @@ class App(AdvancedMixin, tk.Tk):
         s.layout("Treeview", [("Treeview.treearea", {"sticky": "nswe"})])
         s.configure("Side.Treeview", background=p["side"], fieldbackground=p["side"])
 
-        s.configure("Vertical.TScrollbar", background=p["raised"], troughcolor=p["card"],
-                    bordercolor=p["card"], lightcolor=p["raised"], darkcolor=p["raised"],
-                    arrowcolor=p["faint"], gripcount=0, arrowsize=12)
-        s.map("Vertical.TScrollbar", background=[("active", p["border"])])
+        for orientation in ("Vertical", "Horizontal"):
+            style = f"{orientation}.TScrollbar"
+            s.configure(style, background=p["raised"], troughcolor=p["card"],
+                        bordercolor=p["card"], lightcolor=p["raised"], darkcolor=p["raised"],
+                        arrowcolor=p["faint"], gripcount=0, arrowsize=12)
+            s.map(style, background=[("active", p["border"])])
 
         # tabs
         s.configure("TNotebook", background=p["bg"], borderwidth=0, tabmargins=(0, 4, 0, 0))
@@ -660,7 +662,7 @@ class App(AdvancedMixin, tk.Tk):
               lightcolor=[("selected", p["accent"])],
               expand=[("selected", (0, 0, 0, 0))])
         s.configure("Main.TNotebook", background=p["side"], tabmargins=(12, 0, 0, 0))
-        s.configure("Main.TNotebook.Tab", background=p["side"], padding=self.pad(20, 10),
+        s.configure("Main.TNotebook.Tab", background=p["side"], padding=self.pad(9, 10),
                     lightcolor=p["side"], bordercolor=p["side"])
         s.map("Main.TNotebook.Tab", background=[("selected", p["bg"]), ("active", p["raised"])],
               lightcolor=[("selected", p["accent"])])
@@ -823,13 +825,15 @@ class App(AdvancedMixin, tk.Tk):
         # ---- header
         head = ttk.Frame(self, style="Header.TFrame", padding=(18, 12, 18, 10))
         head.pack(fill="x")
-        brand = ttk.Frame(head, style="Header.TFrame")
+        actions = ttk.Frame(head, style="Header.TFrame")
+        actions.pack(fill="x")
+        brand = ttk.Frame(actions, style="Header.TFrame")
         brand.pack(side="left")
         ttk.Label(brand, text="Fortune's Weave", style="Title.TLabel").pack(anchor="w")
         ttk.Label(brand, text=f"SAVE EDITOR  ·  v{__version__}",
                   style="Subtitle.TLabel").pack(anchor="w")
 
-        right = ttk.Frame(head, style="Header.TFrame")
+        right = ttk.Frame(actions, style="Header.TFrame")
         right.pack(side="right")
         self.theme_btn = ttk.Button(right, text="☀" if self.theme_name() == "dark" else "☾",
                                     width=3, style="Icon.TButton", command=self.toggle_theme)
@@ -841,18 +845,19 @@ class App(AdvancedMixin, tk.Tk):
         self.revert_btn.pack(side="right")
         ttk.Button(right, text="Snapshot", command=self.take_snapshot).pack(side="right", padx=(0, 8))
         ttk.Button(right, text="Restore…", command=self.restore_snapshot).pack(side="right")
+        self.open_btn = ttk.Button(right, text="Open…", command=self.open_dialog)
+        self.open_btn.pack(side="right", padx=(0, 8))
 
         mid = ttk.Frame(head, style="Header.TFrame")
-        mid.pack(side="left", padx=(32, 0), fill="x", expand=True)
+        mid.pack(fill="x", pady=(10, 0))
         r1 = ttk.Frame(mid, style="Header.TFrame")
         r1.pack(fill="x")
         ttk.Label(r1, text="Slot", style="Side.TLabel").pack(side="left")
         self.slot_var = tk.StringVar()
         self.slot_box = ttk.Combobox(r1, textvariable=self.slot_var, state="readonly", width=52)
-        self.slot_box.pack(side="left", padx=(8, 8))
+        self.slot_box.pack(side="left", padx=(8, 0), fill="x", expand=True)
         self.slot_box.bind("<<ComboboxSelected>>", self.on_slot_pick)
         self.register_combo(self.slot_box)
-        ttk.Button(r1, text="Open folder…", command=self.open_dialog).pack(side="left")
         r2 = ttk.Frame(mid, style="Header.TFrame")
         r2.pack(fill="x", pady=(6, 0))
         self.mirror_chk = ttk.Checkbutton(r2, text="Also edit this route's other saves",
@@ -882,15 +887,27 @@ class App(AdvancedMixin, tk.Tk):
         self.flags_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.mounts_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.world_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
+        self.tutorials_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
+        self.blessings_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
+        self.fast_travel_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
+        self.facilities_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
+        self.deeds_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
+        self.boons_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.pages.add(self.units_page, text="Units")
         self.pages.add(self.convoy_page, text="Convoy")
         self.pages.add(self.gold_page, text="Gold")
         self.pages.add(self.supports_page, text="Supports")
         self.pages.add(self.player_page, text="Player")
         self.pages.add(self.classes_page, text="Classes")
-        self.pages.add(self.flags_page, text="Flags")
         self.pages.add(self.mounts_page, text="Mounts")
         self.pages.add(self.world_page, text="World map")
+        self.pages.add(self.tutorials_page, text="Tutorials")
+        self.pages.add(self.blessings_page, text="Blessings")
+        self.pages.add(self.fast_travel_page, text="Fast travel")
+        self.pages.add(self.facilities_page, text="Functions")
+        self.pages.add(self.deeds_page, text="Notable Deeds")
+        self.pages.add(self.boons_page, text="Boons")
+        self.pages.add(self.flags_page, text="Flags")
 
         self._build_units()
         self._build_convoy()
@@ -901,18 +918,28 @@ class App(AdvancedMixin, tk.Tk):
         self._build_flags()
         self._build_mounts()
         self._build_world_map()
+        self._build_tutorials()
+        self._build_blessings()
+        self._build_fast_travel()
+        self._build_facilities()
+        self._build_deeds()
+        self._build_boons()
         self._style_trees()
         self._enable_multi_select_all()
         self._update_dirty()
 
     def _enable_multi_select_all(self):
-        """Ctrl+A / Shift+drag on every list except the two row-pickers.
+        """Ctrl+A / Shift+drag on every list except the three row-pickers.
 
-        The unit lists drive the edit form, so they stay single-choice; every
+        Unit and blessing lists drive edit forms, so stay single-choice; every
         other table (convoy, classes, masteries, flags, mounts) takes a range.
         """
         skip = {id(getattr(self, "unit_tree", None)),
-                id(getattr(self, "cls_unit_tree", None))}
+                id(getattr(self, "cls_unit_tree", None)),
+                id(getattr(self, "blessing_tree", None)),
+                id(getattr(self, "deed_tree", None)),
+                id(getattr(self, "boon_tree", None)),
+                id(getattr(self, "facility_access_tree", None))}
 
         def walk(w):
             for child in w.winfo_children():
@@ -1592,6 +1619,16 @@ class App(AdvancedMixin, tk.Tk):
             target = None
         elif sel == str(self.world_page):
             target = self.map_search
+        elif sel == str(self.tutorials_page):
+            target = self.tutorial_search
+        elif sel == str(self.fast_travel_page):
+            target = self.fast_travel_search
+        elif sel == str(self.facilities_page):
+            target = self.facility_search
+        elif sel == str(self.deeds_page):
+            target = self.deed_search
+        elif sel == str(self.boons_page):
+            target = self.boon_search
         if target is None:
             return
         target.focus_set()
@@ -1816,6 +1853,23 @@ class App(AdvancedMixin, tk.Tk):
         if not self.dirty:
             self.flash("Nothing to save — no changes yet.")
             return True
+        import story_files
+        try:
+            chapter_writes = story_files.prepare(self.files, self.dirty)
+        except Exception as exc:  # noqa: BLE001 — preflight must not write anything
+            messagebox.showerror(APP_NAME, f"Nothing saved:\n\n{exc}", parent=self)
+            return False
+        for plan in chapter_writes.values():
+            if plan.previous is not None and not messagebox.askyesno(
+                    "Replace chapter start file?",
+                    f"{os.path.basename(plan.target)} already exists.\n\n"
+                    "Replace it with this staged chapter-start state? The existing "
+                    "file will first be kept as .bak, or the next numbered .bak "
+                    "if an earlier backup exists.\n\nNo cancels this Save; all edits "
+                    "and the chapter-file request remain pending.",
+                    parent=self, icon="warning"):
+                self.flash("Nothing saved — the existing chapter file was kept.", "warn")
+                return False
         newer = [p for p in self.dirty if self._changed_on_disk(p)]
         if newer and not messagebox.askyesno(
                 APP_NAME, "The game has saved " + ", ".join(os.path.basename(p) for p in newer)
@@ -1832,7 +1886,21 @@ class App(AdvancedMixin, tk.Tk):
             if not sv:
                 continue
             try:
+                plan = chapter_writes.get(pth)
+                if plan:
+                    story_files.check_unchanged(plan)
+                    if story_files.path_key(plan.target) != story_files.path_key(pth):
+                        story_files.write(plan)
+                        # A completed file is not repeated if the source save fails.
+                        story_files.completed(self, sv)
+                        self.files.pop(plan.target, None)
+                        self._get(plan.target)
+                        if plan.target not in self.slot_paths:
+                            self.slot_paths.append(plan.target)
+                        written.append(os.path.basename(plan.target))
                 sv.save(pth)
+                if plan:
+                    story_files.completed(self, sv)
                 self.mtimes[pth] = os.path.getmtime(pth)
                 self.dirty.discard(pth)
                 written.append(os.path.basename(pth))
@@ -1841,6 +1909,7 @@ class App(AdvancedMixin, tk.Tk):
         self._populate_slot_box()
         self._update_file_label()
         self._update_dirty()
+        self.refresh_story()
         if failed:
             messagebox.showerror(APP_NAME, "Some slots could not be written:\n\n"
                                  + "\n".join(failed) + "\n\nIs the game still running?")

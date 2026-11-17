@@ -260,7 +260,7 @@ def damaged_convoy_at(payload) -> int:
     if not blk:
         return -1
     p = f.payload
-    for n in core.SaveTree.read(p).nodes:
+    for n in f.tree().nodes:
         if blk.start <= n.start and n.end <= blk.end and n.end - n.start > 8 \
                 and p[n.start + 4] == 1 and 1 <= struct.unpack_from("<H", p, n.start + 5)[0] <= 20000:
             return n.start

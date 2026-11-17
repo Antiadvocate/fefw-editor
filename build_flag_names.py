@@ -21,6 +21,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import fefw_core as core                      # noqa: E402
+from flag_labels import apply_labels         # noqa: E402
 
 
 IDENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]{2,63}$")
@@ -50,8 +51,25 @@ def game_strings(gamedata: str):
 
 
 def main() -> int:
+    if len(sys.argv) == 2 and sys.argv[1] in ('--refresh-labels', '--check-labels'):
+        path = os.path.join(HERE, 'flag_names.json')
+        with open(path, encoding='utf8') as fh:
+            raw = json.load(fh)
+        names = {int(h, 16): row for h, row in raw.items()}
+        apply_labels(names)
+        out = {'%08x' % h: row for h, row in names.items()}
+        if sys.argv[1] == '--check-labels':
+            current = raw == out
+            print('Known English flag labels are current.' if current else
+                  'Known flag labels need refreshing: python build_flag_names.py --refresh-labels')
+            return 0 if current else 1
+        with open(path, 'w', encoding='utf8') as fh:
+            json.dump(out, fh, ensure_ascii=False, separators=(',', ':'))
+        print('Refreshed known English labels; original keys preserved.')
+        return 0
     if len(sys.argv) != 2 or not os.path.isdir(sys.argv[1]):
         print("usage: python build_flag_names.py <path to your dumped romfs/GameData folder>")
+        print("       python build_flag_names.py --refresh-labels | --check-labels")
         return 2
     gamedata = sys.argv[1]
     names: dict[int, dict] = {}
@@ -87,6 +105,7 @@ def main() -> int:
         add("加入_" + key, "Recruited: %s" % label)
         add("面識_" + key, "Met: %s" % label)
 
+    apply_labels(names)
     path = os.path.join(HERE, "flag_names.json")
     out = {"%08x" % h: v for h, v in names.items()}
     with open(path, "w", encoding="utf8") as fh:
