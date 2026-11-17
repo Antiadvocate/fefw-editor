@@ -305,7 +305,7 @@
       "polarity": "restriction",
       "store": "progression",
       "coverage": "Unlock tested",
-      "note": "Enable clears the upper movement restriction; Disable restores it. Separate from Dagsion upper-area access. Clearing it passed Dietrich Chapter 5 training/certification. Cai Part 2 Chapter 5 uses the same restriction for temple-area access; its proposed repair is inferred and awaits a game retest. Other route and story barriers can still apply."
+      "note": "Enable clears the upper movement restriction; Disable restores it. Separate from Dagsion upper-area access. Clearing it passed Dietrich Chapter 5 training/certification. Cai Part 2 Chapter 5 temple-area access also passed, both resuming the blocked save and entering the chapter afresh. Other route and story barriers can still apply."
     },
     "16b679c4": {
       "name": "行動範囲制限_中層",

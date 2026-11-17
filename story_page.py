@@ -22,9 +22,9 @@ def warning_points(route, part=1):
     if part == 2:
         if route != 1:
             raise story.StoryError('Only Cai Part 2 has provisional targets.')
-        return ('Cai Part 2 Chapters 1–4 and 6 passed opening and next-battle checks from a natural Part 2 baseline. Chapter 5 needs a repair retest.',
-                'Chapter 5 now enables upper-city movement to reach Dagda’s temple. This repair is inferred from the blocked save and access conditions; it is not yet game-tested.',
-                'These results apply to naturally reached Part 2 saves. The separate Part 1-to-2 experiment remains untested. Party and prior progression are retained; missing prerequisites can still block objectives.',
+        return ('Cai Part 2 Chapters 1–6 passed opening and next-battle checks from a natural Part 2 baseline.',
+                'Chapter 5 enables upper-city movement to reach Dagda’s temple. Both repairing the blocked save and entering the chapter afresh passed.',
+                'Separate conversion from Cai Part 1 Chapter 4 to Part 2 Chapter 1 passed its opening and next-battle checks. Other starting states, Obelisk loading and long-term progression remain untested. Party and prior progression are retained; missing prerequisites can still block objectives.',
                 *WARNING_POINTS[3:])
     if route == 4:
         return WARNING_POINTS
@@ -48,7 +48,7 @@ def warning_points(route, part=1):
 
 def evidence_note(route, part=1):
     if part == 2:
-        return 'Cai only: Chapters 1–4/6 and editor checks passed. Chapter 5 repair, Part 1-to-2 conversion, Obelisk loading and long-term progression remain untested.'
+        return 'Cai only: Chapters 1–6, Chapter 5 repair and editor checks passed. Part 1 Chapter 4 → Part 2 Chapter 1 passed short-session checks. Obelisk loading, other conversion starting states and long-term progression remain untested.'
     if route == 4:
         return EVIDENCE_NOTE
     if route == 1:
@@ -63,7 +63,7 @@ def evidence_note(route, part=1):
 def chapter_evidence(route, chapter, part=1):
     if part == 2:
         return ('Game-tested opening and progression from native Part 2' if chapter in story_start.PART2_TESTED
-                else 'Upper-city access repair inferred — retest pending')
+                else 'Inferred — game test pending')
     if route == 3 and chapter in story_start.THEODORA_REPAIRS:
         return story_start.THEODORA_REPAIRS[chapter]
     if route == 2 and chapter in story_start.DIETRICH_BLOCKERS:
@@ -119,7 +119,7 @@ class StoryPageMixin:
                     2: 'Chapters 3–12 game-tested, including direct entry for 5/6. Chapters 1/2 unavailable because of the Chapter 2 rescue block.',
                     3: 'Chapters 1–12 passed; targeted repairs for 4/6/8/9. Chapter 6 uses alternate traversal.'}[info.route]
         if info.part == 2:
-            evidence = 'Chapters 1–4/6 passed; Chapter 5 access repair needs a retest.'
+            evidence = 'Chapters 1–6 passed, including the Chapter 5 upper-city movement repair.'
         if info.part == 2 and getattr(self.sv, '_allow_cai_part_transition', False):
             evidence += ' This session used experimental Part 1-to-2 entry.'
         self.story_status.configure(text=info.label + '\n' + evidence + note)
@@ -196,7 +196,7 @@ class StoryPageMixin:
                  2: 'Dietrich Chapters 1/2 are unavailable because of the Chapter 2 rescue block. Chapters 5–7 apply targeted prerequisites; party and tutorials are preserved.',
                  3: 'Theodora 4/6/8/9 apply targeted access repairs. Chapter 6 uses an alternate route around the NPC barrier. Chapters 1–2 use 1446; Chapter 3+ uses 1449. Party and tutorials are preserved.'}[info.route]
         if info.part == 2:
-            limit = 'Cai Chapters 1–4/6 passed from native Part 2. Chapter 5 applies an inferred upper-city movement repair. Part 1-to-2 entry remains experimental.'
+            limit = 'Cai Chapters 1–6 passed from native Part 2. Chapter 5 applies the tested upper-city movement repair. Part 1-to-2 entry remains experimental outside the tested Chapter 4 baseline.'
         ttk.Label(frame, text='Selected save only. Apply stages the chapter start and date; Ctrl+S saves and Ctrl+Z undoes. ' + limit,
                   wraplength=625, justify='left').pack(anchor='w', pady=(4, 10))
         buttons = ttk.Frame(frame); buttons.pack(side='bottom', fill='x', pady=(12, 0))
@@ -265,9 +265,14 @@ class StoryPageMixin:
         snapshot = bytes(slot.payload)
         if not messagebox.askyesno('Experimental Cai Part 2 entry',
                 'Start this Cai Part 1 save at Part 2 Chapter 1?\n\n'
-                'This is an untested conversion. It keeps your current units, items, '
+                'Conversion from Cai Part 1 Chapter 4 passed opening and next-battle checks. '
+                'Other starting states and long-term progression remain untested. '
+                'It keeps your current units, items, '
                 'flags and world state; it does not grant missing transition rewards '
                 'or unlocks. Objectives may be blocked.\n\n'
+                'This changes the selected save to Part 2, but does not create the '
+                'separate Part_Kai_2 handoff file. An optional Chapter_Kai_2_N '
+                'chapter file is different and does not replace it.\n\n'
                 'Use a disposable copy. Apply changes only this slot; Ctrl+S saves '
                 'and Ctrl+Z undoes. Chapter files are not created automatically.', parent=self):
             return

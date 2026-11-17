@@ -32,7 +32,7 @@ class Part2Test(unittest.TestCase):
         self.assertEqual(story.chapter_filename(1, 1), 'Chapter_Kai_1_1')
         self.assertIn('passed', story_page.warning_points(1, 2)[0])
         self.assertIn('Game-tested', story_page.chapter_evidence(1, 1, 2))
-        self.assertIn('inferred', story_page.chapter_evidence(1, 5, 2))
+        self.assertIn('Game-tested', story_page.chapter_evidence(1, 5, 2))
 
     def test_all_targets_preserve_unrelated_roots_and_all_flags(self):
         f = fixture(); before = bytes(f.payload)

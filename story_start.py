@@ -3,9 +3,10 @@
 Leda Chapters 2–12 have short-session game evidence. Chapter 1 is unavailable:
 its opening plays but its first objective cannot be progressed.
 No private captures or GameData are required at runtime.
-Cai Part 2 Chapters 1–4 and 6 passed opening and next-battle checks.
-Chapter 5 has a provisional upper-city movement repair; retest pending.
-Part 1-to-2 entry is a separate untested experiment.
+Cai Part 2 Chapters 1–6 passed opening and next-battle checks.
+Chapter 5 upper-city movement repair passed both resumed and fresh entry.
+Part 1 Chapter 4-to-Part 2 Chapter 1 entry passed short-session checks;
+other conversion starting states and long-term progression remain untested.
 Cai Part 1 Chapters 1–12 passed short-session game tests.
 Dietrich Chapters 3–12 passed short-session checks, including integrated
 prerequisites for 5–7. Chapters 1/2 are unavailable: Chapter 2 replay remains
@@ -135,8 +136,8 @@ def normalized_blocks(f):
 
 
 # Part 2 title dates from the private timeline; Chapter 1/year from the native
-# checkpoint. Year 1450 for later chapters is provisional until game-tested.
-PART2_TESTED = frozenset((1, 2, 3, 4, 6))
+# checkpoint. Chapters 1–6 subsequently passed short-session game checks.
+PART2_TESTED = frozenset(range(1, 7))
 PART2_UPPER_MOVEMENT = core.id_hash("行動範囲制限_上層")
 PART2_DATES = {1: (1, 1, 12, 0), 2: (2, 1, 12, 0), 3: (3, 1, 12, 0),
                4: (4, 3, 12, 0), 5: (4, 30, 9, 30), 6: (4, 30, 12, 0)}

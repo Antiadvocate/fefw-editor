@@ -1,15 +1,17 @@
 # Cai Part 2 — Test 2
 
-Test 1 Chapters **1–4 and 6 passed**, including reaching the next story battle.
-All editor checks passed. Those results apply to the natural Part 2 baseline;
-they do not yet establish that conversion from Part 1 works. Chapter 5 remains
-blocked pending the access repair below. No need to repeat the passed chapters.
+**All Test 2 cases and editor checks passed (17 November 2026).** Together
+with Test 1, Cai Part 2 Chapters **1–6** passed opening and next-battle checks
+from the natural Part 2 baseline. Both Chapter 5 repair cases passed, as did
+conversion from the Cai Part 1 Chapter 4 control to Part 2 Chapter 1.
+Other conversion starting states, Obelisk loading and long-term progression
+remain untested. The instructions below document the completed tests.
 
 ## Chapter 5
 
 The blocked save has Dagsion upper-area access unlocked, but retains the
 separate upper-area movement restriction. The game's `A30` access event checks
-that restriction. The proposed fix clears only that flag. It preserves the
+that restriction. The tested fix clears only that flag. It preserves the
 lower-area restriction and all other progression, units and inventory.
 
 | Case | Starting state | Test |
@@ -19,7 +21,8 @@ lower-area restriction and all other progression, units and inventory.
 
 Test 05A first, then 05B independently. Save after reaching the next story event
 or battle if possible. If blocked, return the save and describe the door/path or
-missing interaction. Both cases remain untested repairs until you report back.
+missing interaction. Both cases have now passed; both returned progress saves
+reach the Chapter 5 battle with the upper movement restriction cleared.
 
 In the editor, selecting Part 2 Chapter 5 applies the repair automatically.
 For an already-blocked save, Functions → Area access → **Dagsion upper-area
@@ -36,8 +39,9 @@ natural Part 2 baseline.
 **Try Cai Part 2 entry…** action. It targets Part 2 Chapter 1, retaining the
 Part 1 roster, stats, inventory, flags and map records. It sets the part/chapter,
 entry sequence and clock, and clears cached restart state. It does not import
-another save's progression or grant transition rewards. Whether this is enough
-for the game to proceed is deliberately the subject of the test.
+another save's progression or grant transition rewards. This case passed:
+the returned arrival retains the four-unit roster and the progress save reaches
+the Part 2 Chapter 1 battle.
 
 1. Load X1 and confirm the intended Part 2 opening plays.
 2. Save at the first controllable point as `X1-arrival`.
@@ -53,15 +57,24 @@ To reproduce X1 through the UI, open a copy of `00-Part1-Control/Auto` and choos
 **Try Cai Part 2 entry…** beside Story progression. Apply stages the experiment;
 Save writes it. Check Undo/Redo, including Undo after saving, then save/reopen and
 verify that the displayed part agrees. The action affects only the selected save
-and does not automatically create a chapter file.
+and does not automatically create a chapter file. These editor checks passed.
+
+**The action changes the selected save to Part 2, but does not create the
+separate `Part_Kai_2` handoff file.** The optional `Chapter_Kai_2_N` chapter
+file is different and does not replace it.
 
 ## What `Part_Kai_2` contains
 
 This is not the same state as `Chapter_Kai_2_1`. Its live metadata is still
 **Cai Part 1 Chapter 12**, dated **10 December 1449**, with a distinct transition
 resume state. Its cached restart data contains Chapter 12 entry, free-time and
-battle snapshots. That suggests a native handoff for starting Part 2; the exact
-loading behavior has not been tested here. The original file remains unchanged.
+battle snapshots. That suggests a native handoff for starting Part 2.
+
+The tester observed an inventory carryover screen when Part 2 started and
+reported that removing `Part_Kai_2` during entry still seemed fine. This is a
+successful short-session observation, not proof that the file is unnecessary
+for every loading, replay or later progression case. No automatic creation or
+deletion of that file is performed by the editor.
 
 ## Return format
 

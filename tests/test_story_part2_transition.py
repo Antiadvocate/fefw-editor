@@ -1,4 +1,4 @@
-"""Bounded Cai part conversion and the inferred Chapter 5 access repair."""
+"""Bounded Cai part conversion and the tested Chapter 5 access repair."""
 from pathlib import Path
 import os
 import tempfile
