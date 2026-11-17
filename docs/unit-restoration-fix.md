@@ -4,9 +4,9 @@
 
 | Case | Accepted scope | Still untested |
 |---|---|---|
-| U1 | User reports pass for the deployed additions: Buccar, Sirocco and Catania | Olympia could not deploy because only three additional slots were available |
+| U1 | User reports pass for Buccar, Sirocco and Catania, then Olympia deployed separately in the same save | Broader deployment combinations |
 | U2 | User reports pass for Guzran | Later natural recruitment interactions |
-| U3 | User reports pass for renumbered Sirocco | Buccar leaves for story reasons and was not tested |
+| U3 | User reports pass for renumbered Sirocco and, as a substitute for Buccar, Catania retaining player control after renumbering in that chapter | Buccar himself was not retested because he leaves for story reasons |
 | Editor | All requested checks passed, including the corrected R0/R1 restoration retest | No remaining check in this focused editor test set |
 
 All six returned containers have valid checksums. The three input Auto files
@@ -18,6 +18,13 @@ battle save containing Sirocco and no Buccar, consistent with the reported
 story departure. The battle gear/number layout is outside the current identity
 reader, so those two returns do not independently verify the stored number.
 The user-reported behavior and the decoded save evidence are recorded separately.
+
+In a follow-up on 17 November 2026, the user confirmed Olympia passes when
+deployed separately in that save, and Catania retains player control after her
+number is changed in the same chapter. Catania is accepted as the substitute
+for Buccar's renumbering case. These are user-reported passes without new return
+files; the original capture facts above remain unchanged. Together with the
+editor retest below, this completes the planned functional checks.
 
 No returned file contains Benditz. None is identified as the disposable Flags
 test save, so this does not establish whether that particular editor test had
@@ -75,7 +82,7 @@ plus Restore/Undo/Redo returns the complete payload to its original state.
 and R0 below. This accepts the corrected restoration and Flags value-edit
 workflow, including the requested Undo/Redo and Save/reopen checks. No new
 returned files accompanied this confirmation; it is user-reported acceptance.
-The earlier game deployment limitations remain unchanged.
+The later Olympia and Catania game checks are recorded above.
 
 The correction package includes `R0-Benditz-Recruited/Auto` and
 `R1-Restore-Benditz/Auto`, based on the returned U2 free-time save. They contain
@@ -89,6 +96,8 @@ the same added Benditz record, number 50. Only the main recruitment flag differs
    `加入_ベンディッツ`. Set it to 0. The rest of the flag list must remain visible.
    Add unit should now offer Restore; check Undo/Redo for the flag change too.
 
-There is no need to repeat U1/U2 or Sirocco's accepted U3 check. Olympia's
-deployment and Buccar's renumbered deployment remain outstanding, alongside
-later natural recruitment and other untested catalogue/route combinations.
+The planned functional checks are complete, with Catania covering the remaining
+renumbering case in place of Buccar. No repeat of the accepted checks is needed.
+This does not establish Buccar's own renumbered deployment, later natural
+recruitment or every catalogue/route combination; those are outside this
+completed test set.
