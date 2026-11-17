@@ -1,5 +1,8 @@
 # New units — expanded tests 2
 
+**Results received:** see [Test 2 results and Anna retest](unit-expansion-test2-results.md).
+The original instructions and profiles below are retained for provenance.
+
 These are ten independent pre-edited saves, each adding ONE unit to the same
 old Leda Chapter 9 baseline. Use the existing restoration-fix editor if needed;
 there is no new editor build to install and no need to enable restricted rows.
