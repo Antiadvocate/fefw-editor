@@ -38,23 +38,33 @@ def array(data, at):
     return result
 
 
-def report(directory):
+def report(directory, *, extra_profiles=None):
+    # Research-only explicit overrides; the normal catalogue remains identical.
+    # Passing these does not enable any candidate in the editor.
+    extra_profiles = extra_profiles or {}
     tables.BASE = Path(directory)
     person = tables.Data('Person.bin'); jobs = tables.Data('Job.bin')
     growth = tables.Data('Growth.bin'); skills = tables.Data('Skill.bin')
     prows, jrows, srows = records(person), records(jobs), records(skills)
+    for key, profile in extra_profiles.items():
+        if key not in prows or set(profile) - {'class_key', 'hp', 'ranks'}:
+            raise ValueError('Unknown experimental identity or override')
     names = json.loads((HERE/'unit_ids.json').read_text())
     flags = {r['name'] for r in json.loads((HERE/'flag_names.json').read_text()).values()}
     items = json.loads((HERE/'item_ids.json').read_text())
     skill_ids = json.loads((HERE/'skill_ids.json').read_text())
     canonical = {key:at for key,at in prows.items()
-                 if 0 < person.b[at+48] < 100 and '加入_'+key[4:] in flags}
+                 if (0 < person.b[at+48] < 100 and '加入_'+key[4:] in flags)
+                 or key in extra_profiles}
     short_ids = {person.string(person.q(at+40)): key for key,at in canonical.items()}
     entries = {}
     for key,at in canonical.items():
         h = f'{core.id_hash(key):08x}'
-        job = person.string(person.q(at+56))
-        ranks = list(person.b[at+584:at+597])
+        profile = extra_profiles.get(key, {})
+        job = profile.get('class_key', person.string(person.q(at+56)))
+        ranks = profile.get('ranks', list(person.b[at+584:at+597]))
+        if len(ranks) != 13 or any(type(x) is not int or x < 0 for x in ranks):
+            raise ValueError('Invalid experimental ranks')
         if any(x > len(SKILL_THRESHOLDS) for x in ranks): raise ValueError('Unknown rank')
         masteries = [[i, SKILL_THRESHOLDS[rank-1]] for i,rank in enumerate(ranks) if rank]
         learned = []
@@ -97,7 +107,7 @@ def report(directory):
             'source_offset':hex(at), 'person_serial':person.b[at+48],
             'source_flags':person.b[at+49],
             'class':f'{core.id_hash(job):08x}', 'class_key':job, 'level':1,
-            'hp':struct.unpack_from('<h',person.b,at+450)[0],
+            'hp':profile.get('hp', struct.unpack_from('<h',person.b,at+450)[0]),
             'masteries':masteries, 'items':[f'{core.id_hash(k):08x}' for k in inventory],
             'magic':[f'{core.id_hash(k):08x}' for k in magic],
             'skills':[[f'{core.id_hash(s):08x}' for s in group] for group in
@@ -109,6 +119,10 @@ def report(directory):
             'restriction':('Custom protagonist creation is not supported.' if key=='PID_イシュマール' else
                            'Special-character defaults need validation.' if person.b[at+49]!=39 else ''),
             'route_scope':'Route/part eligibility unverified; this is not a natural recruitment event.'}
+        if key in extra_profiles:
+            entries[h]['evidence'] = 'Experimental profile; game test pending'
+            entries[h]['restriction'] = 'Research-only candidate; not enabled in the editor.'
+            entries[h]['experimental_overrides'] = profile
     return {'schema':1, 'scope':'Level-one defaults, not chapter-scaled natural recruits. No story rewards, conditional skills or shared mounts are granted.',
             'sources':{n:hashlib.sha256((Path(directory)/n).read_bytes()).hexdigest()
                        for n in ('Person.bin','Growth.bin','Job.bin','Skill.bin')},

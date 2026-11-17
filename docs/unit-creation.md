@@ -1,14 +1,19 @@
 # Unit creation and identity editing — Test 1
 
 The Units page now offers **Add unit…**, a visible **Unit #** column, and
-**Change unit number…**. This is a data-derived test feature. Game acceptance
-is pending; a correctly parsed record does not establish working deployment.
+**Change unit number…**. The initial functional test set has passed within its
+[reported scope](unit-restoration-fix.md). Expanded cross-route, special and
+NPC cases are [pending game tests](testing-unit-expansion-test2.md); a correctly
+parsed record does not establish working deployment.
 
 ## Catalogue and creation
 
-The picker has 67 named character identities with recovered recruitment keys.
+The picker has 67 named character identities with PID-derived recruitment keys.
 54 ordinary candidates are enabled. Twelve special-character entries and the
 custom protagonist remain visible but disabled pending their own validation.
+An [audit of all 2,923 Person rows](unit-catalogue-coverage.md) accounts for all
+55 entries with source flag byte 39: 54 enabled plus the custom protagonist.
+That heuristic is not proof of an exhaustive natural-recruitment list.
 An existing character, including a known alternate template, cannot be added
 again. Status is calculated over the entire live UnitPool, including records
 hidden by the editor's roster filter.
@@ -29,7 +34,9 @@ are distributed. Two positive 31-bit seed words are derived from the character
 key and allocated number; progress accumulators and battle counters
 start empty. This initialization still needs game level-up testing.
 
-Only the exact recovered recruitment and met flags are set. No story completion,
+Only the exact PID-derived recruitment and met flags are set. The flag catalogue
+generates those names; their existence there is not independent evidence of a
+natural recruitment event. No story completion,
 facility, class-unlock, support, reward or tutorial flags are granted. Route and
 part eligibility for natural recruitment is **unverified**. Adding a character
 early may affect its later scripted recruitment; that check remains required.
