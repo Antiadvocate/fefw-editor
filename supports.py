@@ -37,6 +37,10 @@ POINTS_PATH = os.path.join(HERE, "support_points.json")
 RANKS = ("C", "B", "A", "S")
 
 MAX_POINTS = 3200       # the maximum; confirmed in-game to be level 5
+# Cumulative points at which support level 1..5 starts (400 for 1->2, then 1000,
+# 1000 and 800 more).  3200 is confirmed in-game; the lower steps come from
+# https://annasnotebook.net/en/bonds/ (issue #39) and are the same for every pair.
+LEVEL_POINTS = (0, 400, 1400, 2400, 3200)
 ENTRY_SIZE = 12         # [u32 pair hash][u32 points][u32 extra]
 
 _pairs: list[dict] | None = None
@@ -201,6 +205,23 @@ def find_table(payload, start: int, end: int) -> dict | None:
 def set_points(payload, offset: int, value: int) -> None:
     """Write the point value of the entry at ``offset`` (in place)."""
     struct.pack_into("<I", payload, offset + 4, max(0, min(int(value), 0xFFFFFFFF)))
+
+
+def level_of(points: int | None) -> int | None:
+    """Support level (1-5) that ``points`` reaches, or None when unknown."""
+    if points is None:
+        return None
+    return sum(1 for need in LEVEL_POINTS if points >= need) or 1
+
+
+def next_level_at(points: int | None) -> int | None:
+    """Points needed for the next level, or None at the top / when unknown."""
+    if points is None:
+        return None
+    for need in LEVEL_POINTS:
+        if points < need:
+            return need
+    return None
 
 
 def points_of(table: dict | None, pair_hash: int) -> int | None:

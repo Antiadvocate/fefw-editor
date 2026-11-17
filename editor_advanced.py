@@ -1774,6 +1774,19 @@ def add_convoy_item_ui(self):
     if not qty:
         return
     conv = layer.live_convoy(bytes(self.sv.payload))
+    if conv is not None and not layer.stacks(iid):
+        # gear takes one slot per copy: say so up front if they won't fit
+        room = layer.convoy_free_gear_slots(bytes(self.sv.payload))
+        if room < qty:
+            self.flash(f"{layer.item_label(iid)} doesn't stack - {qty} copies need {qty} "
+                       f"slots and the convoy has room for {room}.", "warn")
+            return
+        self.push_undo()
+        if self._core_edit(
+                lambda f: (layer.add_convoy_copies(f.payload, iid, qty) and f.payload) or None,
+                f"Convoy: added {layer.item_label(iid)} ×{qty} (one slot each)"):
+            self.refresh_convoy()
+        return
     home = layer.convoy_home(iid, conv.slots) if conv else None
     if home is None:
         self.flash(f"{layer.item_label(iid)} has no convoy slot of its own.", "warn")
