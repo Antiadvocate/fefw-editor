@@ -7,7 +7,7 @@
 | U1 | User reports pass for the deployed additions: Buccar, Sirocco and Catania | Olympia could not deploy because only three additional slots were available |
 | U2 | User reports pass for Guzran | Later natural recruitment interactions |
 | U3 | User reports pass for renumbered Sirocco | Buccar leaves for story reasons and was not tested |
-| Editor | All other requested checks passed | Restore recruitment needs the corrected Flags workflow below |
+| Editor | All requested checks passed, including the corrected R0/R1 restoration retest | No remaining check in this focused editor test set |
 
 All six returned containers have valid checksums. The three input Auto files
 match the supplied kit exactly. U1's return is a battle save containing Buccar
@@ -70,6 +70,12 @@ decoded payload. Both saved containers validate, and the actual Flags controller
 plus Restore/Undo/Redo returns the complete payload to its original state.
 
 ## Focused editor retest
+
+**Passed:** on 17 November 2026 the user confirmed "Both checks pass" for R1
+and R0 below. This accepts the corrected restoration and Flags value-edit
+workflow, including the requested Undo/Redo and Save/reopen checks. No new
+returned files accompanied this confirmation; it is user-reported acceptance.
+The earlier game deployment limitations remain unchanged.
 
 The correction package includes `R0-Benditz-Recruited/Auto` and
 `R1-Restore-Benditz/Auto`, based on the returned U2 free-time save. They contain
