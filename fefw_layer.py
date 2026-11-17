@@ -17,6 +17,7 @@ import struct
 
 import fefw_core as core
 from fefw_save import *                      # noqa: F401,F403  (ids, labels, catalogue…)
+from fefw_save import DATA_DIR
 from fefw_save import (                      # noqa: F401
     Convoy, ConvoyRow, SaveError, SaveFile as _SaveFile, UnitRecord as _UnitRecord,
     item_ids, item_label, is_enemy, unit_ids,
@@ -332,7 +333,10 @@ def convoy_rows(payload) -> list:
 # Bakul in 1071).  A stack in another item's slot is ignored by the game, which
 # is why 1.3.1's "Add" and "All materials" (first empty slot) didn't show up.
 # The layout is game data, the same in every save, so the offset is fixed.
-CONVOY_SLOT_OFFSET = 24
+# The offset is 23, not 24: in all 28 game-written convoys checked (issue #38) the
+# stack of an item sits at slot = row + 23, counting slots from 0 ("slot 1008" on
+# screen is index 1007).  1.3.2 used 24 and so wrote into the neighbour's slot.
+CONVOY_SLOT_OFFSET = 23
 
 
 def convoy_home(iid: int, n_slots: int) -> "int | None":
@@ -354,10 +358,110 @@ def _item_rows() -> dict:
     return _ROWS
 
 
+# Gear (weapons, tomes, staves, shields, anything with 2+ uses) never stacks: every
+# copy takes a slot of its own with quantity 1, and the game puts it in the first
+# empty slot of the low part of the list - the slots whose "own item" (row - 23) is
+# itself gear, which no stack ever uses.  item_stack.json lists those items
+# (build_item_stack.py); without the file everything is treated as stackable.
+_SINGLE: "set | None" = None
+_POOL: "set | None" = None
+
+
+def single_ids() -> set:
+    """Item ids that take one slot per copy."""
+    global _SINGLE
+    if _SINGLE is None:
+        try:
+            with open(os.path.join(DATA_DIR, "item_stack.json"), encoding="utf8") as fh:
+                _SINGLE = {int(x, 16) for x in json.load(fh).get("single", [])}
+        except (OSError, ValueError):
+            _SINGLE = set()
+    return _SINGLE
+
+
+def stacks(item_id: int) -> bool:
+    """True if copies of the item share one slot (with a quantity)."""
+    return (item_id & 0xFFFFFFFF) not in single_ids()
+
+
+def _pool_slots() -> set:
+    """Slots the game fills with non-stacking items."""
+    global _POOL
+    if _POOL is None:
+        ids = list(item_ids())
+        single = single_ids()
+        _POOL = {k for k in range(len(ids) + CONVOY_SLOT_OFFSET)
+                 if k - CONVOY_SLOT_OFFSET < 1 or ids[k - CONVOY_SLOT_OFFSET] in single}
+    return _POOL
+
+
+def convoy_free_gear_slots(payload) -> int:
+    """How many more non-stacking items the convoy has room for."""
+    f = core.SaveFile(bytes(payload))
+    at = core.convoy_at(f)
+    if at < 0:
+        return 0
+    slots = core.convoy_read(f, at)
+    pool = _pool_slots()
+    return sum(1 for k, s in enumerate(slots) if k in pool and not (s.item and s.qty))
+
+
+def add_convoy_copies(payload: bytearray, item_id: int, qty: int = 1) -> bool:
+    """Add ``qty`` copies of a non-stacking item, each in its own empty slot
+    (always new slots, even when one is already in the convoy).  Raises
+    SaveError, changing nothing, if there is not room for all of them."""
+    f = core.SaveFile(bytes(payload))
+    at = core.convoy_at(f)
+    if at < 0:
+        return False
+    slots = core.convoy_read(f, at)
+    pool = _pool_slots()
+    free = [k for k, s in enumerate(slots) if k in pool and not (s.item and s.qty)]
+    qty = max(1, int(qty))
+    if len(free) < qty:
+        raise core.SaveError(f"the convoy has room for {len(free)} more non-stacking "
+                             f"item(s), not {qty}")
+    for k in free[:qty]:
+        slots[k] = core.Slot(1, core.Item(item_id & 0xFFFFFFFF))
+    payload[:] = core.convoy_write(f, at, slots)
+    return True
+
+
+def set_convoy_copies(payload: bytearray, item_id: int, qty: int) -> bool:
+    """Make the convoy hold exactly ``qty`` plain copies of a non-stacking item
+    (forged copies, which carry extra data, are left alone).  Extra copies are
+    taken from the highest slots.  Raises SaveError if it doesn't fit."""
+    f = core.SaveFile(bytes(payload))
+    at = core.convoy_at(f)
+    if at < 0:
+        return False
+    iid = item_id & 0xFFFFFFFF
+    slots = core.convoy_read(f, at)
+    have = [k for k, s in enumerate(slots)
+            if s.item and s.qty and s.item.id == iid and not s.item.extra]
+    if not have and any(s.item and s.qty and s.item.id == iid for s in slots):
+        raise core.SaveError("those are forged copies, each one unique - use Add item "
+                             "to add plain ones")
+    qty = max(0, int(qty))
+    total = sum(slots[k].qty for k in have)
+    if qty == total and all(slots[k].qty == 1 for k in have):
+        return False
+    for k in have[qty:]:
+        slots[k] = core.Slot(0, None)
+    for k in have[:qty]:            # one copy per slot; splits a stack the game wouldn't make
+        slots[k] = core.Slot(1, slots[k].item)
+    payload[:] = core.convoy_write(f, at, slots)
+    need = qty - len(have[:qty])
+    return add_convoy_copies(payload, iid, need) if need > 0 else True
+
+
 def add_convoy_slot(payload: bytearray, item_id: int, qty: int = 1) -> bool:
     """Put a stack in the item's own slot (added to what is there, max 999).
     Copies of it sitting in other items' slots are moved home with it.  False
-    if the item has no slot or its slot holds another item."""
+    if the item has no slot or its slot holds another item.  Items that don't
+    stack get one slot per copy instead (add_convoy_copies)."""
+    if not stacks(item_id):
+        return add_convoy_copies(payload, item_id, qty)
     f = core.SaveFile(bytes(payload))
     at = core.convoy_at(f)
     if at < 0:
@@ -547,9 +651,51 @@ def copy_unit_in(payload: bytearray, origin, uid: int) -> bool:
     u = unit_in(src, uid)
     if u is None:
         return False
+    # Keep the guarded importer: it already allocates a unique number and
+    # rejects duplicate identities and unsupported equipment/context layouts.
     import unit_entries
     payload[:] = unit_entries.copy_in(src, u, dst)
     return True
+
+
+def renumber_unit(payload: bytearray, index: int) -> int | None:
+    """Give unit ``index`` of the pool a unit number no other unit uses.
+
+    Every unit carries a number the game identifies it by (Cai 1, Peter 7, ...;
+    battalions and mounts name their owner by it).  A unit copied in from another
+    slot brings the number it had *there*, which another unit here may already
+    own - the game then treats both as the same unit: selecting one activates the
+    other (issue #33).  Returns the new number, or None if it was already unique.
+    """
+    f = core.SaveFile(bytes(payload))
+    units = f.units()
+    u = units[index]
+    g = core.gear(f, u)
+    if g is None:
+        return None
+    taken = set()
+    for o in units:
+        if o.start == u.start:
+            continue
+        og = core.gear(f, o)
+        if og is not None:
+            taken.add(og.unit_number)
+    st = core.party_store(f)
+    if st:
+        taken.update(l.owner for l in core.legions(f, st[2]) if l.owner != g.unit_number)
+    if g.unit_number not in taken:
+        return None
+    new = next(n for n in range(1, 256) if n not in taken)
+    p = f.payload
+    p[core.tail_at(p, u.start, u.end) - 9] = new
+    if g.ride or g.legion:
+        ride = g.ride and core.Ride(g.ride.id, new, g.ride.serial, g.ride.flag, g.ride.date,
+                                    g.ride.name, g.ride.allies, g.ride.last)
+        legion = g.legion and core.Legion(g.legion.row, new, g.legion.id)
+        g2 = core.gear(f, u)
+        p[:] = core.with_gear(f, u, g2, ride, legion)
+    payload[:] = f.payload
+    return new
 
 
 def remove_unit(payload: bytearray, uid: int) -> bool:
