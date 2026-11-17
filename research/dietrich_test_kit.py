@@ -50,7 +50,10 @@ def build(source_dir, output):
     pending = []
     for chapter in range(1, 13):
         source = 'Chapter_Dit_1_1' if chapter == 1 else 'Auto'
-        f = saves[source]; payload = start.edited(f, chapter); g = core.SaveFile(payload)
+        f = saves[source]
+        # Reproduce the original Test 1 profile, before Test 2 prerequisites.
+        payload = start._edited_at_entry(f, chapter, 1449, start.target(chapter, 2))
+        g = core.SaveFile(payload)
         if flags(g) != flags(f) or tutorials.read(g) != tutorials.read(f):
             raise ValueError('Chapter edit changed flags or tutorials')
         original = start.normalized_blocks(f); after = start.normalized_blocks(g)
@@ -60,7 +63,7 @@ def build(source_dir, output):
         i = start.validate(g)
         if (i.route,i.part,i.chapter,i.sequence) != (2,1,chapter,story.sequence(chapter,2)):
             raise ValueError('Incorrect chapter entry')
-        if start.edited(g, chapter) != payload: raise ValueError('Entry is not idempotent')
+        if start._edited_at_entry(g, chapter, 1449, start.target(chapter, 2)) != payload: raise ValueError('Entry is not idempotent')
         pending.append((f'D1-{chapter:02d}-Chapter-{chapter:02d}', source, payload))
     output.mkdir(parents=True)
     control = output/'00-Native-Control'; control.mkdir()

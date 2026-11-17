@@ -10,12 +10,14 @@ Other Leda chapter files remain untested through the Obelisk.
 Chapter 4 direct entry with the Sewers fix. Cai Obelisk use remains untested.
 See [Cai/Tutorials Test 5 results](docs/test-results-cai-tutorials-test5.md).
 
-**Dietrich Part 1:** Chapters **1, 3, 4 and 8–12** passed short-session tests;
-all Test 1 UI checks passed. Chapters **2, 5, 6 and 7** open but have known
-progression blocks. [Test 1 results](docs/test-results-story-dietrich-test1.md)
-record the evidence. [Test 2](docs/testing-story-dietrich-test2.md) supplies
-isolated repair probes; ordinary chapter editing still preserves flags and
-party. Dietrich Obelisk use and long term progression remain untested.
+**Dietrich Part 1:** Chapters **1 and 3–12** passed short-session checks,
+including the Chapter 5–7 repairs in [Test 2](docs/test-results-story-dietrich-test2.md).
+All Test 1 UI checks passed. **Chapter 2 replay remains blocked**; only its native
+control passed. Chapter selection applies the bounded prerequisites for 5–7,
+preserving party and tutorials. [Test 3](docs/testing-story-dietrich-test3.md)
+checks integrated entry for 5/6 and isolates Chapter 2 event-state candidates.
+Chapter 7's integrated output exactly matches its accepted test save. Dietrich
+Obelisk use and long term progression remain untested.
 
 **Tutorial names:** 180 titles, categories and their visible order now match the
 supplied game screenshots. This corrects 61 labels, including **Mentoring (Cai)**;
@@ -29,7 +31,7 @@ The Journal, Mentoring and Dagsion area controls remain available with their
 individual evidence labels. Arena testing remains deferred.
 See [Sewers results and editor checks](docs/test-results-sewers-functions.md).
 The [Cai and Tutorials test kit](docs/testing-cai-tutorials-test5.md) passed its
-reported checks. Dietrich Test 2 targets the four reported progression blocks.
+reported checks. Dietrich Test 3 focuses on Chapter 2 and integrated Chapter 5/6 entry.
 
 **Facilities branch:** the UI and FAC-01–06 game tests passed on Leda Part 1
 Chapter 9. Ten services and six gates are Game-tested; Yu Phas additionally
@@ -61,7 +63,7 @@ library, or a ready-made Windows `.exe`.
 | | Class | Pick any class the game knows. It's added to the unit's own class list, the way the game does it |
 | **Convoy** | | Everything in storage, materials included: add a stack, stock every material at once, swap the item in any row, change its quantity, remove a row, and repair a list damaged by older versions |
 | **Gold** | | Set gold |
-| **Player** | | Leda Part 1 starts 2–12 (game-tested) and Cai Part 1 starts 1–12 (game-tested); Dietrich Part 1 starts 1–12 (eight passes; 2/5/6/7 have known blocks), selected from the save route. Other targets/routes guarded. Optional chapter file on Save with overwrite confirmation and backup. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
+| **Player** | | Leda Part 1 starts 2–12 (game-tested) and Cai Part 1 starts 1–12 (game-tested); Dietrich Part 1 starts 1–12 (11 short-session passes including repairs; Chapter 2 replay blocked; integrated 5/6 entry pending), selected from the save route. Other targets/routes guarded. Optional chapter file on Save with overwrite confirmation and backup. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
 | **Classes** | | A unit's whole class list (set the current class, add, swap or remove one, set its exp) and its weapon masteries with their rank (E … S+) and exp — select several masteries (Ctrl+A, Shift+click or Shift+drag) and Set rank, Set exp or Remove changes all of them at once |
 | **Supports** | | Every character's support partners with the **points** this save holds for the pair, the highest rank the game defines, and which conversations this save has recorded. Set the points (0 … 3200) and the game works the level out from them. **Record conversation as seen** writes that conversation's flag |
 | **Mounts** | | The battalion and mount each unit carries, chosen from the save's pool |

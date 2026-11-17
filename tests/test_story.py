@@ -26,9 +26,9 @@ def fixture(route=4, part=1, chapter=2, *, padding=0, seq=0xb7b9cc2aad8d3152):
     extra=len(p);p.extend(bytes(4))
     general=leaf(b'\0'+struct.pack('<H',len(facilities.ANCHORS))+
                  b''.join(struct.pack('<IB',key,1) for key in sorted(facilities.ANCHORS)))
-    history=leaf(bytes(3))
-    t=len(p);p.extend(struct.pack('<IIII',0x972fa7ee,general+32,facilities.HISTORY_MEMBER,history+32))
-    struct.pack_into('<I',p,extra,(2<<24)|(t+32))
+    history=leaf(bytes(3));progression=leaf(bytes(3))
+    t=len(p);p.extend(struct.pack('<IIIIII',0x972fa7ee,general+32,facilities.HISTORY_MEMBER,history+32,0x4ad575a2,progression+32))
+    struct.pack_into('<I',p,extra,(3<<24)|(t+32))
     t=len(p);p.extend(struct.pack('<IIII',0xabcdef01,child+32,0xabcdef02,extra+32))
     struct.pack_into('<I',p,u,(2<<24)|(t+32))
     t=len(p)

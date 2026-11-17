@@ -4,8 +4,9 @@ Leda Chapters 2–12 have short-session game evidence. Chapter 1 is unavailable:
 its opening plays but its first objective cannot be progressed.
 No private captures or GameData are required at runtime.
 Cai Part 1 Chapters 1–12 passed short-session game tests.
-Dietrich Chapters 1, 3, 4 and 8–12 passed short-session tests. Chapters 2, 5,
-6 and 7 open but have reported progression blocks under investigation.
+Dietrich Chapters 1 and 3–12 passed short-session checks, including Test 2
+repairs for 5–7. Integrated direct entry for 5/6 awaits regression checks.
+Chapter 2 replay remains blocked; only its native control passed.
 """
 from datetime import datetime
 import struct
@@ -13,6 +14,7 @@ import struct
 import fefw_core as core
 import story
 import facilities
+import story_prerequisites
 
 CHAPTERS = tuple(range(2, 13))
 TESTED = frozenset(CHAPTERS)
@@ -33,12 +35,9 @@ DIETRICH_DATES = {1: (2, 10, 9, 0), 2: (2, 10, 14, 0), 3: (2, 11, 12, 0),
                   10: (9, 29, 12, 0), 11: (10, 5, 12, 0), 12: (11, 4, 12, 0)}
 TARGETS = {4: CHAPTERS, 1: tuple(CAI_DATES), 2: tuple(DIETRICH_DATES)}
 TESTED_BY_ROUTE = {4: TESTED, 1: frozenset(CAI_DATES),
-                   2: frozenset((1, 3, 4, 8, 9, 10, 11, 12))}
+                   2: frozenset((1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))}
 DIETRICH_BLOCKERS = {
     2: 'Opening works; rescue proximity event blocked',
-    5: 'Training works; certification objective blocked',
-    6: 'Opening works; Trading Company access blocked',
-    7: 'Opening works; Teach Secrets selection blocked',
 }
 RESUME_OFFSET = 58
 FREE_TIME_ID = 0xd8588d186b3f9502
@@ -157,6 +156,8 @@ def edited(f, chapter):
     p = _edited_at_entry(f, chapter, 1449 if info.route in (1, 2) else ENTRY_YEARS[chapter], date)
     if info.route == 1 and chapter >= 3:
         p = facilities.edited(core.SaveFile(p), {facilities.SEWERS: True})
+    if info.route == 2:
+        p = story_prerequisites.edited(core.SaveFile(p), chapter)
     return p
 
 

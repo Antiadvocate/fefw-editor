@@ -11,6 +11,7 @@ import fefw_core as core
 import fefw_save as container
 import story
 import story_start as start
+import story_prerequisites as prerequisites
 import story_page
 import story_files
 from test_story import StoryHarness, box_for
@@ -27,10 +28,10 @@ class DietrichStoryTest(unittest.TestCase):
     def test_native_sequence_anchors_and_reported_target_evidence(self):
         self.assertEqual(tuple(story.sequence(n,2) for n in range(1,5)),NATIVE_IDS)
         self.assertEqual(start.TARGETS[2],tuple(range(1,13)))
-        self.assertEqual(start.TESTED_BY_ROUTE[2],frozenset((1,3,4,8,9,10,11,12)))
-        self.assertIn('known progression blocks',story_page.warning_points(2)[0])
-        self.assertIn('remain blocked',story_page.evidence_note(2))
-        for chapter in (2,5,6,7):
+        self.assertEqual(start.TESTED_BY_ROUTE[2],frozenset((1,3,4,5,6,7,8,9,10,11,12)))
+        self.assertIn('Chapter 2 replay remains blocked',story_page.warning_points(2)[0])
+        self.assertIn('native control',story_page.evidence_note(2))
+        for chapter in (2,):
             self.assertTrue(story_page.chapter_evidence(2,chapter).startswith('Blocked'))
         self.assertIn('Chapter 2 separately blocked',story_page.chapter_evidence(2,1))
         self.assertEqual(story.chapter_filename(2,12),'Chapter_Dit_1_12')
@@ -44,7 +45,7 @@ class DietrichStoryTest(unittest.TestCase):
                 g=core.SaveFile(start.edited(f,chapter));i=start.validate(g)
                 self.assertEqual((i.route,i.part,i.chapter,i.sequence),(2,1,chapter,story.sequence(chapter,2)))
                 self.assertEqual(struct.unpack_from('<H5B',g.payload,i.header+22),(1449,month,day,hour,0,0))
-                self.assertEqual(flags(g),flags(f))
+                self.assertEqual(flags(g),flags(core.SaveFile(prerequisites.edited(f,chapter))))
                 after=start.normalized_blocks(g)
                 for key in original.keys()-{'Header','GameUserData','GameSchedule','Calendar','GameRestartData'}:
                     self.assertEqual(original[key],after[key])
@@ -105,7 +106,7 @@ class DietrichPrivateTest(unittest.TestCase):
             box=container.SaveFile(str(root/name));self.assertEqual(box.verify(),[])
             f=core.SaveFile(box.payload);i=start.validate(f)
             for chapter in range(1,13):
-                g=core.SaveFile(start.edited(f,chapter));self.assertEqual(flags(g),flags(f))
+                g=core.SaveFile(start.edited(f,chapter));self.assertEqual(flags(g),flags(core.SaveFile(prerequisites.edited(f,chapter))))
                 self.assertEqual([core.gear(g,u).unit_number for u in g.units()],
                                  [core.gear(f,u).unit_number for u in f.units()])
             if name!='Auto':self.assertEqual(i.sequence,NATIVE_IDS[i.chapter-1])

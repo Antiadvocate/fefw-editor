@@ -63,7 +63,7 @@ The game data version was not separately reported.
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
 | 5 | Boons | All 31 groups / 81 tiers editable; broader mappings labelled Inferred | [BEDIT results](test-results-boon-editing-2026-11-15.md): +16 EXP Off / +17 On. [WEDIT-01–07 passed](test-results-weapon-boon-2026-11-15.md): discount Off/On persists in returned saves; player reports earlier 10% prices reproduced and backups through .bak4 |
-| 6 | Story | Leda P1 starts 2–12 and Cai P1 starts 1–12 accepted; Dietrich P1 starts 1–12 with eight passes and four blocks; route-bound chapter files on Save | [Cai/Tutorials Test 5](test-results-cai-tutorials-test5.md) passed; [Dietrich Test 1 results](test-results-story-dietrich-test1.md): 1/3/4/8–12 and UI pass; 2/5/6/7 blocked |
+| 6 | Story | Leda P1 starts 2–12 and Cai P1 starts 1–12 accepted; Dietrich P1 starts 1–12 with 11 short-session passes including repairs; Chapter 2 replay blocked; route-bound chapter files on Save | [Cai/Tutorials Test 5](test-results-cai-tutorials-test5.md) passed; [Dietrich Test 2 results](test-results-story-dietrich-test2.md): 5/6/7 A repairs pass; integrated 5/6 entry pending; C2 native control only |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
 test report before being called game-tested. Other routes are not covered by
@@ -435,3 +435,22 @@ left over from skipped story steps, and absent teachable-secret permissions.
 [The next kit](testing-story-dietrich-test2.md) isolates these hypotheses without
 adding recruits or changing automatic chapter preparation. Broader HubData reset
 and an Esmerelda class change are labelled fallback experiments only.
+
+
+## Dietrich Test 2 results and focused Test 3 — 2026-11-17
+
+[The player passed 05A, 06A and 07A](test-results-story-dietrich-test2.md), including
+Esmerelda teaching and the following Chapter 7 checkpoint. All ten returned saves
+validate. Chapters 1 and 3–12 now have short-session acceptance; Chapter 2 replay
+remains blocked. 02A and 02B failed; 02C is only a native-control pass.
+
+Chapter selection now applies exact-target 5–7 prerequisites, preserving party
+and tutorials. Chapter 7 produces the same bytes as accepted 07A. Integrated
+5/6 chapter starts await [Test 3](testing-story-dietrich-test3.md). Chapter 6 keeps
+its intentional upper restriction and enables the three function switches
+present in successful 06A; no separate port unlock has been established.
+
+Two unnamed event-store records appeared in the native Chapter 2 progression
+return and are already present in the failed replay. Test 3 isolates those
+candidates without removing Esmerelda or resetting HubData. Names/causality are
+unconfirmed; no automatic Chapter 2 change, full-route acceptance or main merge.
