@@ -1276,8 +1276,10 @@ class App(AdvancedMixin, tk.Tk):
         # the note is packed before the table so a short window shrinks the
         # table instead of pushing the buttons and the note out of sight
         ttk.Label(main, style="CardFaint.TLabel", justify="left", wraplength=620,
-                  text="Points are what the game turns into a support level: 3200 is the "
-                       "maximum (level 5). The save keeps a slot for every pair, so a pair "
+                  text="Points are what the game turns into a support level: levels 1-5 "
+                       "start at 0 / 400 / 1,400 / 2,400 / 3,200 points (3,200 is the "
+                       "maximum, confirmed in-game; the others come from the community "
+                       "table at annasnotebook.net). The save keeps a slot for every pair, so a pair "
                        "whose support hasn't opened yet still has a value here — the game may "
                        "not show it until it opens the relationship itself. “Seen” is the "
                        "save's 支援会話 flag for a conversation; Max is the highest rank the "
@@ -1317,17 +1319,21 @@ class App(AdvancedMixin, tk.Tk):
         self.sup_pt_lbl = ttk.Label(pts, text="", style="CardFaint.TLabel")
         self.sup_pt_lbl.pack(side="left", padx=(12, 0))
 
-        self.sup_tree = scrolled_tree(body, columns=("jp", "points", "max", "seen", "party"),
+        self.sup_tree = scrolled_tree(body, columns=("jp", "points", "lv", "next", "max", "seen", "party"),
                                       show="tree headings", selectmode="browse")
         self.sup_tree.heading("#0", text="Support partner", anchor="w")
         self.sup_tree.heading("jp", text="Japanese", anchor="w")
         self.sup_tree.heading("points", text="Points", anchor="e")
+        self.sup_tree.heading("lv", text="Lv", anchor="center")
+        self.sup_tree.heading("next", text="Next level at", anchor="e")
         self.sup_tree.heading("max", text="Max", anchor="center")
         self.sup_tree.heading("seen", text="Conversations seen", anchor="w")
         self.sup_tree.heading("party", text="In party", anchor="center")
         self.sup_tree.column("#0", width=180, minwidth=130)
         self.sup_tree.column("jp", width=140)
         self.sup_tree.column("points", width=64, anchor="e", stretch=False)
+        self.sup_tree.column("lv", width=40, anchor="center", stretch=False)
+        self.sup_tree.column("next", width=96, anchor="e", stretch=False)
         self.sup_tree.column("max", width=50, anchor="center", stretch=False)
         self.sup_tree.column("seen", width=160, stretch=False)
         self.sup_tree.column("party", width=74, anchor="center", stretch=False)
@@ -1489,6 +1495,8 @@ class App(AdvancedMixin, tk.Tk):
                 "", "end", text=pa["en"],
                 values=(pa["jp"],
                         "—" if pts is None else f"{pts:,}",
+                        "—" if pts is None else supports.level_of(pts),
+                        self._next_level_text(pts),
                         pa["chart"].get("max") or "—",
                         ", ".join(got) if got else "—",
                         "✓" if ("PID_" + pa["jp"]) in party else ""),
@@ -1517,6 +1525,13 @@ class App(AdvancedMixin, tk.Tk):
             self.sup_tree.see(target)
             self.on_support_pair()
 
+    @staticmethod
+    def _next_level_text(pts) -> str:
+        if pts is None:
+            return "—"
+        nxt = supports.next_level_at(pts)
+        return "max" if nxt is None else f"{nxt:,}"
+
     def on_support_pair(self, _e=None):
         """Mirror the selected pair's points into the editor row."""
         if not hasattr(self, "sup_pt_var"):
@@ -1540,7 +1555,10 @@ class App(AdvancedMixin, tk.Tk):
         self.sup_pt_var.set("" if pts is None else str(pts))
         name = self.sup_tree.item(sel[0], "text")
         self.sup_pt_lbl.configure(
-            text=(f"{name}: {pts:,} of {supports.max_points():,} points")
+            text=(f"{name}: {pts:,} of {supports.max_points():,} points · "
+                  f"level {supports.level_of(pts)}"
+                  + (f", next at {supports.next_level_at(pts):,}"
+                     if supports.next_level_at(pts) else " (max)"))
             if pts is not None else f"{name}: no entry in this save")
 
     def _paint_support_tags(self):
