@@ -44,7 +44,7 @@ def build(source_dir, output):
             chapter = int(name.rsplit('_', 1)[1])
             if info.chapter != chapter or info.sequence != story.sequence(chapter, 2):
                 raise ValueError('Native checkpoint disagrees with the inferred rule')
-            if struct.unpack_from('<H5B', f.payload, info.header+22) != (1449, *start.target(chapter, 2), 0):
+            if struct.unpack_from('<H5B', f.payload, info.header+22) != (1449, *start.DIETRICH_DATES[chapter], 0):
                 raise ValueError('Native checkpoint disagrees with the entry date')
         originals[name] = raw; saves[name] = f
     pending = []
@@ -52,7 +52,7 @@ def build(source_dir, output):
         source = 'Chapter_Dit_1_1' if chapter == 1 else 'Auto'
         f = saves[source]
         # Reproduce the original Test 1 profile, before Test 2 prerequisites.
-        payload = start._edited_at_entry(f, chapter, 1449, start.target(chapter, 2))
+        payload = start._edited_at_entry(f, chapter, 1449, start.DIETRICH_DATES[chapter])
         g = core.SaveFile(payload)
         if flags(g) != flags(f) or tutorials.read(g) != tutorials.read(f):
             raise ValueError('Chapter edit changed flags or tutorials')
@@ -63,7 +63,7 @@ def build(source_dir, output):
         i = start.validate(g)
         if (i.route,i.part,i.chapter,i.sequence) != (2,1,chapter,story.sequence(chapter,2)):
             raise ValueError('Incorrect chapter entry')
-        if start._edited_at_entry(g, chapter, 1449, start.target(chapter, 2)) != payload: raise ValueError('Entry is not idempotent')
+        if start._edited_at_entry(g, chapter, 1449, start.DIETRICH_DATES[chapter]) != payload: raise ValueError('Entry is not idempotent')
         pending.append((f'D1-{chapter:02d}-Chapter-{chapter:02d}', source, payload))
     output.mkdir(parents=True)
     control = output/'00-Native-Control'; control.mkdir()

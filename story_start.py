@@ -4,9 +4,9 @@ Leda Chapters 2–12 have short-session game evidence. Chapter 1 is unavailable:
 its opening plays but its first objective cannot be progressed.
 No private captures or GameData are required at runtime.
 Cai Part 1 Chapters 1–12 passed short-session game tests.
-Dietrich Chapters 1 and 3–12 passed short-session checks, including Test 2
-repairs for 5–7. Integrated direct entry for 5/6 awaits regression checks.
-Chapter 2 replay remains blocked; only its native control passed.
+Dietrich Chapters 3–12 passed short-session checks, including integrated
+prerequisites for 5–7. Chapters 1/2 are unavailable: Chapter 2 replay remains
+blocked, and Chapter 1 leads into that block. Native saves still load normally.
 """
 from datetime import datetime
 import struct
@@ -33,11 +33,13 @@ DIETRICH_DATES = {1: (2, 10, 9, 0), 2: (2, 10, 14, 0), 3: (2, 11, 12, 0),
                   4: (3, 8, 12, 0), 5: (4, 11, 6, 0), 6: (5, 4, 12, 0),
                   7: (5, 29, 20, 0), 8: (6, 21, 12, 0), 9: (8, 10, 12, 0),
                   10: (9, 29, 12, 0), 11: (10, 5, 12, 0), 12: (11, 4, 12, 0)}
-TARGETS = {4: CHAPTERS, 1: tuple(CAI_DATES), 2: tuple(DIETRICH_DATES)}
+DIETRICH_CHAPTERS = tuple(range(3, 13))
+TARGETS = {4: CHAPTERS, 1: tuple(CAI_DATES), 2: DIETRICH_CHAPTERS}
 TESTED_BY_ROUTE = {4: TESTED, 1: frozenset(CAI_DATES),
-                   2: frozenset((1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))}
+                   2: frozenset(DIETRICH_CHAPTERS)}
 DIETRICH_BLOCKERS = {
-    2: 'Opening works; rescue proximity event blocked',
+    1: 'Battle works, but leads into the Chapter 2 rescue block',
+    2: 'Replay cannot progress the rescue proximity event',
 }
 RESUME_OFFSET = 58
 FREE_TIME_ID = 0xd8588d186b3f9502
@@ -115,8 +117,10 @@ def target(chapter, route=4):
     if type(route) is not int or route not in TARGETS:
         raise story.StoryError('Story editing supports Leda, Cai and Dietrich Part 1 only.')
     if type(chapter) is not int or chapter not in TARGETS[route]:
-        if route in (1, 2):
-            raise story.StoryError(f'Choose a {story.ROUTES[route]} Part 1 chapter from 1 to 12.')
+        if route == 2:
+            raise story.StoryError('Choose a Dietrich Part 1 chapter from 3 to 12. Chapters 1 and 2 are unavailable because the Chapter 2 rescue cannot be progressed on replay.')
+        if route == 1:
+            raise story.StoryError('Choose a Cai Part 1 chapter from 1 to 12.')
         raise story.StoryError('Choose a Leda Part 1 chapter from 2 to 12. Chapter 1 is unavailable because its first objective cannot be progressed.')
     return {1: CAI_DATES, 2: DIETRICH_DATES, 4: ENTRY_DATES}[route][chapter]
 

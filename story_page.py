@@ -27,9 +27,9 @@ def warning_points(route):
                 'Direct Chapter 4 entry passed with the Sewers fix. Editor-created Cai chapter files have not been tested through the Obelisk. Long term testing has not been carried out.',
                 *WARNING_POINTS[3:])
     if route == 2:
-        return ('This is a Dietrich Part 1 save. Chapters 1 and 3–12 passed short-session checks, including repairs for Chapters 5–7. Chapter 2 replay remains blocked.',
+        return ('This is a Dietrich Part 1 save. Chapters 3–12 are available and passed short-session checks. Chapters 1 and 2 are unavailable: Chapter 2 replay blocks at the rescue, and Chapter 1 leads into it.',
                 'Chapter 5 clears the upper movement restriction. Chapter 6 clears the lower restriction and enables upper/lower access and Vandahl Trading Company. Chapter 7 permits Hidden Windpierce teaching. Other unlocks and party units must be managed separately.',
-                'Chapter 1 can reach the Chapter 2 block. Integrated direct entry for Chapters 5/6 still needs checking. Chapter 7 teaching and its next checkpoint passed. Obelisk and long term progression remain untested.',
+                'Direct entry and progression for Chapters 5/6 passed with these prerequisites. Chapter 7 teaching and its next checkpoint also passed. Obelisk and long term progression remain untested.',
                 *WARNING_POINTS[3:])
     raise story.StoryError('Unsupported story route.')
 
@@ -40,19 +40,17 @@ def evidence_note(route):
     if route == 1:
         return ('Cai Chapters 1–12 passed opening and progression tests, including direct Chapter 4 entry. Cai Chapter 3+ enables Sewers access. Entry resets the clock and internal restart state. Cai Obelisk use remains untested.')
     if route == 2:
-        return ('Dietrich: 11 chapter checks and Test 1 UI passed. Chapter 2 only passed with the native control. Targeted prerequisites for 5–7 preserve party and tutorials.')
+        return ('Dietrich Chapters 3–12 and Test 1 UI passed. Only the native Chapter 2 control worked; replay repairs failed. Targeted prerequisites for 5–7 preserve party and tutorials.')
     raise story.StoryError('Unsupported story route.')
 
 
 def chapter_evidence(route, chapter):
     if route == 2 and chapter in story_start.DIETRICH_BLOCKERS:
-        return 'Blocked — ' + story_start.DIETRICH_BLOCKERS[chapter]
+        return 'Unavailable — ' + story_start.DIETRICH_BLOCKERS[chapter]
     if route == 2 and chapter in (5, 6):
-        return 'Repair passed; integrated direct entry pending'
+        return 'Game-tested direct entry and progression'
     if route == 2 and chapter == 7:
         return 'Teaching and next checkpoint passed with permission fix'
-    if route == 2 and chapter == 1:
-        return 'Battle and transition passed; Chapter 2 separately blocked'
     if chapter in story_start.TESTED_BY_ROUTE[route]:
         return 'Game-tested opening and progression'
     return 'Inferred — game test pending'
@@ -91,7 +89,7 @@ class StoryPageMixin:
         note = f'\n{story.chapter_filename(pending.route, pending.chapter)} will be created on Save.' if pending else ''
         evidence = {4: 'Chapters 2–12 game-tested; Chapter 1 unavailable.',
                     1: 'Chapters 1–12 game-tested; Chapter 3+ enables Sewers access.',
-                    2: 'Chapters 1 and 3–12 passed, including repairs for 5–7. Chapter 2 replay blocked; direct-entry checks for 5/6 pending.'}[info.route]
+                    2: 'Chapters 3–12 game-tested, including direct entry for 5/6. Chapters 1/2 unavailable because of the Chapter 2 rescue block.'}[info.route]
         self.story_status.configure(text=info.label + '\n' + evidence + note)
         self.story_button.state(['!disabled'])
 
@@ -156,7 +154,7 @@ class StoryPageMixin:
         frame = ttk.Frame(win, padding=18); frame.pack(fill='both', expand=True)
         ttk.Label(frame, text='Choose a chapter start', style='CardH3.TLabel').pack(anchor='w')
         limit = {4: 'Chapter 1 is unavailable.', 1: 'Cai Chapter 3+ also enables Sewers access.',
-                 2: 'Dietrich Chapter 2 replay remains blocked. Chapters 5–7 apply targeted prerequisites; party and tutorials are preserved.'}[info.route]
+                 2: 'Dietrich Chapters 1/2 are unavailable because of the Chapter 2 rescue block. Chapters 5–7 apply targeted prerequisites; party and tutorials are preserved.'}[info.route]
         ttk.Label(frame, text='Selected save only. Apply stages the chapter start and date; Ctrl+S saves and Ctrl+Z undoes. ' + limit,
                   wraplength=625, justify='left').pack(anchor='w', pady=(4, 10))
         buttons = ttk.Frame(frame); buttons.pack(side='bottom', fill='x', pady=(12, 0))

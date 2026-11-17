@@ -63,7 +63,7 @@ The game data version was not separately reported.
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
 | 5 | Boons | All 31 groups / 81 tiers editable; broader mappings labelled Inferred | [BEDIT results](test-results-boon-editing-2026-11-15.md): +16 EXP Off / +17 On. [WEDIT-01–07 passed](test-results-weapon-boon-2026-11-15.md): discount Off/On persists in returned saves; player reports earlier 10% prices reproduced and backups through .bak4 |
-| 6 | Story | Leda P1 starts 2–12 and Cai P1 starts 1–12 accepted; Dietrich P1 starts 1–12 with 11 short-session passes including repairs; Chapter 2 replay blocked; route-bound chapter files on Save | [Cai/Tutorials Test 5](test-results-cai-tutorials-test5.md) passed; [Dietrich Test 2 results](test-results-story-dietrich-test2.md): 5/6/7 A repairs pass; integrated 5/6 entry pending; C2 native control only |
+| 6 | Story | Leda P1 starts 2–12 and Cai P1 starts 1–12 accepted; Dietrich P1 starts 3–12 accepted; 1/2 unavailable because of the Chapter 2 rescue block; route-bound chapter files on Save | [Cai/Tutorials Test 5](test-results-cai-tutorials-test5.md) passed; [Dietrich Test 3 results](test-results-story-dietrich-test3.md): direct 5/6 entry passed; all C2 replay diagnostics failed; 1/2 removed from selection |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
 test report before being called game-tested. Other routes are not covered by
@@ -454,3 +454,21 @@ Two unnamed event-store records appeared in the native Chapter 2 progression
 return and are already present in the failed replay. Test 3 isolates those
 candidates without removing Esmerelda or resetting HubData. Names/causality are
 unconfirmed; no automatic Chapter 2 change, full-route acceptance or main merge.
+
+
+## Dietrich accepted selection: Chapters 3–12 — 2026-11-17
+
+[Test 3](test-results-story-dietrich-test3.md) passed direct entry for Chapters
+5 and 6. All three Chapter 2 diagnostics failed despite the edited records
+remaining absent in their returned saves. All seven returns validate.
+
+Chapters 1/2 are now unavailable as destinations, with an explicit explanation:
+Chapter 2 replay blocks at the rescue, and Chapter 1 leads into it. Native 1/2
+saves remain supported inputs. UI actions, production edits and stale pending
+chapter-file writes enforce the restriction. Chapters 3–12 remain accepted;
+Cai/Leda support is unchanged and Theodora remains read-only.
+
+Chapter 2 recruitment/party state is still an unproven research lead. No roster
+reset or further flag guesses are applied. Investigation is parked without
+requesting more player tests. Historical diagnostic builders stay reproducible.
+Obelisk/full-route behavior remains untested; no main merge in this change.
