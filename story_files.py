@@ -49,10 +49,10 @@ def prepare(files, dirty):
         info = story_start.validate(f)
         story.check_outer(sv.raw, info)
         # Reject stale requests after a snapshot restore or unrelated story edit.
-        if (info.route != request.route or info.chapter != chapter
+        if (info.route != request.route or info.part != request.part or info.chapter != chapter
                 or bytes(story_start.edited(f, chapter)) != bytes(f.payload)):
             raise core.SaveError('The requested chapter file no longer matches a staged chapter start. Apply the chapter start again before saving.')
-        target = str(Path(source).absolute().with_name(story.chapter_filename(info.route, chapter)))
+        target = str(Path(source).absolute().with_name(story.chapter_filename(info.route, chapter, info.part)))
         key = path_key(target)
         if key in targets or (key in dirty_keys and key != path_key(source)):
             raise core.SaveError(f'{Path(target).name} has competing unsaved changes. Save or discard that slot first.')

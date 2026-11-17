@@ -18,7 +18,14 @@ WARNING_POINTS = (
 EVIDENCE_NOTE = ('Chapters 2–12 passed opening and next-story-beat tests. Editor-created chapter files passed Obelisk tests for Chapters 8 and 9; other chapters are untested through the Obelisk. Entry resets the clock and internal restart state.')
 
 
-def warning_points(route):
+def warning_points(route, part=1):
+    if part == 2:
+        if route != 1:
+            raise story.StoryError('Only Cai Part 2 has provisional targets.')
+        return ('Cai Part 2 chapters 1–6 are provisional. No edited Part 2 chapter has passed a game test yet.',
+                'Chapter 1 uses a captured checkpoint sequence. Chapters 2–6 assume the Part 1 sequence pattern also applies here; their dates come from the Part 2 timeline.',
+                'Use a naturally reached Part 2 save. Party, inventory, flags, facilities and map unlocks are preserved. Missing prerequisites may block objectives. This does not convert Part 1 saves to Part 2.',
+                *WARNING_POINTS[3:])
     if route == 4:
         return WARNING_POINTS
     if route == 1:
@@ -39,7 +46,9 @@ def warning_points(route):
     raise story.StoryError('Unsupported story route.')
 
 
-def evidence_note(route):
+def evidence_note(route, part=1):
+    if part == 2:
+        return 'Provisional — Cai only. Chapter entry, objectives and Obelisk use need game tests. Entry resets the date and cached restart state; later dates assume the captured year 1450.'
     if route == 4:
         return EVIDENCE_NOTE
     if route == 1:
@@ -51,7 +60,10 @@ def evidence_note(route):
     raise story.StoryError('Unsupported story route.')
 
 
-def chapter_evidence(route, chapter):
+def chapter_evidence(route, chapter, part=1):
+    if part == 2:
+        return ('Captured checkpoint sequence — replay untested' if chapter == 1
+                else 'Inferred sequence and inherited year — game test pending')
     if route == 3 and chapter in story_start.THEODORA_REPAIRS:
         return story_start.THEODORA_REPAIRS[chapter]
     if route == 2 and chapter in story_start.DIETRICH_BLOCKERS:
@@ -82,12 +94,12 @@ class StoryPageMixin:
             return
         self.story_button.state(['disabled'])
         if not self.sv:
-            self.story_status.configure(text='Open a Leda, Cai, Dietrich or Theodora Part 1 save. Other routes remain read-only.')
+            self.story_status.configure(text='Open a supported Part 1 save or a Cai Part 2 save (provisional).')
             return
         route = layer.route_info(self.sv.payload)
         label = f'{route[0]} · Part {route[1]} · Chapter {route[2]}\n' if route else ''
-        if route and (route[0], route[1]) not in (('Leda', 1), ('Cai', 1), ('Dietrich', 1), ('Theodora', 1)):
-            self.story_status.configure(text=label + 'Read-only. Story editing supports Leda, Cai, Dietrich and Theodora Part 1 only.')
+        if route and (route[0], route[1]) not in (('Leda', 1), ('Cai', 1), ('Dietrich', 1), ('Theodora', 1), ('Cai', 2)):
+            self.story_status.configure(text=label + 'Read-only. Supported: the four Part 1 routes and provisional Cai Part 2.')
             return
         try:
             info = story_start.validate(self.core_of())
@@ -95,17 +107,19 @@ class StoryPageMixin:
         except core.SaveError as exc:
             self.story_status.configure(text=label + str(exc)); return
         pending = getattr(self.sv, '_pending_story_chapter', None)
-        note = f'\n{story.chapter_filename(pending.route, pending.chapter)} will be created on Save.' if pending else ''
+        note = f'\n{story.chapter_filename(pending.route, pending.chapter, pending.part)} will be created on Save.' if pending else ''
         evidence = {4: 'Chapters 2–12 game-tested; Chapter 1 unavailable.',
                     1: 'Chapters 1–12 game-tested; Chapter 3+ enables Sewers access.',
                     2: 'Chapters 3–12 game-tested, including direct entry for 5/6. Chapters 1/2 unavailable because of the Chapter 2 rescue block.',
                     3: 'Chapters 1–12 passed; targeted repairs for 4/6/8/9. Chapter 6 uses alternate traversal.'}[info.route]
+        if info.part == 2:
+            evidence = 'Chapters 1–6 provisional; all replay/progression tests pending.'
         self.story_status.configure(text=info.label + '\n' + evidence + note)
         self.story_button.state(['!disabled'])
 
     def _story_ready(self):
         if not self.sv:
-            self.flash('Open a Leda, Cai, Dietrich or Theodora Part 1 save first.', 'warn'); return False
+            self.flash('Open a supported Part 1 save or a Cai Part 2 save first.', 'warn'); return False
         if self.mirror.get():
             self.flash('Turn off “Also edit this route’s other saves” before editing story progression.', 'warn')
             return False
@@ -120,29 +134,33 @@ class StoryPageMixin:
         if not self._story_ready():
             return
         slot = self.sv
-        route = story.read(core.SaveFile(slot.payload)).route
+        initial = story.read(core.SaveFile(slot.payload))
+        route, part = initial.route, initial.part
         if not self._confirm_story_warning():
             return
         if self.sv is not slot or not self._story_ready():
             return
-        if story.read(core.SaveFile(slot.payload)).route != route:
-            self.flash('The route changed while the warning was open. Open Story progression again.', 'warn'); return
+        current = story.read(core.SaveFile(slot.payload))
+        if (current.route, current.part) != (route, part):
+            self.flash('The route changed or the part changed while the warning was open. Open Story progression again.', 'warn'); return
         choice = self._choose_story_chapter()
         if choice is not None and self.sv is slot and self._story_ready():
-            if story.read(core.SaveFile(slot.payload)).route != route:
-                self.flash('The route changed while choosing a chapter. Open Story progression again.', 'warn'); return
+            current = story.read(core.SaveFile(slot.payload))
+            if (current.route, current.part) != (route, part):
+                self.flash('The route changed or the part changed while choosing a chapter. Open Story progression again.', 'warn'); return
             self.apply_story_chapter(*choice)
 
     def _confirm_story_warning(self):
-        route = story.read(core.SaveFile(self.sv.payload)).route
+        info = story.read(core.SaveFile(self.sv.payload))
+        route, part = info.route, info.part
         win = tk.Toplevel(self); win.title(WARNING_TITLE); win.transient(self)
         self.place_dialog(win, 720, 570)
         win.configure(background=self.p['bg']); win.resizable(False, False)
         frame = ttk.Frame(win, padding=20); frame.pack(fill='both', expand=True)
         ttk.Label(frame, text=WARNING_TITLE, style='CardH3.TLabel', wraplength=670).pack(anchor='w', pady=(0, 12))
-        for point in warning_points(route):
+        for point in warning_points(route, part):
             ttk.Label(frame, text='• ' + point, wraplength=665, justify='left').pack(anchor='w', pady=(0, 10))
-        ttk.Label(frame, text=evidence_note(route), wraplength=665, justify='left',
+        ttk.Label(frame, text=evidence_note(route, part), wraplength=665, justify='left',
                   style='CardMuted.TLabel').pack(anchor='w', pady=(0, 8))
         result = [False]
         def finish(value):
@@ -158,14 +176,16 @@ class StoryPageMixin:
     def _choose_story_chapter(self):
         info = story_start.validate(core.SaveFile(self.sv.payload))
         lord = story.ROUTES[info.route]
-        chapters = story_start.TARGETS[info.route]
-        win = tk.Toplevel(self); win.title(f'{lord} · Part 1 — choose chapter'); win.transient(self)
+        chapters = story_start.chapters_for(info.route, info.part)
+        win = tk.Toplevel(self); win.title(f'{lord} · Part {info.part} — choose chapter'); win.transient(self)
         self.place_dialog(win, 680, 540); win.configure(background=self.p['bg'])
         frame = ttk.Frame(win, padding=18); frame.pack(fill='both', expand=True)
         ttk.Label(frame, text='Choose a chapter start', style='CardH3.TLabel').pack(anchor='w')
         limit = {4: 'Chapter 1 is unavailable.', 1: 'Cai Chapter 3+ also enables Sewers access.',
                  2: 'Dietrich Chapters 1/2 are unavailable because of the Chapter 2 rescue block. Chapters 5–7 apply targeted prerequisites; party and tutorials are preserved.',
                  3: 'Theodora 4/6/8/9 apply targeted access repairs. Chapter 6 uses an alternate route around the NPC barrier. Chapters 1–2 use 1446; Chapter 3+ uses 1449. Party and tutorials are preserved.'}[info.route]
+        if info.part == 2:
+            limit = 'Provisional Cai Part 2 targets; game tests pending. Party and unlocks are preserved.'
         ttk.Label(frame, text='Selected save only. Apply stages the chapter start and date; Ctrl+S saves and Ctrl+Z undoes. ' + limit,
                   wraplength=625, justify='left').pack(anchor='w', pady=(4, 10))
         buttons = ttk.Frame(frame); buttons.pack(side='bottom', fill='x', pady=(12, 0))
@@ -178,13 +198,13 @@ class StoryPageMixin:
         table = ttk.Frame(frame); table.pack(fill='both', expand=True)
         table.rowconfigure(0, weight=1); table.columnconfigure(0, weight=1)
         tree = ttk.Treeview(table, columns=('evidence',), show='tree headings', height=12, selectmode='browse')
-        tree.heading('#0', text=f'{lord} Part 1', anchor='w'); tree.column('#0', width=150, stretch=False)
+        tree.heading('#0', text=f'{lord} Part {info.part}', anchor='w'); tree.column('#0', width=150, stretch=False)
         tree.heading('evidence', text='Evidence / limits', anchor='w'); tree.column('evidence', width=450)
         scroll = ttk.Scrollbar(table, orient='vertical', command=tree.yview)
         tree.configure(yscrollcommand=scroll.set)
         tree.grid(row=0, column=0, sticky='nsew'); scroll.grid(row=0, column=1, sticky='ns')
         for chapter in chapters:
-            text = chapter_evidence(info.route, chapter)
+            text = chapter_evidence(info.route, chapter, info.part)
             tree.insert('', 'end', iid=str(chapter), text=f'Chapter {chapter}', values=(text,))
         current = str(info.chapter if info.chapter in chapters else chapters[0])
         tree.selection_set(current); tree.see(current); tree.focus(current)
@@ -202,21 +222,23 @@ class StoryPageMixin:
         if not self._story_ready():
             return
         try:
-            route = story_start.validate(core.SaveFile(self.sv.payload)).route
-            story_start.target(chapter, route)
+            info = story_start.validate(core.SaveFile(self.sv.payload))
+            route, part = info.route, info.part
+            story_start.target(chapter, route, part)
             self._commit_form()
             if not self._story_ready():
                 return
-            if story.read(core.SaveFile(self.sv.payload)).route != route:
-                raise story.StoryError('The route changed; reopen Story progression.')
+            current = story.read(core.SaveFile(self.sv.payload))
+            if (current.route, current.part) != (route, part):
+                raise story.StoryError('The route changed or the part changed; reopen Story progression.')
             new = story_start.edited(core.SaveFile(self.sv.payload), chapter)
         except core.SaveError as exc:
             self.flash(str(exc), 'error'); return
-        pending = story.ChapterFileRequest(route, chapter) if create_file else None
+        pending = story.ChapterFileRequest(route, chapter, part) if create_file else None
         if bytes(new) == bytes(self.sv.payload) and pending == getattr(self.sv, '_pending_story_chapter', None):
             self.flash('This chapter-start setup is already staged.', 'info'); return
         self.push_undo()
         self.sv.payload = bytearray(new); self.sv.scan(); self.sv._core_cache = None
         self.sv._pending_story_chapter = pending
         self._touch([self.sv]); self.refresh_after_core()
-        self.flash(f'{story.ROUTES[route]} Part 1 Chapter {chapter} start staged — Ctrl+S saves; Ctrl+Z undoes.', 'ok')
+        self.flash(f'{story.ROUTES[route]} Part {part} Chapter {chapter} start staged — Ctrl+S saves; Ctrl+Z undoes.', 'ok')

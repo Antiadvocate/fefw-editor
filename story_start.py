@@ -1,8 +1,10 @@
-"""Leda Part 1 chapter entry, using the game-tested Test 3 D profile.
+"""Chapter entry for tested Part 1 routes and provisional Cai Part 2.
 
 Leda Chapters 2–12 have short-session game evidence. Chapter 1 is unavailable:
 its opening plays but its first objective cannot be progressed.
 No private captures or GameData are required at runtime.
+Cai Part 2 Chapters 1–6 are provisional: only Chapter 1 has a captured
+checkpoint sequence. Later sequence IDs and inherited year need game tests.
 Cai Part 1 Chapters 1–12 passed short-session game tests.
 Dietrich Chapters 3–12 passed short-session checks, including integrated
 prerequisites for 5–7. Chapters 1/2 are unavailable: Chapter 2 replay remains
@@ -131,7 +133,28 @@ def normalized_blocks(f):
 
 
 
-def target(chapter, route=4):
+# Part 2 title dates from the private timeline; Chapter 1/year from the native
+# checkpoint. Year 1450 for later chapters is provisional until game-tested.
+PART2_DATES = {1: (1, 1, 12, 0), 2: (2, 1, 12, 0), 3: (3, 1, 12, 0),
+               4: (4, 3, 12, 0), 5: (4, 30, 9, 30), 6: (4, 30, 12, 0)}
+
+
+def chapters_for(route, part=1):
+    if type(part) is not int or type(route) is not int:
+        raise story.StoryError('Unsupported story route or part.')
+    if part == 2 and route == 1:
+        return story.PART2_CHAPTERS
+    if part == 1 and route in TARGETS:
+        return TARGETS[route]
+    raise story.StoryError('Unsupported story route or part.')
+
+
+def target(chapter, route=4, part=1):
+    if part == 2:
+        story.sequence(chapter, route, part)
+        return PART2_DATES[chapter]
+    if type(part) is not int or part != 1:
+        raise story.StoryError('Unsupported story part.')
     if type(route) is not int or route not in TARGETS:
         raise story.StoryError('Story editing supports Leda, Cai, Dietrich and Theodora Part 1 only.')
     if type(chapter) is not int or chapter not in TARGETS[route]:
@@ -176,7 +199,9 @@ def validate(f):
 
 def edited(f, chapter):
     info = validate(f)
-    date = target(chapter, info.route)
+    date = target(chapter, info.route, info.part)
+    if info.part == 2:
+        return _edited_at_entry(f, chapter, 1450, date)
     year = (THEODORA_YEARS[chapter] if info.route == 3 else
             ENTRY_YEARS[chapter] if info.route == 4 else 1449)
     p = _edited_at_entry(f, chapter, year, date)
@@ -211,7 +236,7 @@ def _edited_at_entry(f, chapter, year, date):
         raise story.StoryError('An unrelated object changed; the chapter edit was refused.')
     user = bytearray(original['GameUserData'])
     user[9] = chapter
-    struct.pack_into('<Q', user, 85, story.sequence(chapter, info.route))
+    struct.pack_into('<Q', user, 85, story.sequence(chapter, info.route, info.part))
     struct.pack_into('<Q', user, 4+RESUME_OFFSET, CHECKPOINT_ID)
     if bytes(user) != after['GameUserData'] or check.chapter != chapter:
         raise story.StoryError('Unexpected player or flag changes; the chapter edit was refused.')

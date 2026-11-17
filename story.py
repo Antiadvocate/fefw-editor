@@ -1,4 +1,4 @@
-"""Live story validation and sequence writers for the four Part 1 routes.
+"""Live story validation for Part 1 and provisional Cai Part 2 chapter tests.
 
 Production chapter-entry targets and acceptance live in story_start. The low-level
 sequence writer retains Chapter 1 for reproducing historical failed probes.
@@ -22,7 +22,20 @@ class StoryError(core.SaveError):
     pass
 
 
-def sequence(chapter, route=4):
+PART2_PREFIX = 0x6462d9c33a114480  # Reverse-FNV of captured Cai checkpoint + inferred 1_1 suffix.
+PART2_CHAPTERS = tuple(range(1, 7))
+
+
+def sequence(chapter, route=4, part=1):
+    if type(part) is not int or part not in (1, 2):
+        raise StoryError('Unsupported story part.')
+    if part == 2:
+        if type(route) is not int or route != 1 or type(chapter) is not int or chapter not in PART2_CHAPTERS:
+            raise StoryError('Provisional Part 2 editing supports Cai chapters 1–6 only.')
+        value = PART2_PREFIX
+        for byte in f'{chapter}_1'.encode('ascii'):
+            value = ((value * 0x100000001b3) & 0xffffffffffffffff) ^ byte
+        return value
     if type(chapter) is not int or chapter not in CHAPTERS:
         raise StoryError('Choose a Part 1 chapter from 1 to 12.')
     if type(route) is not int or route not in PREFIXES:
@@ -37,11 +50,12 @@ def sequence(chapter, route=4):
 class ChapterFileRequest:
     route: int
     chapter: int
+    part: int = 1
 
 
-def chapter_filename(route, chapter):
-    sequence(chapter, route)  # Validate before constructing a filename.
-    return f'Chapter_{FILE_CODES[route]}_1_{chapter}'
+def chapter_filename(route, chapter, part=1):
+    sequence(chapter, route, part)  # Validate before constructing a filename.
+    return f'Chapter_{FILE_CODES[route]}_{part}_{chapter}'
 
 
 @dataclass(frozen=True)
@@ -104,8 +118,10 @@ def require_leda(f):
 
 def require_supported(f):
     info = read(f)
+    if (info.route, info.part) == (1, 2) and info.chapter in PART2_CHAPTERS:
+        return info
     if info.route not in PREFIXES or info.part != 1 or info.chapter not in CHAPTERS:
-        raise StoryError(f'{info.label}. Story editing supports Leda, Cai, Dietrich and Theodora Part 1 only.')
+        raise StoryError(f'{info.label}. Story editing supports the four Part 1 routes and provisional Cai Part 2 chapters 1–6.')
     return info
 
 
@@ -116,8 +132,8 @@ def check_outer(raw, info):
 
 
 def edited(f, chapter, *, route=4):
-    target = sequence(chapter, route)
     info = require_supported(f)
+    target = sequence(chapter, route, info.part)
     if info.route != route:
         raise StoryError('The requested story route does not match the save; route conversion is not supported.')
     p = bytearray(f.payload)
@@ -133,7 +149,7 @@ def edited(f, chapter, *, route=4):
 def sync_outer_summary(payload, out):
     """Derive chapter, sequence, entry state and clock mirrors when serializing.
 
-Only known, consistent supported P1 layouts are eligible. Other routes/formats and
+Only known, consistent supported story layouts are eligible. Other routes/formats and
 ambiguous files keep their original summary. No raw container state is changed
 at edit time; the payload in Undo history remains authoritative.
 """
