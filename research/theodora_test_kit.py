@@ -1,5 +1,6 @@
 """Build Theodora replay probes from fingerprinted private reference saves.
 
+Historical Test 1 builder: retains the original unmodified flag/map behavior.
 All twelve targets use the same Chapter 3 Auto, including backward replay of
 Chapters 1/2. Native controls are never edited. No private bytes are bundled
 with this script, and structural validation is not game acceptance.
@@ -51,7 +52,7 @@ def build(source_dir, output):
         originals[name] = raw; saves[name] = f
     f = saves['Auto']; original = start.normalized_blocks(f); pending = []
     for chapter in range(1, 13):
-        payload = start.edited(f, chapter); g = core.SaveFile(payload)
+        payload = start._edited_at_entry(f, chapter, start.THEODORA_YEARS[chapter], start.THEODORA_DATES[chapter]); g = core.SaveFile(payload)
         if flags(g) != flags(f) or tutorials.read(g) != tutorials.read(f):
             raise ValueError('Chapter edit changed flags or tutorials')
         after = start.normalized_blocks(g)
@@ -63,7 +64,7 @@ def build(source_dir, output):
             raise ValueError('Incorrect chapter entry')
         if struct.unpack_from('<H5B', g.payload, i.header+22) != (start.THEODORA_YEARS[chapter], *start.THEODORA_DATES[chapter], 0):
             raise ValueError('Incorrect entry clock')
-        if start.edited(g, chapter) != payload: raise ValueError('Entry is not idempotent')
+        if start._edited_at_entry(g, chapter, start.THEODORA_YEARS[chapter], start.THEODORA_DATES[chapter]) != payload: raise ValueError('Entry is not idempotent')
         pending.append((f'T1-{chapter:02d}-Chapter-{chapter:02d}', payload))
     output.mkdir(parents=True)
     control = output/'00-Native-Control'; control.mkdir()

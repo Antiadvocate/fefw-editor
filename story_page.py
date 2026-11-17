@@ -32,9 +32,9 @@ def warning_points(route):
                 'Direct entry and progression for Chapters 5/6 passed with these prerequisites. Chapter 7 teaching and its next checkpoint also passed. Obelisk and long term progression remain untested.',
                 *WARNING_POINTS[3:])
     if route == 3:
-        return ('This is a Theodora Part 1 save. Chapters 1–3, 5, 7 and 10–12 passed opening/progression checks. Chapters 4, 6, 8 and 9 open but have reported access blocks.',
-                'Chapters 1–2 return to 1446; Chapter 3 and later use 1449. Your current party is kept, including when replaying the opening chapters. Earlier units, facilities, features, tutorials, map points and side quests are not restored automatically.',
-                'City movement controls are available in Functions, separately from area-unlock switches. Theodora repairs remain pending and are not applied automatically by chapter selection. Obelisk use and long term progression remain untested.',
+        return ('This is a Theodora Part 1 save. Chapters 1–12 passed short-session checks, including repaired access for Chapters 4, 6, 8 and 9.',
+                'Chapters 1–2 return to 1446; Chapter 3 and later use 1449. Chapter 4 enables middle movement; 6/8 enable middle, lower and district movement; 9 shows the three-point Troy exit. Other earlier unlocks and party units must be managed separately.',
+                'Chapter 6 passed via an alternate city route: the NPC barrier can remain. Chapter 8 cleared that barrier. The cause of this difference is unresolved. City controls remain available in Functions. Obelisk use and long term progression remain untested.',
                 *WARNING_POINTS[3:])
     raise story.StoryError('Unsupported story route.')
 
@@ -47,13 +47,13 @@ def evidence_note(route):
     if route == 2:
         return ('Dietrich Chapters 3–12 and Test 1 UI passed. Only the native Chapter 2 control worked; replay repairs failed. Targeted prerequisites for 5–7 preserve party and tutorials.')
     if route == 3:
-        return ('Theodora Test 1 UI passed. Eight chapters passed progression; Chapter 2 goes straight into battle. City barriers in 4/6/8 and world-map access in 9 need repair tests. Entry preserves party, flags and tutorials.')
+        return ('Theodora Chapters 1–12 and Test 1 UI passed. Chapter 6 uses alternate traversal; 9 needs only the small Troy-exit repair. Exact prerequisites for 4/6/8/9 preserve party, tutorials and unrelated flags/map points.')
     raise story.StoryError('Unsupported story route.')
 
 
 def chapter_evidence(route, chapter):
-    if route == 3 and chapter in story_start.THEODORA_BLOCKERS:
-        return story_start.THEODORA_BLOCKERS[chapter]
+    if route == 3 and chapter in story_start.THEODORA_REPAIRS:
+        return story_start.THEODORA_REPAIRS[chapter]
     if route == 2 and chapter in story_start.DIETRICH_BLOCKERS:
         return 'Unavailable — ' + story_start.DIETRICH_BLOCKERS[chapter]
     if route == 2 and chapter in (5, 6):
@@ -99,7 +99,7 @@ class StoryPageMixin:
         evidence = {4: 'Chapters 2–12 game-tested; Chapter 1 unavailable.',
                     1: 'Chapters 1–12 game-tested; Chapter 3+ enables Sewers access.',
                     2: 'Chapters 3–12 game-tested, including direct entry for 5/6. Chapters 1/2 unavailable because of the Chapter 2 rescue block.',
-                    3: 'Chapters 1–3, 5, 7 and 10–12 game-tested. Access blocks in 4/6/8/9; repairs pending.'}[info.route]
+                    3: 'Chapters 1–12 passed; targeted repairs for 4/6/8/9. Chapter 6 uses alternate traversal.'}[info.route]
         self.story_status.configure(text=info.label + '\n' + evidence + note)
         self.story_button.state(['!disabled'])
 
@@ -165,7 +165,7 @@ class StoryPageMixin:
         ttk.Label(frame, text='Choose a chapter start', style='CardH3.TLabel').pack(anchor='w')
         limit = {4: 'Chapter 1 is unavailable.', 1: 'Cai Chapter 3+ also enables Sewers access.',
                  2: 'Dietrich Chapters 1/2 are unavailable because of the Chapter 2 rescue block. Chapters 5–7 apply targeted prerequisites; party and tutorials are preserved.',
-                 3: 'Theodora 4/6/8/9 have access blocks. Chapters 1–2 use 1446; Chapter 3+ uses 1449. Party, flags and tutorials are preserved.'}[info.route]
+                 3: 'Theodora 4/6/8/9 apply targeted access repairs. Chapter 6 uses an alternate route around the NPC barrier. Chapters 1–2 use 1446; Chapter 3+ uses 1449. Party and tutorials are preserved.'}[info.route]
         ttk.Label(frame, text='Selected save only. Apply stages the chapter start and date; Ctrl+S saves and Ctrl+Z undoes. ' + limit,
                   wraplength=625, justify='left').pack(anchor='w', pady=(4, 10))
         buttons = ttk.Frame(frame); buttons.pack(side='bottom', fill='x', pady=(12, 0))

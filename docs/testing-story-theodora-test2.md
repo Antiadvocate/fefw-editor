@@ -1,5 +1,11 @@
 # Theodora story and Functions — Test 2
 
+**Historical test guide:** chapter results are now recorded in
+[Test 2 results](test-results-story-theodora-test2.md). Accepted repairs are
+integrated into chapter selection. The original instructions below are retained
+for provenance; no repeat chapter round is requested. The new Functions UI
+check has no separately reported result.
+
 Theodora Chapters **1–3, 5, 7 and 10–12** and all Test 1 UI checks are accepted.
 Chapter 2's straight-to-battle transition is sufficient. This round only tests
 the four blocked chapters and the newly exposed movement controls.

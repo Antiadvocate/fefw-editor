@@ -43,8 +43,8 @@ implementation, not a claim that untested chapters can be entered or progressed.
 
 At the time of this reference update, story editing supported Leda and Cai only.
 The subsequent [Dietrich Test 1](testing-story-dietrich-test1.md) uses these anchors
-for inferred chapter entries. Theodora now has Chapters 1–12, with eight accepted
-and access blocks in 4/6/8/9; see [Theodora results](test-results-story-theodora-test1.md).
+for inferred chapter entries. Theodora now has Chapters 1–12 accepted through their reported checkpoints,
+including repairs for 4/6/8/9; see [Theodora results](test-results-story-theodora-test2.md).
 
 ## Fingerprints
 

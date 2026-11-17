@@ -313,8 +313,8 @@
       "kind": "Area access",
       "polarity": "restriction",
       "store": "progression",
-      "coverage": "Inferred",
-      "note": "Enable clears the middle movement restriction used by upper-to-middle and lower-to-middle entrances. Theodora normally clears it before Chapter 4; it remains set in the blocked arena return. Theodora repair is game-test pending. Disable restores the restriction."
+      "coverage": "Unlock tested",
+      "note": "Enable clears the middle movement restriction; Disable restores it. Theodora Chapter 4 arena access and progression passed with this single restriction removed. Also included in the combined Chapter 6/8 traversal repairs. The reverse Disable effect has not been game-tested."
     },
     "8386d712": {
       "name": "行動範囲制限_下層",
@@ -323,7 +323,7 @@
       "polarity": "restriction",
       "store": "progression",
       "coverage": "Conditional pass",
-      "note": "Enable clears the lower movement restriction; Disable restores it. Dietrich Chapter 6 walking access passed together with upper/lower function access and Vandahl Trading Company. Those switches remain separate. Theodora Chapter 6/8 repair is pending."
+      "note": "Enable clears the lower movement restriction; Disable restores it. Dietrich Chapter 6 walking passed with its separate function unlocks. Theodora Chapter 6 passed via alternate traversal with middle/lower/district restrictions cleared; its NPC barrier remained. Chapter 8 also passed with the combined movement repair. This is not an isolated lower-toggle test."
     },
     "a9d310ac": {
       "name": "行動範囲制限_富裕区-商業区",
@@ -331,8 +331,8 @@
       "kind": "Area access",
       "polarity": "restriction",
       "store": "progression",
-      "coverage": "Inferred",
-      "note": "Enable clears the movement restriction controlling the NPC barrier and invisible wall between these districts. Present in blocked Theodora Chapter 6/8; normally cleared during Chapter 4. A separate crate-display flag and chapter-specific barriers can still block the passage. Game test pending. Disable restores the restriction."
+      "coverage": "Conditional pass",
+      "note": "Enable clears the district movement restriction; Disable restores it. Theodora Chapter 8 removed the NPC barrier and progressed with middle/lower/district restrictions cleared together. Chapter 6 kept the NPCs in both test variants but progressed via alternate traversal. Other story, crate-display or timing conditions may apply; timing is unconfirmed. This is not an isolated district-toggle test."
     }
   }
 }

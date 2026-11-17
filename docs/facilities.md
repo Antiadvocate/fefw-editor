@@ -85,15 +85,19 @@ unselected raw records are preserved. Empty progression maps are supported.
 | Functions row | Exact key | Hash | Evidence |
 | --- | --- | --- | --- |
 | Dagsion upper-area movement | `行動範囲制限_上層` | `89dc5a51` | Unlock tested: Dietrich Chapter 5 |
-| Dagsion middle-area movement | `行動範囲制限_中層` | `16b679c4` | Inferred: Theodora Chapter 4 repair pending |
-| Dagsion lower-area / port movement | `行動範囲制限_下層` | `8386d712` | Conditional pass: Dietrich Chapter 6 with its function unlocks |
-| Wealthy–commercial district passage | `行動範囲制限_富裕区-商業区` | `a9d310ac` | Inferred: Theodora Chapter 6/8 repair pending |
+| Dagsion middle-area movement | `行動範囲制限_中層` | `16b679c4` | Unlock tested: Theodora Chapter 4 arena access/progression |
+| Dagsion lower-area / port movement | `行動範囲制限_下層` | `8386d712` | Conditional pass: Dietrich 6; Theodora 6/8 combined traversal repair |
+| Wealthy–commercial district passage | `行動範囲制限_富裕区-商業区` | `a9d310ac` | Conditional pass: Theodora 8 barrier removal; 6 uses alternate traversal |
 
 The pre-existing upper/lower area access and Vandahl Trading Company rows now
 record their combined Dietrich Chapter 6 pass. A separate crate-display flag
 and chapter-specific barriers can still block passage; these controls do not
-clear those automatically. Theodora Test 2 uses the same Functions writer.
-Its map-visibility probes change World map points, not function flags.
+clear those automatically. Theodora Test 2 used the same Functions writer. Chapter 6 kept its NPC barrier
+in both A/B but progressed through an alternate route in A. Chapter 8 removed
+the barrier. The cause of the difference is unresolved; time gating is only a
+hypothesis. The tested Chapter 9 three-point repair changes World map points,
+not function flags. The new movement-row UI check has not been separately
+reported; Test 1 UI passes remain accepted.
 
 The seven gate switches live in the general map. They are independent of the
 ordinary temple destinations in the existing Fast travel tab. Kalla's gate is

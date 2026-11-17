@@ -20,12 +20,13 @@ Chapter selection applies the tested prerequisites for 5–7 while preserving
 party and tutorials. All Test 1 UI checks passed. Dietrich Obelisk use and
 long term progression remain untested.
 
-**Theodora Part 1:** Chapters **1–3, 5, 7 and 10–12** and all Test 1 UI checks
-passed. Chapter 2 goes straight into battle. Chapters **4/6/8** have city access
-blocks; **9** is blocked on the world map. Focused repairs are in
-[Theodora Test 2](docs/testing-story-theodora-test2.md), pending game tests.
-Ordinary chapter selection preserves flags/map state; it does not apply these
-repairs automatically. Chapters 1/2 use 1446; Chapter 3+ uses 1449.
+**Theodora Part 1:** Chapters **1–12** passed short-session checks. Chapter 2
+enters battle directly. Chapters **4/6/8/9** passed with the focused Test 2
+repairs, now applied during chapter selection. Chapter 6 uses an alternate city
+route; its NPC barrier remains. Chapter 8 removed that barrier. Chapter 9 needs
+only the three-point Troy exit. Party, tutorials and unrelated flags/map points
+are preserved. Chapters 1/2 use 1446; Chapter 3+ uses 1449.
+See [Test 2 results](docs/test-results-story-theodora-test2.md).
 
 **Tutorial names:** 180 titles, categories and their visible order now match the
 supplied game screenshots. This corrects 61 labels, including **Mentoring (Cai)**;
@@ -75,7 +76,7 @@ library, or a ready-made Windows `.exe`.
 | | Class | Pick any class the game knows. It's added to the unit's own class list, the way the game does it |
 | **Convoy** | | Everything in storage, materials included: add a stack, stock every material at once, swap the item in any row, change its quantity, remove a row, and repair a list damaged by older versions |
 | **Gold** | | Set gold |
-| **Player** | | Leda Part 1 starts 2–12, Cai 1–12 and Dietrich 3–12 (game-tested); Theodora 1–12 (eight accepted, access blocks in 4/6/8/9), selected from the save route. Dietrich 1/2 unavailable because of the Chapter 2 rescue block. Other targets/routes guarded. Optional chapter file on Save with overwrite confirmation and backup. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
+| **Player** | | Leda Part 1 starts 2–12, Cai 1–12 and Dietrich 3–12 (game-tested); Theodora 1–12 (passed with targeted repairs in 4/6/8/9; Chapter 6 uses alternate traversal), selected from the save route. Dietrich 1/2 unavailable because of the Chapter 2 rescue block. Other targets/routes guarded. Optional chapter file on Save with overwrite confirmation and backup. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
 | **Classes** | | A unit's whole class list (set the current class, add, swap or remove one, set its exp) and its weapon masteries with their rank (E … S+) and exp — select several masteries (Ctrl+A, Shift+click or Shift+drag) and Set rank, Set exp or Remove changes all of them at once |
 | **Supports** | | Every character's support partners with the **points** this save holds for the pair, the highest rank the game defines, and which conversations this save has recorded. Set the points (0 … 3200) and the game works the level out from them. **Record conversation as seen** writes that conversation's flag |
 | **Mounts** | | The battalion and mount each unit carries, chosen from the save's pool |

@@ -24,17 +24,26 @@ next checkpoint passed. All Test 1 UI checks passed. See
 [Test 3 results](test-results-story-dietrich-test3.md). Dietrich Obelisk use
 remains untested. All entry years are 1449.
 
-**Theodora Part 1** offers Chapters **1–12**. Chapters **1–3, 5, 7 and 10–12**
-passed opening/progression checks; all Test 1 UI checks passed. Chapter 2's
-returned save is already in battle and needs no after-progress capture.
-Chapters **4/6/8** have city access blocks; **9** has a world-map movement block.
-Native Chapters 1–3 anchor the sequence rule and early dates; later dates come
-from the timeline. Chapters 1/2 use **1446**, and Chapter 3+ uses **1449**, even
-when the source was an earlier chapter. Party, flags and tutorials are preserved.
-Chapter 1 replay from the existing party passed. No prerequisite flags or map
-changes are added automatically for this route. Manual movement controls are
-available in Functions. See [Test 1 results](test-results-story-theodora-test1.md)
-and [focused Test 2 repairs](testing-story-theodora-test2.md).
+**Theodora Part 1** offers Chapters **1–12**, all accepted through the reported
+short-session checkpoint. All Test 1 UI checks passed. Chapter 2 enters battle
+and needs no after-progress save. Chapters 4/6/8/9 passed the targeted Test 2
+repairs, now integrated into selection: 4 clears middle movement; 6/8 clear
+middle/lower/district restrictions; 9 shows only the three-point Troy exit.
+Chapter 6 passes via alternate traversal while the NPC barrier remains; Chapter
+8 removes the barrier. Timing is a possible explanation, not established.
+The 06B service unlocks and 09B broad route probe are not applied.
+
+Native Chapters 1–3 anchor the sequence rule and early dates. Chapters 1/2 use
+**1446** and Chapter 3+ uses **1449**, including backward replay. Party, tutorials,
+unrelated flags and other map points are preserved. Each chapter change and its
+prerequisites share Undo/Redo and Save. Reapplying restores only that chapter's
+exact prerequisites. Manual movement controls remain in Functions.
+
+Repairs were game-tested on arrival saves; the integrated chapter-entry path
+has automated equivalence, history and export checks. No separate in-game test
+of the new automatic application has been reported. Obelisk and long-term
+progression remain untested. See [Test 2 results](test-results-story-theodora-test2.md).
+
 
 For every supported Cai Chapter 3+ selection, the chapter action also enables
 **Functions → Area access → Sewers access (Cai)**. Both changes share one
@@ -70,7 +79,7 @@ The warning title remains **CAUTION - UNEXPECTED CONSEQUENCES POSSIBLE**. It
 retains the user's points about Leda Part 1, no previous unlock/unit grants,
 limited testing, the Obelisk Chamber and a fresh-directory backup. The Obelisk
 point is immediately above backup. Warning text follows the loaded route: Leda
-explains Chapter 1's exclusion and its tested scope; Cai explains the automatic Sewers exception and its accepted chapter tests; Dietrich identifies the eight passes and four blocked chapters. Changing route while either
+explains Chapter 1's exclusion and its tested scope; Cai explains the automatic Sewers exception and its accepted chapter tests; Dietrich describes its 3–12 scope; Theodora explains its exact repairs and Chapter 6 alternate route. Changing route while either
 dialog is open requires reopening it. The picker never chooses a different route.
 
 ## What is changed

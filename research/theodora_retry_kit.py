@@ -1,7 +1,7 @@
 """Focused Theodora city/mapping probes from exact private Test 1 returns.
 
-No story beat is skipped. These repairs are game-test pending and are never
-applied by ordinary chapter selection. Private save bytes are not bundled.
+No story beat is skipped. Test 2 accepted 04, 06A, 08 and 09A; the production writer now
+applies their exact deltas. This historical builder retains all six probes. Private save bytes are not bundled.
 """
 from pathlib import Path
 from collections import deque, defaultdict

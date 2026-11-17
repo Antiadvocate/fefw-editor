@@ -15,6 +15,7 @@ import story_page
 import story_files
 from test_story import StoryHarness, box_for
 from test_story_files import SaveHarness
+from test_story_theodora_prerequisites import fixture as repaired_fixture
 from research.theodora_test_kit import build, flags, SOURCES, NATIVE_CLOCKS
 
 # Recorded independently from native checkpoints and timeline title rows.
@@ -27,33 +28,32 @@ class TheodoraStoryTest(unittest.TestCase):
     def test_native_anchors_and_reported_evidence(self):
         self.assertEqual(tuple(story.sequence(n,3) for n in range(1,4)), NATIVE_IDS)
         self.assertEqual(start.TARGETS[3], tuple(range(1,13)))
-        self.assertEqual(start.TESTED_BY_ROUTE[3], frozenset((1,2,3,5,7,10,11,12)))
+        self.assertEqual(start.TESTED_BY_ROUTE[3], frozenset(range(1,13)))
         for ch in start.TARGETS[3]:
-            if ch in (4,6,8,9):self.assertTrue(story_page.chapter_evidence(3,ch).startswith('Opens;'))
+            if ch in (4,6,8,9):self.assertIn('passed',story_page.chapter_evidence(3,ch))
             else:self.assertEqual(story_page.chapter_evidence(3,ch), 'Game-tested opening and progression')
-        self.assertIn('reported access blocks', story_page.warning_points(3)[0])
+        self.assertIn('Chapters 1–12 passed', story_page.warning_points(3)[0])
         self.assertIn('1446', story_page.warning_points(3)[1])
         self.assertIn('UI passed', story_page.evidence_note(3))
         self.assertEqual(story.chapter_filename(3,12), 'Chapter_Seo_1_12')
 
     def test_forward_backward_years_preserve_party_flags_roots_and_roundtrip(self):
-        f = StoryHarness(3).core_of(); before = bytes(f.payload)
+        f = repaired_fixture(); before = bytes(f.payload)
         # Test from both sides of the year transition, independent of source year.
         sources = (f, core.SaveFile(start.edited(f,1)))
         with tempfile.TemporaryDirectory() as tmp:
             for source in sources:
                 original = start.normalized_blocks(source)
                 for chapter, (month,day,hour) in enumerate(DATES,1):
-                    # Neither route's prerequisite writer may run for Theodora.
-                    with patch.object(start.facilities,'edited',side_effect=AssertionError('Cai prerequisite')), \
-                         patch.object(start.story_prerequisites,'edited',side_effect=AssertionError('Dietrich prerequisite')):
+                    # Dietrich prerequisites must never run for Theodora.
+                    with patch.object(start.story_prerequisites,'edited',side_effect=AssertionError('Dietrich prerequisite')):
                         g = core.SaveFile(start.edited(source,chapter))
                     i = start.validate(g); year = 1446 if chapter <= 2 else 1449
                     self.assertEqual((i.route,i.part,i.chapter,i.sequence),(3,1,chapter,story.sequence(chapter,3)))
                     self.assertEqual(struct.unpack_from('<H5B',g.payload,i.header+22),(year,month,day,hour,0,0))
-                    self.assertEqual(flags(g),flags(source))
+                    self.assertEqual(flags(g),flags(core.SaveFile(start.story_theodora_prerequisites.edited(source,chapter))))
                     after = start.normalized_blocks(g)
-                    for key in original.keys()-{'Header','GameUserData','GameSchedule','Calendar','GameRestartData'}:
+                    for key in original.keys()-{'Header','GameUserData','GameSchedule','Calendar','GameRestartData','GmapSpotMgr'}:
                         self.assertEqual(original[key],after[key])
                     self.assertEqual(start.edited(g,chapter),g.payload)
                     box=box_for(source);box.payload=g.payload;path=Path(tmp)/'Auto';path.write_bytes(box.to_bytes())
