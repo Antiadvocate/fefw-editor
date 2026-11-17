@@ -157,6 +157,19 @@ consistent with a boundary operation skipped by direct title entry, but it does
 not prove type 84 writes files or establish the exact trigger. Explicit editor
 file creation does not establish the natural trigger.
 
+## Route snapshots on Obelisk entry and exit
+
+The player observed that entering the Obelisk Chamber copies the latest Auto
+into the current route's `Route_Led`, `Route_Kai`, etc., then writes a new Auto.
+Leaving the chamber creates `Route_Ism` for the main character. This explains
+why an active-route Auto can exist without its Route_* snapshot beforehand.
+The copy order is player-reported; the new reference archives do not contain
+paired Route captures for an independent byte comparison.
+
+These route snapshots are distinct from `Chapter_*` entry checkpoints. The
+natural Chapter-file trigger discussed above remains unresolved, and chapter
+editing still does not create Route files. See [reference evidence](route-reference-saves.md).
+
 ## Guards and history
 
 Cai dates, capture evidence and the Route_Kai observation are detailed in

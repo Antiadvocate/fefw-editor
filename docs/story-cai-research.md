@@ -91,17 +91,20 @@ Reproduce with `python research/story_timeline_report.py /path/to/GameData --rou
 The unrecovered type-84 action precedes Chapters 2–12, but does not prove a file
 creation trigger. No GameData is committed or required at runtime.
 
-## Why no Route_Kai?
+## Route_Kai and the Obelisk Chamber
 
-The user reports no Route_Kai file in this working save folder. This does not
-block the editor: Auto supplies the current Cai state and the two natural
-chapter files supply checkpoint evidence. No Route_Kai is synthesized.
+The earlier working Cai folder did not contain Route_Kai. The player has now
+observed that entering the Obelisk Chamber creates the route's Route_* file
+by copying the most recent Auto **before** a new Auto is written. On leaving
+the chamber, Route_Ism is created for the main character. This is a player
+observation, replacing the earlier speculative route-switch trigger.
 
-The exact creation trigger is **unconfirmed**. Existing Route_* files appear to
-retain a route separately from the active Auto; creation when leaving/switching
-a route is a hypothesis, not a verified event. A natural before/after route
-transition or runtime save-operation trace would be needed to pin it down.
-There is no need to change routes solely to supply this file for the current tests.
+The supplied Dietrich/Theodora archives contain no Route-file before/after
+pairs, so the copy has not been byte-compared in this update. See the
+[reference report](route-reference-saves.md#player-observed-route-file-lifecycle).
+Auto and native Chapter files remain sufficient for the current editor;
+Route files are not synthesized. This finding is separate from the still
+unconfirmed natural Chapter-file creation trigger.
 
 ## Reproduction and limits
 

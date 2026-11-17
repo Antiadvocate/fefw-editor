@@ -283,8 +283,8 @@ checkpoints independently recover prefix `eab884585a706f5d`; source route, resum
 calendar and restart layouts validate. The editor offers Cai Chapters 2, 4 and 9
 with Cai dates and file names. [Cai Test 1](test-results-story-cai-test1.md)
 accepted 2/9 and found Chapter 4 blocked; the UI carries those distinctions. Leda support is unchanged.
-No Route_Kai file is required or synthesized; its natural creation trigger is
-unconfirmed. [Cai evidence](story-cai-research.md) records the inputs and limits.
+No Route_Kai file is required or synthesized. The player subsequently observed
+Route-file creation on Obelisk entry/exit; see [reference evidence](route-reference-saves.md).
 
 The user observed no new external Chapter_Led_ files except 1_1 in the earlier
 Chapter 1 test. Creation at the previous chapter boundary is a hypothesis, not
@@ -386,3 +386,17 @@ Filters, Select shown, bulk removal and restoration from a recognized empty
 list are included. The original 1/2 state limits remain; no read/unread claim
 is made. See [the kit guide](testing-cai-tutorials-test5.md) for pending checks.
 Earlier dated sections above describe their original builds.
+
+## Dietrich/Theodora references and Obelisk observations — 2026-11-16
+
+Validated Dietrich free time at P1 Chapter 4 plus four native checkpoints, and
+Theodora free time at P1 Chapter 3 plus three native checkpoints: nine files,
+all checksums, summaries and known structural checks passing. Theodora
+Chapters 1/2 are in 1446; Chapter 3 is in 1449. Recovered selector candidates,
+clock data and fingerprints are in [route-reference-saves.md](route-reference-saves.md).
+These references do not enable new production story routes or change Test 5.
+
+The player observed Route_Led/Route_Kai/etc. being copied from the latest Auto
+on entering the Obelisk, before a new Auto is made; leaving creates Route_Ism
+for the main character. This supersedes the old speculative Route-file trigger.
+It does not resolve the separate natural Chapter-file creation trigger.
