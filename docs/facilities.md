@@ -11,8 +11,8 @@ The **Functions** tab (formerly Facilities) has **Saved switches** and **Access 
 views. Flags remains the rightmost tab; slightly tighter tab spacing keeps it
 visible at the existing minimum window width.
 
-Saved switches contains **37 switches**: 21 service switches, seven
-Gate of the Gods registrations, six Journal switches and three area-access switches. Select individual rows or a range, then
+Saved switches contains **41 switches**: 21 service switches, seven
+Gate of the Gods registrations, six Journal switches and seven area-access/movement controls. Select individual rows or a range, then
 Enable selected or Disable selected. Search accepts English, Japanese or a
 hash; the category filter separates services, gates, journal sections and area access.
 The selected row explains its evidence. Ctrl+Z/Ctrl+Y and normal saving/backups
@@ -28,7 +28,8 @@ apply. Route mirroring must be off.
 **Enabled describes the saved switch, not guaranteed usability.** NPC
 placement, route, story, schedule and other conditions can still apply.
 Ten tested services and six gates are Game-tested; Yu Phas has a Conditional
-pass. The ten original untested services and nine new controls remain Inferred.
+pass. Each newer row carries its own evidence scope; a combined prerequisite
+pass is not described as an isolated toggle test.
 Original Japanese keys remain in Reads As and established English names
 appear in Flags. See the [acceptance report](test-results-facilities-test1.md).
 
@@ -64,12 +65,35 @@ Sewers access (Cai) uses the exact dialogue-read identity
 member `b631f2c1` of the same anchored flag group. It stores 1 when enabled
 and removes only that record when disabled. The map is found structurally,
 including when empty; a missing, duplicated or malformed member is read-only.
-Mixed general/history selections are validated before either map is changed.
+Mixed general/history/progression selections are validated before any map is changed.
 The entrance still requires Cai and an allowed story phase. Unlock and
 progression passed on the natural Chapter 4 return; disabling is not game-tested.
 Selecting a supported Cai Chapter 3+ automatically enables this one prerequisite.
 Chapter 2 and Leda selections preserve its current state. Other switches are
-not enabled automatically. See [results](test-results-sewers-functions.md).
+not enabled by the Cai action. Dietrich's separately tested Chapter 5–7
+prerequisites still apply. See [results](test-results-sewers-functions.md).
+
+### Dagsion movement controls
+
+These four **Area access** rows edit only the progression member `4ad575a2`.
+They use inverse polarity: **Enable clears the restriction; Disable restores it**.
+They are separate from upper/lower area-unlock flags in the general map. A
+same-hash record in another map cannot substitute for the progression record.
+Missing/duplicate stores and unknown values or wide encodings are refused;
+unselected raw records are preserved. Empty progression maps are supported.
+
+| Functions row | Exact key | Hash | Evidence |
+| --- | --- | --- | --- |
+| Dagsion upper-area movement | `行動範囲制限_上層` | `89dc5a51` | Unlock tested: Dietrich Chapter 5 |
+| Dagsion middle-area movement | `行動範囲制限_中層` | `16b679c4` | Inferred: Theodora Chapter 4 repair pending |
+| Dagsion lower-area / port movement | `行動範囲制限_下層` | `8386d712` | Conditional pass: Dietrich Chapter 6 with its function unlocks |
+| Wealthy–commercial district passage | `行動範囲制限_富裕区-商業区` | `a9d310ac` | Inferred: Theodora Chapter 6/8 repair pending |
+
+The pre-existing upper/lower area access and Vandahl Trading Company rows now
+record their combined Dietrich Chapter 6 pass. A separate crate-display flag
+and chapter-specific barriers can still block passage; these controls do not
+clear those automatically. Theodora Test 2 uses the same Functions writer.
+Its map-visibility probes change World map points, not function flags.
 
 The seven gate switches live in the general map. They are independent of the
 ordinary temple destinations in the existing Fast travel tab. Kalla's gate is

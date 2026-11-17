@@ -22,27 +22,7 @@ CHAPTER_EDITS = {
 
 def member_map(f, member):
     """Read a direct flag-group member, including the native empty encoding."""
-    tree, group, _ = facilities.flag_group(f)
-    parent = tree.nodes[group]; table = f.ptr(parent.start)
-    count = f.u32(parent.start) >> 24
-    rows = [(f.u32(table+8*i), f.ptr(table+8*i+4)) for i in range(count)]
-    if (table+8*count != parent.end or len({k for k,v in rows}) != count
-            or len({v for k,v in rows}) != count
-            or {v for k,v in rows} != {n.start for n in tree.nodes if n.parent == group}):
-        raise core.SaveError('Unrecognised story flag group; no changes made.')
-    hits = [at for key,at in rows if key == member]
-    if len(hits) != 1:
-        raise core.SaveError('Missing story prerequisite map; no changes made.')
-    at = hits[0]; index = tree.node_at(at); node = tree.nodes[index]
-    if node.struct or node.parent != group or any(n.parent == index for n in tree.nodes):
-        raise core.SaveError('Unexpected story prerequisite structure.')
-    maps = [m for m in core.flag_maps(f) if m.start == at]
-    if not maps and bytes(f.payload[at+4:node.end]) == bytes(4):
-        return core.FlagMap(-1, at, [])
-    if (len(maps) != 1 or f.ptr(at) != node.end
-            or len({v.hash for v in maps[0].flags}) != len(maps[0].flags)):
-        raise core.SaveError('Invalid story prerequisite records.')
-    return maps[0]
+    return facilities.locate_member(f, member)
 
 
 def edited(f, chapter):

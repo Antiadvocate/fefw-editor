@@ -24,13 +24,17 @@ next checkpoint passed. All Test 1 UI checks passed. See
 [Test 3 results](test-results-story-dietrich-test3.md). Dietrich Obelisk use
 remains untested. All entry years are 1449.
 
-**Theodora Part 1** offers Chapters **1–12**, all **Inferred — game test pending**.
+**Theodora Part 1** offers Chapters **1–12**. Chapters **1–3, 5, 7 and 10–12**
+passed opening/progression checks; all Test 1 UI checks passed. Chapter 2's
+returned save is already in battle and needs no after-progress capture.
+Chapters **4/6/8** have city access blocks; **9** has a world-map movement block.
 Native Chapters 1–3 anchor the sequence rule and early dates; later dates come
 from the timeline. Chapters 1/2 use **1446**, and Chapter 3+ uses **1449**, even
 when the source was an earlier chapter. Party, flags and tutorials are preserved.
-Native Chapter 1 has an empty roster; replay from an existing party is untested.
-No prerequisite flags are added for this route. See the
-[Theodora Test 1 guide](testing-story-theodora-test1.md).
+Chapter 1 replay from the existing party passed. No prerequisite flags or map
+changes are added automatically for this route. Manual movement controls are
+available in Functions. See [Test 1 results](test-results-story-theodora-test1.md)
+and [focused Test 2 repairs](testing-story-theodora-test2.md).
 
 For every supported Cai Chapter 3+ selection, the chapter action also enables
 **Functions → Area access → Sewers access (Cai)**. Both changes share one

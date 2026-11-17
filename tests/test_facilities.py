@@ -31,8 +31,8 @@ def outside(f):
 class FacilityTest(unittest.TestCase):
     def test_catalog_and_labels_preserve_original_identity(self):
         cat = fac.catalog()
-        self.assertEqual(len(cat), 37)
-        self.assertEqual(sum(r['polarity'] == 'restriction' for r in cat.values()), 3)
+        self.assertEqual(len(cat), 41)
+        self.assertEqual(sum(r['polarity'] == 'restriction' for r in cat.values()), 7)
         self.assertEqual(sum(r['kind'] == 'Gate registration' for r in cat.values()), 7)
         self.assertEqual(cat[KALLA]['name'], '神殿_転移_カーラ神殿')
         self.assertNotIn(0xb482d5dc, cat)  # Ordinary Kalla travel is a different map.
@@ -45,7 +45,7 @@ class FacilityTest(unittest.TestCase):
 
     def test_every_switch_both_directions_only_changes_selected_raw_record(self):
         for h, row in fac.catalog().items():
-            if h == fac.SEWERS: continue  # Separate history-map regression tests.
+            if fac.member_for(h) != fac.GENERAL_MEMBER: continue  # Separate sibling-map tests.
             with self.subTest(h=f'{h:08x}'):
                 f = fixture([[(0x99887766, 2, False)], rows()])
                 for state in (False, True, False):

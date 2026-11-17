@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "scope": "Functions: 21 service switches, 7 gate registrations, 6 journal switches and 2 area-access switches. New controls are Inferred; previous Leda service/gate evidence retains its original scope. Arena has separate read-only diagnostics; its saved switch is not established.",
+  "scope": "Functions: 21 service switches, 7 gate registrations, 6 journal switches and 7 area-access/movement controls. Movement restrictions use the progression map; ordinary access switches use the general map and Cai Sewers uses dialogue history. Evidence remains scoped to reported tests.",
   "entries": {
     "b9a0e16b": {
       "name": "禁止_武器屋",
@@ -95,8 +95,8 @@
       "label": "Vandahl Trading Company",
       "kind": "Service",
       "polarity": "unlock",
-      "coverage": "Inferred",
-      "note": "This saved switch has not had an isolated in-game lock/unlock test. NPC placement, route, story and schedule conditions may also apply."
+      "coverage": "Conditional pass",
+      "note": "Dietrich Chapter 6 direct entry and walking progression passed with upper/lower area access, Vandahl Trading Company and the lower movement restriction cleared together. This does not establish an isolated toggle test. Area movement controls are separate; other route, story and NPC conditions can still apply."
     },
     "efdc12db": {
       "name": "機能開放_劇場",
@@ -271,16 +271,16 @@
       "label": "Dagsion upper-area access",
       "kind": "Area access",
       "polarity": "unlock",
-      "coverage": "Inferred",
-      "note": "Separate saved access switch, added by normal Cai Chapter 5 free-time permissions in Chapter.bin. Missing in the blocked Chapter 4 return; present after Chapter 9 advancement. Story restrictions and entrance conditions still apply. Game test pending."
+      "coverage": "Conditional pass",
+      "note": "Dietrich Chapter 6 direct entry and walking progression passed with upper/lower area access, Vandahl Trading Company and the lower movement restriction cleared together. This does not establish an isolated toggle test. Area movement controls are separate; other route, story and NPC conditions can still apply."
     },
     "9402533e": {
       "name": "機能開放_ダグシオン下層",
       "label": "Dagsion lower-area access",
       "kind": "Area access",
       "polarity": "unlock",
-      "coverage": "Inferred",
-      "note": "Separate saved access switch, added by normal Cai Chapter 4 free-time permissions in Chapter.bin. Missing in the blocked return; present after Chapter 9 advancement. Does not clear chapter restrictions or unlock a fast-travel destination. Game test pending."
+      "coverage": "Conditional pass",
+      "note": "Dietrich Chapter 6 direct entry and walking progression passed with upper/lower area access, Vandahl Trading Company and the lower movement restriction cleared together. This does not establish an isolated toggle test. Area movement controls are separate; other route, story and NPC conditions can still apply."
     },
     "728ccd68": {
       "name": "機能開放_稽古",
@@ -297,6 +297,42 @@
       "polarity": "unlock",
       "coverage": "Unlock tested",
       "note": "Enables the dialogue prerequisite for Cai's Sewers entrance. Entering and progressing passed in Chapter 4 after natural Chapter 3 completion. The entrance still requires Cai and an allowed story phase. Disabling removes this dialogue record; the disable effect has not been game-tested. Cai Chapter 3+ selections enable this automatically."
+    },
+    "89dc5a51": {
+      "name": "行動範囲制限_上層",
+      "label": "Dagsion upper-area movement",
+      "kind": "Area access",
+      "polarity": "restriction",
+      "store": "progression",
+      "coverage": "Unlock tested",
+      "note": "Enable clears the upper movement restriction; Disable restores it. Separate from Dagsion upper-area access. Clearing it passed Dietrich Chapter 5 training/certification. Other route and story barriers can still apply."
+    },
+    "16b679c4": {
+      "name": "行動範囲制限_中層",
+      "label": "Dagsion middle-area movement",
+      "kind": "Area access",
+      "polarity": "restriction",
+      "store": "progression",
+      "coverage": "Inferred",
+      "note": "Enable clears the middle movement restriction used by upper-to-middle and lower-to-middle entrances. Theodora normally clears it before Chapter 4; it remains set in the blocked arena return. Theodora repair is game-test pending. Disable restores the restriction."
+    },
+    "8386d712": {
+      "name": "行動範囲制限_下層",
+      "label": "Dagsion lower-area / port movement",
+      "kind": "Area access",
+      "polarity": "restriction",
+      "store": "progression",
+      "coverage": "Conditional pass",
+      "note": "Enable clears the lower movement restriction; Disable restores it. Dietrich Chapter 6 walking access passed together with upper/lower function access and Vandahl Trading Company. Those switches remain separate. Theodora Chapter 6/8 repair is pending."
+    },
+    "a9d310ac": {
+      "name": "行動範囲制限_富裕区-商業区",
+      "label": "Wealthy–commercial district passage",
+      "kind": "Area access",
+      "polarity": "restriction",
+      "store": "progression",
+      "coverage": "Inferred",
+      "note": "Enable clears the movement restriction controlling the NPC barrier and invisible wall between these districts. Present in blocked Theodora Chapter 6/8; normally cleared during Chapter 4. A separate crate-display flag and chapter-specific barriers can still block the passage. Game test pending. Disable restores the restriction."
     }
   }
 }

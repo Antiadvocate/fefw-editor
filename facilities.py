@@ -1,4 +1,4 @@
-"""Allowlisted switches in GameUserData's general and dialogue-history maps.
+"""Allowlisted switches in GameUserData's general, history and progression maps.
 
 Service switches, temple-transfer registrations and ordinary travel flags are
 independent. Do not identify this map by its enumerated index.
@@ -22,6 +22,10 @@ SEWERS_DIALOGUE = 'MID_LGV_1KAI_c02_LG11_003_m06'
 HISTORY_MEMBER = 0xb631f2c1
 UNAVAILABLE = 'unavailable'
 GENERAL_MEMBER = 0x972fa7ee
+PROGRESSION_MEMBER = 0x4ad575a2
+MOVEMENT = {core.id_hash(key): key for key in (
+    '行動範囲制限_上層', '行動範囲制限_中層', '行動範囲制限_下層',
+    '行動範囲制限_富裕区-商業区')}
 # The native Cai Chapter 1 checkpoint predates all general-map anchors. Its
 # complete 13-member flag-group layout is an independently captured identity.
 FLAG_GROUP_MEMBERS = frozenset((0x25207c4c, 0x58a0be00, GENERAL_MEMBER,
@@ -43,8 +47,12 @@ def catalog():
         for h, row in cat.items():
             expected = '禁止_' if row['polarity'] == 'restriction' else (
                 '神殿_転移_' if row['kind'] == 'Gate registration' else '機能開放_')
-            identity_ok = (row['name'] == SEWERS_DIALOGUE if h == SEWERS
-                           else row['name'].startswith(expected))
+            identity_ok = (row['name'] == MOVEMENT[h] and row.get('store') == 'progression'
+                           and row['kind'] == 'Area access' and row['polarity'] == 'restriction'
+                           if h in MOVEMENT else
+                           row.get('store', 'general') == 'general' and
+                           (row['name'] == SEWERS_DIALOGUE if h == SEWERS
+                            else row['name'].startswith(expected)))
             if (core.id_hash(row['name']) != h or not identity_ok
                     or row['kind'] not in ('Service', 'Gate registration', 'Journal', 'Area access')
                     or row['polarity'] not in ('unlock', 'restriction')
@@ -62,7 +70,8 @@ def apply_labels(names):
         key = row['name']
         if names.get(h, {}).get('name', key) != key:
             raise FacilityError(f'Conflicting facility identity for {h:08x}')
-        prefix = ('Disabled: ' if row['polarity'] == 'restriction' else
+        prefix = ('Movement restricted: ' if h in MOVEMENT else
+                  'Disabled: ' if row['polarity'] == 'restriction' else
                   'Registered: ' if row['kind'] == 'Gate registration' else
                   'Function unlocked: ' if row['kind'] in ('Journal', 'Area access') else 'Facility unlocked: ')
         updates[h] = {**names.get(h, {}), 'name': key, 'label': prefix + row['label'], 'kind': 'facility'}
@@ -71,7 +80,7 @@ def apply_labels(names):
 
 def locate(f):
     users = [b for b in f.blocks if b.name == 'GameUserData']
-    identities = ANCHORS | (catalog().keys() - {SEWERS})
+    identities = ANCHORS | (catalog().keys() - {SEWERS} - MOVEMENT.keys())
     candidates = [m for m in core.flag_maps(f) if any(v.hash in identities for v in m.flags)]
     if len(users) != 1 or len(candidates) != 1:
         raise FacilityError('No unique general facility map; these controls are read-only.')
@@ -128,8 +137,8 @@ def flag_group(f):
     return tree, hits[0][0], hits[0][1]
 
 
-def locate_history(f):
-    """Find the history sibling by its structural key, never its map ordinal."""
+def locate_member(f, member):
+    """Find a flag-group member by structural identity, including an empty map."""
     tree, group, general_start = flag_group(f)
     parent = tree.nodes[group]
     table = f.ptr(parent.start)
@@ -138,20 +147,28 @@ def locate_history(f):
     if (table+8*count != parent.end or len({k for k, v in rows}) != count
             or len({v for k, v in rows}) != count
             or {v for k, v in rows} != {n.start for n in tree.nodes if n.parent == group}):
-        raise FacilityError('Unrecognised function flag group; Sewers is read-only.')
-    targets = [v for k, v in rows if k == HISTORY_MEMBER]
-    if len(targets) != 1 or targets[0] == general_start:
-        raise FacilityError('No unique dialogue-history member; Sewers is read-only.')
+        raise FacilityError('Unrecognised function flag group; no changes made.')
+    targets = [v for k, v in rows if k == member]
+    if len(targets) != 1:
+        raise FacilityError('No unique requested flag member; no changes made.')
     at = targets[0]; index = tree.node_at(at); node = tree.nodes[index]
     if node.struct or node.parent != group or any(n.parent == index for n in tree.nodes):
-        raise FacilityError('Unexpected dialogue-history structure; Sewers is read-only.')
+        raise FacilityError('Unexpected flag member structure; no changes made.')
     maps = [m for m in core.flag_maps(f) if m.start == at]
     if not maps and bytes(f.payload[at+4:node.end]) == bytes(4):
         return core.FlagMap(-1, at, [])  # Empty kind-0 list plus alignment.
     if (len(maps) != 1 or len({v.hash for v in maps[0].flags}) != len(maps[0].flags)
             or f.ptr(at) != node.end):
-        raise FacilityError('Invalid dialogue-history records; Sewers is read-only.')
+        raise FacilityError('Invalid flag member records; no changes made.')
     return maps[0]
+
+
+def locate_history(f):
+    return locate_member(f, HISTORY_MEMBER)
+
+
+def member_for(h):
+    return PROGRESSION_MEMBER if h in MOVEMENT else HISTORY_MEMBER if h == SEWERS else GENERAL_MEMBER
 
 
 def read(f):
@@ -164,6 +181,14 @@ def read(f):
         values[SEWERS] = UNAVAILABLE
     else:
         values.update({v.hash: v.value for v in history.flags if v.hash == SEWERS})
+    for h in MOVEMENT: values.pop(h, None)
+    try:
+        progression = locate_member(f, PROGRESSION_MEMBER)
+    except FacilityError:
+        values.update({h: UNAVAILABLE for h in MOVEMENT})
+    else:
+        values.update({v.hash: f'wide {v.value}' if v.wide else v.value
+                       for v in progression.flags if v.hash in MOVEMENT})
     return values
 
 
@@ -190,11 +215,14 @@ def edited(f, edits):
     for h, state in edits.items():
         if type(h) is not int or h not in cat or type(state) is not bool:
             raise FacilityError('Choose known facility switches and an enable/disable action.')
-    general = locate(f) if any(h != SEWERS for h in edits) or not edits else None
-    history = locate_history(f) if SEWERS in edits else None
+    needed = {member_for(h) for h in edits} if edits else {GENERAL_MEMBER}
+    maps = {member: locate(f) if member == GENERAL_MEMBER else locate_member(f, member)
+            for member in needed}
     plans = {}
     for h, state in edits.items():
-        fm = history if h == SEWERS else general
+        fm = maps[member_for(h)]
+        if h in MOVEMENT and any(v.hash == h and v.wide for v in fm.flags):
+            raise FacilityError(f'{cat[h]["label"]} has an unknown wide encoding; batch unchanged.')
         present = {v.hash: v.value for v in fm.flags}
         old = enabled(h, present.get(h))
         if old is None:

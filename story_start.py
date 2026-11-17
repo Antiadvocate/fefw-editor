@@ -7,8 +7,9 @@ Cai Part 1 Chapters 1–12 passed short-session game tests.
 Dietrich Chapters 3–12 passed short-session checks, including integrated
 prerequisites for 5–7. Chapters 1/2 are unavailable: Chapter 2 replay remains
 blocked, and Chapter 1 leads into that block. Native saves still load normally.
-Theodora Chapters 1–12 are inferred and await game tests. Chapters 1–2 use
-1446; Chapter 3 and later return to 1449, regardless of the source year.
+Theodora Chapters 1–3, 5, 7 and 10–12 passed opening/progression checks.
+Chapters 4/6/8 have city access blocks; Chapter 9 has a world-map block.
+Chapters 1–2 use 1446; Chapter 3+ uses 1449 regardless of the source year.
 """
 from datetime import datetime
 import struct
@@ -43,7 +44,13 @@ THEODORA_DATES = {1: (2, 1, 12, 0), 2: (2, 13, 12, 0), 3: (2, 4, 7, 0),
 THEODORA_YEARS = {chapter: 1446 if chapter <= 2 else 1449 for chapter in range(1, 13)}
 TARGETS = {4: CHAPTERS, 1: tuple(CAI_DATES), 2: DIETRICH_CHAPTERS, 3: tuple(THEODORA_DATES)}
 TESTED_BY_ROUTE = {4: TESTED, 1: frozenset(CAI_DATES),
-                   2: frozenset(DIETRICH_CHAPTERS), 3: frozenset()}
+                   2: frozenset(DIETRICH_CHAPTERS), 3: frozenset((1, 2, 3, 5, 7, 10, 11, 12))}
+THEODORA_BLOCKERS = {
+    4: 'Opens; upper-city gate blocks the arena objective',
+    6: 'Opens; NPC barrier blocks the route to the objective',
+    8: 'Opens; NPC barrier blocks the route to the objective',
+    9: "Opens; cannot leave Troy's Shrine on the world map",
+}
 DIETRICH_BLOCKERS = {
     1: 'Battle works, but leads into the Chapter 2 rescue block',
     2: 'Replay cannot progress the rescue proximity event',

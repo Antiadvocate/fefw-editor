@@ -33,7 +33,7 @@ class FacilityPageMixin:
         self.facility_search = ttk.Entry(search_row); self.facility_search.pack(fill='x', expand=True)
         self.facility_search.bind('<KeyRelease>', lambda e: self.refresh_facilities())
         ttk.Label(switches, style='CardFaint.TLabel', wraplength=950, justify='left', text=(
-            'Enable/Disable changes only the selected saved switches. Route, story and NPC conditions may still limit access. '
+            'Enable/Disable changes only the selected saved switches. Enabling movement clears its restriction; area-unlock switches are separate. Route, story and NPC conditions may still limit access. '
             'Gate registrations are separate from ordinary fast travel.\n'
             'Stables stays unchanged unless selected. Turn off “Also edit this route’s other saves”. Ctrl+Z undoes; Ctrl+S saves.'
         )).pack(side='bottom', anchor='w', pady=(8, 0))

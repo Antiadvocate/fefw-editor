@@ -1,5 +1,9 @@
 # Theodora story — Test 1
 
+Historical test guide. [Results](test-results-story-theodora-test1.md) accept
+eight chapters and all UI checks, with access blocks in 4/6/8/9. The original
+test instructions and then-current evidence are retained below.
+
 Theodora Part 1 Chapters 1–12 are **Inferred — game test pending**. This kit
 contains the updated source editor and twelve independent generated Autos.
 Previous Leda, Cai and Dietrich results remain accepted; there is no need to

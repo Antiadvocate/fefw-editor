@@ -20,20 +20,25 @@ Chapter selection applies the tested prerequisites for 5–7 while preserving
 party and tutorials. All Test 1 UI checks passed. Dietrich Obelisk use and
 long term progression remain untested.
 
-**Theodora Part 1:** Chapters **1–12** are available for experimental testing,
-all labelled **Inferred — game test pending**. Chapters 1/2 use 1446; Chapter 3+
-uses 1449. Party, flags and tutorials are preserved. Native Chapters 1–3 anchor
-the sequence rule; later dates come from the route timeline. See the
-[Theodora Test 1 guide](docs/testing-story-theodora-test1.md).
+**Theodora Part 1:** Chapters **1–3, 5, 7 and 10–12** and all Test 1 UI checks
+passed. Chapter 2 goes straight into battle. Chapters **4/6/8** have city access
+blocks; **9** is blocked on the world map. Focused repairs are in
+[Theodora Test 2](docs/testing-story-theodora-test2.md), pending game tests.
+Ordinary chapter selection preserves flags/map state; it does not apply these
+repairs automatically. Chapters 1/2 use 1446; Chapter 3+ uses 1449.
 
 **Tutorial names:** 180 titles, categories and their visible order now match the
 supplied game screenshots. This corrects 61 labels, including **Mentoring (Cai)**;
 38 unseen scenario-specific titles remain provisional. Exact keys are unchanged.
 
-**Functions** replaces the Facilities tab. Its 37 switches include
+**Functions** replaces the Facilities tab. Its 41 switches include
 **Sewers access (Cai)** under Area access. Selecting Cai Chapter 3 or later
 also enables this prerequisite automatically, with Undo/Redo and Save.
 Other earlier unlocks and party units still require separate changes.
+Area access now also includes **upper, middle and lower/port movement** and
+the **wealthy–commercial district passage**. Enable clears the corresponding
+movement restriction; the ordinary upper/lower access and Trading Company
+switches remain separate. Each row states its tested scope.
 The Journal, Mentoring and Dagsion area controls remain available with their
 individual evidence labels. Arena testing remains deferred.
 See [Sewers results and editor checks](docs/test-results-sewers-functions.md).
@@ -70,7 +75,7 @@ library, or a ready-made Windows `.exe`.
 | | Class | Pick any class the game knows. It's added to the unit's own class list, the way the game does it |
 | **Convoy** | | Everything in storage, materials included: add a stack, stock every material at once, swap the item in any row, change its quantity, remove a row, and repair a list damaged by older versions |
 | **Gold** | | Set gold |
-| **Player** | | Leda Part 1 starts 2–12, Cai 1–12 and Dietrich 3–12 (game-tested); Theodora 1–12 (Inferred — game test pending), selected from the save route. Dietrich 1/2 unavailable because of the Chapter 2 rescue block. Other targets/routes guarded. Optional chapter file on Save with overwrite confirmation and backup. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
+| **Player** | | Leda Part 1 starts 2–12, Cai 1–12 and Dietrich 3–12 (game-tested); Theodora 1–12 (eight accepted, access blocks in 4/6/8/9), selected from the save route. Dietrich 1/2 unavailable because of the Chapter 2 rescue block. Other targets/routes guarded. Optional chapter file on Save with overwrite confirmation and backup. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
 | **Classes** | | A unit's whole class list (set the current class, add, swap or remove one, set its exp) and its weapon masteries with their rank (E … S+) and exp — select several masteries (Ctrl+A, Shift+click or Shift+drag) and Set rank, Set exp or Remove changes all of them at once |
 | **Supports** | | Every character's support partners with the **points** this save holds for the pair, the highest rank the game defines, and which conversations this save has recorded. Set the points (0 … 3200) and the game works the level out from them. **Record conversation as seen** writes that conversation's flag |
 | **Mounts** | | The battalion and mount each unit carries, chosen from the save's pool |
@@ -79,7 +84,7 @@ library, or a ready-made Windows `.exe`.
 | **Tutorials** | | 218 tutorial identities: 180 screenshot-checked titles and 38 provisional English translations. Category/state/evidence filters, selected batches, empty-list restoration, original keys and Undo/Redo. See [tutorials.md](docs/tutorials.md) |
 | **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Six level previews tested in Leda Chapter 9; Fortuna's EXP effect remains unknown. Selection and Divine Sand are read-only. Six tested first-audience toggles; Fortuna has no audience condition. See [blessings.md](docs/blessings.md) |
 | **Fast travel** | | Add/remove 20 identified Dagsion destination flags in the selected save, with original keys and undo/redo. The original 16 have screenshot-confirmed English names. Four additional flags persisted in Chapter 9 tests; only Yu Phas Temple appeared and allowed travel, while walking back in stayed blocked. See [fast-travel.md](docs/fast-travel.md) |
-| **Functions** | | 37 service, gate, journal and area switches, with evidence labels and read-only Arena/route/access diagnostics. See [facilities.md](docs/facilities.md) |
+| **Functions** | | 41 service, gate, journal and area/movement switches, with evidence labels and read-only Arena/route/access diagnostics. See [facilities.md](docs/facilities.md) |
 | **Boons** | | All 31 Boons / 81 tiers: set a tier, remove ownership, switch On/Off or set all to max. Karma and progression preserved; undo/redo. Game-tested and inferred mappings labelled. See [boons.md](docs/boons.md) |
 | **Notable Deeds** | | 350 milestones; 47 editable totals; the 14 newly enabled counters are labelled Inferred. Hours Played passed its 20-hour game test. Targets/rewards and stored claim states shown separately; no currency or claim writes. See [notable-deeds.md](docs/notable-deeds.md) |
 

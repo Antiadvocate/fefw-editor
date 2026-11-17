@@ -24,15 +24,16 @@ DATES = ((2,1,12),(2,13,12),(2,4,7),(3,1,12),(3,7,20),(3,21,23),
 
 
 class TheodoraStoryTest(unittest.TestCase):
-    def test_native_anchors_and_pending_evidence(self):
+    def test_native_anchors_and_reported_evidence(self):
         self.assertEqual(tuple(story.sequence(n,3) for n in range(1,4)), NATIVE_IDS)
         self.assertEqual(start.TARGETS[3], tuple(range(1,13)))
-        self.assertEqual(start.TESTED_BY_ROUTE[3], frozenset())
+        self.assertEqual(start.TESTED_BY_ROUTE[3], frozenset((1,2,3,5,7,10,11,12)))
         for ch in start.TARGETS[3]:
-            self.assertEqual(story_page.chapter_evidence(3,ch), 'Inferred — game test pending')
-        self.assertIn('not been game-tested', story_page.warning_points(3)[0])
+            if ch in (4,6,8,9):self.assertTrue(story_page.chapter_evidence(3,ch).startswith('Opens;'))
+            else:self.assertEqual(story_page.chapter_evidence(3,ch), 'Game-tested opening and progression')
+        self.assertIn('reported access blocks', story_page.warning_points(3)[0])
         self.assertIn('1446', story_page.warning_points(3)[1])
-        self.assertIn('Inferred', story_page.evidence_note(3))
+        self.assertIn('UI passed', story_page.evidence_note(3))
         self.assertEqual(story.chapter_filename(3,12), 'Chapter_Seo_1_12')
 
     def test_forward_backward_years_preserve_party_flags_roots_and_roundtrip(self):
