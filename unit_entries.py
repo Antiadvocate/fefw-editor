@@ -46,6 +46,50 @@ def canonical(person):
     return identities().get(person, person)
 
 
+def apply_labels(names):
+    """Label recovered primary flags and distinguish existing alternate keys."""
+    updates = {}
+    try:
+        legacy = json.loads((HERE/'unit_ids.json').read_text(encoding='utf8'))
+    except (OSError, ValueError) as exc:
+        raise core.SaveError(f'Cannot load unit labels: {exc}') from exc
+    known_names = {row['name'] for row in catalog().values()}
+    # Older catalogue keys based on English names are not recovered Person
+    # aliases. Mark their existing labels as unverified; never merge identities
+    # or synthesize new save flags from these names.
+    for meta in legacy.values():
+        if meta.get('src') != 'key' or meta.get('name') not in known_names:
+            continue
+        pid = meta.get('pid', '')
+        if not pid.startswith('PID_'):
+            continue
+        for token, prefix in (('加入_', 'Recruited'), ('面識_', 'Met')):
+            key = token + pid[4:];h = core.id_hash(key)
+            if names.get(h, {}).get('name') == key:
+                updates[h] = {**names[h], 'label': f"{prefix}: {meta['name']} (unverified alias)"}
+    for row in catalog().values():
+        for key, prefix in ((row['recruit_flag'], 'Recruited'), (row['met_flag'], 'Met')):
+            if not key:
+                continue
+            h = core.id_hash(key)
+            if names.get(h, {}).get('name', key) != key:
+                raise core.SaveError(f'Conflicting unit flag identity for {h:08x}')
+            updates[h] = {**names.get(h, {}), 'name': key, 'label': f"{prefix}: {row['name']}"}
+    for h, meta in names.items():
+        key = meta.get('name', '')
+        for token, prefix in (('加入_', 'Recruited'), ('面識_', 'Met')):
+            if not key.startswith(token):
+                continue
+            person = core.id_hash('PID_' + key[len(token):])
+            main = identities().get(person)
+            if main is None or main == person:
+                continue
+            if core.id_hash(key) != h:
+                raise core.SaveError(f'Conflicting alternate unit flag identity for {h:08x}')
+            updates[h] = {**meta, 'label': f"{prefix}: {catalog()[main]['name']} (alternate record)"}
+    names.update(updates)
+
+
 def require_context(f):
     info = story.read(f)
     if info.part != 1 or info.route not in (1,2,3,4):

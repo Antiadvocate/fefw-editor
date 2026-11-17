@@ -74,6 +74,8 @@ class UnitEntryPageMixin:
             selected.update(person=h,action=action)
             if action=='restore':preview='Restore recruitment/met flags; keep the existing unit and its number.'
             else:preview=f"Level 1 · {class_label(int(r['class'],16))} · HP {r['hp']} · Unit number {number if number is not None else 'unavailable'}\n{len(r['items'])} starting items · {len(r['magic'])} spells · {len(r['skills'][5])} learned abilities. No mount or battalion is copied."
+            if action=='add':preview+='\nNo existing unit record to restore; this creates a new unit.'
+            preview+=f"\nRecruitment flag (Reads As): {r['recruit_flag']}"
             detail.configure(text=f"{r['name']} — {state}\n{preview}\n{r['evidence']}. {r['route_scope']}\nRecruitment may interact with later story events. Undo/Redo is available; changes are written on Save."+(f'\n{allocation_error}' if allocation_error and action!='restore' else ''))
             apply.configure(text='Restore recruitment' if action=='restore' else 'Add unit')
             if action:apply.state(['!disabled'])

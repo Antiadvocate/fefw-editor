@@ -1075,25 +1075,32 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
         self._write_flag(map_i, hash_, val)
 
     def _write_flag(self, map_i: int, hash_: int, value: int):
-        def edit(g):
-            maps = core.flag_maps(g)
-            m = next((x for x in maps if x.index == map_i), None)
-            if m is None:
-                return None
-            fl = next((x for x in m.flags if x.hash == hash_), None)
-            if fl is None:
-                return core.flag_add(g, m, hash_, value)
-            start = fl.offset - 5 if fl.wide else fl.offset - 4
-            size = 9 if fl.wide else 5
-            b = bytearray(g.payload[start:start + size])
-            if fl.wide:
-                b[5:9] = core.struct.pack("<i", value)
-            else:
-                b[4] = value & 0xFF
-            return core.replace_content(g, m.start, bytes(b))
-
+        if not self.sv:
+            return
+        if self.mirror.get():
+            self.flash('Turn off “Also edit this route’s other saves” for flag value changes.', 'warn')
+            return
+        self._commit_form()
+        changes = []
+        try:
+            for sv in (self.sv,):
+                f = self.core_of(sv)
+                fm = next((m for m in core.flag_maps(f) if m.index == map_i), None)
+                if fm is None:
+                    raise core.SaveError('The selected flag list is missing from a target save.')
+                new = core.flag_set(f, fm, hash_, value)
+                if new != f.payload:
+                    changes.append((sv, new))
+        except core.SaveError as exc:
+            self.flash(str(exc), 'error');return
+        if not changes:
+            return
+        self.push_undo()
+        for sv, new in changes:
+            sv.payload = bytearray(new);sv.scan();sv._core_cache = None
+        self._touch([sv for sv, _ in changes]);self.refresh_after_core()
         name = (flag_names().get(hash_) or {}).get("label") or "0x%08x" % hash_
-        self._core_edit(edit, f"{name} = {value}")
+        self.flash(f'{name} = {value} — Ctrl+S to write it.', 'ok')
 
     def remove_flag(self):
         key = self._flag_sel()

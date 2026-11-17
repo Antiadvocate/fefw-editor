@@ -6,6 +6,10 @@ level-one candidates, blocks duplicate characters/numbers and preserves existing
 unit progress. Part 1 free-time saves only; in-game acceptance is pending.
 See [scope and identity rules](docs/unit-creation.md) and the
 [focused test guide](docs/testing-unit-creation-test1.md).
+The first game returns passed for the deployed additions and renumbered Sirocco;
+Olympia's deployment and renumbered Buccar remain untested. The restoration
+follow-up fixes Flags value editing and distinguishes primary recruitment flags
+from alternate/unverified aliases. See [results and the focused retest](docs/unit-restoration-fix.md).
 
 **Story progression — Leda Part 1:** Player offers **Chapters 2–12**, all tested
 through the opening and next main story beat. Chapter 1 is unavailable: its

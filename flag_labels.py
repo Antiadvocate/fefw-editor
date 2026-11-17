@@ -7,6 +7,7 @@ import facilities
 import facility_access
 import fefw_core as core
 import tutorials
+import unit_entries
 
 KNOWN_FLAGS = {
     0xb9a0e16b: ('禁止_武器屋', 'Disabled: Armorer'),
@@ -23,7 +24,7 @@ def apply_labels(names: dict[int, dict], *, strict: bool = True) -> None:
                 raise core.SaveError(f'Conflicting known flag identity for {h:08x}')
             continue
         names[h] = {**names.get(h, {}), 'name': key, 'label': label}
-    for module in (tutorials, fast_travel, audiences, deeds, boons, facilities, facility_access):
+    for module in (tutorials, fast_travel, audiences, deeds, boons, facilities, facility_access, unit_entries):
         # A bad catalogue must not leave a partial overlay behind. The Flags
         # page can still display raw records; catalogue pages report errors.
         updated = dict(names)

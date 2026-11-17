@@ -10,10 +10,29 @@ import deeds
 import editor_advanced as advanced
 import flag_labels
 import fefw_core as core
+import unit_entries
 from test_fast_travel import fixture
 
 
 class FlagLabelsTest(unittest.TestCase):
+    def test_primary_recruitment_names_are_searchable_without_conflating_aliases(self):
+        names = {};unit_entries.apply_labels(names)
+        for row in unit_entries.catalog().values():
+            for key, prefix in ((row['recruit_flag'], 'Recruited'), (row['met_flag'], 'Met')):
+                if key:
+                    self.assertEqual(names[core.id_hash(key)]['label'],f"{prefix}: {row['name']}")
+        primary='加入_ベンディッツ';scenario='加入_SC11_06_ベンディッツ';legacy='加入_Venditz'
+        names={core.id_hash(key):{'name':key,'label':'Recruited: Benditz'} for key in (primary,scenario,legacy)}
+        unit_entries.apply_labels(names)
+        self.assertEqual(names[core.id_hash(primary)]['label'],'Recruited: Benditz')
+        self.assertEqual(names[core.id_hash(scenario)]['label'],'Recruited: Benditz (alternate record)')
+        self.assertEqual(names[core.id_hash(legacy)]['label'],'Recruited: Benditz (unverified alias)')
+        self.assertEqual({r['name'] for r in names.values() if 'Benditz' in r['label']},
+                         {primary,scenario,legacy,'面識_ベンディッツ'})
+        bad={core.id_hash(primary):{'name':'wrong'}};before=dict(bad)
+        with self.assertRaises(core.SaveError):unit_entries.apply_labels(bad)
+        self.assertEqual(bad,before)
+
     def test_shipped_dictionary_and_runtime_share_all_known_labels(self):
         raw = json.loads((Path(__file__).resolve().parents[1] / 'flag_names.json').read_text(encoding='utf8'))
         names = {int(h, 16): row for h, row in raw.items()}
@@ -69,3 +88,12 @@ class FlagLabelsTest(unittest.TestCase):
         app.flag_search = SimpleNamespace(get=lambda: 'deadbeef')
         advanced.AdvancedMixin.refresh_flags(app)
         self.assertEqual(output[0]['text'], 'unknown 0xdeadbeef')
+        keys=('加入_ベンディッツ','加入_SC11_06_ベンディッツ','加入_Venditz')
+        recruit=fixture([[(core.id_hash(k),0,False) for k in keys]])
+        app.core_of=lambda:recruit;app.flag_search=SimpleNamespace(get=lambda:'Benditz')
+        advanced.AdvancedMixin.refresh_flags(app)
+        self.assertEqual(len(output),3)
+        by_key={r['values'][0]:r['text'] for r in output}
+        self.assertEqual(by_key[keys[0]],'Recruited: Benditz')
+        self.assertEqual(by_key[keys[1]],'Recruited: Benditz (alternate record)')
+        self.assertEqual(by_key[keys[2]],'Recruited: Benditz (unverified alias)')

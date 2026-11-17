@@ -1101,6 +1101,30 @@ def flag_add(f: SaveFile, fm: FlagMap, hash_: int, value: int) -> bytearray:
     return flag_rebuild(f, fm, fm.flags, bytes(b))
 
 
+def flag_set(f: SaveFile, fm: FlagMap, hash_: int, value: int) -> bytearray:
+    """Set one existing flag, preserving its list and all other records."""
+    if type(value) is not int or not 0 <= value <= 0x7FFFFFFF:
+        raise SaveError("flag value must be an integer from 0 to 2147483647")
+    hits = [fl for fl in fm.flags if fl.hash == hash_]
+    if len(hits) != 1:
+        raise SaveError("no unique flag in the selected list")
+    fl = hits[0]
+    out = bytearray(f.payload)
+    if fl.value == value:
+        return out
+    if fl.wide:
+        struct.pack_into('<i', out, fl.offset, value)
+    elif value < 255:
+        out[fl.offset] = value
+    else:
+        # Preserve the whole list when promoting one compact value to int32.
+        body = bytearray(f.payload[fm.start + 4:f.ptr(fm.start)])
+        offset = fl.offset - fm.start - 4
+        body[offset:offset + 1] = b'\xff' + struct.pack('<i', value)
+        return replace_content(f, fm.start, body)
+    return out
+
+
 def flag_remove(f: SaveFile, fm: FlagMap, flag: Flag) -> bytearray:
     return flag_rebuild(f, fm, [x for x in fm.flags if x is not flag])
 

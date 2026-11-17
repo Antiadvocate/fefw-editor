@@ -4,6 +4,11 @@ This test adds character creation, duplicate protection and editable unit
 numbers. It includes the current tutorial-category correction. No chapter
 retesting is needed; the checks below concern units and identity only.
 
+**Update:** the first returns passed within the reported deployment limits.
+Use the [corrected restoration instructions](unit-restoration-fix.md) and the
+new build for manual flag edits. The original restoration step below lacked
+the exact key and exposed a separate Flags value-edit defect.
+
 ## Before testing
 
 Use a separate copy of the save folder with the game closed. Each test case
@@ -48,8 +53,11 @@ claim later recruitment events are proven.
   reopen; its number and defaults should persist. Original units retain theirs.
 - Change its number to one already used by another unit: refuse without a
   change. Use a free number: apply, Undo/Redo and reopen after saving.
-- On a disposable copy, set that character's **Recruited** flag to zero in
-  Flags. Add unit should offer **Restore recruitment**, keeping the same record,
+- On a disposable copy containing the character's existing unit record, set
+  its main **Recruited** flag to zero in Flags. Match Reads As to the exact key
+  shown in Add unit (Benditz: `加入_ベンディッツ`); alternate/unverified aliases
+  are different keys. Keep route mirroring off. Add unit should offer
+  **Restore recruitment**, keeping the same record,
   number, stats and inventory. Undo/Redo should also work. This only tests the
   flag restoration, not revival or every reason a character might be hidden.
 - **Copy unit in…** refuses a character already in the destination. An absent
