@@ -28,6 +28,10 @@ only the three-point Troy exit. Party, tutorials and unrelated flags/map points
 are preserved. Chapters 1/2 use 1446; Chapter 3+ uses 1449.
 See [Test 2 results](docs/test-results-story-theodora-test2.md).
 
+**Performance:** repeated save parsing is cached with byte-level invalidation,
+and chapter entry skips rebuilding already-empty restart blobs. See the
+[optimisation measurements and validation](docs/performance-2026-11-17.md).
+
 **Tutorial names:** 180 titles, categories and their visible order now match the
 supplied game screenshots. This corrects 61 labels, including **Mentoring (Cai)**;
 38 unseen scenario-specific titles remain provisional. Exact keys are unchanged.

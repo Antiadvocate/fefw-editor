@@ -68,7 +68,7 @@ def read(f: core.SaveFile) -> Table:
     blocks = [b for b in f.blocks if b.name == "GameUserData"]
     if len(blocks) != 1:
         raise BlessingError("No unique GameUserData block; blessing editing is disabled.")
-    tree = core.SaveTree(f.payload)
+    tree = f.tree()
     parent = tree.node_at(blocks[0].start)
     if parent < 0:
         raise BlessingError("Cannot identify the live blessing data.")

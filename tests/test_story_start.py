@@ -62,7 +62,7 @@ class StoryStartTest(unittest.TestCase):
     def test_unrecognized_tree_fails_as_save_error_and_preserves_outer_summary(self):
         from unittest.mock import patch
         f = fixture(); box = box_for(f); out = bytearray(box.raw); before = bytes(out)
-        with patch.object(core, 'SaveTree', side_effect=RecursionError('unsupported object')):
+        with patch.object(core.SaveFile, 'tree', side_effect=RecursionError('unsupported object')):
             with self.assertRaises(core.SaveError): story.read(f)
             story.sync_outer_summary(f.payload, out)
         self.assertEqual(bytes(out), before)

@@ -118,7 +118,7 @@ class DeedTest(unittest.TestCase):
             with self.subTest(maps=maps), self.assertRaises(deeds.DeedError): deeds.read(fixture(maps))
         f = fixture([rows()]); tree = core.SaveTree(f.payload)
         tree.nodes[tree.node_at(deeds.locate(f).start)].parent = -1
-        with patch.object(deeds.core, 'SaveTree', return_value=tree):
+        with patch.object(core.SaveFile, 'tree', return_value=tree):
             with self.assertRaises(deeds.DeedError): deeds.read(f)
 
     def test_state_labels_do_not_infer_claims_from_progress(self):

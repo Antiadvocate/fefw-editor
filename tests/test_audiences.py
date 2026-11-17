@@ -86,7 +86,7 @@ class AudienceTest(unittest.TestCase):
                 au.edited(fixture(maps), {GODS[-1]: 1})
         f = fixture([rows()]); tree = core.SaveTree(f.payload)
         tree.nodes[tree.node_at(au.locate(f).start)].parent = -1
-        with patch.object(au.core, 'SaveTree', return_value=tree):
+        with patch.object(core.SaveFile, 'tree', return_value=tree):
             with self.assertRaises(au.AudienceError): au.read(f)
 
     def test_reordered_shifted_and_unscoped_decoy_maps(self):

@@ -96,5 +96,5 @@ class FacilityTest(unittest.TestCase):
             with self.assertRaises(fac.FacilityError): fac.edited(fixture(maps),{EXAM:False})
         f=fixture([rows()]);tree=core.SaveTree(f.payload)
         tree.nodes[tree.node_at(fac.locate(f).start)].parent=-1
-        with patch.object(fac.core,'SaveTree',return_value=tree):
+        with patch.object(core.SaveFile, 'tree', return_value=tree):
             with self.assertRaises(fac.FacilityError):fac.read(f)

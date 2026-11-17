@@ -132,7 +132,7 @@ class FastTravelTest(unittest.TestCase):
     def test_map_outside_live_flag_group_is_rejected(self):
         f = fixture([rows()]); tree = core.SaveTree(f.payload)
         tree.nodes[tree.node_at(ft.locate(f).start)].parent = -1
-        with patch.object(ft.core, 'SaveTree', return_value=tree):
+        with patch.object(core.SaveFile, 'tree', return_value=tree):
             with self.assertRaises(ft.FastTravelError): ft.read(f)
 
     def test_absent_is_distinct_from_zero(self):

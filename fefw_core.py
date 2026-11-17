@@ -160,7 +160,18 @@ class SaveFile:
         return f
 
     def tree(self) -> "SaveTree":
-        return SaveTree.read(self.payload)
+        """Reuse a validated tree only while every payload byte is unchanged.
+
+        Edits also happen through bytearray slices and struct.pack_into, so an
+        identity or manually bumped revision cannot safely invalidate this.
+        Keep the tree on an immutable snapshot, never a live mutable payload.
+        """
+        cached = getattr(self, "_tree_cache", None)
+        if cached is not None and cached.payload == self.payload:
+            return cached
+        tree = SaveTree.read(bytes(self.payload))
+        self._tree_cache = tree
+        return tree
 
 
 # --------------------------------------------------------------------------
@@ -187,7 +198,7 @@ LEAF_BLOCKS = {fnv1_32(b"Header"), fnv1_32(b"SubquestData")}
 
 
 class SaveTree:
-    def __init__(self, payload: bytearray):
+    def __init__(self, payload: bytes | bytearray):
         self.payload = payload
         self.nodes: list[Node] = []
         self.refs: list[Ref] = []
@@ -209,7 +220,7 @@ class SaveTree:
                             "end (0x%X)" % (end, n))
 
     @staticmethod
-    def read(payload: bytearray) -> "SaveTree":
+    def read(payload: bytes | bytearray) -> "SaveTree":
         return SaveTree(payload)
 
     # -- helpers ---------------------------------------------------------
@@ -679,7 +690,7 @@ def skill_list(f: SaveFile, u: SaveUnit, index: int) -> list:
 
 
 def replace_content(f: SaveFile, obj_start: int, body: bytes) -> bytearray:
-    tr = SaveTree.read(f.payload)
+    tr = f.tree()
     node = tr.node_at(obj_start)
     if node < 0:
         raise SaveError("no object at 0x%X" % obj_start)
@@ -760,7 +771,7 @@ def convoy_at(f: SaveFile) -> int:
     blk = f.block("Transporter")
     if not blk:
         return -1
-    for n in SaveTree.read(f.payload).nodes:
+    for n in f.tree().nodes:
         if blk.start <= n.start and n.end <= blk.end \
                 and SaveTree.is_convoy(f.payload, n.start, n.end):
             return n.start
@@ -951,7 +962,7 @@ def legions(f: SaveFile, at: int) -> list:
 def _replace_list(f: SaveFile, at: int, body: bytearray) -> bytearray:
     while len(body) & 3:
         body.append(0)
-    tr = SaveTree.read(f.payload)
+    tr = f.tree()
     node = tr.node_at(at)
     if node < 0:
         raise SaveError("no list at 0x%X" % at)
@@ -1000,6 +1011,25 @@ class FlagMap:
 
 def flag_maps(f: SaveFile, known=None) -> list:
     """Every [u8 kind][u32 name][value] list in GameUserData."""
+    # Preserve the mutable result API without exposing cached Flag objects.
+    # Both absolute bounds and bytes matter after a resizing edit elsewhere.
+    blk = f.block("GameUserData")
+    if not blk:
+        return []
+    bounds = (blk.start, blk.end)
+    body = bytes(f.payload[blk.start:blk.end])
+    cached = getattr(f, "_flag_maps_cache", None)
+    if cached is None or cached[:2] != (bounds, body):
+        maps = _scan_flag_maps(f)
+        rows = tuple((m.index, m.start, tuple(
+            (v.map, v.hash, v.offset, v.wide, v.value) for v in m.flags)) for m in maps)
+        cached = (bounds, body, rows)
+        f._flag_maps_cache = cached
+    return [FlagMap(index, start, [Flag(*v) for v in flags])
+            for index, start, flags in cached[2]]
+
+
+def _scan_flag_maps(f: SaveFile) -> list:
     blk = f.block("GameUserData")
     if not blk:
         return []
@@ -1146,11 +1176,11 @@ def unit_by_person(f: SaveFile, person: int, nth: int = 0) -> "SaveUnit | None":
 def copy_unit(src: SaveFile, unit: SaveUnit, dst: SaveFile,
               replace: int | None = None) -> bytearray:
     """Copy a unit record from one save into another (or over one in place)."""
-    src_tree = SaveTree.read(src.payload)
+    src_tree = src.tree()
     node = src_tree.node_at(unit.start)
     if node < 0:
         raise SaveError("the unit isn't an object of its own save")
-    dst_tree = SaveTree.read(dst.payload)
+    dst_tree = dst.tree()
     pool = dst.block("UnitPool")
     if pool is None:
         raise SaveError("no UnitPool in this save")
@@ -1180,7 +1210,7 @@ def copy_unit(src: SaveFile, unit: SaveUnit, dst: SaveFile,
 
 def remove_unit(f: SaveFile, index: int) -> bytearray:
     """Delete a unit record, refusing if anything else still points at it."""
-    tree = SaveTree.read(f.payload)
+    tree = f.tree()
     pool = f.block("UnitPool")
     units = f.units()
     if pool is None or not (0 <= index < len(units)):
@@ -1286,7 +1316,7 @@ def with_gear(f: SaveFile, u: SaveUnit, g: Gear, ride, legion) -> bytearray:
     body += p[start:u.end]
     while ((len(body) - (u.end - g.ride_at)) & 3) != 0:
         body.append(0)
-    tr = SaveTree.read(p)
+    tr = f.tree()
     node = tr.node_at(u.start)
     if node < 0:
         raise SaveError("the unit's record wasn't found")
@@ -1304,7 +1334,7 @@ def reliquary_store(f: SaveFile):
     inner = _member(f, outer, 4225261395)
     if inner is None:
         return None
-    tr = SaveTree.read(f.payload)
+    tr = f.tree()
     node = tr.node_at(inner)
     if node < 0:
         return None

@@ -69,7 +69,7 @@ def read(f):
     if h.end - h.start != 220 or f.payload[h.start + 8] != 15 or core.user_data(f) != ud:
         raise StoryError('Unknown story field layout; no changes allowed.')
     try:
-        tree = core.SaveTree(f.payload)
+        tree = f.tree()
     except RecursionError as exc:
         raise StoryError('Unsupported story object tree; no changes allowed.') from exc
     parent = tree.node_at(u.start)

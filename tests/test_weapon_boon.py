@@ -74,7 +74,7 @@ class WeaponBoonTest(unittest.TestCase):
             self.assertEqual(bytes(f.payload), before)
         f = weapon_save(); before = bytes(f.payload); tree = core.SaveTree(f.payload)
         tree.nodes[tree.node_at(audiences.locate(f).start)].parent = -1
-        with patch.object(audiences.core, 'SaveTree', return_value=tree):
+        with patch.object(core.SaveFile, 'tree', return_value=tree):
             with self.assertRaises(boons.BoonError): boons.edited_weapons_active(f, False)
         with patch.object(boons.core, 'user_data', return_value=-1):
             with self.assertRaises(boons.BoonError): boons.edited_weapons_active(f, False)

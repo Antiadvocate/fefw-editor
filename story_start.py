@@ -85,7 +85,7 @@ def members(f,tree,at,keys):
 
 
 def restart_leaves(f):
-    tree=core.SaveTree(f.payload);block=one_block(f,'GameRestartData')
+    tree=f.tree();block=one_block(f,'GameRestartData')
     slots=members(f,tree,block.start,RESTART_KEYS)
     if f.payload[block.start+4:block.start+8]!=b'\x03\0\0\0':
         raise core.SaveError('Unknown restart version/prefix')
@@ -115,6 +115,9 @@ def restart_leaves(f):
 
 def clear_restart(f):
     starts=restart_leaves(f)  # Validate every record before changing any.
+    # Most slots already hold the canonical zero-length blob. Rebuilding one
+    # still reparses the entire save, so leave those exact bytes in place.
+    starts=[start for start in starts if f.u32(start+4) != 0]
     result=core.SaveFile(f.payload)
     for start in reversed(starts):
         result=core.SaveFile(core.replace_content(result,start,bytes(4)))
@@ -123,7 +126,7 @@ def clear_restart(f):
 
 
 def normalized_blocks(f):
-    tree=core.SaveTree(f.payload)
+    tree=f.tree()
     return {b.name:tree.copy_object(tree.node_at(b.start),0) for b in f.blocks}
 
 

@@ -140,13 +140,13 @@ def rank_of(exp: int) -> int:
 class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTravelPageMixin, DeedPageMixin, BoonPageMixin, FacilityPageMixin, StoryPageMixin):
     # ------------------------------------------------------------- helpers
     def core_of(self, sv=None):
-        """fefw_core.SaveFile for a slot (cached on the payload object)."""
+        """Decoded slot, reused only while its source bytes are unchanged."""
         sv = sv or self.sv
         if sv is None:
             return None
         key = (sv.path, id(sv.payload))
         cache = getattr(sv, "_core_cache", None)
-        if cache and cache[0] == key:
+        if cache and cache[0] == key and cache[1].payload == sv.payload:
             return cache[1]
         f = core.SaveFile(bytes(sv.payload))
         sv._core_cache = (key, f)

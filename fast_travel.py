@@ -74,7 +74,7 @@ def locate(f: core.SaveFile) -> core.FlagMap:
         raise FastTravelError("At least three original destinations must be present to identify this list.")
     if len({fl.hash for fl in fm.flags}) != len(fm.flags):
         raise FastTravelError("Duplicate fast-travel-list keys; editing is disabled.")
-    tree = core.SaveTree(f.payload)
+    tree = f.tree()
     node = tree.node_at(fm.start)
     user = tree.node_at(blocks[0].start)
     group = tree.nodes[node].parent if node >= 0 else -1

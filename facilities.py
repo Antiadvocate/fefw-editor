@@ -88,7 +88,7 @@ def locate(f):
     hashes = {v.hash for v in fm.flags}
     if len(hashes & ANCHORS) < MIN_ANCHORS or len(hashes) != len(fm.flags):
         raise FacilityError('Facility map needs two unchanged anchors and no duplicate keys.')
-    tree = core.SaveTree(f.payload)
+    tree = f.tree()
     node, user = tree.node_at(fm.start), tree.node_at(users[0].start)
     group = tree.nodes[node].parent if node >= 0 else -1
     if (node < 0 or user < 0 or group < 0 or tree.nodes[node].struct
@@ -108,7 +108,7 @@ def flag_group(f):
         general = locate(f)
     except FacilityError:
         general = None
-    tree = core.SaveTree(f.payload)
+    tree = f.tree()
     if general is not None:
         return tree, tree.nodes[tree.node_at(general.start)].parent, general.start
     users = [b for b in f.blocks if b.name == 'GameUserData']

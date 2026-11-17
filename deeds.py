@@ -82,7 +82,7 @@ def locate(f: core.SaveFile) -> core.FlagMap:
         raise DeedError("At least three known counters are needed to identify the deeds list.")
     if len({fl.hash for fl in fm.flags}) != len(fm.flags):
         raise DeedError("Duplicate deeds-list keys; editing is disabled.")
-    tree = core.SaveTree(f.payload)
+    tree = f.tree()
     node = tree.node_at(fm.start)
     user = tree.node_at(blocks[0].start)
     group = tree.nodes[node].parent if node >= 0 else -1

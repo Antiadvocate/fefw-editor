@@ -57,7 +57,7 @@ def locate(f: core.SaveFile) -> core.FlagMap:
     hashes = {fl.hash for fl in fm.flags}
     if len(hashes & ANCHORS) < MIN_ANCHORS or len(hashes) != len(fm.flags):
         raise AudienceError("Audience map needs two unchanged anchors and no duplicate keys.")
-    tree = core.SaveTree(f.payload)
+    tree = f.tree()
     node, user = tree.node_at(fm.start), tree.node_at(blocks[0].start)
     group = tree.nodes[node].parent if node >= 0 else -1
     if (node < 0 or user < 0 or group < 0 or tree.nodes[node].struct or

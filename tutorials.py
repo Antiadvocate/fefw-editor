@@ -119,7 +119,7 @@ def locate(f: core.SaveFile) -> core.FlagMap:
         raise TutorialError("Too little evidence to identify the tutorial list safely.")
     if len({fl.hash for fl in fm.flags}) != len(fm.flags):
         raise TutorialError("Duplicate tutorial-list keys; editing is disabled.")
-    tree = core.SaveTree(f.payload)
+    tree = f.tree()
     node = tree.node_at(fm.start)
     if node < 0 or any(n.parent == node for n in tree.nodes):
         raise TutorialError("Unrecognised tutorial-list structure; editing is disabled.")
