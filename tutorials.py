@@ -16,7 +16,7 @@ import facilities
 HERE = Path(__file__).resolve().parent
 AVAILABLE = 2
 MAP_MEMBER = 0xe9bc5b65
-CATEGORIES = ('General', 'Free time', 'World map', 'Combat', 'Route-specific')
+CATEGORIES = ('Battle', 'Bases', 'The World Map', 'Dungeons', 'Flame Lords')
 
 
 class TutorialError(core.SaveError):
@@ -34,7 +34,7 @@ def catalog() -> dict[int, dict]:
             if (not row["name"].startswith("TUTO_") or
                     core.id_hash(row["name"]) != h or not row["label"] or
                     row.get('category') not in CATEGORIES or
-                    row.get('evidence') not in ('screenshot-and-save-restoration', 'provisional-translation')):
+                    row.get('evidence') not in ('screenshot-and-save-restoration', 'screenshot-title-and-order', 'provisional-translation')):
                 raise ValueError("invalid tutorial identity")
         if not entries:
             raise ValueError("empty catalogue")
@@ -55,7 +55,7 @@ def apply_labels(names: dict[int, dict]) -> None:
 
 
 def evidence_label(row):
-    return 'Provisional name' if row['evidence'] == 'provisional-translation' else 'Previously checked'
+    return 'Provisional name' if row['evidence'] == 'provisional-translation' else 'Game title checked'
 
 
 def _structural_map(f):

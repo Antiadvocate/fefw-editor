@@ -31,11 +31,12 @@ def structured(entries):
 class CompleteTutorialTest(unittest.TestCase):
     def test_catalogue_identities_evidence_and_known_names_are_separate(self):
         cat=tut.catalog();self.assertEqual(len(cat),218)
-        self.assertEqual(sum(r['evidence']=='provisional-translation' for r in cat.values()),103)
+        self.assertEqual(sum(r['evidence']=='provisional-translation' for r in cat.values()),38)
         labels={};tut.apply_labels(labels)
         practice=core.id_hash('TUTO_稽古')
-        self.assertEqual(cat[practice]['label'],'Practice')
-        self.assertIn('(provisional)',labels[practice]['label'])
+        self.assertEqual(cat[practice]['label'],'Mentoring (Cai)')
+        self.assertNotIn('(provisional)',labels[practice]['label'])
+        self.assertEqual(tut.evidence_label(cat[practice]), 'Game title checked')
         self.assertEqual(labels[practice]['name'],'TUTO_稽古')
         self.assertNotIn('provisional',labels[AUTO]['label'])
         self.assertEqual({r['category'] for r in cat.values()},set(tut.CATEGORIES))

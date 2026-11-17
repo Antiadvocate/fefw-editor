@@ -1,4 +1,4 @@
-"""Read a private Leda or Cai Part 1 timeline to verify its chapter title rows.
+"""Read a private Leda, Cai or Dietrich Part 1 timeline to verify its chapter title rows.
 
 Chapter existence is not proof of the inferred save sequence mapping. This
 report is read-only and the game dump is neither bundled nor needed at runtime.
@@ -14,8 +14,8 @@ from research import facility_access_report as data
 
 
 def report(gamedata, route='leda'):
-    routes = {'leda': ('Led', 'レダ篇', 'LED'), 'cai': ('Kai', 'カイ篇', 'KAI')}
-    if route not in routes:raise ValueError('Choose leda or cai')
+    routes = {'leda': ('Led', 'レダ篇', 'LED'), 'cai': ('Kai', 'カイ篇', 'KAI'), 'dietrich': ('Dit', 'ディートリヒ篇', 'DIT')}
+    if route not in routes:raise ValueError('Choose leda, cai or dietrich')
     suffix, group, title = routes[route]
     filename = f'Timeline_Part1_{suffix}.bin'
     data.BASE=Path(gamedata);d=data.Data(filename)
@@ -48,5 +48,5 @@ def report(gamedata, route='leda'):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('gamedata',type=Path)
-    p.add_argument('--route',choices=('leda','cai'),default='leda')
+    p.add_argument('--route',choices=('leda','cai','dietrich'),default='leda')
     a=p.parse_args();print(json.dumps(report(a.gamedata,a.route),indent=2))

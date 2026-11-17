@@ -6,21 +6,29 @@ opening plays, but the first objective does not advance. Optional chapter-file
 creation on Save passed UI/backup checks and Obelisk loading for Chapters 8/9.
 Other Leda chapter files remain untested through the Obelisk.
 
-**Cai Part 1:** Chapters **1–12** are available. Chapters **1, 5–8 and 10–12**
-are Inferred targets awaiting the next game tests. Chapters 2/9 passed
-initial progression tests, and Chapter 3 was completed. The Chapter 4 Sewers
-fix passed after natural Chapter 3 completion; direct Chapter 4 entry with
-this fix still needs a game test. Cai Obelisk use remains untested.
+**Cai Part 1:** Chapters **1–12** passed opening and progression tests, including
+Chapter 4 direct entry with the Sewers fix. Cai Obelisk use remains untested.
+See [Cai/Tutorials Test 5 results](docs/test-results-cai-tutorials-test5.md).
+
+**Dietrich Part 1:** Chapters **1–12** are now available as **Inferred** targets.
+Four native checkpoints anchor the sequence rule; dates come from the native
+captures and timeline. Export checks preserve party, tutorials and feature flags.
+Game progression and Dietrich Obelisk use are pending. Start with Chapter 4,
+then Chapter 3: [Dietrich Test 1 guide](docs/testing-story-dietrich-test1.md).
+
+**Tutorial names:** 180 titles, categories and their visible order now match the
+supplied game screenshots. This corrects 61 labels, including **Mentoring (Cai)**;
+38 unseen scenario-specific titles remain provisional. Exact keys are unchanged.
 
 **Functions** replaces the Facilities tab. Its 37 switches include
 **Sewers access (Cai)** under Area access. Selecting Cai Chapter 3 or later
 also enables this prerequisite automatically, with Undo/Redo and Save.
 Other earlier unlocks and party units still require separate changes.
-The Journal, Practice and Dagsion area controls remain available with their
+The Journal, Mentoring and Dagsion area controls remain available with their
 individual evidence labels. Arena testing remains deferred.
 See [Sewers results and editor checks](docs/test-results-sewers-functions.md).
-The next [Cai and Tutorials test kit](docs/testing-cai-tutorials-test5.md)
-contains nine independent chapter entries and three tutorial cases.
+The [Cai and Tutorials test kit](docs/testing-cai-tutorials-test5.md) passed its
+reported checks. Dietrich is the next progression test.
 
 **Facilities branch:** the UI and FAC-01–06 game tests passed on Leda Part 1
 Chapter 9. Ten services and six gates are Game-tested; Yu Phas additionally
@@ -52,13 +60,13 @@ library, or a ready-made Windows `.exe`.
 | | Class | Pick any class the game knows. It's added to the unit's own class list, the way the game does it |
 | **Convoy** | | Everything in storage, materials included: add a stack, stock every material at once, swap the item in any row, change its quantity, remove a row, and repair a list damaged by older versions |
 | **Gold** | | Set gold |
-| **Player** | | Leda Part 1 starts 2–12 (game-tested) and Cai Part 1 starts 1–12: 2/3/9 game-tested, 4 conditional, others Inferred, selected from the save route. Other targets/routes guarded. Optional chapter file on Save with overwrite confirmation and backup. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
+| **Player** | | Leda Part 1 starts 2–12 (game-tested) and Cai Part 1 starts 1–12 (game-tested); Dietrich Part 1 starts 1–12 (Inferred, awaiting game tests), selected from the save route. Other targets/routes guarded. Optional chapter file on Save with overwrite confirmation and backup. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
 | **Classes** | | A unit's whole class list (set the current class, add, swap or remove one, set its exp) and its weapon masteries with their rank (E … S+) and exp — select several masteries (Ctrl+A, Shift+click or Shift+drag) and Set rank, Set exp or Remove changes all of them at once |
 | **Supports** | | Every character's support partners with the **points** this save holds for the pair, the highest rank the game defines, and which conversations this save has recorded. Set the points (0 … 3200) and the game works the level out from them. **Record conversation as seen** writes that conversation's flag |
 | **Mounts** | | The battalion and mount each unit carries, chosen from the save's pool |
 | **World map** | | Which of the map's places, junctions and road points the save has **shown** or hides, and which places are marked **visited** (white versus dark icon). Show or hide a selection, a whole road, or every place / road at once. See *World map* below |
 | **Flags** | | Every named variable the save stores: support conversations, recruited / met, achievements, feature and class unlocks. Search, filter, set, add, remove |
-| **Tutorials** | | 218 tutorial identities: 115 checked names and 103 provisional English translations. Category/state/evidence filters, selected batches, empty-list restoration, original keys and Undo/Redo. See [tutorials.md](docs/tutorials.md) |
+| **Tutorials** | | 218 tutorial identities: 180 screenshot-checked titles and 38 provisional English translations. Category/state/evidence filters, selected batches, empty-list restoration, original keys and Undo/Redo. See [tutorials.md](docs/tutorials.md) |
 | **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Six level previews tested in Leda Chapter 9; Fortuna's EXP effect remains unknown. Selection and Divine Sand are read-only. Six tested first-audience toggles; Fortuna has no audience condition. See [blessings.md](docs/blessings.md) |
 | **Fast travel** | | Add/remove 20 identified Dagsion destination flags in the selected save, with original keys and undo/redo. The original 16 have screenshot-confirmed English names. Four additional flags persisted in Chapter 9 tests; only Yu Phas Temple appeared and allowed travel, while walking back in stayed blocked. See [fast-travel.md](docs/fast-travel.md) |
 | **Functions** | | 37 service, gate, journal and area switches, with evidence labels and read-only Arena/route/access diagnostics. See [facilities.md](docs/facilities.md) |
@@ -178,7 +186,7 @@ button in the top action bar. The slot selector now has its own row so it cannot
 squeeze the button off-screen. Open selects a save file and loads its folder;
 Ctrl+O and the existing unsaved-change prompt still work. This candidate retains
 **Blessings EXP** editing for all seven gods and the tested **Tutorials** page
-with 218 identities (115 checked names and 103 provisional translations) and
+with 218 identities (180 screenshot-checked titles and 38 provisional translations) and
 the original Japanese keys. Search, select, **Make available** or **Remove
 selected**, then Ctrl+S. Ctrl+Z/Ctrl+Y undo/redo. Turn off route mirroring for
 these edits; unknown records and unrelated progress are preserved.

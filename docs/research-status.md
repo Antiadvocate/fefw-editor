@@ -63,7 +63,7 @@ The game data version was not separately reported.
 | 3 | Fast travel and Open button | 16 scoped Dagsion flags; confirmed English names; selected save only | [OPEN-01–02 and FT-01–08](testing-fast-travel.md) passed on Leda Chapter 9 |
 | 4 | Notable deeds | 32 editable counters; 15 read-only; 350 milestones; claims/currency read-only | Training completion/+10 claim confirmed; decrease clears claims in game. [DEED-11–14](testing-notable-deeds.md) all passed; milestone accepted on the reported setup |
 | 5 | Boons | All 31 groups / 81 tiers editable; broader mappings labelled Inferred | [BEDIT results](test-results-boon-editing-2026-11-15.md): +16 EXP Off / +17 On. [WEDIT-01–07 passed](test-results-weapon-boon-2026-11-15.md): discount Off/On persists in returned saves; player reports earlier 10% prices reproduced and backups through .bak4 |
-| 6 | Story | Leda P1 starts 2–12; Cai P1 starts 1–12, with 2/3/9 accepted and 4 conditional; route-bound chapter files on Save | [Sewers fix](test-results-sewers-functions.md) passed on natural Chapter 4. [Cai/Tutorials Test 5](testing-cai-tutorials-test5.md) covers remaining chapters and the complete 218-entry tutorial catalogue |
+| 6 | Story | Leda P1 starts 2–12 and Cai P1 starts 1–12 accepted; Dietrich P1 starts 1–12 Inferred; route-bound chapter files on Save | [Cai/Tutorials Test 5](test-results-cai-tutorials-test5.md) passed; [Dietrich Test 1](testing-story-dietrich-test1.md) awaits game results |
 
 Each stage needs its own guide, technical layout, limitations and reproducible
 test report before being called game-tested. Other routes are not covered by
@@ -374,18 +374,23 @@ uses a distinct facility definition but lacks an established saved switch;
 read-only diagnostics and isolated probes avoid assuming a shared flag.
 [Test 2](testing-functions-cai-test2.md) targets this gap before more Cai chapters.
 
-## Cai remaining chapters and Tutorials completion — current candidate
+## Cai and Tutorials accepted; Dietrich candidate — 2026-11-17
 
-Cai Chapters 1–12 are selectable; 1, 5–8 and 10–12 await game tests.
-Chapter 4 is conditional after the successful Sewers fix; direct entry is
-being retried. The numeric Chapter 3+ rule enables Sewers for all later targets.
+Cai Chapters 1–12 now have player-reported opening/progression passes, including
+direct Chapter 4 with the Sewers fix. The 19 returned saves validate; Chapter 1
+has a reported pass without a returned capture. Tutorials counts are 120, 218
+and zero. See [the acceptance record](test-results-cai-tutorials-test5.md).
 
-Tutorials now contains every one of the 218 identities in the supplied two
-tables, with 115 previously checked names and 103 provisional translations.
-Filters, Select shown, bulk removal and restoration from a recognized empty
-list are included. The original 1/2 state limits remain; no read/unread claim
-is made. See [the kit guide](testing-cai-tutorials-test5.md) for pending checks.
-Earlier dated sections above describe their original builds.
+The screenshots establish 180 titles, their categories and visible order: 61
+labels corrected; 38 scenario-specific names remain provisional. Only unseen
+ambiguous titles encountered naturally need additional screenshots. The
+Functions label now says Mentoring (Cai); its behavior evidence is unchanged.
+
+Dietrich Chapters 1–12 are selectable but Inferred. Native Chapters 1–4 anchor
+the sequence prefix and clocks; later dates come from the private timeline.
+Export checks cover unchanged party, flags and tutorials, valid summaries and
+round trips. [Test 1](testing-story-dietrich-test1.md) starts with Chapter 4,
+then Chapter 3. Theodora remains read-only. Earlier dated sections are history.
 
 ## Dietrich/Theodora references and Obelisk observations — 2026-11-16
 
@@ -400,3 +405,19 @@ The player observed Route_Led/Route_Kai/etc. being copied from the latest Auto
 on entering the Obelisk, before a new Auto is made; leaving creates Route_Ism
 for the main character. This supersedes the old speculative Route-file trigger.
 It does not resolve the separate natural Chapter-file creation trigger.
+
+
+## Feature backlog: support level and next-level threshold
+
+Requested on 2026-11-17: [upstream issue #39](https://github.com/Antiadvocate/fefw-editor/issues/39).
+Queue after the current tutorial-name and Dietrich story work. Add both a
+**Current level** column (requested in the follow-up comment) and **Next level at**
+in Supports, similar to Classes → Weapon masteries → Next rank at. The purpose
+is to let players set points just below the next threshold and earn the level
+in game, instead of only seeing the 3200-point maximum.
+
+Before implementation, verify thresholds and any pair-specific behavior against
+recovered data and the issue's linked bonds reference. Distinguish a level earned
+from points from a conversation/unlock state if the save stores them separately.
+Define maximum-level and unknown-state displays; preserve existing point editing
+and Undo/Redo. This item is queued, not implemented or game-tested.

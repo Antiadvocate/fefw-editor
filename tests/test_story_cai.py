@@ -27,10 +27,10 @@ class CaiStoryTest(unittest.TestCase):
         self.assertEqual(story.sequence(1,1),0x1c39b1f1e90b1ef6)
         self.assertEqual(story.sequence(2,1),0x1c36b1f1e908e8c1)
         self.assertEqual(start.TARGETS[1],tuple(range(1,13)))
-        self.assertEqual(start.TESTED_BY_ROUTE[1],frozenset((2,3,9)))
+        self.assertEqual(start.TESTED_BY_ROUTE[1],frozenset(range(1,13)))
         for chapter in (0,13,True,'2'):
             with self.assertRaises(core.SaveError): start.edited(fixture(),chapter)
-        for route in (0,2,3,9,True):
+        for route in (0,3,9,True):
             with self.assertRaises(core.SaveError): story.sequence(2,route)
         self.assertEqual(story.chapter_filename(1,9),'Chapter_Kai_1_9')
         self.assertEqual(story.chapter_filename(4,9),'Chapter_Led_1_9')
@@ -86,8 +86,8 @@ class CaiStoryTest(unittest.TestCase):
         a.undo();self.assertEqual(bytes(a.sv.payload),before);self.assertIsNone(a.sv._pending_story_chapter)
         a.redo();self.assertEqual(a.sv._pending_story_chapter,story.ChapterFileRequest(1,9))
         self.assertIn('Cai',a.messages[-3][0])
-        self.assertIn('Sewers entry and progression passed',story_page.warning_points(1)[2])
-        self.assertIn('direct entry remains untested',story_page.evidence_note(1))
+        self.assertIn('Direct Chapter 4 entry passed',story_page.warning_points(1)[2])
+        self.assertIn('including direct Chapter 4 entry',story_page.evidence_note(1))
         self.assertIn('Chapter 1 cannot be selected',story_page.warning_points(4)[0])
 
     def test_save_uses_only_kai_filename_and_route_bound_request_rejects_stale_route(self):

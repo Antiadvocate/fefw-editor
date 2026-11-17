@@ -137,7 +137,7 @@ The quest-list flag is no longer an identity anchor. Two of the unchanged
 first-free-time/map/travel permissions still identify the general map, so
 disabling all journal sections does not disable the controls themselves.
 
-Training and Practice are separate switches. Dagsion upper/lower permissions
+Training and Mentoring (Cai), previously labelled Practice, are separate switches. Dagsion upper/lower permissions
 are separately editable; none removes chapter restrictions or registers travel.
 Arena has no verified saved switch. Access conditions exposes the distinction
 and the relevant activity switch states without making an Arena write.

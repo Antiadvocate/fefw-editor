@@ -1,5 +1,9 @@
 # Cai Part 1 — native evidence and progression tests
 
+**Update, 2026-11-17:** Cai Chapters 1–12 passed the player's opening/progression
+checks, including direct Chapter 4 with the Sewers fix. See [Test 5 results](test-results-cai-tutorials-test5.md).
+The dated investigations below retain their original scope and findings.
+
 The user supplied native `Auto`, `Chapter_Kai_1_1` and `Chapter_Kai_1_2` on
 2026-11-16. The uploaded Auto is named `Auto(3)`; the suffix is an upload name,
 not the game filename. All three container and payload checksums validate.

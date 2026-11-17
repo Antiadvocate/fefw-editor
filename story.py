@@ -1,4 +1,4 @@
-"""Live story validation and route-specific sequence writers for Leda and Cai.
+"""Live story validation and route-specific sequence writers for Leda, Cai and Dietrich.
 
 Production chapter-entry targets and acceptance live in story_start. The low-level
 sequence writer retains Chapter 1 for reproducing historical failed probes.
@@ -11,8 +11,9 @@ import fefw_core as core
 CHAPTERS = tuple(range(1, 13))
 LEDA_PREFIX = 0xfde8dadc5dfc1118
 CAI_PREFIX = 0xeab884585a706f5d
-PREFIXES = {4: LEDA_PREFIX, 1: CAI_PREFIX}
-FILE_CODES = {4: 'Led', 1: 'Kai'}
+DIETRICH_PREFIX = 0x13dfaa82ebb06dc7
+PREFIXES = {4: LEDA_PREFIX, 1: CAI_PREFIX, 2: DIETRICH_PREFIX}
+FILE_CODES = {4: 'Led', 1: 'Kai', 2: 'Dit'}
 ROUTES = {1: 'Cai', 2: 'Dietrich', 3: 'Theodora', 4: 'Leda', 9: 'Eshmel'}
 
 
@@ -24,7 +25,7 @@ def sequence(chapter, route=4):
     if type(chapter) is not int or chapter not in CHAPTERS:
         raise StoryError('Choose a Part 1 chapter from 1 to 12.')
     if type(route) is not int or route not in PREFIXES:
-        raise StoryError('Story editing supports Leda and Cai Part 1 only.')
+        raise StoryError('Story editing supports Leda, Cai and Dietrich Part 1 only.')
     value = PREFIXES[route]
     for byte in f'{chapter}_1'.encode('ascii'):
         value = ((value * 0x100000001b3) & 0xffffffffffffffff) ^ byte
@@ -103,7 +104,7 @@ def require_leda(f):
 def require_supported(f):
     info = read(f)
     if info.route not in PREFIXES or info.part != 1 or info.chapter not in CHAPTERS:
-        raise StoryError(f'{info.label}. Story editing supports Leda and Cai Part 1 only.')
+        raise StoryError(f'{info.label}. Story editing supports Leda, Cai and Dietrich Part 1 only.')
     return info
 
 
@@ -131,7 +132,7 @@ def edited(f, chapter, *, route=4):
 def sync_outer_summary(payload, out):
     """Derive chapter, sequence, entry state and clock mirrors when serializing.
 
-Only known, consistent Leda/Cai P1 layouts are eligible. Other routes/formats and
+Only known, consistent Leda/Cai/Dietrich P1 layouts are eligible. Other routes/formats and
 ambiguous files keep their original summary. No raw container state is changed
 at edit time; the payload in Undo history remains authoritative.
 """

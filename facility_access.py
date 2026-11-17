@@ -104,7 +104,7 @@ def report(f):
         values = facilities.read(f)
         training = facilities.state_label(0xd70afcb2, values.get(0xd70afcb2))
         practice = facilities.state_label(0x728ccd68, values.get(0x728ccd68))
-        detail = f'Training switch: {training}. Practice switch: {practice}. '
+        detail = f'Training switch: {training}. Mentoring switch: {practice}. '
     except core.SaveError:
         detail = 'Related saved switches could not be read. '
     rows.append({'id': 'arena', 'hash': None, 'label': 'Arena',

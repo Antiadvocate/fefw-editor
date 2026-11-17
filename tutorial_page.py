@@ -30,7 +30,7 @@ class TutorialPageMixin:
         self.tutorial_state = ttk.Combobox(filters, state='readonly', width=16,
                                          values=('All states', 'Absent', 'Available (2)', 'Present (1)', 'Unknown'))
         self.tutorial_evidence = ttk.Combobox(filters, state='readonly', width=19,
-                                            values=('All names', 'Previously checked', 'Provisional name'))
+                                            values=('All names', 'Game title checked', 'Provisional name'))
         for combo in (self.tutorial_category, self.tutorial_state, self.tutorial_evidence):
             combo.current(0); combo.pack(side='left', padx=(0, 6))
             combo.bind('<<ComboboxSelected>>', lambda e: self.refresh_tutorials())
@@ -110,9 +110,9 @@ class TutorialPageMixin:
         picked = self.tutorial_tree.selection()
         if len(picked) == 1:
             row = tutorials.catalog()[int(picked[0], 16)]
-            note = ('English title is a provisional translation of the game identity; check the displayed title in game. Availability has not yet been game-tested.'
+            note = ('English title is provisional and absent from the supplied screenshots. If it appears during normal play, a title screenshot would help confirm it.'
                     if row['evidence'] == 'provisional-translation' else
-                    'English name was checked during the earlier screenshot and save restoration work; this is not an independent unlock test for every route.')
+                    'English title, category and order match the supplied in-game screenshots. This verifies the name, not feature unlocks or availability on every route.')
             text = row['label'] + ' · ' + tutorials.evidence_label(row) + '\n' + note
         elif picked:
             text = f'{len(picked)} tutorials selected. The whole selection changes together; unknown saved states are preserved by refusing the batch.'

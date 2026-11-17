@@ -1,4 +1,4 @@
-# Story progression — Leda and Cai Part 1
+# Story progression — Leda, Cai and Dietrich Part 1
 
 Player → Story progression… offers **Leda Part 1 Chapters 2–12**, all accepted
 for the chapter opening and next main story beat. **Chapter 1 cannot be selected**:
@@ -11,13 +11,16 @@ game-tested through the Obelisk; ordinary entry acceptance is a separate result.
 See [Test 5 results](test-results-story-test5.md). Full-campaign behavior remains
 untested.
 
-**Cai Part 1** offers Chapters **1–12**. Chapters **1, 5–8 and 10–12** are
-Inferred and awaiting the next game tests. Chapters 2/9 passed initial
-progression tests; Chapter 3 was completed into Chapter 4. Enabling the missing
-Sewers dialogue prerequisite fixed the Chapter 4 objective on that natural
-return. Direct Chapter 4 entry with the automatic prerequisite remains to be
-game-tested. Cai Obelisk use is untested.
-See [Sewers results](test-results-sewers-functions.md).
+**Cai Part 1** offers Chapters **1–12**, now accepted for opening and progression
+in the player's tests. Direct Chapter 4 entry passed with the automatic Sewers
+prerequisite. Cai Obelisk use and full-campaign behavior remain untested.
+See [Cai/Tutorials Test 5 results](test-results-cai-tutorials-test5.md).
+
+**Dietrich Part 1** offers Chapters **1–12** as **Inferred — game test pending**.
+Four native checkpoints agree on the selector rule and early clocks; Chapters
+5–12 use timeline title dates. All entry years are 1449. Native checkpoints and
+successful exports do not establish that skipping chapters works in game.
+See [Dietrich evidence and Test 1](testing-story-dietrich-test1.md).
 
 For every supported Cai Chapter 3+ selection, the chapter action also enables
 **Functions → Area access → Sewers access (Cai)**. Both changes share one
@@ -30,12 +33,13 @@ read-only. The editor checks actual save contents, not filenames or party member
 
 ## Using the editor
 
-1. Open a disposable, supported Leda or Cai Part 1 free-time or chapter-start save.
+1. Open a disposable, supported Leda, Cai or Dietrich Part 1 free-time or chapter-start save.
 2. Turn off route mirroring, then click Story progression… on Player.
 3. Read the warning and back up the whole save folder into a fresh directory.
 4. Continue to the chapter list. Each target carries its evidence label.
 5. Optionally check **Create a chapter start file using this state**. It queues
-   `Chapter_Led_1_<chapter>` or `Chapter_Kai_1_<chapter>` beside the selected save,
+   `Chapter_Led_1_<chapter>`, `Chapter_Kai_1_<chapter>` or
+   `Chapter_Dit_1_<chapter>` beside the selected save,
    according to the actual route. Unchecked creates no file.
 6. Apply stages the chapter/date and file request. Ctrl+Z/Ctrl+Y undo/redo both.
 7. Save (Ctrl+S) writes the selected save and any requested chapter file. Existing
@@ -52,15 +56,15 @@ The warning title remains **CAUTION - UNEXPECTED CONSEQUENCES POSSIBLE**. It
 retains the user's points about Leda Part 1, no previous unlock/unit grants,
 limited testing, the Obelisk Chamber and a fresh-directory backup. The Obelisk
 point is immediately above backup. Warning text follows the loaded route: Leda
-explains Chapter 1's exclusion and its tested scope; Cai explains the automatic Sewers exception, Chapter 3 acceptance, Chapter 4 conditional pass and untested Obelisk use. Changing route while either
+explains Chapter 1's exclusion and its tested scope; Cai explains the automatic Sewers exception and its accepted chapter tests; Dietrich states that every target awaits game testing. Changing route while either
 dialog is open requires reopening it. The picker never chooses a different route.
 
 ## What is changed
 
 `story_start.edited` reproduces the successful **Test 3 D** setup. Its Leda Chapter
 4/9 payloads and serialized files match the delivered D candidates exactly.
-Removing HubSeq brought no observed improvement, so it is retained. Cai uses
-the same preparation mechanics with its own validated selector prefix and dates;
+Removing HubSeq brought no observed improvement, so it is retained. Cai and Dietrich use
+the same preparation mechanics with their own validated selector prefixes and dates;
 that structural agreement does not establish game compatibility.
 
 | Saved component | Chapter-start edit |
@@ -68,7 +72,7 @@ that structural agreement does not establish game compatibility.
 | Header, GameUserData and outer summary | Target chapter and chapter-entry sequence |
 | GameUserData v23 body+58, u64 | Separate resume identifier: `d8588d186b3f9502` → `a2f3e9a7ff461708` |
 | Header state bytes, block+20/+21 | Observed chapter-start context `10 0b` |
-| Header and GameSchedule clocks | Route-specific entry date/time: Leda Chapter 1 in 1444; all Cai entries and later Leda chapters in 1449 |
+| Header and GameSchedule clocks | Route-specific entry date/time: Leda Chapter 1 in 1444; all Cai/Dietrich entries and later Leda chapters in 1449 |
 | Remaining GameSchedule / Calendar cache | Empty checkpoint form, retaining known version markers |
 | Eight internal restart slots | Validated Header/Data blobs cleared; the game rebuilds a target checkpoint during entry |
 | Outer raw+48..56 | State/clock mirrored from the current payload during serialization, including after Undo |
@@ -177,7 +181,7 @@ Cai dates, capture evidence and the Route_Kai observation are detailed in
 chapter-file creation requires a Route_* file. The editor does not create one.
 
 The engine requires a unique Header (220 bytes, marker 15), GameUserData v23,
-agreeing route/part/chapter/sequence for Leda or Cai Part 1, and the recognized free-time or checkpoint
+agreeing route/part/chapter/sequence for Leda, Cai or Dietrich Part 1, and the recognized free-time or checkpoint
 resume/state pair. GameSchedule and Calendar sizes/versions, matching valid
 clocks and all eight restart members/blobs/checksums are checked before mutation.
 Unknown and battle states are refused before traversing their variable objects;

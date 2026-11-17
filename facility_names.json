@@ -284,11 +284,11 @@
     },
     "728ccd68": {
       "name": "機能開放_稽古",
-      "label": "Practice (Cai)",
+      "label": "Mentoring (Cai)",
       "kind": "Service",
       "polarity": "unlock",
       "coverage": "Inferred",
-      "note": "Distinct from the Training flag. Listed in Cai Chapter 4 free-time permissions; added between the Chapter 9 opening and advancement returns. The precise in-game action and any Arena dependency remain unconfirmed. English label is a literal translation. Game test pending."
+      "note": "Distinct from the Training flag. Listed in Cai Chapter 4 free-time permissions; added between the Chapter 9 opening and advancement returns. The player and in-game tutorial title identify this activity as Mentoring (Cai). The isolated effect of this saved switch and any Arena dependency remain unconfirmed; the behavior evidence stays Inferred."
     },
     "7d18367a": {
       "name": "MID_LGV_1KAI_c02_LG11_003_m06",

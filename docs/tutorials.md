@@ -17,9 +17,10 @@ Changes stay in memory until Ctrl+S. Ctrl+Z and Ctrl+Y undo and redo the whole
 selection. Reopen the save to check the exported result.
 
 The catalogue covers all **218 identities** in the supplied `Tutorial.bin`
-and `Tutorial_P0.bin` tables. The 115 earlier labels remain checked; 103 new
-English names are **provisional translations**, not confirmed localized titles.
-Their availability is awaiting the Cai test run. Absent entries can be added;
+and `Tutorial_P0.bin` tables. **180 titles** now match the supplied category and All-order screenshots,
+correcting 61 labels. **38 unseen scenario titles** remain provisional.
+The focused, full-catalogue and empty-list game tests passed; not every entry
+is visible at every story stage. Absent entries can be added;
 unknown records outside this catalogue are counted and preserved. A tutorial describes a feature; adding it does not unlock the
 facility, ability, quest or story event it describes.
 
@@ -105,7 +106,7 @@ older states, other slots and unrelated flag records are not targets.
 `tutorial_names.json` pairs official English text transcribed from supplied
 screenshots with internal keys from the supplied Tutorial/Tutorial_P0 tables.
 The full restored list and the three corrections were checked by the player.
-This is restoration evidence, not 115 independent controlled unlock tests.
+This is naming/restoration evidence, not independent feature-unlock tests.
 `title_id`, when available, is a cross-reference for future review, not a save
 key. Null means no reliable title identifier was recorded.
 
@@ -122,16 +123,22 @@ The source tables contain 217 entries plus one `Tutorial_P0` entry.
 records exact title IDs without copying localized message bodies. An
 ideographic space (U+3000) inside the Eshmel tutorial key is preserved exactly.
 
-New labels carry `provisional-translation` evidence, appear as **Provisional
-name** in Tutorials, and have a **(provisional)** suffix in Flags. Category
-filters group General, Free time, World map, Combat and Route-specific entries
-using the source title ID. This categorization does not claim route eligibility.
+The 180 visible labels carry `screenshot-title-and-order` evidence and appear
+as **Game title checked**. The 38 absent labels retain `provisional-translation`,
+**Provisional name**, and a **(provisional)** suffix in Flags. Category filters
+match Battle, Bases, The World Map, Dungeons and Flame Lords. Ordering follows
+the All screenshots, including Extra Weapons after Merging Causality; unseen
+scenario entries retain their table-relative positions. Categorization does
+not establish route eligibility. See the [61 corrections and 180-title
+crosswalk](tutorial-title-reconciliation.md).
 
 Make available still writes 2; Remove still deletes the record. Value 1 remains
 Present (1), and unknown values remain protected. No unsupported read/unread
 semantics have been invented. Bulk actions use the same whole-batch validation,
 Undo/Redo, selected-slot isolation and Save handling as individual edits.
 
-Use the [Cai and Tutorials test guide](testing-cai-tutorials-test5.md). Complete
+See the [Cai and Tutorials results](test-results-cai-tutorials-test5.md).
+Further title screenshots are only needed for provisional entries encountered
+during normal progression; do not repeat the 180 confirmed titles. Complete
 coverage of the supplied metadata is not confirmation that all 218 entries are
 visible or useful at every story stage.
