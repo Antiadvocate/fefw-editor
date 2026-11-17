@@ -1,5 +1,12 @@
 # Fortune's Weave Save Editor
 
+**New-unit test feature:** Units now has **Add unit…**, a visible **Unit #**,
+and guarded number editing. The searchable catalogue enables 54 data-derived
+level-one candidates, blocks duplicate characters/numbers and preserves existing
+unit progress. Part 1 free-time saves only; in-game acceptance is pending.
+See [scope and identity rules](docs/unit-creation.md) and the
+[focused test guide](docs/testing-unit-creation-test1.md).
+
 **Story progression — Leda Part 1:** Player offers **Chapters 2–12**, all tested
 through the opening and next main story beat. Chapter 1 is unavailable: its
 opening plays, but the first objective does not advance. Optional chapter-file

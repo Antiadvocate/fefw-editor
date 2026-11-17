@@ -1,0 +1,106 @@
+"""Selected-slot recruit preview and identity controls."""
+import tkinter as tk
+from tkinter import ttk, simpledialog
+
+import fefw_core as core
+import unit_entries as entries
+
+
+class UnitEntryPageMixin:
+    def _unit_entry_ready(self):
+        if not self.sv: return False
+        if self.mirror.get():
+            self.flash('Turn off “Also edit this route’s other saves” for unit creation and numbering.', 'warn')
+            return False
+        self._commit_form()
+        try: entries.require_context(self.core_of())
+        except core.SaveError as exc:
+            self.flash(str(exc), 'error');return False
+        return True
+
+    def apply_unit_entry(self, action, person, number=None, expected=None):
+        if not self._unit_entry_ready():return False
+        if expected is not None and (self.sv is not expected[0] or bytes(self.sv.payload)!=expected[1]):
+            self.flash('The selected save changed. Reopen the unit preview.', 'warn');return False
+        try:
+            f=self.core_of()
+            if action=='add':new=entries.add(f,person)
+            elif action=='restore':new=entries.restore(f,person)
+            elif action=='renumber':new=entries.renumber(f,person,number)
+            else:raise core.SaveError('Unknown unit action.')
+        except core.SaveError as exc:
+            self.flash(str(exc),'error');return False
+        if new==f.payload:
+            self.flash('The unit already has that number.','info');return False
+        self.push_undo()
+        self.sv.payload=bytearray(new);self.sv.scan();self.sv._core_cache=None
+        self.uid=person;self._touch([self.sv]);self.refresh_after_core();self.show_unit()
+        self.flash({'add':'Unit added','restore':'Recruitment restored','renumber':'Unit number and mapped ownership references updated'}[action]+' — Ctrl+S to save.','ok')
+        return True
+
+    def open_add_unit(self):
+        if not self._unit_entry_ready():return
+        f=self.core_of();expected=(self.sv,bytes(self.sv.payload))
+        try:
+            rows=entries.roster(f);flags=entries.flag_values(f);cat=entries.catalog()
+            states={h:entries.status(f,h,rows,flags) for h in cat}
+            try:number=entries.next_number(f);allocation_error=''
+            except core.SaveError as exc:number=None;allocation_error=str(exc)
+        except core.SaveError as exc:self.flash(str(exc),'error');return
+        from editor_advanced import class_label
+        win=tk.Toplevel(self);win.title('Add unit — preview');win.transient(self)
+        self.place_dialog(win,850,640)
+        top=ttk.Frame(win,padding=12);top.pack(fill='x')
+        ttk.Label(top,text='Choose a character',style='CardH3.TLabel').pack(anchor='w')
+        search=ttk.Entry(top);search.pack(fill='x',pady=(8,0))
+        frame=ttk.Frame(win,padding=(12,0));frame.pack(fill='both',expand=True)
+        tree=ttk.Treeview(frame,columns=('class','status'),show='tree headings',selectmode='browse')
+        tree.heading('#0',text='Character');tree.column('#0',width=180)
+        tree.heading('class',text='Starting class');tree.column('class',width=155)
+        tree.heading('status',text='Status');tree.column('status',width=370)
+        scroll=ttk.Scrollbar(frame,orient='vertical',command=tree.yview);tree.configure(yscrollcommand=scroll.set)
+        tree.pack(side='left',fill='both',expand=True);scroll.pack(side='right',fill='y')
+        detail=ttk.Label(win,wraplength=805,justify='left',padding=12)
+        detail.pack(fill='x')
+        bar=ttk.Frame(win,padding=12);bar.pack(fill='x')
+        selected={'person':None,'action':None}
+        def choose(*_):
+            picked=tree.selection();selected.update(person=None,action=None)
+            apply.state(['disabled'])
+            if not picked:detail.configure(text='Select a character to preview the change.');return
+            h=int(picked[0],16);r=cat[h];state=states[h]
+            action=('add' if state.startswith('Not present') and number is not None else
+                    'restore' if state.startswith('Existing inactive') else None)
+            selected.update(person=h,action=action)
+            if action=='restore':preview='Restore recruitment/met flags; keep the existing unit and its number.'
+            else:preview=f"Level 1 · {class_label(int(r['class'],16))} · HP {r['hp']} · Unit number {number if number is not None else 'unavailable'}\n{len(r['items'])} starting items · {len(r['magic'])} spells · {len(r['skills'][5])} learned abilities. No mount or battalion is copied."
+            detail.configure(text=f"{r['name']} — {state}\n{preview}\n{r['evidence']}. {r['route_scope']}\nRecruitment may interact with later story events. Undo/Redo is available; changes are written on Save."+(f'\n{allocation_error}' if allocation_error and action!='restore' else ''))
+            apply.configure(text='Restore recruitment' if action=='restore' else 'Add unit')
+            if action:apply.state(['!disabled'])
+        def fill(*_):
+            keep=tree.selection();tree.delete(*tree.get_children());q=search.get().strip().casefold()
+            for h,r in sorted(cat.items(),key=lambda item:item[1]['name'].casefold()):
+                label=class_label(int(r['class'],16))
+                if q and q not in f"{r['name']} {r['pid']} {label} {states[h]}".casefold():continue
+                tree.insert('','end',iid=f'{h:08x}',text=r['name'],values=(label,states[h]))
+            if keep and tree.exists(keep[0]):tree.selection_set(keep)
+            choose()
+        def commit():
+            if selected['action'] and self.apply_unit_entry(selected['action'],selected['person'],expected=expected):win.destroy()
+        apply=ttk.Button(bar,text='Add unit',style='Accent.TButton',command=commit);apply.pack(side='right')
+        ttk.Button(bar,text='Cancel',command=win.destroy).pack(side='right',padx=8)
+        search.bind('<KeyRelease>',fill);tree.bind('<<TreeviewSelect>>',choose)
+        fill();search.focus_set();win.grab_set();self.wait_window(win)
+
+    def open_unit_number(self):
+        if not self._unit_entry_ready() or self.uid is None:return
+        person=self.uid;expected=(self.sv,bytes(self.sv.payload))
+        try:
+            rows=[g for u,g in entries.roster(self.core_of()) if u.person==person]
+            if len(rows)!=1:raise core.SaveError('No unique character record is selected.')
+            old=rows[0].unit_number
+        except core.SaveError as exc:self.flash(str(exc),'error');return
+        number=simpledialog.askinteger('Change unit number',
+            f'Current unit_number: {old}\nEnter an unused number (1–254).\nMapped mount and battalion ownership will move with the unit.\nThis action is experimental until its in-game checks pass.',
+            initialvalue=old,minvalue=1,maxvalue=254,parent=self)
+        if number is not None:self.apply_unit_entry('renumber',person,number,expected)

@@ -1,0 +1,267 @@
+"""Atomic, selected-save recruitment and guarded identity editing.
+
+Creation uses an explicit version-36 record, never another character's state.
+These edits are data-derived candidates until their game checks are reported.
+"""
+from functools import lru_cache
+from pathlib import Path
+import hashlib
+import json
+import struct
+
+import fefw_core as core
+import facilities
+import story
+
+HERE = Path(__file__).resolve().parent
+MIN_NUMBER, MAX_NUMBER = 1, 254  # 0 and 255 are not allocated.
+
+
+@lru_cache(maxsize=1)
+def catalog():
+    try:
+        raw = json.loads((HERE/'unit_catalog.json').read_text(encoding='utf8'))
+        if raw['schema'] != 1: raise ValueError('unknown schema')
+        entries = {int(k,16):v for k,v in raw['entries'].items()}
+        aliases = {}
+        for h,r in entries.items():
+            if core.id_hash(r['pid']) != h or not r['name'] or r['level'] != 1:
+                raise ValueError('invalid identity/defaults')
+            if not 1 <= r['hp'] <= 999 or len(r['skills']) != 6:
+                raise ValueError('invalid unit defaults')
+            for a in [h, *(int(a,16) for a in r['aliases'])]:
+                if a in aliases and aliases[a] != h: raise ValueError('ambiguous character alias')
+                aliases[a] = h
+        return entries
+    except (OSError, KeyError, ValueError, TypeError) as exc:
+        raise core.SaveError(f'Cannot load recruit catalogue: {exc}') from exc
+
+
+@lru_cache(maxsize=1)
+def identities():
+    return {a:h for h,r in catalog().items() for a in [h,*(int(x,16) for x in r['aliases'])]}
+
+
+def canonical(person):
+    return identities().get(person, person)
+
+
+def require_context(f):
+    info = story.read(f)
+    if info.part != 1 or info.route not in (1,2,3,4):
+        raise core.SaveError('Unit creation/renumbering currently supports the four Part 1 routes.')
+    if bytes(f.payload[info.header+20:info.header+22]) != b'\x12\x05':
+        raise core.SaveError('Use a free-time save; battle and chapter-start records are not edited here.')
+    if f.block('UnitPool') is None: raise core.SaveError('No live unit pool.')
+    # Also validates the supported live flag store before touching any record.
+    facilities.locate(f)
+    return info
+
+
+def roster(f):
+    """Inspect all live records, including ones hidden by the UI."""
+    pool = f.block('UnitPool')
+    if pool is None or bytes(f.payload[pool.start+4:pool.start+6]) != b'\0\4':
+        raise core.SaveError('Unrecognised live unit pool.')
+    units = f.units()
+    if len(units) != f.u16(pool.start+6): raise core.SaveError('Incomplete live unit pool.')
+    at = pool.start+8
+    result = []
+    for u in units:
+        if u.start != at or u.end > pool.end or f.payload[u.start+4:u.start+8] != b'\x24\0\0\0':
+            raise core.SaveError('Unknown or incomplete unit record.')
+        gear = core.gear(f,u)
+        if gear is None: raise core.SaveError('A live unit has an unrecognised identity/equipment layout.')
+        result.append((u,gear))
+        at = u.end
+    if bytes(f.payload[at:pool.end]) != b'\xff\0\0\0':
+        raise core.SaveError('Unexpected data after the live unit pool.')
+    f.tree()
+    return result
+
+
+def flag_values(f):
+    return {x.hash:x.value for x in facilities.locate(f).flags}
+
+
+def status(f, person, rows=None, values=None):
+    row = catalog()[person]
+    hits = [(u,g) for u,g in (roster(f) if rows is None else rows) if canonical(u.person)==person]
+    if hits:
+        if len(hits)>1: return 'Duplicate character records — review required'
+        if hits[0][0].person != person: return 'Alternate record exists — review required'
+        recruited = (flag_values(f) if values is None else values).get(core.id_hash(row['recruit_flag']))
+        if recruited == 1: return 'Already in party'
+        if recruited in (None,0) and hits[0][0].flags == 0:
+            return 'Existing inactive record — restore recruitment'
+        return 'Existing record — recruitment state needs review'
+    return row['restriction'] or 'Not present — add level 1'
+
+
+def _equipment_records(f):
+    """Typed reference fields only: no raw-byte search/replace."""
+    result=[]; seen=set()
+    party=core.party_store(f)
+    if party is None:
+        raise core.SaveError('The party equipment stores could not be identified.')
+    for st in (party, core.reliquary_store(f)):
+        if not st: continue
+        for kind,at in (('ride',st[1]),('legion',st[2])):
+            if at in seen: continue
+            seen.add(at)
+            end=f.ptr(at)
+            if end<at+7 or end>len(f.payload) or f.payload[at+4]!=0:
+                raise core.SaveError('Unknown equipment pool header.')
+            count=f.u16(at+5); pos=at+7
+            for _ in range(count):
+                if pos >= end: raise core.SaveError('Truncated equipment pool.')
+                if f.payload[pos] == 0: pos+=1;continue
+                if kind=='ride':
+                    obj,nxt=core.Ride.read(f.payload,pos,end)
+                    if obj is None: raise core.SaveError('Unknown mount record.')
+                    result.append((pos+9,obj.owner,obj.allies));pos=nxt
+                else:
+                    if f.payload[pos]!=1 or pos+17>end: raise core.SaveError('Unknown battalion record.')
+                    result.append((pos+2,f.payload[pos+2],b''));pos+=17
+            if end-pos>3 or any(f.payload[pos:end]):
+                raise core.SaveError('Unexpected trailing equipment data.')
+    return result
+
+
+def _references(f, rows):
+    refs = _equipment_records(f)
+    for u,g in rows:
+        if g.ride: refs.append((g.ride_at+9,g.ride.owner,g.ride.allies))
+        if g.legion: refs.append((g.legion_at+2,g.legion.owner,b''))
+    return refs
+
+
+def next_number(f):
+    rows=roster(f)
+    people=[canonical(u.person) for u,_ in rows]
+    if len(people)!=len(set(people)): raise core.SaveError('Existing duplicate character records must be reviewed first.')
+    nums=[g.unit_number for _,g in rows]
+    if len(nums)!=len(set(nums)): raise core.SaveError('Existing duplicate unit numbers must be repaired first.')
+    refs=_references(f,rows)
+    if any(allies for _,_,allies in refs):
+        raise core.SaveError('Mount affinity references are not yet mapped; allocating a new identity is disabled.')
+    used=set(nums)|{owner for _,owner,_ in refs if owner not in (0,255)}
+    # Do not recycle holes: other records may retain a historical identity.
+    number=max(used,default=0)+1
+    if not MIN_NUMBER<=number<=MAX_NUMBER: raise core.SaveError('No supported unused unit number remains.')
+    return number
+
+
+def _recruit(f,row):
+    work=f.copy()
+    for name in (row['recruit_flag'],row['met_flag']):
+        if not name: continue
+        fm=facilities.locate(work);h=core.id_hash(name)
+        matches=[x for x in fm.flags if x.hash==h]
+        if len(matches)>1 or (matches and (matches[0].wide or matches[0].value not in (0,1))):
+            raise core.SaveError('Unknown recruitment/met state; unchanged.')
+        if matches:
+            work.payload[matches[0].offset]=1
+        else:
+            work=core.SaveFile(core.flag_add(work,fm,h,1))
+    return work
+
+
+def _record(row,number,at):
+    """Construct the observed record format from typed fields and empty history."""
+    b=bytearray(72);b[4]=36
+    struct.pack_into('<II',b,10,core.id_hash(row['pid']),int(row['class'],16))
+    # Independent positive 31-bit seed words, within the observed native range.
+    # Their initialization is inferred and still needs game level-up checks.
+    seed=hashlib.sha256(f"{row['pid']}:{number}".encode()).digest()[:8]
+    struct.pack_into('<II',b,18,*(max(1,x & 0x7fffffff) for x in struct.unpack('<II',seed)))
+    b[59]=1;struct.pack_into('<H',b,64,row['hp'])
+    def leaf(body):
+        start=len(b);b.extend(bytes(4)+body);b.extend(bytes(-len(b)%4))
+        struct.pack_into('<I',b,start,at+len(b)+32)
+    mastery=bytes([len(row['masteries'])])+b''.join(struct.pack('<BH',i,v) for i,v in row['masteries'])
+    leaf(mastery+b'\1'+struct.pack('<IBB',int(row['class'],16),0,4))
+    b.extend(b'\xff\xff\xff\xff\0\0\0\0')
+    inventory=row['items']+row['magic']
+    leaf(bytes([0,len(row['items']),len(row['magic'])])+b''.join(b'\x41'+struct.pack('<I',int(h,16)) for h in inventory))
+    for skills in row['skills']:
+        leaf(b'\0'+struct.pack('<H',len(skills))+b''.join(b'\x43'+struct.pack('<I',int(h,16)) for h in skills))
+    # Version 35 equipment, no mount/battalion, number, empty version 33 history.
+    b.extend(bytes([35,0,0,0,number,0,3,0,0,0,0,0,0,33,0,0,4,0,5,0]))
+    b.extend(b'\0\0\0\0\0\xff\xff\0');b.extend(bytes(-len(b)%4))
+    struct.pack_into('<I',b,0,at+len(b)+32)
+    return bytes(b)
+
+
+def add(f,person):
+    require_context(f)
+    if person not in catalog(): raise core.SaveError('Choose a catalogued recruit.')
+    row=catalog()[person]
+    if row['restriction']: raise core.SaveError(row['restriction'])
+    existing=[u for u,_ in roster(f) if canonical(u.person)==person]
+    if existing: raise core.SaveError(status(f,person)+'. A second copy will not be added.')
+    number=next_number(f)
+    # Validate flags before constructing an appended record, preserving every old unit.
+    work=_recruit(f,row);pool=work.block('UnitPool');units=work.units();tree=work.tree()
+    at=pool.end-4;new=tree.splice(tree.node_at(pool.start),at,0,_record(row,number,at))
+    struct.pack_into('<H',new,pool.start+6,len(units)+1)
+    result=core.SaveFile(new);rows=roster(result)
+    if [(u.person,g.unit_number) for u,g in rows[:-1]] != [(u.person,g.unit_number) for u,g in roster(work)]:
+        raise core.SaveError('Existing unit identities changed; nothing applied.')
+    if rows[-1][0].person!=person or rows[-1][1].unit_number!=number:
+        raise core.SaveError('New unit did not read back.')
+    return new
+
+
+def restore(f,person):
+    require_context(f)
+    if status(f,person) != 'Existing inactive record — restore recruitment':
+        raise core.SaveError('This record cannot be restored through the recruit action.')
+    rows=roster(f)
+    people=[canonical(u.person) for u,_ in rows]
+    if len(people)!=len(set(people)): raise core.SaveError('Existing duplicate character records must be reviewed first.')
+    nums=[g.unit_number for _,g in rows]
+    if len(nums)!=len(set(nums)): raise core.SaveError('Existing duplicate unit numbers must be repaired first.')
+    return _recruit(f,catalog()[person]).payload
+
+
+def renumber(f,person,number):
+    require_context(f)
+    if type(number) is not int or not MIN_NUMBER<=number<=MAX_NUMBER:
+        raise core.SaveError('Unit number must be an integer from 1 to 254.')
+    rows=roster(f);hits=[(u,g) for u,g in rows if u.person==person]
+    if len(hits)!=1: raise core.SaveError('No unique live character record.')
+    u,g=hits[0];old=g.unit_number
+    if number==old:return bytearray(f.payload)
+    if sum(canonical(v.person)==canonical(person) for v,_ in rows)>1:
+        raise core.SaveError('This character has multiple live records; review them before renumbering.')
+    if any(x.unit_number==number for _,x in rows): raise core.SaveError('That unit number is already used by another live unit.')
+    refs=_references(f,rows)
+    if any(allies for _,_,allies in refs):
+        raise core.SaveError('Mount affinity references are not yet mapped; renumbering this save is disabled.')
+    if any(owner==number for _,owner,_ in refs): raise core.SaveError('That number is still referenced by equipment.')
+    if sum(x.unit_number==old for _,x in rows)>1 and any(owner==old for _,owner,_ in refs):
+        raise core.SaveError('Duplicate number has ambiguous equipment ownership; cannot renumber safely.')
+    out=bytearray(f.payload);tail=core.tail_at(out,u.start,u.end);out[tail-9]=number
+    for at,owner,_ in refs:
+        if owner==old:out[at]=number
+    checked=roster(core.SaveFile(out))
+    if next(x.unit_number for v,x in checked if v.person==person)!=number:
+        raise core.SaveError('Renumber did not read back.')
+    return out
+
+
+def copy_in(src,unit,dst):
+    """Guard the existing import path against character and number collisions."""
+    require_context(dst)
+    if any(canonical(u.person)==canonical(unit.person) for u,_ in roster(dst)):
+        raise core.SaveError('This character already has a live record in the destination.')
+    number=next_number(dst)
+    gear=core.gear(src,unit)
+    if gear is None: raise core.SaveError('Source identity/equipment layout is unknown.')
+    if gear.ride or gear.legion:
+        raise core.SaveError('Detach the source mount/battalion before importing; shared equipment is not copied.')
+    work=core.SaveFile(core.copy_unit(src,unit,dst));u=work.units()[-1]
+    tail=core.tail_at(work.payload,u.start,u.end);work.payload[tail-9]=number
+    roster(work)
+    return work.payload

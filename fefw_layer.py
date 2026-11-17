@@ -547,7 +547,8 @@ def copy_unit_in(payload: bytearray, origin, uid: int) -> bool:
     u = unit_in(src, uid)
     if u is None:
         return False
-    payload[:] = core.copy_unit(src, u, dst)
+    import unit_entries
+    payload[:] = unit_entries.copy_in(src, u, dst)
     return True
 
 

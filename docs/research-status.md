@@ -342,8 +342,13 @@ Preserve unrelated facilities, including the intentionally locked Stables.
 
 ## Feature backlog: create new unit entry
 
-Requested on 2026-11-15 for prioritization. Unit creation remains queued after the now-prioritized Story progression
-experiment; it is not part of the current Deeds release.
+Requested on 2026-11-15 and approved for implementation on 2026-11-17 after the
+Part 1 story/optimisation milestone. The first implementation is now available
+on `feature/unit-creation`, pending game checks. The picker, independent
+level-one defaults, duplicate checks, visible/editable unit numbers, guarded
+import and restore-recruitment action are described in [unit creation](unit-creation.md).
+Supports thresholds remain a separate backlog item; tutorial visibility
+research is parked after its category correction.
 
 A new unit entry needs a unique `unit_number`. The earlier personal-save
 restoration duplicated unit identities: selecting Catania selected Buccar,

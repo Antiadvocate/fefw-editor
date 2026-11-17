@@ -29,6 +29,7 @@ from deed_page import DeedPageMixin
 from boon_page import BoonPageMixin
 from facility_page import FacilityPageMixin
 from story_page import StoryPageMixin
+from unit_entry_page import UnitEntryPageMixin
 import audiences
 import tutorials
 import flag_labels
@@ -137,7 +138,7 @@ def rank_of(exp: int) -> int:
     return r
 
 
-class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTravelPageMixin, DeedPageMixin, BoonPageMixin, FacilityPageMixin, StoryPageMixin):
+class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTravelPageMixin, DeedPageMixin, BoonPageMixin, FacilityPageMixin, StoryPageMixin, UnitEntryPageMixin):
     # ------------------------------------------------------------- helpers
     def core_of(self, sv=None):
         """Decoded slot, reused only while its source bytes are unchanged."""
@@ -1698,8 +1699,9 @@ def copy_unit_in(self):
     """Bring a unit over from another slot of the same folder."""
     import os
     from tkinter import filedialog
-    if not self.sv:
+    if not self._unit_entry_ready():
         return
+    expected=(self.sv,bytes(self.sv.payload))
     others = [p for p in self.slot_paths if p != self.sv.path]
     start = self.folder or os.path.dirname(self.sv.path)
     pick = filedialog.askopenfilename(
@@ -1717,10 +1719,20 @@ def copy_unit_in(self):
     uid = self._picker(f"Copy a unit from {os.path.basename(pick)}", rows)
     if uid is None:
         return
+    if self.sv is not expected[0] or bytes(self.sv.payload)!=expected[1]:
+        self.flash('The destination changed. Reopen the import dialog.','warn');return
+    try:
+        import unit_entries
+        source=self.core_of(src)
+        unit=layer.unit_in(source,uid)
+        if unit is None:raise core.SaveError('No unique source unit.')
+        payload=unit_entries.copy_in(source,unit,self.core_of())
+    except core.SaveError as exc:self.flash(str(exc),'error');return
     self.push_undo()
     name = next(r[1] for r in rows if r[0] == uid)
-    self._core_edit(lambda f: (layer.copy_unit_in(f.payload, pick, uid) and f.payload) or None,
-                    f"Copied {name} in")
+    self.sv.payload=bytearray(payload);self.sv.scan();self.sv._core_cache=None
+    self.uid=uid;self._touch([self.sv]);self.refresh_after_core();self.show_unit()
+    self.flash(f"Copied {name} in with a new unit number — Ctrl+S to save.","ok")
 
 
 def remove_current_unit(self):

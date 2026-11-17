@@ -1231,24 +1231,17 @@ def remove_unit(f: SaveFile, index: int) -> bytearray:
 
 def new_unit(f: SaveFile, template: SaveUnit, person: int, klass: int,
              level: int, hp: int, items=(), masteries=()) -> bytearray:
-    """Grow a level-1 unit from a template record."""
-    if template.name:
-        raise SaveError("pick a template that isn't the player character")
-    work = SaveFile(copy_unit(f, template, f))
-    u = work.units()[-1]
-    struct.pack_into("<I", work.payload, u.start + 10, person & 0xFFFFFFFF)
-    struct.pack_into("<I", work.payload, u.start + 14, klass & 0xFFFFFFFF)
-    work.payload[u.start + 26:u.start + 35] = bytes(9)
-    work.payload[u.start + 37:u.start + 55] = bytes(18)
-    level = max(1, min(99, int(level)))
-    work.payload[u.start + 59] = level
-    struct.pack_into("<H", work.payload, u.start + 60, (level - 1) * 100)
-    struct.pack_into("<I", work.payload, u.start + 64, max(1, min(999, int(hp))))
-    u = work.units()[-1]
-    new = with_lists(work, u, list(masteries), [(klass & 0xFFFFFFFF, 0, 4)])
-    work = SaveFile(new)
-    u = work.units()[-1]
-    return with_items(work, u, list(items))
+    """Compatibility entry point for safe, catalogued level-one creation.
+
+    Arbitrary template cloning is no longer an identity-safe creation path.
+    The template is not copied; unsupported custom defaults are refused.
+    """
+    import unit_entries
+    row = unit_entries.catalog().get(person)
+    if (row is None or klass != int(row['class'], 16) or level != 1 or hp != row['hp']
+            or items or masteries):
+        raise SaveError("Use the Add unit catalogue defaults, then edit the resulting unit.")
+    return unit_entries.add(f, person)
 
 
 # --------------------------------------------------------------------------

@@ -969,16 +969,22 @@ class App(AdvancedMixin, tk.Tk):
                         variable=self.show_enemies,
                         command=lambda: (self.refresh_units(), self._save_settings())
                         ).pack(anchor="w", pady=(0, 6))
-        self.unit_tree = scrolled_tree(side, columns=("lv",), show="tree headings",
+        self.unit_tree = scrolled_tree(side, columns=("number", "lv"), show="tree headings",
                                        selectmode="browse")
         self.unit_tree.heading("#0", text="Name", anchor="w")
         self.unit_tree.heading("lv", text="Lv", anchor="e")
+        self.unit_tree.heading("number", text="Unit #", anchor="e")
+        self.unit_tree.column("number", width=62, minwidth=55, anchor="e", stretch=False)
         self.unit_tree.column("#0", width=200, minwidth=140)
         self.unit_tree.column("lv", width=44, minwidth=40, anchor="e", stretch=False)
         self.unit_tree.container.pack(fill="both", expand=True)
         self.unit_tree.bind("<<TreeviewSelect>>", self.on_unit_select)
         acts = ttk.Frame(side, style="Card.TFrame")
         acts.pack(fill="x", pady=(8, 0))
+        ttk.Button(acts, text="Add unit…", style="Small.TButton",
+                   command=self.open_add_unit).pack(fill="x", pady=(0, 6))
+        ttk.Button(acts, text="Change unit number…", style="Small.TButton",
+                   command=self.open_unit_number).pack(fill="x", pady=(0, 6))
         ttk.Button(acts, text="Copy unit in…", style="Small.TButton",
                    command=self.copy_unit_in).pack(fill="x")
         ttk.Button(acts, text="Remove unit", style="Small.TButton",
@@ -2047,6 +2053,11 @@ class App(AdvancedMixin, tk.Tk):
         q = self.unit_search.get_query().lower()
         units = sorted(self._unit_map().values(),
                        key=lambda u: (is_enemy(u), u.name.lower()))
+        import unit_entries
+        try:
+            numbers={u.person:g.unit_number for u,g in unit_entries.roster(self.core_of())} if self.sv else {}
+        except core.SaveError:
+            numbers={}
         shown = 0
         for u in units:
             enemy = is_enemy(u)
@@ -2056,7 +2067,7 @@ class App(AdvancedMixin, tk.Tk):
                 continue
             tree.insert("", "end", iid=str(u.uid), text=" " + u.name,
                         image=self._dot(_name_color(u.name), 10),
-                        values=(u.level,), tags=("enemy",) if enemy else ())
+                        values=(numbers.get(u.uid, '—'), u.level), tags=("enemy",) if enemy else ())
             shown += 1
         total = sum(1 for u in units if self.show_enemies.get() or not is_enemy(u))
         self.unit_count.configure(text=f"{shown}" if shown == total else f"{shown} / {total}")
