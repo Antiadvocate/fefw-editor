@@ -18,10 +18,11 @@ arrivals.
 Selecting **Part 2 Chapter 6** now enables middle-area movement for all four
 routes. It clears only that restriction, preserving other access controls,
 story flags, units and inventory. Already-unrestricted cases are unchanged.
-Theodora's manual repair passed; applying it automatically during fresh chapter
-entry still needs the focused check below. Part 1 behavior is unchanged.
+Theodora's manual repair and the focused automatic fresh-entry retest both passed
+on 18 November 2026. Returned arrival and progress saves validate; both keep the
+middle restriction clear and the progress capture reaches the next battle. Part 1 behavior is unchanged.
 
-## One focused game check
+## Completed focused game check
 
 The package contains an updated editor and `test-saves/Theodora-Chapter6/Auto`.
 This fresh Chapter 6 entry is generated from the same original Theodora Part 1

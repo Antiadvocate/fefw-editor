@@ -6,6 +6,7 @@ import fefw_core as core
 import fefw_layer as layer
 import story
 import story_start
+import story_troubleshoot
 
 WARNING_TITLE = 'CAUTION - UNEXPECTED CONSEQUENCES POSSIBLE'
 WARNING_POINTS = (
@@ -23,8 +24,8 @@ def warning_points(route, part=1):
         if route not in story.PREFIXES:
             raise story.StoryError('Part 2 supports the four main routes only.')
         if route != 1:
-            return (f'{story.ROUTES[route]} Part 2 Chapters 1–6 reached the next battle from the tested Part 1 baseline. Theodora Chapter 6 required a manual midtown-access repair.',
-                    'Chapter 5 enables upper-city movement. Chapter 6 enables middle-city movement; the automatic Theodora entry repair needs a focused retest. Other prerequisites may still block progress.',
+            return (f'{story.ROUTES[route]} Part 2 Chapters 1–6 reached the next battle from the tested Part 1 baseline. Theodora Chapter 6 also passed with automatic midtown access.',
+                    'Chapter 5 enables upper-city movement. Chapter 6 enables middle-city movement; the automatic Theodora entry repair passed its focused retest. Other prerequisites may still block progress.',
                     'Party, items and prior progression are retained. Missing units, rewards, facilities and map unlocks are not granted. Other source saves, Obelisk loading and long-term progression need testing.',
                     f'This does not create the separate Part_{story.FILE_CODES[route]}_2 handoff file. Optional chapter files are different.',
                     *WARNING_POINTS[3:])
@@ -55,7 +56,7 @@ def warning_points(route, part=1):
 def evidence_note(route, part=1):
     if part == 2:
         if route != 1:
-            return f'{story.ROUTES[route]} Part 2 Chapters 1–6 reached the next battle from the tested Part 1 baseline. Theodora 6 passed after manual middle-city access repair; automatic entry repair awaits retest. Other baselines, Obelisk loading and long-term progression remain untested.'
+            return f'{story.ROUTES[route]} Part 2 Chapters 1–6 reached the next battle from the tested Part 1 baseline. Theodora 6 passed both manual repair and fresh entry with automatic middle-city access. Other baselines, Obelisk loading and long-term progression remain untested.'
         return 'Cai only: Chapters 1–6, Chapter 5 repair and editor checks passed. Part 1 Chapter 4 → Part 2 Chapter 1 passed short-session checks. Obelisk loading, other conversion starting states and long-term progression remain untested.'
     if route == 4:
         return EVIDENCE_NOTE
@@ -71,7 +72,7 @@ def evidence_note(route, part=1):
 def chapter_evidence(route, chapter, part=1):
     if part == 2:
         if route == 3 and chapter == 6:
-            return 'Progression passed with manual midtown repair — automatic entry fix awaiting retest'
+            return 'Game-tested opening and progression with automatic midtown access'
         return ('Game-tested opening and progression' if chapter in story_start.PART2_TESTED_BY_ROUTE.get(route, ())
                 else 'Inferred — game test pending')
     if route == 3 and chapter in story_start.THEODORA_REPAIRS:
@@ -91,15 +92,20 @@ class StoryPageMixin:
     def _build_story(self, parent):
         card = ttk.Frame(parent, style='Card.TFrame', padding=(16, 8))
         card.pack(fill='x', pady=(10, 0))
-        self.story_button = ttk.Button(card, text='Story progression…',
-                                       command=self.open_story_progression)
-        self.story_button.pack(side='right', padx=(12, 0))
-        self.part2_button = ttk.Button(card, text='Try Part 2 entry…',
-                                      command=self.open_part2_entry)
-        self.part2_button.pack(side='right', padx=(12, 0))
         ttk.Label(card, text='Story progression · Experimental', style='CardH3.TLabel').pack(anchor='w')
         self.story_status = ttk.Label(card, style='CardMuted.TLabel', wraplength=690, justify='left')
         self.story_status.pack(anchor='w', pady=(4, 0))
+        actions = ttk.Frame(card, style='Card.TFrame')
+        actions.pack(fill='x', pady=(8, 0))
+        self.story_button = ttk.Button(actions, text='Story progression…',
+                                       command=self.open_story_progression)
+        self.story_button.pack(side='left')
+        self.part2_button = ttk.Button(actions, text='Try Part 2 entry…',
+                                      command=self.open_part2_entry)
+        self.part2_button.pack(side='left', padx=12)
+        self.troubleshoot_button = ttk.Button(actions, text='Troubleshoot Progress',
+                                              command=self.open_progress_troubleshooter)
+        self.troubleshoot_button.pack(side='left')
         self.refresh_story()
 
     def refresh_story(self):
@@ -108,6 +114,8 @@ class StoryPageMixin:
         self.story_button.state(['disabled'])
         if hasattr(self, 'part2_button'):
             self.part2_button.state(['disabled'])
+        if hasattr(self, 'troubleshoot_button'):
+            self.troubleshoot_button.state(['!disabled'] if self.sv else ['disabled'])
         if not self.sv:
             self.story_status.configure(text='Open a supported Part 1 save or a supported Part 2 save (provisional).')
             return
@@ -149,6 +157,82 @@ class StoryPageMixin:
                               getattr(self.sv, "_allow_part_transition", False))
         except core.SaveError as exc:
             self.flash(str(exc), 'error'); return False
+        return True
+
+    def open_progress_troubleshooter(self):
+        if not self.sv:
+            self.flash('Open a save first.', 'warn'); return
+        slot, snapshot = self.sv, bytes(self.sv.payload)
+        try:
+            report = story_troubleshoot.diagnose(core.SaveFile(snapshot))
+            story.check_outer(slot.raw, report.progress, allow_part_change=
+                              getattr(slot, '_allow_part_transition', False))
+        except core.SaveError as exc:
+            messagebox.showerror('Troubleshoot Progress', str(exc) + '\n\nNo safe suggestion is available. '
+                                 'Please report the save state and blocked objective at:\n' +
+                                 story_troubleshoot.ISSUES_URL, parent=self); return
+        win = tk.Toplevel(self); win.title('Troubleshoot Progress'); win.transient(self)
+        self.place_dialog(win, 740, 570); win.configure(background=self.p['bg'])
+        frame = ttk.Frame(win, padding=18); frame.pack(fill='both', expand=True)
+        buttons = ttk.Frame(frame); buttons.pack(side='bottom', fill='x')
+        ttk.Label(frame, text=report.progress.label, style='CardH3.TLabel').pack(anchor='w')
+        ttk.Label(frame, text=report.note, wraplength=690, justify='left').pack(anchor='w', pady=(8, 10))
+        table = ttk.Treeview(frame, columns=('state',), show='tree headings', height=5,
+                             selectmode='none')
+        table.heading('#0', text='Known prerequisite', anchor='w'); table.column('#0', width=420)
+        table.heading('state', text='Current state / suggestion', anchor='w'); table.column('state', width=260)
+        for row in report.checks:
+            table.insert('', 'end', text=row.label, values=(row.state,))
+        if report.checks:
+            table.pack(fill='both', expand=True, pady=(0, 10))
+        status = report.blocked
+        if not status and report.checks and not report.actionable:
+            status = 'All known prerequisites are already enabled. These checks cannot identify every cause of a blocked objective.'
+        if self.mirror.get():
+            status += '\nTurn off “Also edit this route’s other saves” to apply a repair to this slot.'
+        if status:
+            ttk.Label(frame, text=status.strip(), wraplength=690, justify='left').pack(anchor='w', pady=(0, 10))
+        ttk.Label(frame, text='Only the listed missing unlocks are staged. Your current chapter, story checkpoint, '
+                  'date, party and inventory are kept. Ctrl+S saves; Ctrl+Z undoes.',
+                  wraplength=690, justify='left', style='CardMuted.TLabel').pack(anchor='w', pady=(0, 10))
+        if not report.actionable:
+            ttk.Label(frame, text='Still blocked? Please raise an issue with your character, part, chapter, '
+                      'objective and what blocks the path. Include a screenshot and, if you are comfortable sharing it, a save.',
+                      wraplength=690, justify='left').pack(anchor='w', pady=(0, 4))
+            def open_issues():
+                import webbrowser
+                webbrowser.open(story_troubleshoot.ISSUES_URL)
+            ttk.Button(frame, text='Open Antiadvocate/fefw-editor issues',
+                       command=open_issues).pack(anchor='w', pady=(0, 10))
+        def apply():
+            if self.apply_progress_repair(slot, snapshot):
+                win.destroy()
+        apply_button = ttk.Button(buttons, text='Apply suggested unlocks', command=apply)
+        apply_button.pack(side='right')
+        if not report.actionable or self.mirror.get():
+            apply_button.state(['disabled'])
+        ttk.Button(buttons, text='Close', command=win.destroy).pack(side='right', padx=8)
+        win.bind('<Escape>', lambda e: win.destroy()); win.grab_set(); self.wait_window(win)
+
+    def apply_progress_repair(self, slot, snapshot):
+        if self.sv is not slot or bytes(slot.payload) != snapshot:
+            self.flash('The selected save changed. Reopen Troubleshoot Progress.', 'warn'); return False
+        if not self._story_ready():
+            return False
+        self._commit_form()
+        # Form edits can invalidate the diagnosis; never apply a stale plan.
+        if self.sv is not slot or bytes(slot.payload) != snapshot:
+            self.flash('Pending edits changed the save. Reopen Troubleshoot Progress.', 'warn'); return False
+        try:
+            new = story_troubleshoot.edited(core.SaveFile(slot.payload))
+        except core.SaveError as exc:
+            self.flash(str(exc), 'error'); return False
+        if new == slot.payload:
+            self.flash('No missing known unlocks to apply.', 'info'); return False
+        self.push_undo()
+        slot.payload = bytearray(new); slot.scan(); slot._core_cache = None
+        self._touch([slot]); self.refresh_after_core()
+        self.flash('Suggested progress unlocks staged — Ctrl+S saves; Ctrl+Z undoes.', 'ok')
         return True
 
     def open_story_progression(self):

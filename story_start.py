@@ -9,7 +9,7 @@ Part 1 Chapter 4-to-Part 2 Chapter 1 entry passed short-session checks;
 other conversion starting states and long-term progression remain untested.
 Leda, Dietrich and Theodora Part 2 Chapters 1–6 reached the next battle from
 their tested Part 1 baselines. Theodora Chapter 6 needed a manual middle-city
-movement repair; the automatic chapter-entry repair awaits a focused retest.
+movement repair; the automatic chapter-entry repair subsequently passed its retest.
 Cai Part 1 Chapters 1–12 passed short-session game tests.
 Dietrich Chapters 3–12 passed short-session checks, including integrated
 prerequisites for 5–7. Chapters 1/2 are unavailable: Chapter 2 replay remains

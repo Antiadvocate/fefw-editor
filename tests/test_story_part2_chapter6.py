@@ -35,8 +35,8 @@ class Chapter6RepairTest(unittest.TestCase):
             self.assertEqual(start.edited(f, 6), fixed.payload)
             self.assertEqual(f.payload, before)
             with self.assertRaises(core.SaveError): start.repair_part2_chapter6(fixture(route))
-        self.assertIn('manual', story_page.chapter_evidence(3, 6, 2))
-        self.assertIn('awaiting retest', story_page.chapter_evidence(3, 6, 2))
+        self.assertIn('Game-tested', story_page.chapter_evidence(3, 6, 2))
+        self.assertIn('automatic midtown access', story_page.chapter_evidence(3, 6, 2))
 
 
 @unittest.skipUnless(os.environ.get('FEFW_PART2_REMAINING_RETURN_DIR'), 'No private remaining-route returns supplied')

@@ -314,7 +314,7 @@
       "polarity": "restriction",
       "store": "progression",
       "coverage": "Unlock tested",
-      "note": "Enable clears the middle movement restriction; Disable restores it. Theodora Chapter 4 arena access and progression passed with this single restriction removed. Also included in the combined Part 1 Chapter 6/8 traversal repairs. Theodora Part 2 Chapter 6 reached the next battle after this restriction was manually cleared; automatic Chapter 6 entry now enables it for all four routes and awaits a focused Theodora retest. The reverse Disable effect has not been game-tested."
+      "note": "Enable clears the middle movement restriction; Disable restores it. Theodora Chapter 4 arena access and progression passed with this single restriction removed. Also included in the combined Part 1 Chapter 6/8 traversal repairs. Theodora Part 2 Chapter 6 reached the next battle after this restriction was manually cleared; automatic Chapter 6 entry enables it for all four routes and passed the focused Theodora retest. The reverse Disable effect has not been game-tested."
     },
     "8386d712": {
       "name": "行動範囲制限_下層",
