@@ -3,15 +3,13 @@
 The Units page now offers **Add unit…**, a visible **Unit #** column, and
 **Change unit number…**. The initial functional test set has passed within its
 [reported scope](unit-restoration-fix.md). Expanded cross-route, special and
-NPC cases are [pending game tests](testing-unit-expansion-test2.md); a correctly
+NPC cases have [individual results](unit-expansion-test2-results.md); a correctly
 parsed record does not establish working deployment.
 
 ## Catalogue and creation
 
 The picker has 67 named character identities with PID-derived recruitment keys.
-54 ordinary candidates and Anna are enabled (55 total). Eleven other
-special-character entries and the custom protagonist remain visible but
-disabled pending promotion/validation of their individual profiles.
+54 ordinary candidates, Anna, Hong Hua, Troy and Centurio are enabled (58 total). Eight other special-character entries and the custom protagonist remain visible but disabled pending validation. Hong Hua, Troy and Centurio use their previously accepted Leda Chapter 9 profiles.
 Anna uses her accepted **dismounted-only** class and Bronze Spear. Her Add unit
 preview states that she cannot remount; the mounted class failed deployment in
 the tested battle. Existing Anna records are not automatically reclassed.
@@ -55,7 +53,7 @@ ambiguous records and unknown flag values require review.
 
 The character's PID, Person-table serial and save `unit_number` are different
 values. Character duplicates are checked using canonical PID/known aliases;
-numeric collisions are checked across all live units and mapped equipment owners.
+numeric collisions are checked across all player/reserve/opponent records and mapped equipment owners. Enemy copies may share a character identity; they do not prevent adding that character to the player roster. Existing player copies in deployed, reserve or story-hidden groups do prevent duplicates.
 
 Automatic allocation chooses one above the highest occupied/referenced number,
 within 1–254. It does not recycle gaps or allocate 0/255. Existing duplicates
@@ -77,9 +75,21 @@ API now delegates only supported catalogue defaults to the guarded creator.
 
 ## Scope and editor behavior
 
-Creation/import/renumbering support recognized **Part 1 and Part 2 free-time
-saves** for the four main routes, plus **Eshmel Part 3 free-time saves**. Battle,
-dungeon-resume and chapter-start contexts and unknown layouts are refused.
+Add/restore support the four **Part 1 and Part 2** routes and **Eshmel Part 3**,
+with separate recognized contexts:
+
+| Context | Addition behaviour | Game acceptance |
+| --- | --- | --- |
+| Free-time | Append to the party | Individual existing results apply |
+| Pre-battle | Append to the party before deployment | Pending |
+| Mid-battle | Append to the reserve party group, retaining deployed allies and opponents | Pending; no on-map spawn |
+| Chapter-start | Append to the checkpoint party | Pending; opening scripts may reset or replace it |
+
+UnitPool group headers and record/equipment versions must be recognized.
+Unknown groups/layouts and dungeon resume contexts remain refused. Manual
+renumbering and Copy unit in still require a free-time save: battle references
+are not rewritten. A mid-battle addition is intended for a later deployment;
+retention after the fight must be tested before relying on it.
 **Also edit this route's other saves** applies the action to matching live saves.
 Each target is validated first and allocates a free local number; existing
 active records are kept and inactive recruitment can be restored. A changed

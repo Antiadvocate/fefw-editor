@@ -1,10 +1,9 @@
 # Fortune's Weave Save Editor
 
-**Eshmel Part 3:** Player offers provisional Chapters **1–6** on supported
+**Eshmel Part 3:** Player offers provisional Chapters **2–6** on supported
 Eshmel Part 3 free-time and chapter-start saves. This does not convert other
 characters or earlier parts into Part 3. Chapters 2–5 passed opening and progression checks; Chapter 6 reached its
-opening battle only. Chapter 1 replay is currently blocked at the cauldron
-objective, with party and magic issues; repair tests are pending. Battle and unknown resume states remain read-only for story changes.
+opening battle only. Chapter 1 is unavailable because replay cannot progress; use the Obelisk door to start it naturally. Battle and unknown resume states remain read-only for story changes.
 
 **Mirroring:** “Also edit this route’s other saves” now covers Tutorials,
 Blessings and audiences, Fast Travel, Notable Deeds, Boons, Add Unit, Functions,
@@ -12,18 +11,18 @@ and named flag changes, alongside Maps, Support and existing unit/inventory
 edits. Targets must match character, part and playthrough; chapter checkpoints
 remain excluded. Added-page edits validate all targets before applying, and
 Undo/Redo restores the affected saves together. Add Unit supports the four Part 1/2 routes and Eshmel Part 3
-free-time saves and allocates unused numbers independently in each save.
+free-time, pre-battle, mid-battle and chapter-start saves with recognized layouts. It allocates unused numbers independently in each save. Mid-battle additions go into reserves, not onto the battlefield; game checks for these new contexts are pending.
 Story progress and its chapter-specific troubleshooting repairs stay selected-only.
 
 
 **New-unit test feature:** Units now has **Add unit…**, a visible **Unit #**,
-and guarded number editing. The searchable catalogue enables 54 data-derived
+and guarded number editing. The searchable catalogue enables 58
 level-one candidates, blocks duplicate characters/numbers and preserves existing
-unit progress. Part 1/2 main-route and Eshmel Part 3 free-time saves; in-game acceptance is pending.
+unit progress. The four Part 1/2 routes and Eshmel Part 3 are supported. Renumbering and importing remain limited to free-time saves.
 See [scope and identity rules](docs/unit-creation.md) and the
 [focused test guide](docs/testing-unit-creation-test1.md).
 The first game returns passed for the deployed additions and renumbered Sirocco;
-Olympia's deployment and renumbered Buccar remain untested. The restoration
+Olympia later passed deployment, and renumbered Catania passed control; Buccar's story departure prevented that check. The restoration
 follow-up fixes Flags value editing and distinguishes primary recruitment flags
 from alternate/unverified aliases. See [results and the focused retest](docs/unit-restoration-fix.md).
 

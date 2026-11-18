@@ -55,12 +55,12 @@ class LaterUnitTest(unittest.TestCase):
             app.undo();self.assertEqual([bytes(s.payload) for s in slots],before)
             app.redo();self.assertEqual([bytes(s.payload) for s in slots],after)
 
-    def test_wrong_characters_parts_and_non_free_time_contexts_still_refused(self):
+    def test_wrong_characters_parts_and_unsupported_contexts_still_refused(self):
         f=later_fixture(9,3);info=story.read(f)
         for route,part in ((1,3),(9,2),(9,1),(4,0),(9,4)):
             g=f.copy()
             for at in (info.header+12,info.user+3):g.payload[at:at+2]=bytes((route,part))
             with self.assertRaises(core.SaveError):entries.add(g,CATANIA)
-        for mode in (b'\x12\x04',b'\x12\x06',b'\x10\x0b'):
+        for mode in (b'\x12\x06',b'\x10\x08'):
             g=f.copy();g.payload[info.header+20:info.header+22]=mode
             with self.assertRaises(core.SaveError):entries.add(g,CATANIA)

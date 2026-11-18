@@ -138,6 +138,11 @@ def report(directory, *, extra_profiles=None, accepted_defaults=True):
         anna['restriction'] = ''
         anna['evidence'] = ('Dismounted-only: passed Leda Chapter 9 deployment/control tests. '
                             'Cannot remount; mounted Elephant Rider could not deploy in that battle')
+    if accepted_defaults:
+        for row in entries.values():
+            if row['name'] in ('Hong Hua', 'Troy', 'Centurio'):
+                row['restriction'] = ''
+                row['evidence'] = 'Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested'
     return {'schema':1, 'scope':'Level-one defaults, not chapter-scaled natural recruits. No story rewards, conditional skills or shared mounts are granted.',
             'sources':{n:hashlib.sha256((Path(directory)/n).read_bytes()).hexdigest()
                        for n in ('Person.bin','Growth.bin','Job.bin','Skill.bin')},

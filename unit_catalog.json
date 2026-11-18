@@ -2399,8 +2399,8 @@
       "recruit_flag": "加入_コウカ",
       "met_flag": "面識_コウカ",
       "default_mount": "",
-      "evidence": "Data-derived; game test pending",
-      "restriction": "Special-character defaults need validation.",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
       "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
     },
     "ee5acb16": {
@@ -2468,8 +2468,8 @@
       "recruit_flag": "加入_トロイア",
       "met_flag": "面識_トロイア",
       "default_mount": "",
-      "evidence": "Data-derived; game test pending",
-      "restriction": "Special-character defaults need validation.",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
       "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
     },
     "a5a3b83f": {
@@ -3292,8 +3292,8 @@
       "recruit_flag": "加入_セントリオン",
       "met_flag": "面識_セントリオン",
       "default_mount": "",
-      "evidence": "Data-derived; game test pending",
-      "restriction": "Special-character defaults need validation.",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
       "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
     },
     "19d5b2d0": {

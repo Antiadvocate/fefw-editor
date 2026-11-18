@@ -1,3 +1,8 @@
+Current update: 58 enabled, 9 restricted. Hong Hua, Troy and Centurio have
+been promoted using their accepted individual profiles. The counts below
+are historical audit results; the remaining special-unit tests are isolated
+research saves and do not enable untested entries globally.
+
 # Catalogue coverage audit
 
 **Update:** Anna's dismounted-only profile is now enabled after the A1 pass.

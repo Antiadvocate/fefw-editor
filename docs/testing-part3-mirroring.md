@@ -7,11 +7,9 @@ against the test directory at the same time.
 ## Part 3
 
 Open an Eshmel Part 3 free-time save (or a native chapter-start save). On Player,
-Story progression offers Chapters 1–6 with per-chapter evidence labels.
+Story progression offers Chapters 2–6 with per-chapter evidence labels.
 Editor checks passed. Chapters 2–5 reached the next battle; Chapter 6 reached
-its opening battle only. Chapter 1 replay is blocked at the cauldron objective,
-with missing active companions and zero magic. Use the separate diagnostic
-cases for Chapter 1 until a repair is confirmed.
+its opening battle only. Chapter 1 is unavailable: the retests restored companions but not progression. Start it through the Obelisk door instead. Native Chapter 1 files still load and can be moved to a later supported chapter.
 Other characters must not offer Part 3. Unknown and battle resume states remain
 read-only. This feature does not perform a Part 2-to-3 transition.
 

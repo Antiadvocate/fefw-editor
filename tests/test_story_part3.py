@@ -18,16 +18,23 @@ class Part3Test(unittest.TestCase):
     def test_entry_anchors_and_evidence(self):
         self.assertEqual(story.sequence(1,9,3),0xe1caa5330eae18c4)
         self.assertEqual(story.sequence(2,9,3),0xe1d565330eb7b38b)
-        self.assertEqual(start.chapters_for(9,3),(1,2,3,4,5,6))
-        self.assertIn('pending',story_page.chapter_evidence(9,1,3))
+        self.assertEqual(start.chapters_for(9,3),(2,3,4,5,6))
+        self.assertIn('Unavailable',story_page.chapter_evidence(9,1,3))
+        with self.assertRaisesRegex(core.SaveError,'Obelisk door'):start.edited(fixture(9,3),1)
         self.assertIn('progression untested',story_page.chapter_evidence(9,6,3))
         self.assertIn('Game-tested',story_page.chapter_evidence(9,2,3))
         self.assertIn('does not perform',story_page.warning_points(9,3)[1])
 
-    def test_six_targets_preserve_entire_user_object_except_story_fields(self):
+    def test_native_chapter_one_remains_readable_and_can_move_forward(self):
+        f=fixture(9,3)
+        self.assertEqual(start.validate(f).chapter,1)
+        g=core.SaveFile(start.edited(f,2))
+        self.assertEqual(start.validate(g).chapter,2)
+
+    def test_five_targets_preserve_entire_user_object_except_story_fields(self):
         f=fixture(9,3);before=bytes(f.payload);old=start.normalized_blocks(f)
-        dates=((1,24,8,0),(2,1,12,0),(2,16,12,0),(3,7,12,0),(4,6,12,0),(5,16,12,0))
-        for chapter,date in enumerate(dates,1):
+        dates=((2,1,12,0),(2,16,12,0),(3,7,12,0),(4,6,12,0),(5,16,12,0))
+        for chapter,date in enumerate(dates,2):
             g=core.SaveFile(start.edited(f,chapter));info=start.validate(g)
             self.assertEqual((info.route,info.part,info.chapter),(9,3,chapter))
             self.assertEqual(struct.unpack_from('<H5B',g.payload,info.header+22),(1454,*date,0))

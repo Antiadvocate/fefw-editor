@@ -154,7 +154,7 @@ def chapters_for(route, part=1):
     if type(part) is not int or type(route) is not int:
         raise story.StoryError('Unsupported story route or part.')
     if part == 3 and route == 9:
-        return story.PART3_CHAPTERS
+        return tuple(ch for ch in story.PART3_CHAPTERS if ch != 1)
     if part == 2 and route in story.PREFIXES:
         return story.PART2_CHAPTERS
     if part == 1 and route in TARGETS:
@@ -165,6 +165,8 @@ def chapters_for(route, part=1):
 def target(chapter, route=4, part=1):
     if part == 3:
         story.sequence(chapter, route, part)
+        if chapter == 1:
+            raise story.StoryError('Part 3 Chapter 1 replay is unavailable. Start it through the Obelisk door instead.')
         return PART3_DATES[chapter]
     if part == 2:
         story.sequence(chapter, route, part)

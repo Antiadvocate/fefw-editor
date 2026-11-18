@@ -59,6 +59,11 @@ class UnitEntryPageMixin:
         self.place_dialog(win,850,640)
         top=ttk.Frame(win,padding=12);top.pack(fill='x')
         ttk.Label(top,text='Choose a character',style='CardH3.TLabel').pack(anchor='w')
+        context=entries.context(f)
+        note = {'mid-battle': 'Mid-battle: adds a reserve for a later deployment; does not spawn a unit into the current fight. Game test pending.',
+                'pre-battle': 'Pre-battle: deployment and retention need game testing.',
+                'chapter-start': 'Chapter-start: opening scripts may reset or replace units. Game test pending.'}.get(context, '')
+        if note: ttk.Label(top,text=note,wraplength=805).pack(anchor='w',pady=(6,0))
         search=ttk.Entry(top);search.pack(fill='x',pady=(8,0))
         frame=ttk.Frame(win,padding=(12,0));frame.pack(fill='both',expand=True)
         tree=ttk.Treeview(frame,columns=('class','status'),show='tree headings',selectmode='browse')
@@ -106,6 +111,8 @@ class UnitEntryPageMixin:
         if not self._unit_entry_ready() or self.uid is None:return
         person=self.uid;expected=(self.sv,bytes(self.sv.payload))
         try:
+            if entries.context(self.core_of()) != 'free-time':
+                raise core.SaveError('Renumbering requires a free-time save; battle references are not rewritten.')
             rows=[g for u,g in entries.roster(self.core_of()) if u.person==person]
             if len(rows)!=1:raise core.SaveError('No unique character record is selected.')
             old=rows[0].unit_number

@@ -99,38 +99,114 @@ def require_context(f):
     if not ((info.part in (1, 2) and info.route in (1, 2, 3, 4))
             or (info.part == 3 and info.route == 9)):
         raise core.SaveError('Unit creation/renumbering supports the four Part 1/2 routes and Eshmel Part 3.')
-    if bytes(f.payload[info.header+20:info.header+22]) != b'\x12\x05':
-        raise core.SaveError('Use a free-time save; battle and chapter-start records are not edited here.')
+    if context(f, info) not in ('free-time', 'pre-battle', 'mid-battle', 'chapter-start'):
+        raise core.SaveError('This save context is not supported for unit creation.')
     if f.block('UnitPool') is None: raise core.SaveError('No live unit pool.')
     # Also validates the supported live flag store before touching any record.
-    facilities.locate(f)
+    recruitment_map(f)
     return info
 
 
-def roster(f):
-    """Inspect all live records, including ones hidden by the UI."""
-    pool = f.block('UnitPool')
-    if pool is None or bytes(f.payload[pool.start+4:pool.start+6]) != b'\0\4':
+def context(f, info=None):
+    info = info or story.read(f)
+    return {b'\x12\x05': 'free-time', b'\x12\x04': 'pre-battle',
+            b'\x12\x02': 'mid-battle', b'\x10\x0b': 'chapter-start'}.get(
+                bytes(f.payload[info.header+20:info.header+22]), 'unsupported')
+
+
+def recruitment_map(f):
+    # Native chapter checkpoints can precede the facility-map anchors.
+    return facilities.locate_member(f, facilities.GENERAL_MEMBER)
+
+
+def _unit_gear(f, u):
+    """Read equipment and number forwards, including the v9 battle object.
+
+    Battle-only history can have another version; tail-marker searches are not
+    suitable for identifying its number. No battle state is written here.
+    """
+    p=f.payload; cur=f.ptr(u.start+72)
+    if cur < u.start+76 or cur+8>u.end:
+        raise core.SaveError('Unknown unit mastery layout.')
+    cur+=8
+    for _ in range(7):
+        nxt=f.ptr(cur)
+        if not cur+4<=nxt<=u.end: raise core.SaveError('Unknown unit skill layout.')
+        cur=nxt
+    if cur+3>=u.end or p[cur]!=35: raise core.SaveError('Unknown unit equipment version.')
+    ride_at=cur+1
+    if p[ride_at]==0: ride=None;cur=ride_at+1
+    else:
+        ride,cur=core.Ride.read(p,ride_at,u.end)
+        if ride is None: raise core.SaveError('Unknown unit mount.')
+    legion_at=cur;legion=None
+    if p[cur]==0:cur+=1
+    elif p[cur]==1 and cur+17<u.end:
+        legion=core.Legion(p[cur+1],p[cur+2],struct.unpack_from('<Q',p,cur+9)[0]);cur+=17
+    else:raise core.SaveError('Unknown unit battalion.')
+    if p[u.start+5]==1:
+        at=(cur+3)&~3
+        if any(p[cur:at]) or at+5>=u.end:raise core.SaveError('Unknown battle-state alignment.')
+        end=f.ptr(at)
+        if not at+5<end<u.end-12 or p[at+4]!=9:
+            raise core.SaveError('Unknown unit battle-state object.')
+        number_at=end+1
+    else:
+        number_at=cur+1
+    if (number_at+10>=u.end or p[number_at-1]!=0
+            or p[number_at+1:number_at+3]!=b'\0\3'
+            or p[number_at+9] not in (33,65)):
+        raise core.SaveError('Unknown unit identity layout.')
+    return core.Gear(p[number_at],ride_at,legion_at-ride_at,ride,
+                     legion_at,cur-legion_at,legion)
+
+
+def _pool_groups(f):
+    """Decode counted player, reserve and opponent lists without merging them."""
+    pool=f.block('UnitPool')
+    if pool is None or f.payload[pool.start+4]!=0:
         raise core.SaveError('Unrecognised live unit pool.')
-    units = f.units()
-    if len(units) != f.u16(pool.start+6): raise core.SaveError('Incomplete live unit pool.')
-    at = pool.start+8
-    result = []
-    for u in units:
-        if u.start != at or u.end > pool.end or f.payload[u.start+4:u.start+8] != b'\x24\0\0\0':
-            raise core.SaveError('Unknown or incomplete unit record.')
-        gear = core.gear(f,u)
-        if gear is None: raise core.SaveError('A live unit has an unrecognised identity/equipment layout.')
-        result.append((u,gear))
-        at = u.end
-    if bytes(f.payload[at:pool.end]) != b'\xff\0\0\0':
-        raise core.SaveError('Unexpected data after the live unit pool.')
-    f.tree()
-    return result
+    tree=f.tree();at=pool.start+5;groups=[];seen=set()
+    while at<pool.end:
+        kind=f.payload[at]
+        if kind==255:
+            if bytes(f.payload[at:pool.end])!=b'\xff'+bytes(pool.end-at-1) or pool.end-at>4:
+                raise core.SaveError('Unexpected data after the live unit pool.')
+            return groups
+        if kind not in (0,1,3,4,6,7) or kind in seen or at+3>pool.end:
+            raise core.SaveError('Unknown or duplicate unit-pool group.')
+        seen.add(kind);count=f.u16(at+1);start=(at+6)&~3
+        if any(f.payload[at+3:start]):raise core.SaveError('Unknown unit-pool padding.')
+        cursor=start;rows=[]
+        for _ in range(count):
+            if cursor+84>pool.end:raise core.SaveError('Truncated live unit pool.')
+            end=f.ptr(cursor)
+            if (not cursor+84<=end<=pool.end or end%4 or tree.node_at(cursor)<0
+                    or f.payload[cursor+4]!=36 or f.payload[cursor+5] not in (0,1)):
+                raise core.SaveError('Unknown or incomplete unit record.')
+            u=core.SaveUnit.read(f,cursor);rows.append((u,_unit_gear(f,u)));cursor=end
+        groups.append((kind,at,cursor,rows));at=cursor
+    raise core.SaveError('Missing live unit-pool terminator.')
+
+
+def pool_groups(f):
+    try:
+        return _pool_groups(f)
+    except (IndexError, struct.error) as exc:
+        raise core.SaveError('Truncated or malformed unit-pool records; nothing changed.') from exc
+
+
+def roster(f):
+    """All player records, including reserves and story-hidden units.
+
+    Opponents may legitimately share an identity (including a protagonist).
+    Their numbers are reserved separately during allocation.
+    """
+    return [row for kind,_,_,rows in pool_groups(f) if kind in (0,4,6,7) for row in rows]
 
 
 def flag_values(f):
-    return {x.hash:x.value for x in facilities.locate(f).flags}
+    return {x.hash:x.value for x in recruitment_map(f).flags}
 
 
 def status(f, person, rows=None, values=None):
@@ -189,9 +265,10 @@ def next_number(f):
     rows=roster(f)
     people=[canonical(u.person) for u,_ in rows]
     if len(people)!=len(set(people)): raise core.SaveError('Existing duplicate character records must be reviewed first.')
-    nums=[g.unit_number for _,g in rows]
+    all_rows=[row for _,_,_,group in pool_groups(f) for row in group]
+    nums=[g.unit_number for _,g in all_rows]
     if len(nums)!=len(set(nums)): raise core.SaveError('Existing duplicate unit numbers must be repaired first.')
-    refs=_references(f,rows)
+    refs=_references(f,all_rows)
     if any(allies for _,_,allies in refs):
         raise core.SaveError('Mount affinity references are not yet mapped; allocating a new identity is disabled.')
     used=set(nums)|{owner for _,owner,_ in refs if owner not in (0,255)}
@@ -205,7 +282,7 @@ def _recruit(f,row):
     work=f.copy()
     for name in (row['recruit_flag'],row['met_flag']):
         if not name: continue
-        fm=facilities.locate(work);h=core.id_hash(name)
+        fm=recruitment_map(work);h=core.id_hash(name)
         matches=[x for x in fm.flags if x.hash==h]
         if len(matches)>1 or (matches and (matches[0].wide or matches[0].value not in (0,1))):
             raise core.SaveError('Unknown recruitment/met state; unchanged.')
@@ -252,13 +329,22 @@ def add(f,person):
     if existing: raise core.SaveError(status(f,person)+'. A second copy will not be added.')
     number=next_number(f)
     # Validate flags before constructing an appended record, preserving every old unit.
-    work=_recruit(f,row);pool=work.block('UnitPool');units=work.units();tree=work.tree()
-    at=pool.end-4;new=tree.splice(tree.node_at(pool.start),at,0,_record(row,number,at))
-    struct.pack_into('<H',new,pool.start+6,len(units)+1)
+    work=_recruit(f,row);pool=work.block('UnitPool');tree=work.tree()
+    groups=pool_groups(work);party=next((g for g in groups if g[0]==4),None)
+    if party is None:
+        # Mid-battle additions are reserves, never spawned onto a tile.
+        if context(work)!='mid-battle':raise core.SaveError('No supported party group.')
+        at=next((g[1] for g in groups if g[0]>4),pool.end-4)
+        body=b'\4\1\0\0'+_record(row,number,at+4)
+    else:
+        _,header,at,oldrows=party;body=_record(row,number,at)
+    new=tree.splice(tree.node_at(pool.start),at,0,body)
+    if party is not None:struct.pack_into('<H',new,header+1,len(oldrows)+1)
     result=core.SaveFile(new);rows=roster(result)
-    if [(u.person,g.unit_number) for u,g in rows[:-1]] != [(u.person,g.unit_number) for u,g in roster(work)]:
+    old_ids=[(u.person,g.unit_number) for u,g in roster(work)]
+    if [(u.person,g.unit_number) for u,g in rows if u.person!=person] != old_ids:
         raise core.SaveError('Existing unit identities changed; nothing applied.')
-    if rows[-1][0].person!=person or rows[-1][1].unit_number!=number:
+    if [(u.person,g.unit_number) for u,g in rows if u.person==person] != [(person,number)]:
         raise core.SaveError('New unit did not read back.')
     return new
 
@@ -277,6 +363,9 @@ def restore(f,person):
 
 def renumber(f,person,number):
     require_context(f)
+    if (context(f) != 'free-time' or [g[0] for g in pool_groups(f)] != [4]
+            or any(f.payload[u.start+4:u.start+8] != b'\x24\0\0\0' for u,_ in roster(f))):
+        raise core.SaveError('Renumbering requires a free-time party save; battle references are not rewritten.')
     if type(number) is not int or not MIN_NUMBER<=number<=MAX_NUMBER:
         raise core.SaveError('Unit number must be an integer from 1 to 254.')
     rows=roster(f);hits=[(u,g) for u,g in rows if u.person==person]
@@ -304,6 +393,8 @@ def renumber(f,person,number):
 def copy_in(src,unit,dst):
     """Guard the existing import path against character and number collisions."""
     require_context(dst)
+    if context(dst) != 'free-time' or len(pool_groups(dst)) != 1:
+        raise core.SaveError('Copy unit in requires a free-time save with one party group.')
     if any(canonical(u.person)==canonical(unit.person) for u,_ in roster(dst)):
         raise core.SaveError('This character already has a live record in the destination.')
     number=next_number(dst)

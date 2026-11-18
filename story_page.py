@@ -21,7 +21,7 @@ EVIDENCE_NOTE = ('Chapters 2–12 passed opening and next-story-beat tests. Edit
 
 def warning_points(route, part=1):
     if part == 3 and route == 9:
-        return ('Eshmel Part 3: Chapters 2–5 passed opening and progression checks. Chapter 6 reached its opening battle only. Chapter 1 replay is blocked at the cauldron objective and needs a repair.',
+        return ('Eshmel Part 3: Chapters 2–5 passed opening and progression checks. Chapter 6 reached its opening battle only. Chapter 1 is unavailable; start it through the Obelisk door.',
                 'Chapter selection keeps the current party, stored carryover data, flags and inventory. It does not perform the native Part 3 transition or create missing route-completion state.',
                 'Entry resets the clock and internal restart state. The game can regroup the party or reset unit stats during the opening. No Part 3 unlock repairs have been established.',
                 *WARNING_POINTS[3:])
@@ -60,7 +60,7 @@ def warning_points(route, part=1):
 
 def evidence_note(route, part=1):
     if part == 3 and route == 9:
-        return 'Eshmel Part 3: Chapters 2–5 passed opening and progression checks. Chapter 6 reached its opening battle; progression is untested. Chapter 1 replay is blocked at the cauldron, with party/magic problems. Obelisk loading and longer-term progression remain untested.'
+        return 'Eshmel Part 3: Chapters 2–5 passed opening and progression checks. Chapter 6 reached its opening battle; progression is untested. Chapter 1 is unavailable; start it through the Obelisk door. Obelisk loading and longer-term progression remain untested.'
     if part == 2:
         if route != 1:
             return f'{story.ROUTES[route]} Part 2 Chapters 1–6 reached the next battle from the tested Part 1 baseline. Theodora 6 passed both manual repair and fresh entry with automatic middle-city access. Other baselines, Obelisk loading and long-term progression remain untested.'
@@ -79,7 +79,7 @@ def evidence_note(route, part=1):
 def chapter_evidence(route, chapter, part=1):
     if part == 3 and route == 9:
         if chapter == 1:
-            return 'Blocked — cauldron objective, party and magic; repair testing pending'
+            return 'Unavailable — start through the Obelisk door'
         if chapter == 6:
             return 'Opening battle reached — progression untested'
         return 'Game-tested opening and next battle'

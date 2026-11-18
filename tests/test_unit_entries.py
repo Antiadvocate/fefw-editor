@@ -146,7 +146,7 @@ class UnitEntryTest(unittest.TestCase):
             self.assertEqual(entries.flag_values(added)[core.id_hash('面識_カターニャ')],1)
 
     def test_context_corrupt_pool_exhaustion_and_custom_protagonist_refused(self):
-        for mode in (b'\x10\x0b',b'\x12\x06'):
+        for mode in (b'\x10\x08',b'\x12\x06'):
             f=fixture();h=f.block('Header').start;f.payload[h+20:h+22]=mode
             with self.assertRaises(core.SaveError):entries.add(f,CATANIA)
         f=fixture();f.payload[f.block('UnitPool').end-1]=3
