@@ -221,7 +221,8 @@ def skill_label(sid: int) -> str:
 # convoy
 # --------------------------------------------------------------------------
 def live_convoy(payload) -> "Convoy | None":
-    f = core.SaveFile(bytes(payload))
+    """Read fresh rows, reusing a caller's validated decoded save when available."""
+    f = payload if isinstance(payload, core.SaveFile) else core.SaveFile(bytes(payload))
     at = core.convoy_at(f)
     if at < 0:
         return None

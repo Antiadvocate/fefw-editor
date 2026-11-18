@@ -2518,7 +2518,7 @@ class App(AdvancedMixin, tk.Tk):
         prev = select if select is not None else [int(i) for i in tree.selection()
                                                   if i.isdigit()]
         tree.delete(*tree.get_children())
-        conv = live_convoy(bytes(self.sv.payload)) if self.sv else None
+        conv = live_convoy(self.core_of()) if self.sv else None
         # live_convoy() returns every slot; only the filled ones are items
         self._conv_rows = [r for r in (conv.rows if conv else []) if r.qty and r.iid]
         names = item_ids()
