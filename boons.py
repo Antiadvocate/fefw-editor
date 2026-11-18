@@ -2,7 +2,7 @@
 
 EXP tier 1 and Weapons Discount tiers 1/2 have game evidence. Brawling and
 Black-Magic tier 1 have isolated save captures. Remaining keys and tiers
-extrapolate the common hash pattern; see docs/boons.md. The original
+extrapolate the common hash pattern; see https://github.com/Destorino5/fefw-editor/blob/feature/part2-story/docs/boons.md. The original
 first-tier helpers remain available for reproducing the earlier experiments.
 """
 from __future__ import annotations

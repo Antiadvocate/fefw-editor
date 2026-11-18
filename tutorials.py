@@ -1,7 +1,7 @@
 """Identified tutorial flags, conservative reads, and atomic list edits.
 
 Only stored state 2 and removal are writable here. Other stored states are
-reported verbatim. See docs/tutorials.md for the evidence and limitations.
+reported verbatim. See https://github.com/Destorino5/fefw-editor/blob/feature/part2-story/docs/tutorials.md for the evidence and limitations.
 """
 from __future__ import annotations
 

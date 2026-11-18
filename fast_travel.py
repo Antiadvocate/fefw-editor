@@ -1,7 +1,7 @@
 """Known Dagsion destination flags, independent of world-map/facility state.
 
 Only value 1 and absence are writable. Never infer the list from its index or
-create unscoped lookalike flags. See docs/fast-travel.md for evidence and limits.
+create unscoped lookalike flags. See https://github.com/Destorino5/fefw-editor/blob/feature/part2-story/docs/fast-travel.md for evidence and limits.
 """
 from __future__ import annotations
 

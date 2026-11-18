@@ -15,3 +15,11 @@ Before every merge into `main`:
 
 These are standing user requirements, not a separate permission gate. Follow
 the user's existing authorization to publish and merge their branches.
+
+Keep `main` focused on the editor, its catalogues, user instructions and release
+files. Research scripts, test suites and development/test reports belong on the
+feature branches. Preserve their history there before removing them from main;
+do not reintroduce them during a later feature merge. Run the relevant archived
+suite against the proposed main source when making functional changes. Keep
+the README in its original product-and-usage style, adding features without
+development diaries or test-case lists.
