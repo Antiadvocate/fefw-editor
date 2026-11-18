@@ -23,9 +23,9 @@ def warning_points(route, part=1):
         if route not in story.PREFIXES:
             raise story.StoryError('Part 2 supports the four main routes only.')
         if route != 1:
-            return (f'{story.ROUTES[route]} Part 2 Chapters 1–6 are inferred from the shared Part 2 timeline and Cai tests. This route has not been game-tested.',
-                    'Chapter 5 clears the upper-city movement restriction using the repair tested on Cai. Other route-specific prerequisites may still block progress.',
-                    'Party, items and prior progression are retained. Missing units, rewards, facilities and map unlocks are not granted. Entry, Obelisk loading and long-term progression need testing.',
+            return (f'{story.ROUTES[route]} Part 2 Chapters 1–6 reached the next battle from the tested Part 1 baseline. Theodora Chapter 6 required a manual midtown-access repair.',
+                    'Chapter 5 enables upper-city movement. Chapter 6 enables middle-city movement; the automatic Theodora entry repair needs a focused retest. Other prerequisites may still block progress.',
+                    'Party, items and prior progression are retained. Missing units, rewards, facilities and map unlocks are not granted. Other source saves, Obelisk loading and long-term progression need testing.',
                     f'This does not create the separate Part_{story.FILE_CODES[route]}_2 handoff file. Optional chapter files are different.',
                     *WARNING_POINTS[3:])
         return ('Cai Part 2 Chapters 1–6 passed opening and next-battle checks from a natural Part 2 baseline.',
@@ -55,7 +55,7 @@ def warning_points(route, part=1):
 def evidence_note(route, part=1):
     if part == 2:
         if route != 1:
-            return f'{story.ROUTES[route]} Part 2 Chapters 1–6: inferred from the shared timeline; game tests pending. Chapter 5 applies the Cai-tested access repair. Entry from Part 1, Obelisk loading and long-term progression are untested.'
+            return f'{story.ROUTES[route]} Part 2 Chapters 1–6 reached the next battle from the tested Part 1 baseline. Theodora 6 passed after manual middle-city access repair; automatic entry repair awaits retest. Other baselines, Obelisk loading and long-term progression remain untested.'
         return 'Cai only: Chapters 1–6, Chapter 5 repair and editor checks passed. Part 1 Chapter 4 → Part 2 Chapter 1 passed short-session checks. Obelisk loading, other conversion starting states and long-term progression remain untested.'
     if route == 4:
         return EVIDENCE_NOTE
@@ -70,7 +70,9 @@ def evidence_note(route, part=1):
 
 def chapter_evidence(route, chapter, part=1):
     if part == 2:
-        return ('Game-tested opening and progression from native Part 2' if chapter in story_start.PART2_TESTED_BY_ROUTE.get(route, ())
+        if route == 3 and chapter == 6:
+            return 'Progression passed with manual midtown repair — automatic entry fix awaiting retest'
+        return ('Game-tested opening and progression' if chapter in story_start.PART2_TESTED_BY_ROUTE.get(route, ())
                 else 'Inferred — game test pending')
     if route == 3 and chapter in story_start.THEODORA_REPAIRS:
         return story_start.THEODORA_REPAIRS[chapter]
@@ -273,8 +275,8 @@ class StoryPageMixin:
         snapshot = bytes(slot.payload)
         if not messagebox.askyesno('Experimental Part 2 entry',
                 f'Start this {story.ROUTES[info.route]} Part 1 save at Part 2 Chapter 1?\n\n'
-                'Conversion from Cai Part 1 Chapter 4 passed opening and next-battle checks. '
-                'Leda, Dietrich and Theodora entry is inferred and not yet game-tested. '
+                'Part 2 Chapter 1 entry and progression passed from Cai Chapter 4, '
+                'Leda Chapter 9, Dietrich Chapter 4 and Theodora Chapter 3 saves. '
                 'Other starting states and long-term progression remain untested. '
                 'It keeps your current units, items, '
                 'flags and world state; it does not grant missing transition rewards '

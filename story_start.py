@@ -7,8 +7,9 @@ Cai Part 2 Chapters 1–6 passed opening and next-battle checks.
 Chapter 5 upper-city movement repair passed both resumed and fresh entry.
 Part 1 Chapter 4-to-Part 2 Chapter 1 entry passed short-session checks;
 other conversion starting states and long-term progression remain untested.
-Leda, Dietrich and Theodora Part 2 use the shared timeline targets and Chapter 5
-repair provisionally. Their game checks are pending.
+Leda, Dietrich and Theodora Part 2 Chapters 1–6 reached the next battle from
+their tested Part 1 baselines. Theodora Chapter 6 needed a manual middle-city
+movement repair; the automatic chapter-entry repair awaits a focused retest.
 Cai Part 1 Chapters 1–12 passed short-session game tests.
 Dietrich Chapters 3–12 passed short-session checks, including integrated
 prerequisites for 5–7. Chapters 1/2 are unavailable: Chapter 2 replay remains
@@ -139,9 +140,10 @@ def normalized_blocks(f):
 
 # Part 2 title dates from the private timeline; Chapter 1/year from the native
 # checkpoint. Cai Chapters 1–6 subsequently passed short-session game checks.
-PART2_TESTED = frozenset(range(1, 7))  # Cai only.
-PART2_TESTED_BY_ROUTE = {1: PART2_TESTED, 2: frozenset(), 3: frozenset(), 4: frozenset()}
+PART2_TESTED = frozenset(range(1, 7))
+PART2_TESTED_BY_ROUTE = {route: PART2_TESTED for route in story.PREFIXES}
 PART2_UPPER_MOVEMENT = core.id_hash("行動範囲制限_上層")
+PART2_MIDDLE_MOVEMENT = core.id_hash("行動範囲制限_中層")
 PART2_DATES = {1: (1, 1, 12, 0), 2: (2, 1, 12, 0), 3: (3, 1, 12, 0),
                4: (4, 3, 12, 0), 5: (4, 30, 9, 30), 6: (4, 30, 12, 0)}
 
@@ -211,6 +213,8 @@ def edited(f, chapter):
         p = _edited_at_entry(f, chapter, 1450, date)
         if chapter == 5:
             p = repair_part2_chapter5(core.SaveFile(p))
+        if chapter == 6:
+            p = repair_part2_chapter6(core.SaveFile(p))
         return p
     year = (THEODORA_YEARS[chapter] if info.route == 3 else
             ENTRY_YEARS[chapter] if info.route == 4 else 1449)
@@ -254,11 +258,19 @@ def _edited_at_entry(f, chapter, year, date):
 
 
 def repair_part2_chapter5(f):
-    """Shared A30 gate repair; tested on Cai, inferred for the other routes."""
+    """Shared A30 gate repair; all four routes reached the Chapter 5 battle."""
     info = validate(f)
     if info.route not in story.PREFIXES or (info.part, info.chapter) != (2, 5):
         raise story.StoryError('The temple-access repair requires Part 2 Chapter 5.')
     return facilities.edited(f, {PART2_UPPER_MOVEMENT: True})
+
+
+def repair_part2_chapter6(f):
+    """Clear only middle-city movement; Theodora's manual repair reached battle."""
+    info = validate(f)
+    if info.route not in story.PREFIXES or (info.part, info.chapter) != (2, 6):
+        raise story.StoryError('The midtown-access repair requires Part 2 Chapter 6.')
+    return facilities.edited(f, {PART2_MIDDLE_MOVEMENT: True})
 
 
 def enter_part2(f):

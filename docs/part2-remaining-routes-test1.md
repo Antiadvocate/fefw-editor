@@ -1,5 +1,11 @@
 # Part 2 — Leda, Dietrich and Theodora Test 1
 
+**Results received 18 November:** all 18 returned cases reached their next
+battles; Theodora Chapter 6 required a manual middle-city access repair. See
+[the results and focused automatic-entry check](part2-chapter6-fix.md).
+The instructions below are the historical Test 1 procedure; its generator
+retains the original Chapter 6 behavior for reproduction.
+
 There are **18 independent tests: six chapters per route**. Cai Chapters 1–6
 already passed; you do not need to repeat them for this package.
 

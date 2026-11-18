@@ -1,7 +1,8 @@
 """Build 18 independent Part 2 probes from each route's own Part 1 save.
 
 Fingerprint guards identify the agreed private baselines; no private save data
-or game binaries belong in Git. All candidates use the production editor paths.
+or game binaries belong in Git. Historical Test 1: Chapter 6 retains the
+original state before its movement repair.
 """
 from pathlib import Path
 import argparse
@@ -46,7 +47,8 @@ def build(leda, dietrich, theodora, output):
                         'sha256': sha, 'units': len(f.units())})
         for target in start.chapters_for(route, 2):
             candidate = container.SaveFile(path)
-            candidate.payload = start.edited(entry, target)
+            edit = (lambda f: start._edited_at_entry(f, 6, 1450, start.PART2_DATES[6])) if target == 6 else (lambda f: start.edited(f, target))
+            candidate.payload = edit(entry)
             candidate._allow_part_transition = True
             data = candidate.to_bytes()
             g = core.SaveFile(candidate.payload); i = start.validate(g)
@@ -60,7 +62,7 @@ def build(leda, dietrich, theodora, output):
             struct.pack_into('<Q', expected, 4+start.RESUME_OFFSET, start.CHECKPOINT_ID)
             if expected != after['GameUserData']:
                 raise ValueError('Unexpected player or flag changes')
-            if start.edited(g, target) != candidate.payload:
+            if edit(g) != candidate.payload:
                 raise ValueError('Entry is not idempotent')
             ready.append((route, target, data, bytes(candidate.payload),
                           [(u.person, core.gear(g, u).unit_number) for u in g.units()]))

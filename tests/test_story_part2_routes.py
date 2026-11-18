@@ -21,7 +21,7 @@ class Part2RoutesTest(unittest.TestCase):
         for route in story.PREFIXES:
             with self.subTest(route=route):
                 f = fixture(route, 1)
-                f = core.SaveFile(facilities.edited(f, {start.PART2_UPPER_MOVEMENT: False}))
+                f = core.SaveFile(facilities.edited(f, {start.PART2_UPPER_MOVEMENT: False, start.PART2_MIDDLE_MOVEMENT: False}))
                 before = bytes(f.payload)
                 old = start.normalized_blocks(f)
                 converted = core.SaveFile(start.enter_part2(f))
@@ -37,8 +37,9 @@ class Part2RoutesTest(unittest.TestCase):
                     for key in old.keys()-{'Header', 'GameUserData', 'GameSchedule', 'Calendar', 'GameRestartData'}:
                         self.assertEqual(old[key], now[key])
                     # Compare the entire user object, permitting only the existing
-                    # upper movement repair plus part/chapter/sequence/resume fields.
-                    expected_source = core.SaveFile(facilities.edited(f, {start.PART2_UPPER_MOVEMENT: True})) if chapter == 5 else f
+                    # chapter-specific movement repair plus part/chapter/sequence/resume fields.
+                    repair = {5: start.PART2_UPPER_MOVEMENT, 6: start.PART2_MIDDLE_MOVEMENT}.get(chapter)
+                    expected_source = core.SaveFile(facilities.edited(f, {repair: True})) if repair else f
                     expected = bytearray(start.normalized_blocks(expected_source)['GameUserData'])
                     expected[8:10] = bytes((2, chapter))
                     struct.pack_into('<Q', expected, 85, info.sequence)
@@ -84,10 +85,10 @@ class Part2RoutesTest(unittest.TestCase):
         for route, part in ((9, 1), (4, 2), (2, 3)):
             with self.assertRaises(core.SaveError): start.enter_part2(fixture(route, part))
 
-    def test_inferred_evidence_warning_and_slot_swap(self):
+    def test_route_evidence_warning_and_slot_swap(self):
         for route in (2, 3, 4):
-            self.assertIn('inferred', story_page.warning_points(route, 2)[0])
-            self.assertIn('Inferred', story_page.chapter_evidence(route, 5, 2))
+            self.assertIn('reached the next battle', story_page.warning_points(route, 2)[0])
+            self.assertIn('Game-tested', story_page.chapter_evidence(route, 5, 2))
             a = StoryHarness(route); a.sv = box_for(fixture(route, 1))
             original = a.sv; before = bytes(original.payload)
             with patch.object(story_page.messagebox, 'askyesno', return_value=False) as dialog:
