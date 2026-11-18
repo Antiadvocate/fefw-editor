@@ -4,6 +4,7 @@ from tkinter import ttk, simpledialog, messagebox
 
 import fefw_core as core
 import unit_entries as entries
+from ui_util import ScrollableFrame
 
 
 class UnitEntryPageMixin:
@@ -71,26 +72,40 @@ class UnitEntryPageMixin:
         except core.SaveError as exc:self.flash(str(exc),'error');return
         from editor_advanced import class_label
         win=tk.Toplevel(self);win.title('Add unit — preview');win.transient(self)
-        self.place_dialog(win,850,640)
-        top=ttk.Frame(win,padding=12);top.pack(fill='x')
+        win.configure(background=ttk.Style(win).lookup('TFrame','background'))
+        win.columnconfigure(0,weight=1)
+        win.rowconfigure(1,weight=3,minsize=100)
+        win.rowconfigure(2,weight=2,minsize=110)
+        top=ttk.Frame(win,padding=12);top.grid(row=0,column=0,sticky='ew')
         ttk.Label(top,text='Choose a character',style='CardH3.TLabel').pack(anchor='w')
         context=entries.context(f)
         note = {'pre-battle': 'Pre-battle: added units may have reduced HP/stats or be missing from the editor window. A warning appears before applying.',
                 'chapter-start': 'Chapter-start addition passed the tested opening. Other opening scripts may still reset or replace units.'}.get(context, '')
-        if note: ttk.Label(top,text=note,wraplength=805).pack(anchor='w',pady=(6,0))
+        if note:
+            context_note=ttk.Label(top,text=note,wraplength=805)
+            context_note.pack(fill='x',pady=(6,0))
+            top.bind('<Configure>',lambda event: context_note.configure(
+                wraplength=max(180,event.width-24)))
         search=ttk.Entry(top);search.pack(fill='x',pady=(8,0))
-        frame=ttk.Frame(win,padding=(12,0));frame.pack(fill='both',expand=True)
-        tree=ttk.Treeview(frame,columns=('class','status'),show='tree headings',selectmode='browse')
-        tree.heading('#0',text='Character');tree.column('#0',width=180)
-        tree.heading('class',text='Starting class');tree.column('class',width=155)
-        tree.heading('status',text='Status');tree.column('status',width=370)
+        frame=ttk.Frame(win,padding=(12,0));frame.grid(row=1,column=0,sticky='nsew')
+        frame.rowconfigure(0,weight=1);frame.columnconfigure(0,weight=1)
+        tree=ttk.Treeview(frame,columns=('class','status'),show='tree headings',selectmode='browse',height=6)
+        tree.heading('#0',text='Character');tree.column('#0',width=180,minwidth=140)
+        tree.heading('class',text='Starting class');tree.column('class',width=250,minwidth=230)
+        tree.heading('status',text='Status');tree.column('status',width=340,minwidth=260)
         scroll=ttk.Scrollbar(frame,orient='vertical',command=tree.yview);tree.configure(yscrollcommand=scroll.set)
-        tree.pack(side='left',fill='both',expand=True);scroll.pack(side='right',fill='y')
-        detail=ttk.Label(win,wraplength=805,justify='left',padding=12)
-        detail.pack(fill='x')
-        bar=ttk.Frame(win,padding=12);bar.pack(fill='x')
+        hscroll=ttk.Scrollbar(frame,orient='horizontal',command=tree.xview);tree.configure(xscrollcommand=hscroll.set)
+        tree.grid(row=0,column=0,sticky='nsew');scroll.grid(row=0,column=1,sticky='ns')
+        hscroll.grid(row=1,column=0,sticky='ew')
+        details=ScrollableFrame(win)
+        details.grid(row=2,column=0,sticky='nsew',padx=12,pady=(8,0))
+        detail=ttk.Label(details.body,wraplength=760,justify='left',padding=(0,6))
+        detail.pack(fill='x',anchor='nw')
+        details.canvas.bind('<Configure>',lambda event: detail.configure(wraplength=max(180,event.width-12)),add='+')
+        bar=ttk.Frame(win,padding=12);bar.grid(row=3,column=0,sticky='ew')
         selected={'person':None,'action':None}
         def choose(*_):
+            details.canvas.yview_moveto(0)
             picked=tree.selection();selected.update(person=None,action=None)
             apply.state(['disabled'])
             if not picked:detail.configure(text='Select a character to preview the change.');return
@@ -119,6 +134,9 @@ class UnitEntryPageMixin:
         apply=ttk.Button(bar,text='Add unit',style='Accent.TButton',command=commit);apply.pack(side='right')
         ttk.Button(bar,text='Cancel',command=win.destroy).pack(side='right',padx=8)
         search.bind('<KeyRelease>',fill);tree.bind('<<TreeviewSelect>>',choose)
+        self.place_dialog(win,920,760)
+        win.minsize(min(self.px(580),win.winfo_screenwidth()-40),
+                    min(self.px(420),win.winfo_screenheight()-80))
         fill();search.focus_set();win.grab_set();self.wait_window(win)
 
     def open_unit_number(self):

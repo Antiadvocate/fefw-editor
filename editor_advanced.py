@@ -18,6 +18,7 @@ from tkinter import messagebox, ttk
 
 import fefw_core as core
 import supports
+from ui_util import ScrollableFrame
 from fefw_save import item_ids, item_label, unit_ids
 from map_page import MapPageMixin
 from tutorial_page import TutorialPageMixin
@@ -291,7 +292,9 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
 
     # ============================================================ PLAYER
     def _build_player(self):
-        page = self.player_page
+        self.player_scroll = ScrollableFrame(self.player_page)
+        self.player_scroll.pack(fill="both", expand=True)
+        page = self.player_scroll.body
         card = ttk.Frame(page, style="Card.TFrame", padding=(16, 10))
         card.pack(fill="x")
         ttk.Label(card, text="Player", style="CardH3.TLabel").pack(anchor="w")

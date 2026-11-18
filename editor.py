@@ -36,7 +36,7 @@ import fefw_layer as layer  # noqa: E402
 import supports  # noqa: E402  (support pair chart + conversation flags)
 import fefw_core as core  # noqa: E402  (save object tree: resizing edits)
 from editor_advanced import AdvancedMixin  # noqa: E402  (Player / Classes / Flags pages)
-from ui_util import enable_multi_select, last_tree  # noqa: E402  (Ctrl+A / Shift+drag in tables)
+from ui_util import ScrollableFrame, enable_multi_select, last_tree  # noqa: E402  (Ctrl+A / Shift+drag in tables)
 
 APP_NAME = "Fortune's Weave Save Editor"
 __version__ = "1.3.9"
@@ -403,7 +403,7 @@ class App(AdvancedMixin, tk.Tk):
         self.title(APP_NAME)
         self.ui_scale = _install_scaling(self)
         sw, sh = self.winfo_screenwidth(), self.winfo_screenheight()
-        w, h = min(self.px(1240), sw - 40), min(self.px(780), sh - 80)
+        w, h = min(self.px(1360), sw - 40), min(self.px(900), sh - 80)
         self.geometry(f"{w}x{h}+{max(0, (sw - w) // 2)}+{max(0, (sh - h) // 3)}")
         self.minsize(min(self.px(1000), w), min(self.px(640), h))
 
@@ -871,7 +871,6 @@ class App(AdvancedMixin, tk.Tk):
         bar = ttk.Frame(self, style="Header.TFrame", padding=(18, 6))
         bar.pack(side="bottom", fill="x")
         self.status_lbl = ttk.Label(bar, text="Ready", style="Status.TLabel")
-        self.status_lbl.pack(side="left")
         self.dirty_lbl = ttk.Label(bar, text="", style="Status.TLabel")
         self.dirty_lbl.pack(side="right")
 
@@ -908,6 +907,15 @@ class App(AdvancedMixin, tk.Tk):
         self.pages.add(self.deeds_page, text="Notable Deeds")
         self.pages.add(self.boons_page, text="Boons")
         self.pages.add(self.flags_page, text="Flags")
+
+        tab_menu = tk.Menu(self, tearoff=False)
+        for page in self.pages.tabs():
+            tab_menu.add_command(label=self.pages.tab(page, 'text'),
+                                 command=lambda page=page: self.pages.select(page))
+        self.tab_menu_button = ttk.Menubutton(bar, text='Go to tab', menu=tab_menu)
+        self.tab_menu_button.pack(side='right', padx=(10, 16))
+        self.status_lbl.pack(side='left', fill='x', expand=True)
+        self.pages.enable_traversal()
 
         self._build_units()
         self._build_convoy()
@@ -957,18 +965,20 @@ class App(AdvancedMixin, tk.Tk):
         side = ttk.Frame(pane, style="Card.TFrame", padding=12)
         pane.add(side, weight=0)
         top = ttk.Frame(side, style="Card.TFrame")
-        top.pack(fill="x")
+        side.columnconfigure(0, weight=1)
+        side.rowconfigure(3, weight=1)
+        top.grid(row=0, column=0, sticky="ew")
         ttk.Label(top, text="Units", style="CardH3.TLabel").pack(side="left")
         self.unit_count = ttk.Label(top, text="", style="CardMuted.TLabel")
         self.unit_count.pack(side="right")
         self.unit_search = SearchEntry(side, "Search units or classes…  (Ctrl+F)",
                                        self.refresh_units, width=30)
-        self.unit_search.pack(fill="x", pady=(8, 6))
+        self.unit_search.grid(row=1, column=0, sticky="ew", pady=(8, 6))
         self.unit_search.bind("<Down>", lambda e: (self.unit_tree.focus_set(), "break")[1])
         ttk.Checkbutton(side, text="Show enemies & NPCs", style="Card.TCheckbutton",
                         variable=self.show_enemies,
                         command=lambda: (self.refresh_units(), self._save_settings())
-                        ).pack(anchor="w", pady=(0, 6))
+                        ).grid(row=2, column=0, sticky="w", pady=(0, 6))
         self.unit_tree = scrolled_tree(side, columns=("number", "lv"), show="tree headings",
                                        selectmode="browse")
         self.unit_tree.heading("#0", text="Name", anchor="w")
@@ -977,10 +987,10 @@ class App(AdvancedMixin, tk.Tk):
         self.unit_tree.column("number", width=62, minwidth=55, anchor="e", stretch=False)
         self.unit_tree.column("#0", width=200, minwidth=140)
         self.unit_tree.column("lv", width=44, minwidth=40, anchor="e", stretch=False)
-        self.unit_tree.container.pack(fill="both", expand=True)
+        self.unit_tree.container.grid(row=3, column=0, sticky="nsew")
         self.unit_tree.bind("<<TreeviewSelect>>", self.on_unit_select)
         acts = ttk.Frame(side, style="Card.TFrame")
-        acts.pack(fill="x", pady=(8, 0))
+        acts.grid(row=4, column=0, sticky="ew", pady=(8, 0))
         ttk.Button(acts, text="Add unit…", style="Small.TButton",
                    command=self.open_add_unit).pack(fill="x", pady=(0, 6))
         ttk.Button(acts, text="Change unit number…", style="Small.TButton",
@@ -1023,8 +1033,9 @@ class App(AdvancedMixin, tk.Tk):
         return (self.register(lambda P: P == "" or (P.isdigit() and len(P) <= 7)), "%P")
 
     def _build_stats_tab(self):
-        tab = ttk.Frame(self.unit_tabs, style="Card.TFrame", padding=18)
-        self.unit_tabs.add(tab, text="Stats")
+        self.stats_scroll = ScrollableFrame(self.unit_tabs, style="Card.TFrame", padding=18)
+        self.unit_tabs.add(self.stats_scroll, text="Stats")
+        tab = self.stats_scroll.body
         self._stat_spins: list[ttk.Spinbox] = []
         vcmd = self._num_vcmd()
 
