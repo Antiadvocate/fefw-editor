@@ -99,7 +99,12 @@ def require_context(f):
     if not ((info.part in (1, 2) and info.route in (1, 2, 3, 4))
             or (info.part == 3 and info.route == 9)):
         raise core.SaveError('Unit creation/renumbering supports the four Part 1/2 routes and Eshmel Part 3.')
-    if context(f, info) not in ('free-time', 'pre-battle', 'mid-battle', 'chapter-start'):
+    kind=context(f, info)
+    if kind == 'mid-battle':
+        raise core.SaveError('Adding or restoring units during a battle is disabled: added reserves did not become available in game. Use a pre-battle, free-time or chapter-start save.')
+    if kind == 'world-map':
+        raise core.SaveError('World-map battle state is not supported for Add Unit. Use a normal pre-battle, free-time or chapter-start save.')
+    if kind not in ('free-time', 'pre-battle', 'chapter-start'):
         raise core.SaveError('This save context is not supported for unit creation.')
     if f.block('UnitPool') is None: raise core.SaveError('No live unit pool.')
     # Also validates the supported live flag store before touching any record.
@@ -109,9 +114,13 @@ def require_context(f):
 
 def context(f, info=None):
     info = info or story.read(f)
-    return {b'\x12\x05': 'free-time', b'\x12\x04': 'pre-battle',
-            b'\x12\x02': 'mid-battle', b'\x10\x0b': 'chapter-start'}.get(
-                bytes(f.payload[info.header+20:info.header+22]), 'unsupported')
+    mode=bytes(f.payload[info.header+20:info.header+22])
+    if mode == b'\x12\x02':
+        # The preparation flag distinguishes tactical setup from an active fight.
+        # World-map battle mode has a different lifecycle and is not inferred here.
+        return {1:'pre-battle',0:'mid-battle'}.get(f.payload[info.header+17], 'unsupported')
+    return {b'\x12\x05':'free-time', b'\x12\x04':'world-map',
+            b'\x10\x0b':'chapter-start'}.get(mode, 'unsupported')
 
 
 def recruitment_map(f):
@@ -332,8 +341,8 @@ def add(f,person):
     work=_recruit(f,row);pool=work.block('UnitPool');tree=work.tree()
     groups=pool_groups(work);party=next((g for g in groups if g[0]==4),None)
     if party is None:
-        # Mid-battle additions are reserves, never spawned onto a tile.
-        if context(work)!='mid-battle':raise core.SaveError('No supported party group.')
+        # During tactical preparation, create the unfielded party list.
+        if context(work)!='pre-battle':raise core.SaveError('No supported party group.')
         at=next((g[1] for g in groups if g[0]>4),pool.end-4)
         body=b'\4\1\0\0'+_record(row,number,at+4)
     else:

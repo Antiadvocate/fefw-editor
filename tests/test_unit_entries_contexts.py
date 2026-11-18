@@ -1,6 +1,7 @@
 """Synthetic pre-battle, mid-battle and chapter-start recruitment checks."""
 import struct
 import unittest
+from unittest.mock import patch
 
 import fefw_core as core
 import story_start
@@ -10,7 +11,7 @@ from test_unit_entry_page import Harness
 from test_mirroring import peers
 
 
-def grouped_fixture(groups, mode=b'\x12\x02'):
+def grouped_fixture(groups, mode=b'\x12\x02', preparing=True):
     f=fixture();pool=f.block('UnitPool');tree=f.tree()
     body=bytearray(b'\0')
     for kind,people in groups:
@@ -30,6 +31,7 @@ def grouped_fixture(groups, mode=b'\x12\x02'):
     body.append(255);body.extend(bytes(-(pool.start+4+len(body))%4))
     out=tree.splice(tree.node_at(pool.start),pool.start+4,pool.end-pool.start-4,body)
     g=core.SaveFile(out);h=g.block('Header').start;g.payload[h+20:h+22]=mode
+    g.payload[h+17]=int(preparing)
     return g
 
 
@@ -41,7 +43,7 @@ def records(f):
 
 class UnitContextsTest(unittest.TestCase):
     def test_pre_battle_and_chapter_start_creation_preserves_units_and_state(self):
-        for mode,label in ((b'\x12\x04','pre-battle'),(b'\x10\x0b','chapter-start')):
+        for mode,label in ((b'\x12\x02','pre-battle'),(b'\x10\x0b','chapter-start')):
             f=grouped_fixture([(4,[(CAI,12,False)])],mode)
             before=bytes(f.payload);old=records(f);blocks=story_start.normalized_blocks(f)
             self.assertEqual(entries.context(f),label)
@@ -54,7 +56,7 @@ class UnitContextsTest(unittest.TestCase):
             with self.assertRaises(core.SaveError):entries.renumber(g,CATANIA,99)
             self.assertEqual(f.payload,before)
 
-    def test_mid_battle_reserve_add_preserves_allies_opponents_and_hidden_units(self):
+    def test_pre_battle_add_preserves_allies_opponents_and_hidden_units(self):
         for reserve in ([],[(4,[(OLYMPIA,15,False)])]):
             f=grouped_fixture([(0,[(CAI,12,True)]),
                 (1,[(CATANIA,80,True),(CATANIA,81,True)]),*reserve,
@@ -87,10 +89,12 @@ class UnitContextsTest(unittest.TestCase):
             with self.assertRaises(core.SaveError):entries.add(bad,CATANIA)
             self.assertEqual(bad.payload,before)
 
-    def test_mid_battle_mirrored_add_undo_redo_and_invalid_peer_atomicity(self):
+    def test_pre_battle_mirrored_add_undo_redo_and_invalid_peer_atomicity(self):
         a=Harness();a.sv.payload=grouped_fixture([(0,[(CAI,12,True)])]).payload
         slots=peers(a);before=[bytes(s.payload) for s in slots]
-        self.assertTrue(a.apply_unit_entry('add',CATANIA),a.messages)
+        with patch('unit_entry_page.messagebox.askokcancel',return_value=True) as prompt:
+            self.assertTrue(a.apply_unit_entry('add',CATANIA),a.messages)
+        prompt.assert_called_once()
         after=[bytes(s.payload) for s in slots]
         a.undo();self.assertEqual([bytes(s.payload) for s in slots],before)
         a.redo();self.assertEqual([bytes(s.payload) for s in slots],after)
@@ -99,3 +103,54 @@ class UnitContextsTest(unittest.TestCase):
         before=[bytes(s.payload) for s in slots]
         self.assertFalse(a.apply_unit_entry('add',CATANIA))
         self.assertEqual([bytes(s.payload) for s in slots],before)
+
+    def test_mid_battle_and_world_map_refused_without_changing_payload(self):
+        for mode,preparing,label in ((b'\x12\x02',False,'mid-battle'),
+                                     (b'\x12\x04',False,'world-map')):
+            f=grouped_fixture([(0,[(CAI,12,True)])],mode,preparing)
+            before=bytes(f.payload)
+            self.assertEqual(entries.context(f),label)
+            with self.assertRaises(core.SaveError):entries.add(f,CATANIA)
+            with self.assertRaises(core.SaveError):entries.restore(f,CAI)
+            self.assertEqual(f.payload,before)
+        f=grouped_fixture([(0,[(CAI,12,True)])]);f.payload[f.block('Header').start+17]=2
+        with self.assertRaises(core.SaveError):entries.add(f,CATANIA)
+
+    def test_pre_battle_warning_cancel_and_blocked_mid_battle_peer_are_atomic(self):
+        a=Harness();a.sv.payload=grouped_fixture([(0,[(CAI,12,True)])]).payload
+        slots=peers(a);before=[bytes(s.payload) for s in slots]
+        with patch('unit_entry_page.messagebox.askokcancel',return_value=False) as prompt:
+            self.assertFalse(a.apply_unit_entry('add',CATANIA))
+        prompt.assert_called_once()
+        self.assertIn('reduced HP or stats',prompt.call_args.args[1])
+        self.assertEqual([bytes(s.payload) for s in slots],before)
+        self.assertFalse(getattr(a,'_undo_stack',None))
+        slots[-1].payload=grouped_fixture([(0,[(CAI,12,True)])],preparing=False).payload
+        before=[bytes(s.payload) for s in slots]
+        with patch('unit_entry_page.messagebox.askokcancel') as prompt:
+            self.assertFalse(a.apply_unit_entry('add',CATANIA))
+        prompt.assert_not_called()
+        self.assertEqual([bytes(s.payload) for s in slots],before)
+
+    def test_pre_battle_peer_triggers_warning_from_selected_free_time(self):
+        a=Harness();slots=peers(a,[grouped_fixture([(0,[(CAI,12,True)])]).payload])
+        before=[bytes(s.payload) for s in slots]
+        with patch('unit_entry_page.messagebox.askokcancel',return_value=False) as prompt:
+            self.assertFalse(a.apply_unit_entry('add',CATANIA))
+        prompt.assert_called_once()
+        self.assertEqual([bytes(s.payload) for s in slots],before)
+
+    def test_nine_accepted_special_profiles_are_enabled_with_eshmel_caveat(self):
+        names={'Aswan','Cleobulus','Creek','Gladius','Klapka','Myson','Nathan','Tahonia','Eshmel'}
+        tested=set()
+        for person,row in entries.catalog().items():
+            if row['name'] not in names:continue
+            self.assertFalse(row['restriction'])
+            f=core.SaveFile(entries.add(fixture(),person))
+            self.assertEqual(entries.status(f,person),'Already in party')
+            self.assertEqual(f.units()[-1].klass,int(row['class'],16))
+            tested.add(row['name'])
+            if row['name']=='Eshmel':
+                self.assertIsNone(f.units()[-1].look)
+                self.assertIn('unhelmeted',row['evidence'])
+        self.assertEqual(tested,names)

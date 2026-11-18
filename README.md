@@ -11,14 +11,14 @@ and named flag changes, alongside Maps, Support and existing unit/inventory
 edits. Targets must match character, part and playthrough; chapter checkpoints
 remain excluded. Added-page edits validate all targets before applying, and
 Undo/Redo restores the affected saves together. Add Unit supports the four Part 1/2 routes and Eshmel Part 3
-free-time, pre-battle, mid-battle and chapter-start saves with recognized layouts. It allocates unused numbers independently in each save. Mid-battle additions go into reserves, not onto the battlefield; game checks for these new contexts are pending.
+free-time, normal pre-battle and chapter-start saves with recognized layouts. It allocates unused numbers independently in each save. Pre-battle additions require acknowledging a warning about reduced HP/stats and editor visibility. Mid-battle additions are disabled; world-map battle states remain unsupported.
 Story progress and its chapter-specific troubleshooting repairs stay selected-only.
 
 
 **New-unit test feature:** Units now has **Add unit…**, a visible **Unit #**,
-and guarded number editing. The searchable catalogue enables 58
+and guarded number editing. The searchable catalogue enables 67
 level-one candidates, blocks duplicate characters/numbers and preserves existing
-unit progress. The four Part 1/2 routes and Eshmel Part 3 are supported. Renumbering and importing remain limited to free-time saves.
+unit progress. Eshmel is a special case with a helmeted portrait but a generic unhelmeted battle model. Anna starts dismounted; mounted deployment has also passed a Part 3 Chapter 2 test. The four Part 1/2 routes and Eshmel Part 3 are supported. Renumbering and importing remain limited to free-time saves.
 See [scope and identity rules](docs/unit-creation.md) and the
 [focused test guide](docs/testing-unit-creation-test1.md).
 The first game returns passed for the deployed additions and renumbered Sirocco;

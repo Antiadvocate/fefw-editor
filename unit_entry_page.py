@@ -1,6 +1,6 @@
 """Recruit preview and identity controls with same-route mirroring."""
 import tkinter as tk
-from tkinter import ttk, simpledialog
+from tkinter import ttk, simpledialog, messagebox
 
 import fefw_core as core
 import unit_entries as entries
@@ -38,6 +38,21 @@ class UnitEntryPageMixin:
             elif action == 'restore': entries.restore(self.core_of(), person)
         except core.SaveError as exc:
             self.flash(str(exc), 'error'); return False
+        if action in ('add', 'restore'):
+            try:
+                targets=[self.core_of(sv) for sv in self._targets()]
+                for f in targets:
+                    entries.require_context(f)
+                    entries.roster(f)
+            except core.SaveError as exc:
+                self.flash(f'Nothing changed: {exc}', 'error');return False
+            if any(entries.context(f)=='pre-battle' for f in targets):
+                if not messagebox.askokcancel('Pre-battle unit warning',
+                        'One or more target saves are in battle preparation.\n\n'
+                        'Added units may start with reduced HP or stats, or may not appear '
+                        'in the editor window. Battle setup can change the added unit.\n\n'
+                        'Continue with this unit change?', icon='warning', default='cancel', parent=self):
+                    return False
         label = {'add':'Unit added where missing', 'restore':'Recruitment restored',
                  'renumber':'Unit number and mapped ownership references updated'}.get(action, 'Unit edit')
         if not self._core_edit(edit, label):
@@ -60,9 +75,8 @@ class UnitEntryPageMixin:
         top=ttk.Frame(win,padding=12);top.pack(fill='x')
         ttk.Label(top,text='Choose a character',style='CardH3.TLabel').pack(anchor='w')
         context=entries.context(f)
-        note = {'mid-battle': 'Mid-battle: adds a reserve for a later deployment; does not spawn a unit into the current fight. Game test pending.',
-                'pre-battle': 'Pre-battle: deployment and retention need game testing.',
-                'chapter-start': 'Chapter-start: opening scripts may reset or replace units. Game test pending.'}.get(context, '')
+        note = {'pre-battle': 'Pre-battle: added units may have reduced HP/stats or be missing from the editor window. A warning appears before applying.',
+                'chapter-start': 'Chapter-start addition passed the tested opening. Other opening scripts may still reset or replace units.'}.get(context, '')
         if note: ttk.Label(top,text=note,wraplength=805).pack(anchor='w',pady=(6,0))
         search=ttk.Entry(top);search.pack(fill='x',pady=(8,0))
         frame=ttk.Frame(win,padding=(12,0));frame.pack(fill='both',expand=True)

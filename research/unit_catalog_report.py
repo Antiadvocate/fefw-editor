@@ -136,13 +136,13 @@ def report(directory, *, extra_profiles=None, accepted_defaults=True):
         anna['registered_classes'] = [mounted, anna['class']]
         anna['items'] = [f'{core.id_hash(weapon):08x}']
         anna['restriction'] = ''
-        anna['evidence'] = ('Dismounted-only: passed Leda Chapter 9 deployment/control tests. '
-                            'Cannot remount; mounted Elephant Rider could not deploy in that battle')
+        anna['evidence'] = 'Starts dismounted: passed Leda Chapter 9. Mounted Elephant Rider also passed Part 3 Chapter 2; earlier Leda deployment failed. Remounting and the map/unlock requirements remain unverified'
     if accepted_defaults:
         for row in entries.values():
-            if row['name'] in ('Hong Hua', 'Troy', 'Centurio'):
+            if row['name'] in ('Hong Hua', 'Troy', 'Centurio', 'Aswan', 'Cleobulus', 'Creek', 'Gladius', 'Klapka', 'Myson', 'Nathan', 'Tahonia', 'Eshmel'):
                 row['restriction'] = ''
                 row['evidence'] = 'Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested'
+        entries[f'{core.id_hash("PID_イシュマール"):08x}']['evidence'] = 'Special case: passed Leda Chapter 9 with a helmeted portrait and an unhelmeted generic battle model. Custom appearance/name is not supplied'
     return {'schema':1, 'scope':'Level-one defaults, not chapter-scaled natural recruits. No story rewards, conditional skills or shared mounts are granted.',
             'sources':{n:hashlib.sha256((Path(directory)/n).read_bytes()).hexdigest()
                        for n in ('Person.bin','Growth.bin','Job.bin','Skill.bin')},

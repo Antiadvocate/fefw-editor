@@ -2340,8 +2340,8 @@
       "recruit_flag": "加入_イシュマール",
       "met_flag": "面識_イシュマール",
       "default_mount": "",
-      "evidence": "Data-derived; game test pending",
-      "restriction": "Custom protagonist creation is not supported.",
+      "evidence": "Special case: passed Leda Chapter 9 with a helmeted portrait and an unhelmeted generic battle model. Custom appearance/name is not supplied",
+      "restriction": "",
       "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
     },
     "29c382bc": {
@@ -3368,8 +3368,8 @@
       "recruit_flag": "加入_アスワン",
       "met_flag": "面識_アスワン",
       "default_mount": "",
-      "evidence": "Data-derived; game test pending",
-      "restriction": "Special-character defaults need validation.",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
       "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
     },
     "ccc1297f": {
@@ -3442,8 +3442,8 @@
       "recruit_flag": "加入_クレオブロス",
       "met_flag": "面識_クレオブロス",
       "default_mount": "",
-      "evidence": "Data-derived; game test pending",
-      "restriction": "Special-character defaults need validation.",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
       "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
     },
     "35d5a20e": {
@@ -3516,8 +3516,8 @@
       "recruit_flag": "加入_ミュソン",
       "met_flag": "面識_ミュソン",
       "default_mount": "",
-      "evidence": "Data-derived; game test pending",
-      "restriction": "Special-character defaults need validation.",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
       "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
     },
     "95e8317e": {
@@ -3603,8 +3603,8 @@
       "recruit_flag": "加入_ネイサン",
       "met_flag": "面識_ネイサン",
       "default_mount": "",
-      "evidence": "Data-derived; game test pending",
-      "restriction": "Special-character defaults need validation.",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
       "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
     },
     "d42581b7": {
@@ -3684,8 +3684,8 @@
       "recruit_flag": "加入_キリーク",
       "met_flag": "面識_キリーク",
       "default_mount": "",
-      "evidence": "Data-derived; game test pending",
-      "restriction": "Special-character defaults need validation.",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
       "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
     },
     "66f65049": {
@@ -3811,7 +3811,7 @@
       "recruit_flag": "加入_アンナ",
       "met_flag": "面識_アンナ",
       "default_mount": "",
-      "evidence": "Dismounted-only: passed Leda Chapter 9 deployment/control tests. Cannot remount; mounted Elephant Rider could not deploy in that battle",
+      "evidence": "Starts dismounted: passed Leda Chapter 9. Mounted Elephant Rider also passed Part 3 Chapter 2; earlier Leda deployment failed. Remounting and the map/unlock requirements remain unverified",
       "restriction": "",
       "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event.",
       "registered_classes": [
@@ -3886,8 +3886,8 @@
       "recruit_flag": "加入_グラディウス",
       "met_flag": "面識_グラディウス",
       "default_mount": "",
-      "evidence": "Data-derived; game test pending",
-      "restriction": "Special-character defaults need validation.",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
       "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
     },
     "f6b59fdf": {
@@ -3969,8 +3969,8 @@
       "recruit_flag": "加入_クラプカ",
       "met_flag": "面識_クラプカ",
       "default_mount": "",
-      "evidence": "Data-derived; game test pending",
-      "restriction": "Special-character defaults need validation.",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
       "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
     },
     "6d9442ab": {
@@ -4040,8 +4040,8 @@
       "recruit_flag": "加入_タホウニア",
       "met_flag": "面識_タホウニア",
       "default_mount": "",
-      "evidence": "Data-derived; game test pending",
-      "restriction": "Special-character defaults need validation.",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
       "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
     }
   }

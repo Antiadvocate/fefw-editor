@@ -61,7 +61,7 @@ class UnitEntryTest(unittest.TestCase):
         self.assertEqual(u.klass,dismounted)
         self.assertEqual(u.classes,[(mounted,0,4),(dismounted,0,4)])
         self.assertEqual(u.items,[core.id_hash('IID_青銅の槍')])
-        self.assertIn('Cannot remount',entries.catalog()[person]['evidence'])
+        self.assertIn('Mounted Elephant Rider also passed Part 3',entries.catalog()[person]['evidence'])
         self.assertEqual(entries.status(g,person),'Already in party')
         with self.assertRaises(core.SaveError):entries.add(g,person)
 
@@ -145,17 +145,12 @@ class UnitEntryTest(unittest.TestCase):
             added=core.SaveFile(entries.add(met,CATANIA))
             self.assertEqual(entries.flag_values(added)[core.id_hash('面識_カターニャ')],1)
 
-    def test_context_corrupt_pool_exhaustion_and_custom_protagonist_refused(self):
+    def test_context_corrupt_pool_and_exhaustion_refused(self):
         for mode in (b'\x10\x08',b'\x12\x06'):
             f=fixture();h=f.block('Header').start;f.payload[h+20:h+22]=mode
             with self.assertRaises(core.SaveError):entries.add(f,CATANIA)
         f=fixture();f.payload[f.block('UnitPool').end-1]=3
         with self.assertRaises(core.SaveError):entries.add(f,CATANIA)
-        with self.assertRaises(core.SaveError):entries.add(fixture(),core.id_hash('PID_イシュマール'))
-        restricted=[h for h,r in entries.catalog().items() if r['restriction']]
-        self.assertGreater(len(restricted),1)
-        for person in restricted:
-            with self.assertRaises(core.SaveError):entries.add(fixture(),person)
         f=fixture(equipped=True);pool=core.party_store(f)[1];f.payload[pool+4]=9
         with self.assertRaises(core.SaveError):entries.add(f,CATANIA)
 

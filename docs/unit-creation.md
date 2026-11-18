@@ -9,12 +9,17 @@ parsed record does not establish working deployment.
 ## Catalogue and creation
 
 The picker has 67 named character identities with PID-derived recruitment keys.
-54 ordinary candidates, Anna, Hong Hua, Troy and Centurio are enabled (58 total). Eight other special-character entries and the custom protagonist remain visible but disabled pending validation. Hong Hua, Troy and Centurio use their previously accepted Leda Chapter 9 profiles.
-Anna uses her accepted **dismounted-only** class and Bronze Spear. Her Add unit
-preview states that she cannot remount; the mounted class failed deployment in
-the tested battle. Existing Anna records are not automatically reclassed.
+All 67 catalogue identities are now enabled, including the nine final special
+profiles accepted in Leda Chapter 9. This is not a claim that every route and
+map supports each character's natural recruitment or deployment.
+Eshmel is a **special case**: his tested base record has a helmeted portrait
+and a generic unhelmeted battle model. No custom name/appearance is supplied.
+Anna still starts **dismounted**, with a Bronze Spear. Mounted Elephant Rider
+also passed a Part 3 Chapter 2 test, while it failed the earlier Leda test.
+The map/space/unlock requirements and remounting remain unverified; existing
+Anna records are not automatically reclassed.
 An [audit of all 2,923 Person rows](unit-catalogue-coverage.md) accounts for all
-55 entries with source flag byte 39: 54 enabled plus the custom protagonist.
+55 entries with source flag byte 39, including the custom protagonist.
 That heuristic is not proof of an exhaustive natural-recruitment list.
 An existing character, including a known alternate template, cannot be added
 again. Status is calculated over the entire live UnitPool, including records
@@ -81,15 +86,18 @@ with separate recognized contexts:
 | Context | Addition behaviour | Game acceptance |
 | --- | --- | --- |
 | Free-time | Append to the party | Individual existing results apply |
-| Pre-battle | Append to the party before deployment | Pending |
-| Mid-battle | Append to the reserve party group, retaining deployed allies and opponents | Pending; no on-map spawn |
-| Chapter-start | Append to the checkpoint party | Pending; opening scripts may reset or replace it |
+| Normal pre-battle | Append to the party before deployment, after a warning | Passed with reduced starting HP; editor visibility may be incomplete |
+| Mid-battle | Disabled | Added reserve did not become available, including after restart |
+| Chapter-start | Append to the checkpoint party | Passed the tested opening; other scripts may still reset units |
+| World-map battle | Unsupported | Separate lifecycle; not evidence for normal pre-battle support |
 
 UnitPool group headers and record/equipment versions must be recognized.
 Unknown groups/layouts and dungeon resume contexts remain refused. Manual
 renumbering and Copy unit in still require a free-time save: battle references
-are not rewritten. A mid-battle addition is intended for a later deployment;
-retention after the fight must be tested before relying on it.
+are not rewritten. A warning appears before a pre-battle unit change, including
+when only a mirrored target is pre-battle. Cancelling leaves every target and
+Undo history unchanged. A mid-battle or otherwise unsupported mirrored target
+refuses the whole operation; no targets are partially changed.
 **Also edit this route's other saves** applies the action to matching live saves.
 Each target is validated first and allocates a free local number; existing
 active records are kept and inactive recruitment can be restored. A changed

@@ -40,7 +40,7 @@ change. Undo/Redo should restore both even after switching mirroring off. Save
 and reopen both to verify persistence. Chapter checkpoints and other routes,
 parts and playthroughs should stay unchanged.
 
-For Add Unit, use supported main-route Part 1/2 or Eshmel Part 3 free-time saves. Test a character missing
+For Add Unit, use supported main-route Part 1/2 or Eshmel Part 3 free-time, normal pre-battle or chapter-start saves. Mid-battle and world-map battle states must refuse. Pre-battle changes must show the warning, including when only a peer is pre-battle. Cancelling must leave all saves and history unchanged. Test a character missing
 from both saves, then one already present in a peer. Existing recruited records
 must retain their number, stats and inventory. Inactive records should restore
 recruitment; new records allocate an unused number in their own save. A duplicate

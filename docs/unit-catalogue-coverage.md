@@ -1,3 +1,8 @@
+Current update: all 67 catalogue identities enabled following the final nine
+special-unit passes. Eshmel retains the explicit portrait/model caveat. Anna
+starts dismounted; mounted deployment passed the reported Part 3 Chapter 2 case.
+Earlier counts and restrictions below are historical audit records.
+
 Current update: 58 enabled, 9 restricted. Hong Hua, Troy and Centurio have
 been promoted using their accepted individual profiles. The counts below
 are historical audit results; the remaining special-unit tests are isolated
