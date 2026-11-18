@@ -1,0 +1,39 @@
+name: Source checks
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  save-editor:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.10', '3.12']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -r requirements.txt
+      - run: python build_flag_names.py --check-labels
+      - name: Check source and catalogues
+        shell: python
+        run: |
+          import importlib
+          import json
+          import py_compile
+          import sys
+          from pathlib import Path
+
+          sys.path.insert(0, str(Path.cwd()))
+          for path in Path('.').glob('*.py'):
+              py_compile.compile(str(path), doraise=True)
+          for path in Path('.').glob('*.json'):
+              json.loads(path.read_text(encoding='utf-8'))
+          for name in ('editor', 'editor_advanced', 'story_page', 'unit_entry_page',
+                       'tutorial_page', 'blessing_page', 'fast_travel_page',
+                       'facility_page', 'deed_page', 'boon_page', 'map_page'):
+              importlib.import_module(name)

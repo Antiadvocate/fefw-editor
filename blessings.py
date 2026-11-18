@@ -3,7 +3,7 @@
 No selection, Divine Sand, audience, deed or story flags are changed here.
 The separate audiences module implements experimental first-audience edits.
 The level preview is derived from data thresholds, not a stored level field.
-See docs/blessings.md for evidence, Fortuna and game-validation limits.
+See https://github.com/Destorino5/fefw-editor/blob/feature/part2-story/docs/blessings.md for evidence, Fortuna and game-validation limits.
 """
 from __future__ import annotations
 

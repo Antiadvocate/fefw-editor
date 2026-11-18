@@ -1101,6 +1101,30 @@ def flag_add(f: SaveFile, fm: FlagMap, hash_: int, value: int) -> bytearray:
     return flag_rebuild(f, fm, fm.flags, bytes(b))
 
 
+def flag_set(f: SaveFile, fm: FlagMap, hash_: int, value: int) -> bytearray:
+    """Set one existing flag, preserving its list and all other records."""
+    if type(value) is not int or not 0 <= value <= 0x7FFFFFFF:
+        raise SaveError("flag value must be an integer from 0 to 2147483647")
+    hits = [fl for fl in fm.flags if fl.hash == hash_]
+    if len(hits) != 1:
+        raise SaveError("no unique flag in the selected list")
+    fl = hits[0]
+    out = bytearray(f.payload)
+    if fl.value == value:
+        return out
+    if fl.wide:
+        struct.pack_into('<i', out, fl.offset, value)
+    elif value < 255:
+        out[fl.offset] = value
+    else:
+        # Preserve the whole list when promoting one compact value to int32.
+        body = bytearray(f.payload[fm.start + 4:f.ptr(fm.start)])
+        offset = fl.offset - fm.start - 4
+        body[offset:offset + 1] = b'\xff' + struct.pack('<i', value)
+        return replace_content(f, fm.start, body)
+    return out
+
+
 def flag_remove(f: SaveFile, fm: FlagMap, flag: Flag) -> bytearray:
     return flag_rebuild(f, fm, [x for x in fm.flags if x is not flag])
 
@@ -1231,24 +1255,17 @@ def remove_unit(f: SaveFile, index: int) -> bytearray:
 
 def new_unit(f: SaveFile, template: SaveUnit, person: int, klass: int,
              level: int, hp: int, items=(), masteries=()) -> bytearray:
-    """Grow a level-1 unit from a template record."""
-    if template.name:
-        raise SaveError("pick a template that isn't the player character")
-    work = SaveFile(copy_unit(f, template, f))
-    u = work.units()[-1]
-    struct.pack_into("<I", work.payload, u.start + 10, person & 0xFFFFFFFF)
-    struct.pack_into("<I", work.payload, u.start + 14, klass & 0xFFFFFFFF)
-    work.payload[u.start + 26:u.start + 35] = bytes(9)
-    work.payload[u.start + 37:u.start + 55] = bytes(18)
-    level = max(1, min(99, int(level)))
-    work.payload[u.start + 59] = level
-    struct.pack_into("<H", work.payload, u.start + 60, (level - 1) * 100)
-    struct.pack_into("<I", work.payload, u.start + 64, max(1, min(999, int(hp))))
-    u = work.units()[-1]
-    new = with_lists(work, u, list(masteries), [(klass & 0xFFFFFFFF, 0, 4)])
-    work = SaveFile(new)
-    u = work.units()[-1]
-    return with_items(work, u, list(items))
+    """Compatibility entry point for safe, catalogued level-one creation.
+
+    Arbitrary template cloning is no longer an identity-safe creation path.
+    The template is not copied; unsupported custom defaults are refused.
+    """
+    import unit_entries
+    row = unit_entries.catalog().get(person)
+    if (row is None or klass != int(row['class'], 16) or level != 1 or hp != row['hp']
+            or items or masteries):
+        raise SaveError("Use the Add unit catalogue defaults, then edit the resulting unit.")
+    return unit_entries.add(f, person)
 
 
 # --------------------------------------------------------------------------

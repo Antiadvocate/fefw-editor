@@ -70,7 +70,7 @@ class BlessingPageMixin:
             "Edit one god at a time. Level previews use game-data thresholds; Fortuna is special. "
             "The audience toggle changes only the first-talk flag; other access conditions may still apply. "
             "Audience edits leave EXP, selected blessings, Divine Sand and travel destinations unchanged.\n"
-            "Turn off ‘Also edit this route’s other saves’. Apply EXP and the toggle change memory; "
+            "Uses the same-route mirroring selection. Apply EXP and the toggle change memory; "
             "Ctrl+S saves, Ctrl+Z undoes, Ctrl+Y redoes."
         )).pack(anchor="w", pady=(8, 0))
         self._blessing_selected()
@@ -171,9 +171,6 @@ class BlessingPageMixin:
     def apply_blessing_exp(self):
         if not self.sv:
             return
-        if self.mirror.get():
-            self.flash("Turn off ‘Also edit this route’s other saves’ for blessing edits.", "warn")
-            return
         selected = self.blessing_tree.selection()
         if len(selected) != 1:
             self.flash("Select one god first.", "info")
@@ -194,20 +191,12 @@ class BlessingPageMixin:
         except core.SaveError as exc:
             self.flash(str(exc), "error")
             return
-        if after == before.payload:
-            self.flash("This blessing already has the requested EXP.", "info")
-            return
-        self.push_undo()
         self._core_edit(lambda f: blessings.edited(f, {h: value}),
                         f"{blessings.BY_HASH[h].name} EXP → {value}")
 
     def toggle_blessing_audience(self):
         """Checkbox applies immediately in memory, like other page actions."""
         if not self.sv:
-            self._blessing_selected()
-            return
-        if self.mirror.get():
-            self.flash("Turn off ‘Also edit this route’s other saves’ for audience edits.", "warn")
             self._blessing_selected()
             return
         selected = self.blessing_tree.selection()
@@ -225,10 +214,5 @@ class BlessingPageMixin:
             self.flash(str(exc), "error")
             self._blessing_selected()
             return
-        if after == before.payload:
-            self.flash("This audience already has the requested state.", "info")
-            self._blessing_selected()
-            return
-        self.push_undo()
         self._core_edit(lambda f: audiences.edited(f, {h: value}),
                         f"{blessings.BY_HASH[h].name} first audience → {'recorded' if value else 'not recorded'}")

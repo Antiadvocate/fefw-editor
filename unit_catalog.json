@@ -1,0 +1,4048 @@
+{
+  "schema": 1,
+  "scope": "Level-one defaults, not chapter-scaled natural recruits. No story rewards, conditional skills or shared mounts are granted.",
+  "sources": {
+    "Person.bin": "40f613cfbe31b258673384f4bb795918820ac17c3853af701e302329375a0182",
+    "Growth.bin": "c867449ad44a96cfa08ff404a6c228faea36706c4d783a296a96a66d0b89c43b",
+    "Job.bin": "ceb835e16769e67eff91fb319758f189fc19f2ee760649c8c52fdb4418360207",
+    "Skill.bin": "5c71282ebe99239fb965eabf93eb92c8ae3a8dc37ed0600ccb4ea6bb5b6579ee"
+  },
+  "entries": {
+    "3d853178": {
+      "pid": "PID_カイ",
+      "name": "Cai",
+      "aliases": [
+        "a9e01c6f",
+        "cbef82a1",
+        "35c6d034",
+        "3072452d",
+        "d978821f",
+        "13058674",
+        "2ed573f9",
+        "4c72b612",
+        "47c80686",
+        "41baed5c",
+        "178dc8ae",
+        "5885b2f6",
+        "5b9638b3"
+      ],
+      "source_offset": "0x14c0",
+      "person_serial": 1,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 27,
+      "masteries": [
+        [
+          0,
+          20
+        ],
+        [
+          1,
+          35
+        ],
+        [
+          6,
+          20
+        ],
+        [
+          9,
+          20
+        ]
+      ],
+      "items": [
+        "2f11ea6a"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "25ecd491"
+        ],
+        [],
+        [],
+        [
+          "25ecd491"
+        ],
+        [],
+        [
+          "25ecd491"
+        ]
+      ],
+      "recruit_flag": "加入_カイ",
+      "met_flag": "面識_カイ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "dd42cdd3": {
+      "pid": "PID_ティアラ",
+      "name": "Tialla",
+      "aliases": [
+        "182e2302",
+        "5703c78f",
+        "80827f0e",
+        "86565c08",
+        "a14b2ecf",
+        "8fe09bda",
+        "e08cf1e5",
+        "68dafb37",
+        "d8049f49"
+      ],
+      "source_offset": "0x1780",
+      "person_serial": 2,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 24,
+      "masteries": [
+        [
+          5,
+          35
+        ],
+        [
+          6,
+          35
+        ],
+        [
+          12,
+          35
+        ]
+      ],
+      "items": [
+        "bac907a6"
+      ],
+      "magic": [
+        "084e35bd",
+        "43d77e2c"
+      ],
+      "skills": [
+        [
+          "e6a3e589"
+        ],
+        [],
+        [],
+        [
+          "e6a3e589"
+        ],
+        [],
+        [
+          "16708e3a",
+          "52c26e2b",
+          "661a086a",
+          "e6a3e589"
+        ]
+      ],
+      "recruit_flag": "加入_ティアラ",
+      "met_flag": "面識_ティアラ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "6eea5a06": {
+      "pid": "PID_ピーテル",
+      "name": "Peter",
+      "aliases": [
+        "caa1af01",
+        "d54b0702",
+        "217152e8"
+      ],
+      "source_offset": "0x1a40",
+      "person_serial": 3,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 25,
+      "masteries": [
+        [
+          3,
+          35
+        ]
+      ],
+      "items": [
+        "2f0d0472"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "381ca20e",
+          "eb843114"
+        ],
+        [],
+        [],
+        [
+          "381ca20e",
+          "eb843114"
+        ],
+        [],
+        [
+          "f4ad69c7",
+          "381ca20e",
+          "eb843114"
+        ]
+      ],
+      "recruit_flag": "加入_ピーテル",
+      "met_flag": "面識_ピーテル",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "3eab1233": {
+      "pid": "PID_ウルタンド",
+      "name": "Ultand",
+      "aliases": [
+        "695cbc4d",
+        "97843372",
+        "1e8027cf",
+        "2de04c59"
+      ],
+      "source_offset": "0x1d00",
+      "person_serial": 4,
+      "source_flags": 39,
+      "class": "d5230479",
+      "class_key": "JID_呪い師",
+      "level": 1,
+      "hp": 24,
+      "masteries": [
+        [
+          1,
+          35
+        ],
+        [
+          5,
+          35
+        ],
+        [
+          6,
+          35
+        ]
+      ],
+      "items": [],
+      "magic": [
+        "084e35bd",
+        "43d77e2c"
+      ],
+      "skills": [
+        [
+          "25ecd491"
+        ],
+        [],
+        [],
+        [
+          "25ecd491"
+        ],
+        [],
+        [
+          "d6dd3082",
+          "25ecd491",
+          "52c26e2b",
+          "661a086a"
+        ]
+      ],
+      "recruit_flag": "加入_ウルタンド",
+      "met_flag": "面識_ウルタンド",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "24becc53": {
+      "pid": "PID_ベルトラン",
+      "name": "Bertrand",
+      "aliases": [
+        "254e8625",
+        "2a16dd06",
+        "7409cf45",
+        "4fb01a1d",
+        "4cce6c3c",
+        "a5ec3500",
+        "8b17c70d",
+        "64ab8d17",
+        "e9086a61",
+        "e294010e",
+        "8565571b",
+        "9f7fc578",
+        "95020c3f",
+        "3f7ec141",
+        "27cb312b",
+        "51257511",
+        "dc06e792",
+        "dfbb7d24"
+      ],
+      "source_offset": "0x1fc0",
+      "person_serial": 5,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 28,
+      "masteries": [
+        [
+          0,
+          35
+        ],
+        [
+          2,
+          35
+        ],
+        [
+          8,
+          35
+        ]
+      ],
+      "items": [
+        "01aff8d9",
+        "01b13bf3",
+        "bac907a6"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "bc60971a",
+          "40dd3b94"
+        ],
+        [
+          "3eca6d13"
+        ],
+        [],
+        [
+          "bc60971a",
+          "40dd3b94"
+        ],
+        [],
+        [
+          "bc60971a",
+          "40dd3b94",
+          "3eca6d13"
+        ]
+      ],
+      "recruit_flag": "加入_ベルトラン",
+      "met_flag": "面識_ベルトラン",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "76424943": {
+      "pid": "PID_ゲイツ",
+      "name": "Gaitz",
+      "aliases": [
+        "6c1723a6",
+        "084fd461",
+        "61ddb3f8",
+        "c50b85ac",
+        "8e881869",
+        "011b9907",
+        "a6f891fd",
+        "739fac6e",
+        "9b8db70b",
+        "fe1a4664",
+        "f47a536f",
+        "7b90cfcd"
+      ],
+      "source_offset": "0x2280",
+      "person_serial": 6,
+      "source_flags": 39,
+      "class": "4ce2e45b",
+      "class_key": "JID_兵士",
+      "level": 1,
+      "hp": 27,
+      "masteries": [
+        [
+          1,
+          35
+        ],
+        [
+          2,
+          20
+        ],
+        [
+          9,
+          35
+        ]
+      ],
+      "items": [
+        "01b158ba"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "2d418d07"
+        ],
+        [
+          "a7b09775"
+        ],
+        [],
+        [
+          "2d418d07"
+        ],
+        [],
+        [
+          "a7b09775",
+          "74b87218",
+          "2d418d07"
+        ]
+      ],
+      "recruit_flag": "加入_ゲイツ",
+      "met_flag": "面識_ゲイツ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "3aaae5b5": {
+      "pid": "PID_マクシム",
+      "name": "Maxim",
+      "aliases": [
+        "bf26e2be",
+        "615e8c37",
+        "b543fcd4",
+        "00df7fd5",
+        "52e2497c",
+        "e783ad56",
+        "00d430e8",
+        "91066093",
+        "1704ee02",
+        "2c790acd",
+        "6b5a20e3"
+      ],
+      "source_offset": "0x2540",
+      "person_serial": 7,
+      "source_flags": 39,
+      "class": "95a9c7ea",
+      "class_key": "JID_闘士",
+      "level": 1,
+      "hp": 25,
+      "masteries": [
+        [
+          0,
+          35
+        ],
+        [
+          3,
+          20
+        ],
+        [
+          8,
+          35
+        ]
+      ],
+      "items": [
+        "01aff8d9",
+        "2b16dc0e"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "5e422dbc",
+          "a984b5c2"
+        ],
+        [
+          "88d07c55"
+        ],
+        [],
+        [
+          "5e422dbc",
+          "a984b5c2"
+        ],
+        [],
+        [
+          "30505aee",
+          "5e422dbc",
+          "a984b5c2",
+          "88d07c55"
+        ]
+      ],
+      "recruit_flag": "加入_マクシム",
+      "met_flag": "面識_マクシム",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "acc4355d": {
+      "pid": "PID_ゴライアス",
+      "name": "Goliath",
+      "aliases": [
+        "b6f8d9aa",
+        "bcfa5623",
+        "4d2c7190",
+        "7c5710c3",
+        "065887ca",
+        "797c801e",
+        "314a3e2b",
+        "9bff9a11",
+        "273f56af",
+        "833740b8",
+        "d072ad65",
+        "8a437536",
+        "ffbae49f"
+      ],
+      "source_offset": "0x2800",
+      "person_serial": 8,
+      "source_flags": 39,
+      "class": "4ce2e45b",
+      "class_key": "JID_兵士",
+      "level": 1,
+      "hp": 32,
+      "masteries": [
+        [
+          2,
+          35
+        ],
+        [
+          10,
+          20
+        ]
+      ],
+      "items": [
+        "01b13bf3",
+        "bac907a6"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "40dd3b94"
+        ],
+        [],
+        [],
+        [
+          "40dd3b94"
+        ],
+        [],
+        [
+          "262d1940",
+          "40dd3b94"
+        ]
+      ],
+      "recruit_flag": "加入_ゴライアス",
+      "met_flag": "面識_ゴライアス",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "127ad22c": {
+      "pid": "PID_ダンテ",
+      "name": "Dante",
+      "aliases": [
+        "1c6df3fd",
+        "2bcee196",
+        "856a3a13",
+        "cf82f7cf",
+        "ece04c3e",
+        "8ebf9d68",
+        "b096457a",
+        "2b28a9a5",
+        "38af7ed4",
+        "8528e547",
+        "9d96970a"
+      ],
+      "source_offset": "0x2ac0",
+      "person_serial": 9,
+      "source_flags": 39,
+      "class": "d5230479",
+      "class_key": "JID_呪い師",
+      "level": 1,
+      "hp": 25,
+      "masteries": [
+        [
+          5,
+          35
+        ],
+        [
+          6,
+          35
+        ]
+      ],
+      "items": [
+        "2f0d2589",
+        "bac907a6"
+      ],
+      "magic": [
+        "196894d3",
+        "43d77e2c"
+      ],
+      "skills": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "425d0b5a",
+          "3607b9b5",
+          "661a086a"
+        ]
+      ],
+      "recruit_flag": "加入_ダンテ",
+      "met_flag": "面識_ダンテ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "aa0c2cda": {
+      "pid": "PID_ディートリヒ",
+      "name": "Dietrich",
+      "aliases": [
+        "1d131741",
+        "fb106f6e",
+        "95390a24",
+        "bbb2ec9a",
+        "531ef9f1",
+        "ad1a0123",
+        "67732d74",
+        "519167f5",
+        "ea5cb564"
+      ],
+      "source_offset": "0x2d80",
+      "person_serial": 10,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 27,
+      "masteries": [
+        [
+          0,
+          35
+        ],
+        [
+          8,
+          35
+        ]
+      ],
+      "items": [
+        "a9ff35ec",
+        "bac907a6"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "d25270dd"
+        ],
+        [
+          "3eca6d13"
+        ],
+        [],
+        [
+          "d25270dd"
+        ],
+        [],
+        [
+          "d25270dd",
+          "3eca6d13"
+        ]
+      ],
+      "recruit_flag": "加入_ディートリヒ",
+      "met_flag": "面識_ディートリヒ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "eaed860a": {
+      "pid": "PID_ファビオ",
+      "name": "Fabio",
+      "aliases": [
+        "c0e60aa6",
+        "5fcb42fc",
+        "bf1dd3ca",
+        "e8d94265",
+        "ae95ea97",
+        "155ef73c"
+      ],
+      "source_offset": "0x3040",
+      "person_serial": 11,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 25,
+      "masteries": [
+        [
+          5,
+          35
+        ],
+        [
+          6,
+          35
+        ],
+        [
+          8,
+          35
+        ]
+      ],
+      "items": [
+        "bac907a6"
+      ],
+      "magic": [
+        "80806c2d",
+        "43d77e2c"
+      ],
+      "skills": [
+        [],
+        [
+          "faa16f31"
+        ],
+        [],
+        [],
+        [],
+        [
+          "b8b744b0",
+          "63081ca7",
+          "661a086a",
+          "faa16f31"
+        ]
+      ],
+      "recruit_flag": "加入_ファビオ",
+      "met_flag": "面識_ファビオ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "1622079b": {
+      "pid": "PID_エスメラルダ",
+      "name": "Esmeralda",
+      "aliases": [
+        "67bfd5e9"
+      ],
+      "source_offset": "0x3300",
+      "person_serial": 12,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 28,
+      "masteries": [
+        [
+          1,
+          35
+        ],
+        [
+          2,
+          20
+        ],
+        [
+          10,
+          20
+        ]
+      ],
+      "items": [
+        "01b158ba"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "25ecd491"
+        ],
+        [],
+        [],
+        [
+          "25ecd491"
+        ],
+        [],
+        [
+          "00840fee",
+          "25ecd491"
+        ]
+      ],
+      "recruit_flag": "加入_エスメラルダ",
+      "met_flag": "面識_エスメラルダ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "577e717e": {
+      "pid": "PID_ミカエラ",
+      "name": "Mikaela",
+      "aliases": [
+        "60213b28"
+      ],
+      "source_offset": "0x35c0",
+      "person_serial": 13,
+      "source_flags": 39,
+      "class": "95a9c7ea",
+      "class_key": "JID_闘士",
+      "level": 1,
+      "hp": 26,
+      "masteries": [
+        [
+          2,
+          35
+        ],
+        [
+          3,
+          35
+        ],
+        [
+          9,
+          20
+        ]
+      ],
+      "items": [
+        "01b13bf3"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "40dd3b94",
+          "a6cb92fd"
+        ],
+        [],
+        [],
+        [
+          "40dd3b94",
+          "a6cb92fd"
+        ],
+        [],
+        [
+          "6cc30692",
+          "40dd3b94",
+          "a6cb92fd"
+        ]
+      ],
+      "recruit_flag": "加入_ミカエラ",
+      "met_flag": "面識_ミカエラ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "1fb707f4": {
+      "pid": "PID_オルヘル",
+      "name": "Orchel",
+      "aliases": [
+        "65528cdd",
+        "7525bbb4",
+        "8fdd5bf2",
+        "d059ef55",
+        "824ac2b2",
+        "14e4ea12"
+      ],
+      "source_offset": "0x3880",
+      "person_serial": 14,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 22,
+      "masteries": [
+        [
+          2,
+          20
+        ],
+        [
+          5,
+          35
+        ],
+        [
+          6,
+          35
+        ],
+        [
+          10,
+          20
+        ]
+      ],
+      "items": [
+        "2f119703"
+      ],
+      "magic": [
+        "084e35bd",
+        "43d77e2c",
+        "f2cd8f20"
+      ],
+      "skills": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "52c26e2b",
+          "661a086a",
+          "7bf0a036"
+        ]
+      ],
+      "recruit_flag": "加入_オルヘル",
+      "met_flag": "面識_オルヘル",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "17d8a000": {
+      "pid": "PID_ディエゴ",
+      "name": "Diego",
+      "aliases": [
+        "d792118d",
+        "8b1c76c0",
+        "c6a77218",
+        "f39754ba",
+        "bc5dbd15"
+      ],
+      "source_offset": "0x3b40",
+      "person_serial": 15,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 25,
+      "masteries": [
+        [
+          0,
+          35
+        ],
+        [
+          3,
+          35
+        ]
+      ],
+      "items": [
+        "01aff8d9",
+        "01b00e02"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "1a676f88",
+          "a6cb92fd"
+        ],
+        [],
+        [],
+        [
+          "1a676f88",
+          "a6cb92fd"
+        ],
+        [],
+        [
+          "ae738b9d",
+          "1a676f88",
+          "a6cb92fd"
+        ]
+      ],
+      "recruit_flag": "加入_ディエゴ",
+      "met_flag": "面識_ディエゴ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "fd0849a1": {
+      "pid": "PID_ロレッタ",
+      "name": "Loretta",
+      "aliases": [
+        "6c7cebf3"
+      ],
+      "source_offset": "0x3e00",
+      "person_serial": 16,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 23,
+      "masteries": [
+        [
+          0,
+          35
+        ],
+        [
+          1,
+          20
+        ],
+        [
+          11,
+          20
+        ]
+      ],
+      "items": [
+        "01aff8d9",
+        "2f11ea6a"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "5e422dbc"
+        ],
+        [],
+        [],
+        [
+          "5e422dbc"
+        ],
+        [],
+        [
+          "d06a48cb",
+          "5e422dbc"
+        ]
+      ],
+      "recruit_flag": "加入_ロレッタ",
+      "met_flag": "面識_ロレッタ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "a74c7067": {
+      "pid": "PID_セテス",
+      "name": "Seteth",
+      "aliases": [
+        "ee2ebacd"
+      ],
+      "source_offset": "0x40c0",
+      "person_serial": 17,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 26,
+      "masteries": [
+        [
+          1,
+          35
+        ],
+        [
+          2,
+          20
+        ],
+        [
+          11,
+          20
+        ],
+        [
+          12,
+          20
+        ]
+      ],
+      "items": [
+        "504acb44"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "25ecd491"
+        ],
+        [],
+        [],
+        [
+          "25ecd491"
+        ],
+        [],
+        [
+          "573df7d5",
+          "25ecd491"
+        ]
+      ],
+      "recruit_flag": "加入_セテス",
+      "met_flag": "面識_セテス",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "bdb3a4bb": {
+      "pid": "PID_ニネ",
+      "name": "Ninae",
+      "aliases": [],
+      "source_offset": "0x4380",
+      "person_serial": 18,
+      "source_flags": 39,
+      "class": "4ce2e45b",
+      "class_key": "JID_兵士",
+      "level": 1,
+      "hp": 28,
+      "masteries": [
+        [
+          1,
+          35
+        ],
+        [
+          2,
+          20
+        ],
+        [
+          6,
+          20
+        ],
+        [
+          9,
+          35
+        ]
+      ],
+      "items": [
+        "01b158ba"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "25ecd491"
+        ],
+        [
+          "a7b09775"
+        ],
+        [],
+        [
+          "25ecd491"
+        ],
+        [],
+        [
+          "a7b09775",
+          "58b86ea6",
+          "25ecd491"
+        ]
+      ],
+      "recruit_flag": "加入_ニネ",
+      "met_flag": "面識_ニネ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "f1cdd1a8": {
+      "pid": "PID_セオドラ",
+      "name": "Theodora",
+      "aliases": [
+        "3d16b1d7",
+        "4d32dd9d",
+        "6b6ac80d",
+        "2665d992",
+        "f7fb34b2",
+        "224415b4",
+        "5cf02db3",
+        "04cdab25",
+        "c3c11456",
+        "8110b6e4",
+        "a38c9aa2",
+        "0d184427",
+        "806ceea0",
+        "d0b18f2d",
+        "0a33bd05",
+        "41489402",
+        "8f253ee6",
+        "2fba1bad",
+        "de9fa9d2",
+        "722d76f3",
+        "03411edb"
+      ],
+      "source_offset": "0x4640",
+      "person_serial": 19,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 30,
+      "masteries": [
+        [
+          1,
+          35
+        ],
+        [
+          12,
+          20
+        ]
+      ],
+      "items": [
+        "01b158ba"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "25ecd491"
+        ],
+        [],
+        [],
+        [
+          "25ecd491"
+        ],
+        [],
+        [
+          "25ecd491"
+        ]
+      ],
+      "recruit_flag": "加入_セオドラ",
+      "met_flag": "面識_セオドラ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "c5f213cb": {
+      "pid": "PID_ボナパルテ",
+      "name": "Bonaventure",
+      "aliases": [
+        "36d8cca4",
+        "463f7d54",
+        "e4a4c5dd",
+        "ba32d5fd",
+        "8c5659ef",
+        "b2697b52",
+        "503b5569",
+        "9c07219f",
+        "5f79deed",
+        "6c5601ee",
+        "ea2545a3",
+        "0cec75f4",
+        "bb476e2c",
+        "00b0791d"
+      ],
+      "source_offset": "0x4900",
+      "person_serial": 20,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 25,
+      "masteries": [
+        [
+          0,
+          20
+        ],
+        [
+          5,
+          35
+        ],
+        [
+          6,
+          35
+        ],
+        [
+          9,
+          20
+        ]
+      ],
+      "items": [
+        "2f0d2589",
+        "bac907a6"
+      ],
+      "magic": [
+        "196894d3",
+        "43d77e2c"
+      ],
+      "skills": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "37b151a3",
+          "3607b9b5",
+          "661a086a"
+        ]
+      ],
+      "recruit_flag": "加入_ボナパルテ",
+      "met_flag": "面識_ボナパルテ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "3ce6a1ba": {
+      "pid": "PID_トビヤス",
+      "name": "Tobias",
+      "aliases": [
+        "1be42923",
+        "be4af9a8",
+        "e2311625",
+        "58b50924",
+        "55f0512e",
+        "0bfb8778",
+        "209a0d11",
+        "45a513b2",
+        "e47f8b83",
+        "0beb75fb",
+        "5d816403",
+        "d051c208"
+      ],
+      "source_offset": "0x4bc0",
+      "person_serial": 21,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 28,
+      "masteries": [
+        [
+          2,
+          35
+        ],
+        [
+          9,
+          20
+        ]
+      ],
+      "items": [
+        "01b13bf3"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "40dd3b94",
+          "e68ba384"
+        ],
+        [],
+        [],
+        [
+          "40dd3b94",
+          "e68ba384"
+        ],
+        [],
+        [
+          "ef1c37cc",
+          "40dd3b94",
+          "e68ba384"
+        ]
+      ],
+      "recruit_flag": "加入_トビヤス",
+      "met_flag": "面識_トビヤス",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "4a4e5dcb": {
+      "pid": "PID_リリアン",
+      "name": "Lilian",
+      "aliases": [
+        "be4cf016",
+        "205136bc",
+        "077d90f1",
+        "ba78f047",
+        "339cbe9d",
+        "66392210",
+        "cf371263",
+        "ac5f3d76",
+        "33fc92cd"
+      ],
+      "source_offset": "0x4e80",
+      "person_serial": 22,
+      "source_flags": 39,
+      "class": "5bc3259e",
+      "class_key": "JID_猟兵",
+      "level": 1,
+      "hp": 24,
+      "masteries": [
+        [
+          3,
+          35
+        ]
+      ],
+      "items": [
+        "01b00e02"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "eb843114"
+        ],
+        [],
+        [],
+        [
+          "eb843114"
+        ],
+        [],
+        [
+          "9f748d88",
+          "eb843114"
+        ]
+      ],
+      "recruit_flag": "加入_リリアン",
+      "met_flag": "面識_リリアン",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "66c6d186": {
+      "pid": "PID_ライサンダー",
+      "name": "Lysander",
+      "aliases": [
+        "d88aa627",
+        "acd41fb1",
+        "4c631ba8",
+        "9d2b777a",
+        "fecfa9cc",
+        "fbb3254d",
+        "cef3c09e",
+        "b337e7c7",
+        "23272abc"
+      ],
+      "source_offset": "0x5140",
+      "person_serial": 23,
+      "source_flags": 39,
+      "class": "f6e25508",
+      "class_key": "JID_飛駝兵",
+      "level": 1,
+      "hp": 26,
+      "masteries": [
+        [
+          1,
+          35
+        ],
+        [
+          2,
+          20
+        ],
+        [
+          9,
+          35
+        ],
+        [
+          11,
+          20
+        ]
+      ],
+      "items": [
+        "01b158ba"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "25ecd491"
+        ],
+        [
+          "a7b09775"
+        ],
+        [],
+        [
+          "25ecd491"
+        ],
+        [],
+        [
+          "a7b09775",
+          "79584f7c",
+          "25ecd491"
+        ]
+      ],
+      "recruit_flag": "加入_ライサンダー",
+      "met_flag": "面識_ライサンダー",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "8fd5a1ce": {
+      "pid": "PID_タリムーン",
+      "name": "Talimun",
+      "aliases": [
+        "91ce8541",
+        "824a538e",
+        "afbfffe2",
+        "f00a3438",
+        "b26296f8",
+        "3728458b",
+        "397642d8",
+        "ff030fa7",
+        "844aceeb",
+        "49900888"
+      ],
+      "source_offset": "0x5400",
+      "person_serial": 24,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 27,
+      "masteries": [
+        [
+          0,
+          20
+        ],
+        [
+          5,
+          35
+        ],
+        [
+          6,
+          35
+        ],
+        [
+          12,
+          20
+        ]
+      ],
+      "items": [
+        "01aff8d9",
+        "bac907a6"
+      ],
+      "magic": [
+        "084e35bd",
+        "43d77e2c"
+      ],
+      "skills": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "52c26e2b",
+          "661a086a"
+        ]
+      ],
+      "recruit_flag": "加入_タリムーン",
+      "met_flag": "面識_タリムーン",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "dce09250": {
+      "pid": "PID_ウーシュラ",
+      "name": "Ursula",
+      "aliases": [
+        "0325b2d3",
+        "bb511f10",
+        "6874b0c4",
+        "241a2a2e",
+        "d165c5ee",
+        "678b3a39",
+        "7238e05e"
+      ],
+      "source_offset": "0x56c0",
+      "person_serial": 25,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 24,
+      "masteries": [
+        [
+          0,
+          20
+        ],
+        [
+          3,
+          35
+        ],
+        [
+          8,
+          35
+        ]
+      ],
+      "items": [
+        "01b00e02",
+        "2f0d2589",
+        "bac907a6"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "a6cb92fd"
+        ],
+        [
+          "76630b11"
+        ],
+        [],
+        [
+          "a6cb92fd"
+        ],
+        [],
+        [
+          "1c118b5a",
+          "a6cb92fd",
+          "76630b11"
+        ]
+      ],
+      "recruit_flag": "加入_ウーシュラ",
+      "met_flag": "面識_ウーシュラ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "5658342c": {
+      "pid": "PID_ルルディヤー",
+      "name": "Ludia",
+      "aliases": [
+        "2d6d4c7e"
+      ],
+      "source_offset": "0x5980",
+      "person_serial": 26,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 25,
+      "masteries": [
+        [
+          0,
+          35
+        ]
+      ],
+      "items": [
+        "01aff8d9",
+        "bac907a6"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "bc60971a"
+        ],
+        [],
+        [],
+        [
+          "bc60971a"
+        ],
+        [],
+        [
+          "b7583951",
+          "bc60971a"
+        ]
+      ],
+      "recruit_flag": "加入_ルルディヤー",
+      "met_flag": "面識_ルルディヤー",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "1ae10aca": {
+      "pid": "PID_シモン",
+      "name": "Simon",
+      "aliases": [
+        "c3de6a94"
+      ],
+      "source_offset": "0x5c40",
+      "person_serial": 27,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 28,
+      "masteries": [
+        [
+          0,
+          20
+        ],
+        [
+          2,
+          35
+        ],
+        [
+          8,
+          35
+        ]
+      ],
+      "items": [
+        "01b13bf3",
+        "bac907a6"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "40dd3b94"
+        ],
+        [
+          "3eca6d13"
+        ],
+        [],
+        [
+          "40dd3b94"
+        ],
+        [],
+        [
+          "0603e958",
+          "40dd3b94",
+          "3eca6d13"
+        ]
+      ],
+      "recruit_flag": "加入_シモン",
+      "met_flag": "面識_シモン",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "da17f58d": {
+      "pid": "PID_フィアナ",
+      "name": "Fianna",
+      "aliases": [
+        "24e220fb"
+      ],
+      "source_offset": "0x5f00",
+      "person_serial": 28,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 22,
+      "masteries": [
+        [
+          5,
+          35
+        ],
+        [
+          6,
+          35
+        ]
+      ],
+      "items": [],
+      "magic": [
+        "084e35bd",
+        "43d77e2c"
+      ],
+      "skills": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "c0505037",
+          "52c26e2b",
+          "661a086a"
+        ]
+      ],
+      "recruit_flag": "加入_フィアナ",
+      "met_flag": "面識_フィアナ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "45e9244b": {
+      "pid": "PID_レダ",
+      "name": "Leda",
+      "aliases": [
+        "63197148",
+        "4bb25432",
+        "fb47c07c",
+        "6bebbb1d",
+        "54f8f33e",
+        "25b703ae",
+        "ebaa1a24",
+        "05be722d",
+        "1ed2fd5e"
+      ],
+      "source_offset": "0x61c0",
+      "person_serial": 29,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 25,
+      "masteries": [
+        [
+          0,
+          35
+        ],
+        [
+          3,
+          35
+        ],
+        [
+          6,
+          20
+        ]
+      ],
+      "items": [
+        "01aff8d9",
+        "01b00e02"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "bc60971a",
+          "eb843114"
+        ],
+        [],
+        [],
+        [
+          "bc60971a",
+          "eb843114"
+        ],
+        [],
+        [
+          "bc60971a",
+          "eb843114"
+        ]
+      ],
+      "recruit_flag": "加入_レダ",
+      "met_flag": "面識_レダ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "4e88d94e": {
+      "pid": "PID_バッカニア",
+      "name": "Buccar",
+      "aliases": [
+        "6c0d3305",
+        "ddff5fd3",
+        "260c55b4",
+        "89817071",
+        "d29bd33a",
+        "461bed61",
+        "6ae542bb",
+        "2d9eedb3"
+      ],
+      "source_offset": "0x6480",
+      "person_serial": 30,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 29,
+      "masteries": [
+        [
+          1,
+          20
+        ],
+        [
+          2,
+          35
+        ],
+        [
+          9,
+          20
+        ],
+        [
+          10,
+          20
+        ],
+        [
+          12,
+          20
+        ]
+      ],
+      "items": [
+        "01b13bf3"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "40dd3b94"
+        ],
+        [],
+        [],
+        [
+          "40dd3b94"
+        ],
+        [],
+        [
+          "8dc5033a",
+          "40dd3b94"
+        ]
+      ],
+      "recruit_flag": "加入_バッカニア",
+      "met_flag": "面識_バッカニア",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "5477ab4f": {
+      "pid": "PID_シロッコ",
+      "name": "Sirocco",
+      "aliases": [
+        "a04c32b0"
+      ],
+      "source_offset": "0x6740",
+      "person_serial": 31,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 26,
+      "masteries": [
+        [
+          0,
+          35
+        ],
+        [
+          5,
+          35
+        ],
+        [
+          6,
+          35
+        ]
+      ],
+      "items": [
+        "01aff8d9"
+      ],
+      "magic": [
+        "196894d3",
+        "43d77e2c"
+      ],
+      "skills": [
+        [
+          "1a676f88"
+        ],
+        [],
+        [],
+        [
+          "1a676f88"
+        ],
+        [],
+        [
+          "61c6665e",
+          "1a676f88",
+          "3607b9b5",
+          "661a086a"
+        ]
+      ],
+      "recruit_flag": "加入_シロッコ",
+      "met_flag": "面識_シロッコ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "bc368eb6": {
+      "pid": "PID_オリンピア",
+      "name": "Olympia",
+      "aliases": [
+        "44024947",
+        "b2b87c4c"
+      ],
+      "source_offset": "0x6a00",
+      "person_serial": 32,
+      "source_flags": 39,
+      "class": "d5230479",
+      "class_key": "JID_呪い師",
+      "level": 1,
+      "hp": 24,
+      "masteries": [
+        [
+          5,
+          20
+        ],
+        [
+          6,
+          35
+        ]
+      ],
+      "items": [],
+      "magic": [
+        "43d77e2c",
+        "44e8cf2b"
+      ],
+      "skills": [
+        [
+          "235b2a48"
+        ],
+        [],
+        [],
+        [
+          "235b2a48"
+        ],
+        [],
+        [
+          "68e4c899",
+          "235b2a48",
+          "661a086a",
+          "55562a4d"
+        ]
+      ],
+      "recruit_flag": "加入_オリンピア",
+      "met_flag": "面識_オリンピア",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "076d3f72": {
+      "pid": "PID_ムウ",
+      "name": "Mu",
+      "aliases": [
+        "e637e625"
+      ],
+      "source_offset": "0x6cc0",
+      "person_serial": 33,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 23,
+      "masteries": [
+        [
+          4,
+          35
+        ]
+      ],
+      "items": [
+        "2b16dc0e"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "181c2e70"
+        ],
+        [],
+        [],
+        [
+          "181c2e70"
+        ],
+        [],
+        [
+          "08930fb6",
+          "181c2e70"
+        ]
+      ],
+      "recruit_flag": "加入_ムウ",
+      "met_flag": "面識_ムウ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "4681bccf": {
+      "pid": "PID_アナトリア",
+      "name": "Anatolia",
+      "aliases": [
+        "1c1d230b",
+        "d827d7bf",
+        "517d5b42",
+        "c576b2a3",
+        "4ae195a7",
+        "12f75460",
+        "d518d373",
+        "81c93185",
+        "b39c9284",
+        "09998043"
+      ],
+      "source_offset": "0x6f80",
+      "person_serial": 34,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 25,
+      "masteries": [
+        [
+          4,
+          35
+        ],
+        [
+          5,
+          20
+        ]
+      ],
+      "items": [
+        "2b16dc0e",
+        "efe55956"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "a4083c66"
+        ],
+        [],
+        [],
+        [
+          "a4083c66"
+        ],
+        [],
+        [
+          "a4083c66"
+        ]
+      ],
+      "recruit_flag": "加入_アナトリア",
+      "met_flag": "面識_アナトリア",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "ac33c4e3": {
+      "pid": "PID_ナジャ",
+      "name": "Nezha",
+      "aliases": [
+        "0a6227b3",
+        "6ea5a20e"
+      ],
+      "source_offset": "0x7240",
+      "person_serial": 35,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 26,
+      "masteries": [
+        [
+          0,
+          35
+        ],
+        [
+          4,
+          20
+        ]
+      ],
+      "items": [
+        "2f0d2589",
+        "efe55956"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "bc60971a"
+        ],
+        [],
+        [],
+        [
+          "bc60971a"
+        ],
+        [],
+        [
+          "5cec637c",
+          "bc60971a"
+        ]
+      ],
+      "recruit_flag": "加入_ナジャ",
+      "met_flag": "面識_ナジャ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "aa7f7221": {
+      "pid": "PID_サラン",
+      "name": "Sha Lan",
+      "aliases": [
+        "c1f88165",
+        "0d3c9cd1",
+        "39fb5c1c",
+        "0f499e1d",
+        "a4634099",
+        "34e20c76",
+        "23708fad",
+        "ac716bc3"
+      ],
+      "source_offset": "0x7500",
+      "person_serial": 36,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 23,
+      "masteries": [
+        [
+          1,
+          20
+        ],
+        [
+          5,
+          35
+        ],
+        [
+          6,
+          35
+        ]
+      ],
+      "items": [
+        "efe55956"
+      ],
+      "magic": [
+        "aa9818d3",
+        "196894d3",
+        "43d77e2c"
+      ],
+      "skills": [
+        [
+          "cd7e6704"
+        ],
+        [],
+        [],
+        [
+          "cd7e6704"
+        ],
+        [],
+        [
+          "1c267ca3",
+          "eb30b4e9",
+          "3607b9b5",
+          "661a086a",
+          "cd7e6704"
+        ]
+      ],
+      "recruit_flag": "加入_サラン",
+      "met_flag": "面識_サラン",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "02c784c5": {
+      "pid": "PID_ダイトウ",
+      "name": "Dadao",
+      "aliases": [
+        "5c221995",
+        "f5d7c23a"
+      ],
+      "source_offset": "0x77c0",
+      "person_serial": 37,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 28,
+      "masteries": [
+        [
+          2,
+          35
+        ],
+        [
+          10,
+          20
+        ]
+      ],
+      "items": [],
+      "magic": [],
+      "skills": [
+        [
+          "40dd3b94"
+        ],
+        [],
+        [],
+        [
+          "40dd3b94"
+        ],
+        [],
+        [
+          "4b744049",
+          "40dd3b94"
+        ]
+      ],
+      "recruit_flag": "加入_ダイトウ",
+      "met_flag": "面識_ダイトウ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "2b0915ea": {
+      "pid": "PID_ハルヴィン",
+      "name": "Halvin",
+      "aliases": [
+        "7ad3fb5a",
+        "3f4204ef"
+      ],
+      "source_offset": "0x7a80",
+      "person_serial": 38,
+      "source_flags": 39,
+      "class": "f55f5af3",
+      "class_key": "JID_無職",
+      "level": 1,
+      "hp": 24,
+      "masteries": [
+        [
+          3,
+          35
+        ],
+        [
+          9,
+          20
+        ]
+      ],
+      "items": [
+        "01b00e02",
+        "bac907a6"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "a6cb92fd"
+        ],
+        [],
+        [],
+        [
+          "a6cb92fd"
+        ],
+        [],
+        [
+          "53b659ff",
+          "a6cb92fd"
+        ]
+      ],
+      "recruit_flag": "加入_ハルヴィン",
+      "met_flag": "面識_ハルヴィン",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "99408c08": {
+      "pid": "PID_イシュマール",
+      "name": "Eshmel",
+      "aliases": [
+        "d9817cec",
+        "5e34319f",
+        "d42c6152",
+        "b846b7fd",
+        "6747f563",
+        "b88b1a06"
+      ],
+      "source_offset": "0x7d40",
+      "person_serial": 39,
+      "source_flags": 39,
+      "class": "0886a9b9",
+      "class_key": "JID_ガーディアン",
+      "level": 1,
+      "hp": 27,
+      "masteries": [
+        [
+          1,
+          1215
+        ],
+        [
+          5,
+          35
+        ],
+        [
+          6,
+          35
+        ],
+        [
+          8,
+          220
+        ],
+        [
+          12,
+          220
+        ]
+      ],
+      "items": [
+        "bba0d49d",
+        "bac907a6"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "25ecd491"
+        ],
+        [
+          "d9bdef6a"
+        ],
+        [],
+        [
+          "25ecd491"
+        ],
+        [],
+        [
+          "159861fd",
+          "159861fc",
+          "82827165",
+          "25ecd491",
+          "d9bdef6a"
+        ]
+      ],
+      "recruit_flag": "加入_イシュマール",
+      "met_flag": "面識_イシュマール",
+      "default_mount": "",
+      "evidence": "Special case: passed Leda Chapter 9 with a helmeted portrait and an unhelmeted generic battle model. Custom appearance/name is not supplied",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "29c382bc": {
+      "pid": "PID_コウカ",
+      "name": "Hong Hua",
+      "aliases": [
+        "a078389b",
+        "1e010c9f"
+      ],
+      "source_offset": "0x8000",
+      "person_serial": 40,
+      "source_flags": 55,
+      "class": "c08ea5ec",
+      "class_key": "JID_ウァテス",
+      "level": 1,
+      "hp": 26,
+      "masteries": [
+        [
+          5,
+          1215
+        ],
+        [
+          6,
+          220
+        ],
+        [
+          8,
+          35
+        ],
+        [
+          12,
+          35
+        ]
+      ],
+      "items": [
+        "bac907a6"
+      ],
+      "magic": [
+        "c25f2cc9"
+      ],
+      "skills": [
+        [],
+        [
+          "30b2ccbc"
+        ],
+        [],
+        [],
+        [],
+        [
+          "bdd9ffec",
+          "de52701f",
+          "30b2ccbc"
+        ]
+      ],
+      "recruit_flag": "加入_コウカ",
+      "met_flag": "面識_コウカ",
+      "default_mount": "",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "ee5acb16": {
+      "pid": "PID_トロイア",
+      "name": "Troy",
+      "aliases": [],
+      "source_offset": "0x82c0",
+      "person_serial": 41,
+      "source_flags": 55,
+      "class": "4ca49b37",
+      "class_key": "JID_バトルモンク",
+      "level": 1,
+      "hp": 30,
+      "masteries": [
+        [
+          4,
+          1215
+        ],
+        [
+          5,
+          220
+        ],
+        [
+          6,
+          1215
+        ],
+        [
+          8,
+          35
+        ],
+        [
+          12,
+          35
+        ]
+      ],
+      "items": [
+        "edeea349",
+        "ef3cecb9",
+        "bac907a6"
+      ],
+      "magic": [
+        "43d77e2c"
+      ],
+      "skills": [
+        [
+          "a4083c66"
+        ],
+        [
+          "af6b0482",
+          "1c386b35"
+        ],
+        [],
+        [
+          "a4083c66"
+        ],
+        [],
+        [
+          "4d529916",
+          "a4083c66",
+          "af6b0482",
+          "661a086a",
+          "1c386b35"
+        ]
+      ],
+      "recruit_flag": "加入_トロイア",
+      "met_flag": "面識_トロイア",
+      "default_mount": "",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "a5a3b83f": {
+      "pid": "PID_グザラン",
+      "name": "Guzran",
+      "aliases": [],
+      "source_offset": "0xaec0",
+      "person_serial": 50,
+      "source_flags": 39,
+      "class": "95a9c7ea",
+      "class_key": "JID_闘士",
+      "level": 1,
+      "hp": 26,
+      "masteries": [
+        [
+          0,
+          35
+        ],
+        [
+          8,
+          35
+        ]
+      ],
+      "items": [],
+      "magic": [],
+      "skills": [
+        [
+          "bc60971a"
+        ],
+        [
+          "3eca6d13"
+        ],
+        [],
+        [
+          "bc60971a"
+        ],
+        [],
+        [
+          "2ca5c263",
+          "bc60971a",
+          "3eca6d13"
+        ]
+      ],
+      "recruit_flag": "加入_グザラン",
+      "met_flag": "面識_グザラン",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "550c26ec": {
+      "pid": "PID_ヨーカイ",
+      "name": "Yang Jie",
+      "aliases": [],
+      "source_offset": "0xb180",
+      "person_serial": 51,
+      "source_flags": 39,
+      "class": "d5230479",
+      "class_key": "JID_呪い師",
+      "level": 1,
+      "hp": 24,
+      "masteries": [
+        [
+          2,
+          20
+        ],
+        [
+          6,
+          35
+        ]
+      ],
+      "items": [],
+      "magic": [
+        "43d77e2c"
+      ],
+      "skills": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "8841d116",
+          "661a086a"
+        ]
+      ],
+      "recruit_flag": "加入_ヨーカイ",
+      "met_flag": "面識_ヨーカイ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "1a788ba7": {
+      "pid": "PID_イオ",
+      "name": "Io",
+      "aliases": [],
+      "source_offset": "0xb440",
+      "person_serial": 52,
+      "source_flags": 39,
+      "class": "4ce2e45b",
+      "class_key": "JID_兵士",
+      "level": 1,
+      "hp": 27,
+      "masteries": [
+        [
+          1,
+          35
+        ],
+        [
+          9,
+          35
+        ]
+      ],
+      "items": [],
+      "magic": [],
+      "skills": [
+        [
+          "25ecd491"
+        ],
+        [
+          "a7b09775"
+        ],
+        [],
+        [
+          "25ecd491"
+        ],
+        [],
+        [
+          "a7b09775",
+          "fcb8c8f2",
+          "25ecd491"
+        ]
+      ],
+      "recruit_flag": "加入_イオ",
+      "met_flag": "面識_イオ",
+      "default_mount": "RID_ロシナン",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "76ebde3b": {
+      "pid": "PID_ペペ",
+      "name": "Peppe",
+      "aliases": [
+        "3e9df883"
+      ],
+      "source_offset": "0xb700",
+      "person_serial": 53,
+      "source_flags": 39,
+      "class": "5bc3259e",
+      "class_key": "JID_猟兵",
+      "level": 1,
+      "hp": 23,
+      "masteries": [
+        [
+          0,
+          35
+        ],
+        [
+          3,
+          20
+        ]
+      ],
+      "items": [],
+      "magic": [],
+      "skills": [
+        [
+          "1a676f88"
+        ],
+        [],
+        [],
+        [
+          "1a676f88"
+        ],
+        [],
+        [
+          "905024fe",
+          "1a676f88"
+        ]
+      ],
+      "recruit_flag": "加入_ペペ",
+      "met_flag": "面識_ペペ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "7d4c8692": {
+      "pid": "PID_ノクチュラ",
+      "name": "Noctula",
+      "aliases": [],
+      "source_offset": "0xb9c0",
+      "person_serial": 54,
+      "source_flags": 39,
+      "class": "95a9c7ea",
+      "class_key": "JID_闘士",
+      "level": 1,
+      "hp": 27,
+      "masteries": [
+        [
+          2,
+          20
+        ],
+        [
+          4,
+          35
+        ]
+      ],
+      "items": [],
+      "magic": [],
+      "skills": [
+        [
+          "a4083c66"
+        ],
+        [],
+        [],
+        [
+          "a4083c66"
+        ],
+        [],
+        [
+          "26b52939",
+          "a4083c66"
+        ]
+      ],
+      "recruit_flag": "加入_ノクチュラ",
+      "met_flag": "面識_ノクチュラ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "aaf85c8d": {
+      "pid": "PID_ソフィア",
+      "name": "Sofia",
+      "aliases": [],
+      "source_offset": "0xbc80",
+      "person_serial": 55,
+      "source_flags": 39,
+      "class": "d5230479",
+      "class_key": "JID_呪い師",
+      "level": 1,
+      "hp": 23,
+      "masteries": [
+        [
+          3,
+          20
+        ],
+        [
+          5,
+          20
+        ],
+        [
+          6,
+          35
+        ]
+      ],
+      "items": [],
+      "magic": [
+        "43d77e2c"
+      ],
+      "skills": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [
+          "917b2880",
+          "661a086a"
+        ]
+      ],
+      "recruit_flag": "加入_ソフィア",
+      "met_flag": "面識_ソフィア",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "b1c36239": {
+      "pid": "PID_カターニャ",
+      "name": "Catania",
+      "aliases": [],
+      "source_offset": "0xbf40",
+      "person_serial": 56,
+      "source_flags": 39,
+      "class": "4ce2e45b",
+      "class_key": "JID_兵士",
+      "level": 1,
+      "hp": 25,
+      "masteries": [
+        [
+          0,
+          20
+        ],
+        [
+          1,
+          35
+        ],
+        [
+          11,
+          35
+        ]
+      ],
+      "items": [],
+      "magic": [],
+      "skills": [
+        [
+          "312f5241"
+        ],
+        [
+          "33c70623"
+        ],
+        [],
+        [
+          "312f5241"
+        ],
+        [],
+        [
+          "33c70623",
+          "fc54aab8",
+          "312f5241"
+        ]
+      ],
+      "recruit_flag": "加入_カターニャ",
+      "met_flag": "面識_カターニャ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "8934d84e": {
+      "pid": "PID_ヌディーヌ",
+      "name": "Nydine",
+      "aliases": [],
+      "source_offset": "0xc200",
+      "person_serial": 57,
+      "source_flags": 39,
+      "class": "f6e25508",
+      "class_key": "JID_飛駝兵",
+      "level": 1,
+      "hp": 26,
+      "masteries": [
+        [
+          2,
+          35
+        ],
+        [
+          5,
+          20
+        ],
+        [
+          9,
+          35
+        ],
+        [
+          11,
+          20
+        ]
+      ],
+      "items": [],
+      "magic": [],
+      "skills": [
+        [
+          "40dd3b94"
+        ],
+        [
+          "a7b09775"
+        ],
+        [],
+        [
+          "40dd3b94"
+        ],
+        [],
+        [
+          "a7b09775",
+          "aabc5660",
+          "40dd3b94"
+        ]
+      ],
+      "recruit_flag": "加入_ヌディーヌ",
+      "met_flag": "面識_ヌディーヌ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "dc35ed3d": {
+      "pid": "PID_ザーコネ",
+      "name": "Zarcone",
+      "aliases": [],
+      "source_offset": "0xc4c0",
+      "person_serial": 58,
+      "source_flags": 39,
+      "class": "95a9c7ea",
+      "class_key": "JID_闘士",
+      "level": 1,
+      "hp": 26,
+      "masteries": [
+        [
+          2,
+          35
+        ]
+      ],
+      "items": [],
+      "magic": [],
+      "skills": [
+        [
+          "c420f3b6"
+        ],
+        [],
+        [],
+        [
+          "c420f3b6"
+        ],
+        [],
+        [
+          "014979e0",
+          "c420f3b6"
+        ]
+      ],
+      "recruit_flag": "加入_ザーコネ",
+      "met_flag": "面識_ザーコネ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "1328f941": {
+      "pid": "PID_マジーデ",
+      "name": "Majide",
+      "aliases": [
+        "2f2552ac"
+      ],
+      "source_offset": "0xc780",
+      "person_serial": 59,
+      "source_flags": 39,
+      "class": "95a9c7ea",
+      "class_key": "JID_闘士",
+      "level": 1,
+      "hp": 30,
+      "masteries": [
+        [
+          2,
+          35
+        ],
+        [
+          4,
+          20
+        ]
+      ],
+      "items": [],
+      "magic": [],
+      "skills": [
+        [
+          "40dd3b94"
+        ],
+        [],
+        [],
+        [
+          "40dd3b94"
+        ],
+        [],
+        [
+          "50a8fcb2",
+          "40dd3b94"
+        ]
+      ],
+      "recruit_flag": "加入_マジーデ",
+      "met_flag": "面識_マジーデ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "1393dc93": {
+      "pid": "PID_ベンディッツ",
+      "name": "Benditz",
+      "aliases": [
+        "5b3ef734",
+        "d97ea837"
+      ],
+      "source_offset": "0xca40",
+      "person_serial": 60,
+      "source_flags": 39,
+      "class": "6ebd841d",
+      "class_key": "JID_戦車兵",
+      "level": 1,
+      "hp": 27,
+      "masteries": [
+        [
+          3,
+          35
+        ],
+        [
+          9,
+          35
+        ],
+        [
+          12,
+          20
+        ]
+      ],
+      "items": [],
+      "magic": [],
+      "skills": [
+        [
+          "eb843114"
+        ],
+        [
+          "a7b09775"
+        ],
+        [],
+        [
+          "eb843114"
+        ],
+        [],
+        [
+          "a7b09775",
+          "d9c0a493",
+          "eb843114"
+        ]
+      ],
+      "recruit_flag": "加入_ベンディッツ",
+      "met_flag": "面識_ベンディッツ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "08040c59": {
+      "pid": "PID_イニオニ",
+      "name": "Inyoni",
+      "aliases": [
+        "4386225c"
+      ],
+      "source_offset": "0xcd00",
+      "person_serial": 61,
+      "source_flags": 39,
+      "class": "0a6cb574",
+      "class_key": "JID_アーチャー",
+      "level": 1,
+      "hp": 26,
+      "masteries": [
+        [
+          3,
+          35
+        ]
+      ],
+      "items": [],
+      "magic": [],
+      "skills": [
+        [
+          "381ca20e"
+        ],
+        [],
+        [],
+        [
+          "381ca20e"
+        ],
+        [],
+        [
+          "00a25b16",
+          "381ca20e"
+        ]
+      ],
+      "recruit_flag": "加入_イニオニ",
+      "met_flag": "面識_イニオニ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "786afccd": {
+      "pid": "PID_ジャスミン",
+      "name": "Jasmine",
+      "aliases": [
+        "f6bba962"
+      ],
+      "source_offset": "0xcfc0",
+      "person_serial": 62,
+      "source_flags": 39,
+      "class": "35b5ba79",
+      "class_key": "JID_重装歩兵",
+      "level": 1,
+      "hp": 28,
+      "masteries": [
+        [
+          1,
+          20
+        ],
+        [
+          2,
+          35
+        ],
+        [
+          10,
+          35
+        ],
+        [
+          12,
+          20
+        ]
+      ],
+      "items": [],
+      "magic": [],
+      "skills": [
+        [
+          "40dd3b94"
+        ],
+        [
+          "77f3b1a7"
+        ],
+        [],
+        [
+          "40dd3b94"
+        ],
+        [],
+        [
+          "2df9c400",
+          "40dd3b94",
+          "77f3b1a7"
+        ]
+      ],
+      "recruit_flag": "加入_ジャスミン",
+      "met_flag": "面識_ジャスミン",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "0a96c08b": {
+      "pid": "PID_アレキサンドラ",
+      "name": "Alexandra",
+      "aliases": [
+        "b3654d11",
+        "cced6e5e",
+        "ac170080"
+      ],
+      "source_offset": "0xd280",
+      "person_serial": 63,
+      "source_flags": 39,
+      "class": "52daf7b2",
+      "class_key": "JID_天翼兵",
+      "level": 1,
+      "hp": 24,
+      "masteries": [
+        [
+          0,
+          20
+        ],
+        [
+          1,
+          35
+        ],
+        [
+          11,
+          35
+        ]
+      ],
+      "items": [],
+      "magic": [],
+      "skills": [
+        [
+          "2d418d07"
+        ],
+        [
+          "33c70623"
+        ],
+        [],
+        [
+          "2d418d07"
+        ],
+        [],
+        [
+          "33c70623",
+          "1733116f",
+          "2d418d07"
+        ]
+      ],
+      "recruit_flag": "加入_アレキサンドラ",
+      "met_flag": "面識_アレキサンドラ",
+      "default_mount": "RID_ブーケパラス",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "ca882c8e": {
+      "pid": "PID_ヌッツォ",
+      "name": "Nuzzuo",
+      "aliases": [
+        "71780671",
+        "fffb7d7d"
+      ],
+      "source_offset": "0xd540",
+      "person_serial": 64,
+      "source_flags": 39,
+      "class": "bbbd60d7",
+      "class_key": "JID_ローグ",
+      "level": 1,
+      "hp": 26,
+      "masteries": [
+        [
+          0,
+          35
+        ],
+        [
+          3,
+          20
+        ],
+        [
+          4,
+          20
+        ]
+      ],
+      "items": [],
+      "magic": [],
+      "skills": [
+        [
+          "d25270dd"
+        ],
+        [],
+        [],
+        [
+          "d25270dd"
+        ],
+        [],
+        [
+          "519c1652",
+          "d25270dd"
+        ]
+      ],
+      "recruit_flag": "加入_ヌッツォ",
+      "met_flag": "面識_ヌッツォ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "d8f5d292": {
+      "pid": "PID_セントリオン",
+      "name": "Centurio",
+      "aliases": [
+        "4ce570d5",
+        "4e95fc2e",
+        "99353628",
+        "57e4ae55"
+      ],
+      "source_offset": "0xd800",
+      "person_serial": 65,
+      "source_flags": 47,
+      "class": "ed540530",
+      "class_key": "JID_ヘヴィアーマー",
+      "level": 1,
+      "hp": 27,
+      "masteries": [
+        [
+          1,
+          220
+        ],
+        [
+          2,
+          690
+        ],
+        [
+          10,
+          690
+        ],
+        [
+          12,
+          220
+        ]
+      ],
+      "items": [
+        "32e7304f"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "25ecd491",
+          "7f77bc7d",
+          "40dd3b94",
+          "ac7270cf"
+        ],
+        [
+          "d9bdef6e",
+          "42e18a8f",
+          "42e18a8c",
+          "e890dae6",
+          "ba5475ca"
+        ],
+        [],
+        [
+          "25ecd491",
+          "7f77bc7d",
+          "40dd3b94",
+          "ac7270cf",
+          "87cbcd31",
+          "d02bc05d"
+        ],
+        [],
+        [
+          "d9bdef6e",
+          "42e18a8f",
+          "42e18a8c",
+          "373f4775",
+          "25ecd491",
+          "7f77bc7d",
+          "40dd3b94",
+          "ac7270cf",
+          "87cbcd31",
+          "e890dae6",
+          "d02bc05d",
+          "ba5475ca",
+          "7df9d2fd",
+          "b6385da6"
+        ]
+      ],
+      "recruit_flag": "加入_セントリオン",
+      "met_flag": "面識_セントリオン",
+      "default_mount": "",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "19d5b2d0": {
+      "pid": "PID_アスワン",
+      "name": "Aswan",
+      "aliases": [
+        "425e0bc4",
+        "2e60ad5f"
+      ],
+      "source_offset": "0xdac0",
+      "person_serial": 66,
+      "source_flags": 63,
+      "class": "202ece0d",
+      "class_key": "JID_スナイパー",
+      "level": 1,
+      "hp": 23,
+      "masteries": [
+        [
+          3,
+          690
+        ],
+        [
+          8,
+          220
+        ],
+        [
+          12,
+          690
+        ]
+      ],
+      "items": [
+        "b2fac209"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "eb843114",
+          "feae8966",
+          "dce86ad4",
+          "ef68f0b8"
+        ],
+        [
+          "c8c1c4ba",
+          "c8c1c4b9",
+          "4c499c19",
+          "88d07c55",
+          "faa16f31"
+        ],
+        [],
+        [
+          "eb843114",
+          "feae8966",
+          "dce86ad4",
+          "ef68f0b8",
+          "1ede5af0"
+        ],
+        [],
+        [
+          "c8c1c4ba",
+          "c8c1c4b9",
+          "ea33feab",
+          "eb843114",
+          "feae8966",
+          "dce86ad4",
+          "4c499c19",
+          "ef68f0b8",
+          "1ede5af0",
+          "88d07c55",
+          "faa16f31"
+        ]
+      ],
+      "recruit_flag": "加入_アスワン",
+      "met_flag": "面識_アスワン",
+      "default_mount": "",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "ccc1297f": {
+      "pid": "PID_クレオブロス",
+      "name": "Cleobulus",
+      "aliases": [],
+      "source_offset": "0xdd80",
+      "person_serial": 67,
+      "source_flags": 63,
+      "class": "c08ea5ec",
+      "class_key": "JID_ウァテス",
+      "level": 1,
+      "hp": 23,
+      "masteries": [
+        [
+          0,
+          35
+        ],
+        [
+          5,
+          690
+        ],
+        [
+          6,
+          220
+        ],
+        [
+          9,
+          80
+        ]
+      ],
+      "items": [
+        "9ab0448d"
+      ],
+      "magic": [
+        "80806c2d",
+        "6e86e054",
+        "9d06b79d",
+        "43d780cf",
+        "44e8cf2b"
+      ],
+      "skills": [
+        [
+          "bc60971a"
+        ],
+        [
+          "30b2ccb8",
+          "30b2ccbb",
+          "1c386b31",
+          "a7b09775"
+        ],
+        [],
+        [
+          "bc60971a"
+        ],
+        [],
+        [
+          "30b2ccb8",
+          "30b2ccbb",
+          "1c386b31",
+          "a7b09775",
+          "bc60971a",
+          "63081ca7",
+          "43dbdb72",
+          "d032981f",
+          "661a0a0d",
+          "55562a4d"
+        ]
+      ],
+      "recruit_flag": "加入_クレオブロス",
+      "met_flag": "面識_クレオブロス",
+      "default_mount": "",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "35d5a20e": {
+      "pid": "PID_ミュソン",
+      "name": "Myson",
+      "aliases": [],
+      "source_offset": "0xe040",
+      "person_serial": 68,
+      "source_flags": 63,
+      "class": "c08ea5ec",
+      "class_key": "JID_ウァテス",
+      "level": 1,
+      "hp": 27,
+      "masteries": [
+        [
+          3,
+          35
+        ],
+        [
+          5,
+          690
+        ],
+        [
+          6,
+          220
+        ],
+        [
+          12,
+          35
+        ]
+      ],
+      "items": [
+        "9ab0448d"
+      ],
+      "magic": [
+        "80806c2d",
+        "6e86e054",
+        "d990217d",
+        "43d77e2c",
+        "44e8cf2b"
+      ],
+      "skills": [
+        [
+          "eb843114"
+        ],
+        [
+          "30b2ccb8",
+          "30b2ccbb",
+          "1c386b31",
+          "7cb51f86"
+        ],
+        [],
+        [
+          "eb843114"
+        ],
+        [],
+        [
+          "30b2ccb8",
+          "30b2ccbb",
+          "1c386b31",
+          "eb843114",
+          "63081ca7",
+          "43dbdb72",
+          "c5b4c29f",
+          "661a086a",
+          "55562a4d",
+          "7cb51f86"
+        ]
+      ],
+      "recruit_flag": "加入_ミュソン",
+      "met_flag": "面識_ミュソン",
+      "default_mount": "",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "95e8317e": {
+      "pid": "PID_ネイサン",
+      "name": "Nathan",
+      "aliases": [
+        "0339fe3e",
+        "84818227",
+        "de3a5e30",
+        "507c2952",
+        "cf923f98",
+        "229394e1"
+      ],
+      "source_offset": "0xe300",
+      "person_serial": 69,
+      "source_flags": 55,
+      "class": "cc0fe6a4",
+      "class_key": "JID_バーディンガー",
+      "level": 1,
+      "hp": 26,
+      "masteries": [
+        [
+          0,
+          35
+        ],
+        [
+          1,
+          690
+        ],
+        [
+          9,
+          220
+        ],
+        [
+          10,
+          220
+        ],
+        [
+          12,
+          35
+        ]
+      ],
+      "items": [
+        "e2824a8f"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "bc60971a",
+          "25ecd491",
+          "1c7d1dfd",
+          "ff64b1d0"
+        ],
+        [
+          "d9bdef6e",
+          "d9bdef6d",
+          "a7b09775",
+          "4c499c19",
+          "74716a80"
+        ],
+        [],
+        [
+          "bc60971a",
+          "25ecd491",
+          "1c7d1dfd",
+          "ff64b1d0"
+        ],
+        [],
+        [
+          "d9bdef6e",
+          "d9bdef6d",
+          "a7b09775",
+          "2f0c1a1a",
+          "bc60971a",
+          "25ecd491",
+          "1c7d1dfd",
+          "ff64b1d0",
+          "4c499c19",
+          "74716a80",
+          "a9071a97"
+        ]
+      ],
+      "recruit_flag": "加入_ネイサン",
+      "met_flag": "面識_ネイサン",
+      "default_mount": "",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "d42581b7": {
+      "pid": "PID_キリーク",
+      "name": "Creek",
+      "aliases": [
+        "a76b1e77",
+        "b21fd502",
+        "7bed19a5",
+        "141d68fd",
+        "b2493748"
+      ],
+      "source_offset": "0xe5c0",
+      "person_serial": 70,
+      "source_flags": 55,
+      "class": "cc0fe6a4",
+      "class_key": "JID_バーディンガー",
+      "level": 1,
+      "hp": 25,
+      "masteries": [
+        [
+          0,
+          690
+        ],
+        [
+          1,
+          35
+        ],
+        [
+          9,
+          690
+        ],
+        [
+          12,
+          35
+        ]
+      ],
+      "items": [
+        "0489d224"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "5e422dbc",
+          "34f71e1a",
+          "ceaea4d3",
+          "312f5241"
+        ],
+        [
+          "82ddb101",
+          "82ddb102",
+          "a7b09775",
+          "b962a959",
+          "7cb51f86"
+        ],
+        [],
+        [
+          "5e422dbc",
+          "34f71e1a",
+          "ceaea4d3",
+          "312f5241"
+        ],
+        [],
+        [
+          "82ddb101",
+          "82ddb102",
+          "a7b09775",
+          "b962a959",
+          "a3471635",
+          "5e422dbc",
+          "34f71e1a",
+          "ceaea4d3",
+          "312f5241",
+          "7cb51f86"
+        ]
+      ],
+      "recruit_flag": "加入_キリーク",
+      "met_flag": "面識_キリーク",
+      "default_mount": "",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "66f65049": {
+      "pid": "PID_キロイカ",
+      "name": "Kiroc",
+      "aliases": [],
+      "source_offset": "0xe880",
+      "person_serial": 71,
+      "source_flags": 39,
+      "class": "5bc3259e",
+      "class_key": "JID_猟兵",
+      "level": 1,
+      "hp": 26,
+      "masteries": [
+        [
+          0,
+          35
+        ],
+        [
+          3,
+          35
+        ]
+      ],
+      "items": [],
+      "magic": [],
+      "skills": [
+        [
+          "1a676f88",
+          "381ca20e"
+        ],
+        [],
+        [],
+        [
+          "1a676f88",
+          "381ca20e"
+        ],
+        [],
+        [
+          "8c1bacb5",
+          "1a676f88",
+          "381ca20e"
+        ]
+      ],
+      "recruit_flag": "加入_キロイカ",
+      "met_flag": "面識_キロイカ",
+      "default_mount": "",
+      "evidence": "Data-derived; game test pending",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "a2a279a9": {
+      "pid": "PID_アンナ",
+      "name": "Anna",
+      "aliases": [
+        "0f2a3d05"
+      ],
+      "source_offset": "0xeb40",
+      "person_serial": 72,
+      "source_flags": 57,
+      "class": "482b7740",
+      "class_key": "JID_戦象兵下馬",
+      "level": 1,
+      "hp": 22,
+      "masteries": [
+        [
+          1,
+          690
+        ],
+        [
+          3,
+          220
+        ],
+        [
+          9,
+          220
+        ],
+        [
+          12,
+          35
+        ]
+      ],
+      "items": [
+        "01b158ba"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "25ecd491",
+          "4ae3d639",
+          "5e28bce4",
+          "381ca20e"
+        ],
+        [
+          "d9bdef6e",
+          "d9bdef6d",
+          "c8c1c4ba",
+          "a7b09775",
+          "4bb796e7"
+        ],
+        [],
+        [
+          "25ecd491",
+          "4ae3d639",
+          "5e28bce4",
+          "381ca20e",
+          "48da7bbe"
+        ],
+        [],
+        [
+          "d9bdef6e",
+          "d9bdef6d",
+          "c8c1c4ba",
+          "a7b09775",
+          "0a6d39fc",
+          "25ecd491",
+          "4ae3d639",
+          "5e28bce4",
+          "381ca20e",
+          "48da7bbe",
+          "4bb796e7"
+        ]
+      ],
+      "recruit_flag": "加入_アンナ",
+      "met_flag": "面識_アンナ",
+      "default_mount": "",
+      "evidence": "Starts dismounted: passed Leda Chapter 9. Mounted Elephant Rider also passed Part 3 Chapter 2; earlier Leda deployment failed. Remounting and the map/unlock requirements remain unverified",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event.",
+      "registered_classes": [
+        "bbead586",
+        "482b7740"
+      ]
+    },
+    "55d2f013": {
+      "pid": "PID_グラディウス",
+      "name": "Gladius",
+      "aliases": [
+        "62cbef91"
+      ],
+      "source_offset": "0xee00",
+      "person_serial": 73,
+      "source_flags": 57,
+      "class": "a0154d76",
+      "class_key": "JID_シドー",
+      "level": 1,
+      "hp": 24,
+      "masteries": [
+        [
+          0,
+          690
+        ],
+        [
+          8,
+          220
+        ],
+        [
+          12,
+          220
+        ]
+      ],
+      "items": [
+        "52ac2581"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "ceaea4d3",
+          "3c336430",
+          "42c4d502"
+        ],
+        [
+          "82ddb101",
+          "82ddb102",
+          "4c499c19",
+          "e890dae6",
+          "3eca6d13"
+        ],
+        [],
+        [
+          "ceaea4d3",
+          "3c336430",
+          "42c4d502"
+        ],
+        [],
+        [
+          "82ddb101",
+          "82ddb102",
+          "382c5914",
+          "ceaea4d3",
+          "3c336430",
+          "42c4d502",
+          "4c499c19",
+          "e890dae6",
+          "3eca6d13",
+          "88d07c55"
+        ]
+      ],
+      "recruit_flag": "加入_グラディウス",
+      "met_flag": "面識_グラディウス",
+      "default_mount": "",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "f6b59fdf": {
+      "pid": "PID_クラプカ",
+      "name": "Klapka",
+      "aliases": [
+        "d9570247",
+        "a3aeb9c6"
+      ],
+      "source_offset": "0xf0c0",
+      "person_serial": 74,
+      "source_flags": 57,
+      "class": "0886a9b9",
+      "class_key": "JID_ガーディアン",
+      "level": 1,
+      "hp": 26,
+      "masteries": [
+        [
+          1,
+          690
+        ],
+        [
+          2,
+          35
+        ],
+        [
+          6,
+          35
+        ],
+        [
+          10,
+          35
+        ],
+        [
+          12,
+          35
+        ]
+      ],
+      "items": [
+        "6574cc90"
+      ],
+      "magic": [
+        "43d780cf"
+      ],
+      "skills": [
+        [
+          "25ecd491",
+          "1c7d1dfd",
+          "3bbea790",
+          "40dd3b94"
+        ],
+        [
+          "d9bdef6e",
+          "d9bdef6d",
+          "2f304d54"
+        ],
+        [],
+        [
+          "25ecd491",
+          "1c7d1dfd",
+          "3bbea790",
+          "40dd3b94",
+          "d02bc05d"
+        ],
+        [],
+        [
+          "d9bdef6e",
+          "d9bdef6d",
+          "ad423156",
+          "25ecd491",
+          "1c7d1dfd",
+          "3bbea790",
+          "40dd3b94",
+          "661a0a0d",
+          "d02bc05d",
+          "2f304d54"
+        ]
+      ],
+      "recruit_flag": "加入_クラプカ",
+      "met_flag": "面識_クラプカ",
+      "default_mount": "",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    },
+    "6d9442ab": {
+      "pid": "PID_タホウニア",
+      "name": "Tahonia",
+      "aliases": [
+        "c6f9eb4f"
+      ],
+      "source_offset": "0xf380",
+      "person_serial": 75,
+      "source_flags": 57,
+      "class": "a8939e62",
+      "class_key": "JID_バトルマスター",
+      "level": 1,
+      "hp": 25,
+      "masteries": [
+        [
+          0,
+          220
+        ],
+        [
+          4,
+          690
+        ]
+      ],
+      "items": [
+        "ef3cecb9"
+      ],
+      "magic": [],
+      "skills": [
+        [
+          "bc60971a",
+          "9929d5e9",
+          "a4083c66",
+          "181c2e70"
+        ],
+        [
+          "82ddb101",
+          "af6b0486",
+          "af6b0485"
+        ],
+        [],
+        [
+          "bc60971a",
+          "9929d5e9",
+          "a4083c66",
+          "181c2e70",
+          "a90b4bab",
+          "3a4efa62",
+          "d8768f49"
+        ],
+        [],
+        [
+          "82ddb101",
+          "af6b0486",
+          "af6b0485",
+          "9619508b",
+          "bc60971a",
+          "9929d5e9",
+          "a4083c66",
+          "181c2e70",
+          "a90b4bab",
+          "3a4efa62",
+          "d8768f49"
+        ]
+      ],
+      "recruit_flag": "加入_タホウニア",
+      "met_flag": "面識_タホウニア",
+      "default_mount": "",
+      "evidence": "Passed Leda Chapter 9 addition, deployment and progression checks; other contexts untested",
+      "restriction": "",
+      "route_scope": "Route/part eligibility unverified; this is not a natural recruitment event."
+    }
+  }
+}

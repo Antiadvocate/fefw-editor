@@ -27,9 +27,9 @@ class FastTravelPageMixin:
         ttk.Label(page, style="CardFaint.TLabel", wraplength=980, justify="left", text=(
             "Aurora’s room/garden require Cai for their travel locators; Salamis Guesthouse requires Theodora. Yu Phas travel/exit passed on Leda Chapter 9; its entrance remains restricted. See Facilities > Access conditions. "
             "Search by name, Japanese key or hash. "
-            "Edits affect the selected save's destination list. Travel still depends on game conditions; "
+            "Edits update destination lists in the selected save and enabled mirror targets. Travel still depends on game conditions; "
             "the Stables destination does not unlock the stable facility. Keep at least three original destinations.\n"
-            "Turn off ‘Also edit this route’s other saves’. Ctrl+Z undoes; Ctrl+S saves."
+            "Uses the same-route mirroring selection. Ctrl+Z undoes; Ctrl+S saves."
         )).pack(side="bottom", anchor="w", pady=(8, 0))
         frame = ttk.Frame(page, style="Card.TFrame")
         frame.pack(fill="both", expand=True, pady=(8, 0))
@@ -88,9 +88,6 @@ class FastTravelPageMixin:
     def set_fast_travel(self, value):
         if not self.sv:
             return
-        if self.mirror.get():
-            self.flash("Turn off ‘Also edit this route’s other saves’ for fast-travel edits.", "warn")
-            return
         picked = self.fast_travel_tree.selection()
         if not picked:
             self.flash("Select one or more destinations first.", "info")
@@ -103,9 +100,5 @@ class FastTravelPageMixin:
         except core.SaveError as exc:
             self.flash(str(exc), "error")
             return
-        if after == before.payload:
-            self.flash("Selected destinations already have the requested state.", "info")
-            return
-        self.push_undo()
         what = f"{'Removed' if value is None else 'Made available'} {len(edits)} destination(s)"
         self._core_edit(lambda f: fast_travel.edited(f, edits), what)

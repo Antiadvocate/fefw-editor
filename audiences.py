@@ -1,7 +1,7 @@
 """First-audience flags, separate from blessing EXP and travel.
 
 Six exact keys are referenced by the MIR audience-condition fields. Fortuna's
-condition is empty. Leda Chapter 9 acceptance and its limits are in docs/audiences.md.
+condition is empty. Leda Chapter 9 acceptance and its limits are in https://github.com/Destorino5/fefw-editor/blob/feature/part2-story/docs/audiences.md.
 """
 from __future__ import annotations
 

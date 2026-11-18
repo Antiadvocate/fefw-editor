@@ -221,7 +221,8 @@ def skill_label(sid: int) -> str:
 # convoy
 # --------------------------------------------------------------------------
 def live_convoy(payload) -> "Convoy | None":
-    f = core.SaveFile(bytes(payload))
+    """Read fresh rows, reusing a caller's validated decoded save when available."""
+    f = payload if isinstance(payload, core.SaveFile) else core.SaveFile(bytes(payload))
     at = core.convoy_at(f)
     if at < 0:
         return None
@@ -651,8 +652,10 @@ def copy_unit_in(payload: bytearray, origin, uid: int) -> bool:
     u = unit_in(src, uid)
     if u is None:
         return False
-    payload[:] = core.copy_unit(src, u, dst)
-    renumber_unit(payload, -1)
+    # Keep the guarded importer: it already allocates a unique number and
+    # rejects duplicate identities and unsupported equipment/context layouts.
+    import unit_entries
+    payload[:] = unit_entries.copy_in(src, u, dst)
     return True
 
 

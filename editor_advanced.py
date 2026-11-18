@@ -18,6 +18,7 @@ from tkinter import messagebox, ttk
 
 import fefw_core as core
 import supports
+from ui_util import ScrollableFrame
 from fefw_save import item_ids, item_label, unit_ids
 from map_page import MapPageMixin
 from tutorial_page import TutorialPageMixin
@@ -29,7 +30,9 @@ from deed_page import DeedPageMixin
 from boon_page import BoonPageMixin
 from facility_page import FacilityPageMixin
 from story_page import StoryPageMixin
+from unit_entry_page import UnitEntryPageMixin
 import audiences
+import facilities
 import tutorials
 import flag_labels
 from ui_util import enable_multi_select
@@ -137,7 +140,23 @@ def rank_of(exp: int) -> int:
     return r
 
 
-class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTravelPageMixin, DeedPageMixin, BoonPageMixin, FacilityPageMixin, StoryPageMixin):
+def matching_flag_map(source, target, map_i):
+    """Resolve a mirrored flag list by its member hash, never by scan order."""
+    selected = next((m for m in core.flag_maps(source) if m.index == map_i), None)
+    if selected is None:
+        raise core.SaveError('The selected flag list no longer exists.')
+    if source.payload == target.payload:
+        return selected
+    tree, group, _ = facilities.flag_group(source)
+    node = tree.nodes[group]; table = source.ptr(node.start)
+    keys = [source.u32(table+8*i) for i in range(source.u32(node.start) >> 24)
+            if source.ptr(table+8*i+4) == selected.start]
+    if len(keys) != 1:
+        raise core.SaveError('This flag list has no established identity for mirroring. Edit it with mirroring off.')
+    return facilities.locate_member(target, keys[0])
+
+
+class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTravelPageMixin, DeedPageMixin, BoonPageMixin, FacilityPageMixin, StoryPageMixin, UnitEntryPageMixin):
     # ------------------------------------------------------------- helpers
     def core_of(self, sv=None):
         """Decoded slot, reused only while its source bytes are unchanged."""
@@ -153,30 +172,30 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
         return f
 
     def _core_edit(self, fn, what: str) -> bool:
-        """fn(fefw_core.SaveFile) -> new payload; applied to every target slot."""
+        """Preflight every target, then stage one undoable multi-slot edit."""
         if not self.sv:
             return False
         self._commit_form()
-        touched, err = [], None
+        changes = []
         for sv in self._targets():
             try:
                 f = core.SaveFile(bytes(sv.payload))
                 new = fn(f)
-            except core.SaveError as exc:
-                err = exc
-                continue
-            except Exception as exc:          # noqa: BLE001 — report, never crash
-                err = exc
-                continue
+            except Exception as exc:          # noqa: BLE001 — atomic preflight
+                self.flash(f'Nothing changed: {os.path.basename(sv.path)} — {exc}', 'error')
+                return False
             if new is None or bytes(new) == bytes(sv.payload):
                 continue
-            sv.payload = bytearray(new)
+            changes.append((sv, bytearray(new)))
+        if not changes:
+            self.flash(f'Already set: {what}.', 'info')
+            return False
+        touched = [sv for sv, _ in changes]
+        self.push_undo(slots=touched)
+        for sv, new in changes:
+            sv.payload = new
             sv.scan()
             sv._core_cache = None
-            touched.append(sv)
-        if not touched:
-            self.flash(f"Couldn't apply “{what}”" + (f": {err}" if err else "."), "error")
-            return False
         self._touch(touched)
         self.refresh_after_core()
         where = f" in {len(touched)} slots" if len(touched) > 1 else ""
@@ -273,7 +292,9 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
 
     # ============================================================ PLAYER
     def _build_player(self):
-        page = self.player_page
+        self.player_scroll = ScrollableFrame(self.player_page)
+        self.player_scroll.pack(fill="both", expand=True)
+        page = self.player_scroll.body
         card = ttk.Frame(page, style="Card.TFrame", padding=(16, 10))
         card.pack(fill="x")
         ttk.Label(card, text="Player", style="CardH3.TLabel").pack(anchor="w")
@@ -1069,30 +1090,25 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
         cur = next((fl.value for m in core.flag_maps(f) for fl in m.flags
                     if m.index == map_i and fl.hash == hash_), 0)
         val = _ask_number(self, "Flag value", "New value (0 – 2147483647):", cur, 2_147_483_647)
-        if val is None or val == cur:
+        if val is None or (val == cur and not self.mirror.get()):
             return
         self._write_flag(map_i, hash_, val)
 
     def _write_flag(self, map_i: int, hash_: int, value: int):
-        def edit(g):
-            maps = core.flag_maps(g)
-            m = next((x for x in maps if x.index == map_i), None)
-            if m is None:
-                return None
-            fl = next((x for x in m.flags if x.hash == hash_), None)
-            if fl is None:
-                return core.flag_add(g, m, hash_, value)
-            start = fl.offset - 5 if fl.wide else fl.offset - 4
-            size = 9 if fl.wide else 5
-            b = bytearray(g.payload[start:start + size])
-            if fl.wide:
-                b[5:9] = core.struct.pack("<i", value)
-            else:
-                b[4] = value & 0xFF
-            return core.replace_content(g, m.start, bytes(b))
-
-        name = (flag_names().get(hash_) or {}).get("label") or "0x%08x" % hash_
-        self._core_edit(edit, f"{name} = {value}")
+        if not self.sv:
+            return
+        source = core.SaveFile(self.sv.payload)
+        selected_map = next((m for m in core.flag_maps(source) if m.index == map_i), None)
+        if selected_map is None or not any(fl.hash == hash_ for fl in selected_map.flags):
+            self.flash('The selected flag no longer exists. Refresh the list.', 'error')
+            return
+        def edit(f):
+            fm = matching_flag_map(source, f, map_i)
+            if any(fl.hash == hash_ for fl in fm.flags):
+                return core.flag_set(f, fm, hash_, value)
+            return core.flag_add(f, fm, hash_, value)
+        name = (flag_names().get(hash_) or {}).get('label') or '0x%08x' % hash_
+        self._core_edit(edit, f'{name} = {value}')
 
     def remove_flag(self):
         key = self._flag_sel()
@@ -1103,15 +1119,11 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
         if not messagebox.askyesno("Save editor", f"Remove the flag {name}?", parent=self):
             return
 
+        source = core.SaveFile(self.sv.payload)
         def edit(g):
-            for m in core.flag_maps(g):
-                if m.index != map_i:
-                    continue
-                fl = next((x for x in m.flags if x.hash == hash_), None)
-                if fl is None:
-                    return None
-                return core.flag_remove(g, m, fl)
-            return None
+            m = matching_flag_map(source, g, map_i)
+            fl = next((x for x in m.flags if x.hash == hash_), None)
+            return core.flag_remove(g, m, fl) if fl else g.payload
 
         self._core_edit(edit, f"Removed {name}")
 
@@ -1133,11 +1145,12 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
             return
         target = maps[0].index
 
+        source = core.SaveFile(self.sv.payload)
         def edit(g):
-            ms = core.flag_maps(g)
-            if not ms:
-                return None
-            return core.flag_add(g, ms[0], hash_, val)
+            m = matching_flag_map(source, g, target)
+            if any(fl.hash == hash_ for fl in m.flags):
+                return core.flag_set(g, m, hash_, val)
+            return core.flag_add(g, m, hash_, val)
 
         name = (names.get(hash_) or {}).get("label") or "0x%08x" % hash_
         self._core_edit(edit, f"Added {name} = {val}")
@@ -1366,48 +1379,53 @@ def _slot_payload(app):
 
 
 # ---------------------------------------------------------------- undo/redo
-def push_undo(self):
-    """Snapshot the payload before an edit, so Ctrl+Z can take it back."""
+def _history_snapshot(slots):
+    return [(sv, bytes(sv.payload), getattr(sv, '_pending_story_chapter', None)) for sv in slots]
+
+
+def push_undo(self, slots=None):
+    """Snapshot every affected slot; story actions pass only the selected slot."""
     if not self.sv:
         return
-    stack = getattr(self, "_undo_stack", None)
-    if stack is None or getattr(self, "_history_slot", None) is not self.sv:
-        stack = self._undo_stack = []
-        self._redo_stack = []
+    if getattr(self, '_history_slot', None) is not self.sv:
+        self._undo_stack, self._redo_stack = [], []
         self._history_slot = self.sv
-    stack.append((bytes(self.sv.payload), getattr(self.sv, '_pending_story_chapter', None)))
-    del stack[:-60]
+    slots = list(self._targets() if slots is None else slots)
+    snapshot = _history_snapshot(slots)
+    self._undo_stack.append(snapshot)
+    del self._undo_stack[:-60]
     self._redo_stack.clear()
 
 
-def undo(self):
-    stack = getattr(self, "_undo_stack", None)
-    if not stack or not self.sv or getattr(self, "_history_slot", None) is not self.sv:
-        self.flash("Nothing to undo.", "info")
+def _restore_history(self, source, destination, message):
+    stack = getattr(self, source, None)
+    if not stack or not self.sv or getattr(self, '_history_slot', None) is not self.sv:
+        self.flash('Nothing to ' + ('undo.' if source == '_undo_stack' else 'redo.'), 'info')
         return
-    self._redo_stack.append((bytes(self.sv.payload), getattr(self.sv, '_pending_story_chapter', None)))
-    payload, self.sv._pending_story_chapter = stack.pop()
-    self.sv.payload = bytearray(payload)
-    self.sv.scan()
-    self.sv._core_cache = None
-    self._touch([self.sv])
+    snapshot = stack[-1]
+    files = getattr(self, 'files', None)
+    if files is not None and any(files.get(sv.path) is not sv for sv, _, _ in snapshot):
+        self.flash('A save affected by this edit was reloaded. History was kept; reopen the original saves before undoing.', 'warn')
+        return
+    slots = [sv for sv, _, _ in snapshot]
+    getattr(self, destination).append(_history_snapshot(slots))
+    stack.pop()
+    for sv, payload, pending in snapshot:
+        sv.payload = bytearray(payload)
+        sv._pending_story_chapter = pending
+        sv.scan()
+        sv._core_cache = None
+    self._touch(slots)
     self.refresh_after_core()
-    self.flash("Undone — Ctrl+Y puts it back.", "ok")
+    self.flash(message, 'ok')
+
+
+def undo(self):
+    _restore_history(self, '_undo_stack', '_redo_stack', 'Undone — Ctrl+Y puts it back.')
 
 
 def redo(self):
-    stack = getattr(self, "_redo_stack", None)
-    if not stack or not self.sv or getattr(self, "_history_slot", None) is not self.sv:
-        self.flash("Nothing to redo.", "info")
-        return
-    self._undo_stack.append((bytes(self.sv.payload), getattr(self.sv, '_pending_story_chapter', None)))
-    payload, self.sv._pending_story_chapter = stack.pop()
-    self.sv.payload = bytearray(payload)
-    self.sv.scan()
-    self.sv._core_cache = None
-    self._touch([self.sv])
-    self.refresh_after_core()
-    self.flash("Redone.", "ok")
+    _restore_history(self, '_redo_stack', '_undo_stack', 'Redone.')
 
 
 # --------------------------------------------------------------- snapshots
@@ -1520,7 +1538,6 @@ def add_skill(self, index: int):
     sid = self._picker("Add to " + layer.SKILL_LIST_NAMES[index], rows)
     if sid is None:
         return
-    self.push_undo()
 
     def edit(g):
         u = layer.unit_in(g, self.uid)
@@ -1556,7 +1573,6 @@ def remove_skill(self, index: int):
             return None
         return core.with_skill_list(g, u, index + 1, [x for i, x in enumerate(ids) if i != k])
 
-    self.push_undo()
     self._core_edit(edit, f"{layer.SKILL_LIST_NAMES[index]}: removed entry {k + 1}")
 
 
@@ -1658,7 +1674,6 @@ def assign_battalion(self, clear: bool = False):
             return
         legion = layer.battalions(self.sv.payload)[idx]
         legion = core.Legion(legion.row, g.unit_number if g else 0, legion.id)
-    self.push_undo()
 
     def edit(f):
         u = layer.unit_in(f, uid)
@@ -1679,7 +1694,6 @@ def remove_battalion(self):
     if kind != "battalion":
         self.flash("Pick a battalion in the pool first.", "info")
         return
-    self.push_undo()
     self._core_edit(lambda f: layer_del_battalion(f, idx), "Removed battalion from the pool")
 
 
@@ -1698,8 +1712,9 @@ def copy_unit_in(self):
     """Bring a unit over from another slot of the same folder."""
     import os
     from tkinter import filedialog
-    if not self.sv:
+    if not self._unit_entry_ready():
         return
+    expected=(self.sv,bytes(self.sv.payload))
     others = [p for p in self.slot_paths if p != self.sv.path]
     start = self.folder or os.path.dirname(self.sv.path)
     pick = filedialog.askopenfilename(
@@ -1717,10 +1732,18 @@ def copy_unit_in(self):
     uid = self._picker(f"Copy a unit from {os.path.basename(pick)}", rows)
     if uid is None:
         return
-    self.push_undo()
+    if self.sv is not expected[0] or bytes(self.sv.payload)!=expected[1]:
+        self.flash('The destination changed. Reopen the import dialog.','warn');return
+    try:
+        import unit_entries
+        source=self.core_of(src)
+        unit=layer.unit_in(source,uid)
+        if unit is None:raise core.SaveError('No unique source unit.')
+    except core.SaveError as exc:self.flash(str(exc),'error');return
     name = next(r[1] for r in rows if r[0] == uid)
-    self._core_edit(lambda f: (layer.copy_unit_in(f.payload, pick, uid) and f.payload) or None,
-                    f"Copied {name} in")
+    if self._core_edit(lambda f: unit_entries.copy_in(source, unit, f), f'Copied {name} with a free local unit number'):
+        self.uid=uid;self.show_unit()
+
 
 
 def remove_current_unit(self):
@@ -1736,7 +1759,6 @@ def remove_current_unit(self):
                       "which can confuse it. Undo (Ctrl+Z) brings them back; nothing is "
                       "written until you save.", parent=self):
         return
-    self.push_undo()
     self._core_edit(lambda f: (layer.remove_unit(f.payload, self.uid) and f.payload) or None,
                     f"Removed {u.name}")
     self.uid = None
@@ -1762,7 +1784,6 @@ def add_convoy_item_ui(self):
             self.flash(f"{layer.item_label(iid)} doesn't stack - {qty} copies need {qty} "
                        f"slots and the convoy has room for {room}.", "warn")
             return
-        self.push_undo()
         if self._core_edit(
                 lambda f: (layer.add_convoy_copies(f.payload, iid, qty) and f.payload) or None,
                 f"Convoy: added {layer.item_label(iid)} ×{qty} (one slot each)"):
@@ -1777,7 +1798,6 @@ def add_convoy_item_ui(self):
         self.flash(f"Slot {home + 1}, {layer.item_label(iid)}'s own slot, holds "
                    f"{layer.item_label(other.iid)} — remove that first.", "warn")
         return
-    self.push_undo()
     self._core_edit(lambda f: (layer.add_convoy_slot(f.payload, iid, qty) and f.payload) or None,
                     f"Convoy: added {layer.item_label(iid)} ×{qty}")
     self.refresh_convoy()
@@ -1802,7 +1822,6 @@ def fill_materials_ui(self):
                       "already have are set to it.", max(1, start), 999)
     if not qty:
         return
-    self.push_undo()
     got = {}
 
     def run(f):
@@ -1826,7 +1845,6 @@ def remove_convoy_item_ui(self):
     if not slots:
         self.flash("Pick a convoy row first.", "info")
         return
-    self.push_undo()
     for slot in sorted(slots, reverse=True):
         self._core_edit(
             lambda f, s=slot: (layer.remove_convoy_slot(f.payload, s) and f.payload) or None,

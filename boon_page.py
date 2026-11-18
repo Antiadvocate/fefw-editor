@@ -20,7 +20,7 @@ class BoonPageMixin:
         self.boon_search.bind("<KeyRelease>", lambda e: self.refresh_boons())
         ttk.Label(page, style="CardFaint.TLabel", justify="left", wraplength=900, text=(
             "Tier edits preserve Karma and progression. Set all to max preserves each On/Off switch.\n"
-            "Selected save only: turn off route mirroring. Ctrl+S saves, Ctrl+Z undoes, Ctrl+Y redoes."
+            "Uses the same-route mirroring selection. Ctrl+S saves, Ctrl+Z undoes, Ctrl+Y redoes."
         )).pack(side="bottom", anchor="w", pady=(8, 0))
         form = ttk.Frame(page, style="Card.TFrame", padding=(14, 10))
         form.pack(side="bottom", fill="x", pady=(8, 0))
@@ -146,10 +146,6 @@ class BoonPageMixin:
         if not self.sv:
             self._select_boon()
             return
-        if self.mirror.get():
-            self.flash("Turn off ‘Also edit this route’s other saves’ for Boon edits.", "warn")
-            self._select_boon()
-            return
         self._commit_form()
         try:
             before = self.core_of()
@@ -158,11 +154,6 @@ class BoonPageMixin:
             self.flash(str(exc), "error")
             self.refresh_boons()
             return
-        if after == before.payload:
-            self.flash("These Boons already have the requested state.", "info")
-            self.refresh_boons()
-            return
-        self.push_undo()
         self._core_edit(edit, label)
 
     def set_boon_tier(self, remove=False):

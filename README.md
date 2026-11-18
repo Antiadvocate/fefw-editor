@@ -1,61 +1,5 @@
 # Fortune's Weave Save Editor
 
-**Story progression — Leda Part 1:** Player offers **Chapters 2–12**, all tested
-through the opening and next main story beat. Chapter 1 is unavailable: its
-opening plays, but the first objective does not advance. Optional chapter-file
-creation on Save passed UI/backup checks and Obelisk loading for Chapters 8/9.
-Other Leda chapter files remain untested through the Obelisk.
-
-**Cai Part 1:** Chapters **1–12** passed opening and progression tests, including
-Chapter 4 direct entry with the Sewers fix. Cai Obelisk use remains untested.
-See [Cai/Tutorials Test 5 results](docs/test-results-cai-tutorials-test5.md).
-
-**Dietrich Part 1:** Chapters **3–12** are available and passed short-session
-opening/progression checks, including direct entry for Chapters 5/6 and the
-Chapter 7 teaching objective. **Chapters 1 and 2 are unavailable:** Chapter 2
-replay blocks at the rescue, and Chapter 1 leads into it. Existing native saves
-still load normally. [Test 3 results](docs/test-results-story-dietrich-test3.md)
-record the failed Chapter 2 diagnostics and accepted 5/6 entry paths.
-Chapter selection applies the tested prerequisites for 5–7 while preserving
-party and tutorials. All Test 1 UI checks passed. Dietrich Obelisk use and
-long term progression remain untested.
-
-**Theodora Part 1:** Chapters **1–12** passed short-session checks. Chapter 2
-enters battle directly. Chapters **4/6/8/9** passed with the focused Test 2
-repairs, now applied during chapter selection. Chapter 6 uses an alternate city
-route; its NPC barrier remains. Chapter 8 removed that barrier. Chapter 9 needs
-only the three-point Troy exit. Party, tutorials and unrelated flags/map points
-are preserved. Chapters 1/2 use 1446; Chapter 3+ uses 1449.
-See [Test 2 results](docs/test-results-story-theodora-test2.md).
-
-**Performance:** repeated save parsing is cached with byte-level invalidation,
-and chapter entry skips rebuilding already-empty restart blobs. See the
-[optimisation measurements and validation](docs/performance-2026-11-17.md).
-
-**Tutorial names:** 180 titles, categories and their visible order now match the
-supplied game screenshots. This corrects 61 labels, including **Mentoring (Cai)**;
-38 unseen scenario-specific titles remain provisional. Exact keys are unchanged.
-
-**Functions** replaces the Facilities tab. Its 41 switches include
-**Sewers access (Cai)** under Area access. Selecting Cai Chapter 3 or later
-also enables this prerequisite automatically, with Undo/Redo and Save.
-Other earlier unlocks and party units still require separate changes.
-Area access now also includes **upper, middle and lower/port movement** and
-the **wealthy–commercial district passage**. Enable clears the corresponding
-movement restriction; the ordinary upper/lower access and Trading Company
-switches remain separate. Each row states its tested scope.
-The Journal, Mentoring and Dagsion area controls remain available with their
-individual evidence labels. Arena testing remains deferred.
-See [Sewers results and editor checks](docs/test-results-sewers-functions.md).
-The [Cai and Tutorials test kit](docs/testing-cai-tutorials-test5.md) passed its
-reported checks. Dietrich Test 3 accepted integrated Chapter 5/6 entry; Chapter 2 research is parked.
-
-**Facilities branch:** the UI and FAC-01–06 game tests passed on Leda Part 1
-Chapter 9. Ten services and six gates are Game-tested; Yu Phas additionally
-needs its ordinary Fast travel destination, and ten untested services remain
-Inferred. See [Facilities](docs/facilities.md) and the
-[acceptance report](docs/test-results-facilities-test1.md).
-
 A save editor for **Fire Emblem: Fortune's Weave** saves made by the Eden
 Switch emulator. It edits your playthrough (units, items, convoy, gold, skills,
 flags) and leaves the game itself alone. Plain Python + Tkinter, one extra
@@ -72,83 +16,86 @@ library, or a ready-made Windows `.exe`.
 
 ## What you can edit
 
-| Page | Tab | What |
-|---|---|---|
-| **Units** | Stats | Level, EXP, max HP, and the points each of the nine stats has gained from level-ups (see *Stats* below) |
-| | Arts & skills | All six skill lists in the unit's record (equipped arts, equipped skills, arts known, everything learned…), by name, with add / remove |
-| | Inventory | Swap, add or remove a carried item, picked from a searchable catalogue. Known spells are listed separately |
-| | Class | Pick any class the game knows. It's added to the unit's own class list, the way the game does it |
-| **Convoy** | | Everything in storage, materials included: add a stack, stock every material at once, swap the item in any row, change its quantity, remove a row, and repair a list damaged by older versions |
-| **Gold** | | Set gold |
-| **Player** | | Leda Part 1 starts 2–12, Cai 1–12 and Dietrich 3–12 (game-tested); Theodora 1–12 (passed with targeted repairs in 4/6/8/9; Chapter 6 uses alternate traversal), selected from the save route. Dietrich 1/2 unavailable because of the Chapter 2 rescue block. Other targets/routes guarded. Optional chapter file on Save with overwrite confirmation and backup. Gold, renown exp and Karma Shards; difficulty, mode and playthrough number (written into every slot, since they belong to the run) |
-| **Classes** | | A unit's whole class list (set the current class, add, swap or remove one, set its exp) and its weapon masteries with their rank (E … S+) and exp — select several masteries (Ctrl+A, Shift+click or Shift+drag) and Set rank, Set exp or Remove changes all of them at once |
-| **Supports** | | Every character's support partners with the **points** this save holds for the pair, the highest rank the game defines, and which conversations this save has recorded. Set the points (0 … 3200) and the game works the level out from them. **Record conversation as seen** writes that conversation's flag |
-| **Mounts** | | The battalion and mount each unit carries, chosen from the save's pool |
-| **World map** | | Which of the map's places, junctions and road points the save has **shown** or hides, and which places are marked **visited** (white versus dark icon). Show or hide a selection, a whole road, or every place / road at once. See *World map* below |
-| **Flags** | | Every named variable the save stores: support conversations, recruited / met, achievements, feature and class unlocks. Search, filter, set, add, remove |
-| **Tutorials** | | 218 tutorial identities: 180 screenshot-checked titles and 38 provisional English translations. Category/state/evidence filters, selected batches, empty-list restoration, original keys and Undo/Redo. See [tutorials.md](docs/tutorials.md) |
-| **Blessings** | | Stored EXP for all seven gods, one at a time in the selected save. Six level previews tested in Leda Chapter 9; Fortuna's EXP effect remains unknown. Selection and Divine Sand are read-only. Six tested first-audience toggles; Fortuna has no audience condition. See [blessings.md](docs/blessings.md) |
-| **Fast travel** | | Add/remove 20 identified Dagsion destination flags in the selected save, with original keys and undo/redo. The original 16 have screenshot-confirmed English names. Four additional flags persisted in Chapter 9 tests; only Yu Phas Temple appeared and allowed travel, while walking back in stayed blocked. See [fast-travel.md](docs/fast-travel.md) |
-| **Functions** | | 41 service, gate, journal and area/movement switches, with evidence labels and read-only Arena/route/access diagnostics. See [facilities.md](docs/facilities.md) |
-| **Boons** | | All 31 Boons / 81 tiers: set a tier, remove ownership, switch On/Off or set all to max. Karma and progression preserved; undo/redo. Game-tested and inferred mappings labelled. See [boons.md](docs/boons.md) |
-| **Notable Deeds** | | 350 milestones; 47 editable totals; the 14 newly enabled counters are labelled Inferred. Hours Played passed its 20-hour game test. Targets/rewards and stored claim states shown separately; no currency or claim writes. See [notable-deeds.md](docs/notable-deeds.md) |
+| Page | What |
+|---|---|
+| **Units** | Level, EXP, HP and stat gains; carried items; classes; arts and skills. Add a character from the catalogue, copy one from another save, remove one, restore recruitment, or change its **Unit #**, with duplicate checks. |
+| **Convoy** | Add, swap or remove items and materials (including Building Materials), change quantities, stock all materials, and repair damaged storage lists. |
+| **Player** | Gold, renown EXP and Karma Shards; difficulty, mode and playthrough number; Part 1/2 and Eshmel Part 3 chapter selection, optional chapter-start files, and **Troubleshoot Progress**. |
+| **Classes** | Current and learned classes, class EXP, weapon ranks and mastery EXP, with batch editing. |
+| **Supports** | Support points, current level and next-level requirements, and recorded conversations. |
+| **Mounts** | The battalion and mount each unit carries, chosen from the save's pool. |
+| **World map** | Show or hide places and roads, and mark places visited. |
+| **Tutorials** | Make tutorial records available or remove them, with category, state and name-evidence filters. |
+| **Blessings** | Stored EXP for all seven gods and available first-audience controls. |
+| **Fast travel** | Add or remove identified Dagsion destinations. |
+| **Functions** | Facility and feature availability, area access, and city movement restrictions. |
+| **Notable Deeds** | Progress counters and milestone information, with claim states and rewards shown separately. |
+| **Boons** | Set tiers, remove ownership, switch owned Boons On/Off, or set all to maximum. |
+| **Flags** | Search and edit named save variables, including recruitment, conversations and unlocks. English names appear beside the original Japanese identifiers. |
 
-**Current build: upstream v1.3.9, with all Deed counters editable.** The 14
-newly enabled counters are labelled **Inferred**; the accepted Hours test and
-original counter workflow remain documented separately. Counter edits preserve
-claim states, Karma and underlying story/unit progress. Existing unknown-state
-checks, claim warnings, Undo/Redo and numbered backups remain available.
-See the [release scope](docs/deeds-inferred-release.md).
+Edits support **Undo/Redo** (Ctrl+Z / Ctrl+Y). **Snapshot** / **Restore…** keep
+copies of the whole save folder. Frequently used save data is cached to keep
+switching pages and editing large lists responsive. The window sizes to fit your
+screen; longer forms and previews scroll, action buttons stay visible, and
+**Go to tab** reaches every page when the tab strip is too wide.
 
-The header shows the product/version without temporary test wording. Flags
-remains the rightmost tab. Known English names appear in **Name**, with exact
-original Japanese keys in **Reads As**. Shared catalogue overlays keep these
-labels consistent in the running editor and generated dictionary. Future
-main merges follow [AGENTS.md](AGENTS.md).
+### Story progression
 
-**Accepted Boons Test 4 milestone.** Corrects the eight skill-EXP
-key mappings that made Test 3's Set all to max only partly work in game.
-Brawling and Black-Magic level/Off keys match isolated game captures. The player
-has confirmed **all Boons are On and maximum, and save/load retains them**.
-Test 4's bulk-max game test is accepted on the reported setup; individual
-gameplay effects and every intermediate tier are not all verified.
-No general hash truncation is applied. Earlier incorrect records are preserved
-but ignored when showing ownership. See [the findings](docs/boon-key-investigation.md)
-and [Test 4 validation](docs/test-results-boon-skill-keys-2026-11-15.md).
+Chapter selection is available from **Player → Story progression…**:
 
-Select a row and **Set selected tier**, **Remove Boon**, or use **Set all to max**.
-Select the owned tier to switch it On/Off. Bulk max includes groups hidden by
-search and preserves existing Off states. Save writes the selected slot;
-Undo/Redo restores the entire action. **Flags is now the far-right tab.**
+| Story | Available chapters |
+|---|---|
+| Leda Part 1 | 2–12 |
+| Cai Part 1 | 1–12 |
+| Dietrich Part 1 | 3–12 |
+| Theodora Part 1 | 1–12 |
+| All four routes, Part 2 | 1–6 |
+| Eshmel Part 3 | 2–6, on existing Eshmel Part 3 saves only |
 
-The locked **Weapons Discount 20%** test passed: 240/400 prices On, 300/500
-Off, with level and activation persisting after reload. EXP tier 1 and Weapons
-tiers 1/2 have game evidence. Brawling and Black-Magic tier 1 are **Save-verified**;
-other tiers are explicitly marked **Inferred**.
-The broader editor is structurally tested, without claiming every Boon's effect
-has been verified in game. See the [usage guide](docs/testing-boon-levels.md),
-[results and validation](docs/test-results-boon-levels-2026-11-15.md) and
-[Boons format](docs/boons.md). Karma and progression are preserved.
+Leda Part 1 Chapter 1, Dietrich Part 1 Chapters 1–2 and Eshmel Part 3 Chapter 1
+are unavailable because replay can block progression. Start Part 3 Chapter 1
+naturally through the Obelisk door. Part 3 Chapters 2–5 passed their opening and
+next story event; Chapter 6 was checked only as far as its opening battle.
+Complete playthroughs and every Obelisk checkpoint have not been validated.
 
-This build merges upstream `7157e6c`: numbered `.bak`, `.bak1`, `.bak2` backups
-and the preceding weapon-mastery multi-selection fix. The original `.bak` is
-retained; later distinct pre-save disk states receive increasing numbers.
+Chapter selection preserves your party and earlier progress; it does not grant
+all skipped units, facilities or quests. Known access fixes are applied where
+needed, including Part 2 temple and midtown access. Theodora Part 1 Chapter 6
+may still require the alternate route around the city barrier. **Troubleshoot
+Progress** reads the current character, part and chapter and offers a known
+repair where one exists. If none is known, it points to the upstream issue page.
 
-**Accepted milestone: Notable Deeds Test 2.** Adds 350 mapped milestones with
-32 editable activity counters and 15 read-only counters. Claim states and Karma
-Shards are preserved by the editor; claim rewards in game. See the [numbered test guide](docs/testing-notable-deeds.md)
-and [feature/format documentation](docs/notable-deeds.md). The training completion
-and claim tests passed. Lowering progress below a
-claimed tier made the game clear its claim; Test 2 therefore adds an OK/Cancel
-warning listing affected targets. DEED-11–14 now all passed; the Notable Deeds
-milestone is accepted on the reported Leda Chapter 9 setup.
-The accepted audience controls no longer say
-Experimental. Three hidden travel entries say **Effect unknown**; Yu Phas Temple
-retains its Chapter 9 entry restriction. POL-04/05 both passed.
+**Try Part 2 entry…** offers experimental entry from a supported Part 1 save.
+It does not reproduce the whole native transition or create the separate
+`Part_<lord>_2` handoff file. Part 3 selection does not create missing route
+completion or carryover state. Story changes and troubleshooting apply only to
+the selected save, even when mirroring is enabled.
 
-Units can also be **copied in** from another slot or **removed**. Every edit can
-be undone (Ctrl+Z / Ctrl+Y), and **Snapshot** / **Restore…** keep copies of the
-whole save folder.
+You can optionally create the selected chapter's checkpoint file when saving.
+Existing files require confirmation and receive a backup. Battle states are
+not supported for story changes.
+
+### Adding units
+
+**Add unit…** uses each enabled character's level-one defaults. It checks for
+existing characters and allocates an unused unit number. **Restore recruitment**
+re-enables the relevant flags for an existing eligible record while retaining
+its stats and inventory; it is not a general revival feature. Manual number
+changes also reject collisions.
+
+The catalogue has **67 enabled characters**, including special characters with
+individual notes. Add Unit and recruitment restoration support the four Part
+1/2 routes and Eshmel Part 3 in recognized **free-time, normal pre-battle and
+chapter-start** saves. Pre-battle additions show a warning: units may have
+reduced HP/stats or be absent from the editor view. Mid-battle additions are
+disabled; world-map battle states are unsupported. Copying and renumbering
+remain limited to free-time saves.
+
+Some characters need equipment from the convoy. Anna starts dismounted; mounted
+deployment has also worked in Part 3, but remounting and map eligibility are not
+established. Eshmel's special entry has a helmeted portrait and a generic
+unhelmeted battle model. Read each character's preview for its limitations;
+these entries are not a guarantee of natural recruitment or every story context.
 
 ### Stats
 
@@ -181,8 +128,7 @@ no record changes size.
 
 The byte layout and the behaviour of the two bytes were worked out by
 [@Destorino5](https://github.com/Destorino5) in
-[#27](https://github.com/Antiadvocate/fefw-editor/issues/27); see
-[`docs/world-map.md`](docs/world-map.md).
+[#27](https://github.com/Antiadvocate/fefw-editor/issues/27).
 
 ### Not supported (yet)
 
@@ -199,123 +145,59 @@ If you know where any of these live, contributions are welcome.
 
 ## Download
 
-### Contribution test candidate
+The [upstream releases](https://github.com/Antiadvocate/fefw-editor/releases/latest)
+provide Windows and Linux builds. Their included features depend on the release;
+run this branch from source to use everything listed above.
 
-This branch adds **Notable Deeds** progress editing, **Fast travel** destination editing and a visible **Open…**
-button in the top action bar. The slot selector now has its own row so it cannot
-squeeze the button off-screen. Open selects a save file and loads its folder;
-Ctrl+O and the existing unsaved-change prompt still work. This candidate retains
-**Blessings EXP** editing for all seven gods and the tested **Tutorials** page
-with 218 identities (180 screenshot-checked titles and 38 provisional translations) and
-the original Japanese keys. Search, select, **Make available** or **Remove
-selected**, then Ctrl+S. Ctrl+Z/Ctrl+Y undo/redo. Turn off route mirroring for
-these edits; unknown records and unrelated progress are preserved.
+* **Windows:** unzip the Windows package and run `FEFW Save Editor.exe`.
+  Python is not required. The executable is not code-signed, so SmartScreen
+  may ask for confirmation.
+* **Linux (x86-64):** extract the Linux package and run `./fefw-save-editor`.
+  It requires glibc 2.35 or newer and runs under X11 or XWayland.
+* **macOS / other platforms:** run from source below.
 
-The same labels appear in **Flags**, with the Japanese key in **Reads as**.
-Adding a tutorial does not unlock the feature it describes. This is a source
-test candidate; the upstream release link below does not contain this branch.
-
-In **Blessings**, select a god, enter **New EXP**, click **Apply EXP**, then
-Ctrl+S. Level buttons fill the input only. Turn off **Also edit this route's
-other saves**. Fortuna (labelled Photon in Test 1) accepts raw EXP but has no
-established level thresholds. All BLESS-01–11 acceptance cases passed on the
-reported Leda Chapter 9 / `fefw-recomp-0.1.5` setup; six gods displayed the
-tested level 2, including Kalla's decrease from level 3. Fortuna retained EXP 1;
-the player also reported no noticeable Blessings-screen change at maximum
-stored EXP (65535). Its gameplay effect remains unknown. EXP alone does not
-establish first-audience or temple-access flags. See the report for the exact
-values and coverage limits.
-
-In **Fast travel**, search/select a destination, then **Make available** or
-**Remove selected**, and Save. The catalogue covers 16 flags from the confirmed
-Leda Chapter 9 restoration. OPEN-01–02 and FT-01–08 passed on the reported
-setup, including removal, restoration, travel and persistence for Port,
-Kalla's Temple and Stables. All 16 English labels match the supplied game
-screenshots. The Stables destination does not unlock the stable facility.
-Unknown records and values are preserved; sparse/ambiguous layouts refuse edits.
-
-* [Milestone 5: Boons controlled capture guide](docs/testing-boons.md)
-* [Milestone 5: Research 1 capture results](docs/test-results-boons-2026-11-15.md)
-* [Milestone 5: Boons Test 1 game guide](docs/testing-boon-editing.md)
-* [Milestone 5: Boons Test 1 acceptance and validation](docs/test-results-boon-editing-2026-11-15.md)
-* [Milestone 5: Boons Test 2 Weapons Discount acceptance](docs/test-results-weapon-boon-2026-11-15.md)
-* [Milestone 5: Boons Test 2 reproduction guide](docs/testing-weapon-boon.md)
-* [Boons Test 3: all tiers usage guide](docs/testing-boon-levels.md)
-* [Boons Test 3: WD20 acceptance and validation](docs/test-results-boon-levels-2026-11-15.md)
-* [Accepted locked Weapons Discount 20% experiment](docs/testing-weapon-discount-20.md)
-* [Deeds follow-up: 15 read-only counters queued for testing](docs/deeds-follow-up.md)
-* [Milestone 4: Notable Deeds testing guide](docs/testing-notable-deeds.md)
-* [Notable Deeds feature, full catalogue and binary format](docs/notable-deeds.md)
-* [Milestone 4: implementation validation](docs/test-results-deeds-2026-11-15.md)
-* [Milestone 3: Fast travel and Open button testing guide](docs/testing-fast-travel.md)
-* [Fast travel feature, catalogue and binary-format documentation](docs/fast-travel.md)
-* [Milestone 3: validation report](docs/test-results-fast-travel-2026-11-15.md)
-* [Blessings feature, thresholds and binary-format documentation](docs/blessings.md)
-* [Milestone 2: all seven gods test guide](docs/testing-blessings.md)
-* [Milestone 2: automated and GUI test report](docs/test-results-blessings-2026-11-15.md)
-* [Tutorial feature and binary-format documentation](docs/tutorials.md)
-* [Repeatable game-testing guide and result template](docs/testing.md)
-* [Blessings, fast travel, deeds, Boons and story research/roadmap](docs/research-status.md)
-
-Run `python -m unittest discover -s tests -v` for automated checks. Gameplay
-acceptance of the new GUI is tracked separately from prior restored-save tests.
-
-### Upstream releases
-
-Get the latest build from the
-[**Releases page**](https://github.com/Antiadvocate/fefw-editor/releases/latest):
-
-* **Windows:** `FEFW-Save-Editor-<version>-windows.zip`. Unzip it anywhere you
-  can write to and run `FEFW Save Editor.exe`; no Python needed. The exe isn't
-  code-signed, so SmartScreen may ask you to click *More info → Run anyway*.
-* **Linux (x86-64):** `FEFW-Save-Editor-<version>-linux-x86_64.tar.gz`. No
-  Python or pip needed. Extract it to a folder you can write to and run
-  `./fefw-save-editor`:
-
-  ```
-  tar xzf FEFW-Save-Editor-*-linux-x86_64.tar.gz
-  cd FEFW-Save-Editor-*/
-  ./fefw-save-editor
-  ```
-
-  It needs glibc 2.35 or newer (Arch, Fedora, Debian 12, Ubuntu 22.04, Mint 21
-  and later all qualify). It runs under X11 or XWayland.
-* **Anything else (macOS, ARM):** `…-source.zip`, then see *Running from source*.
+Keep the editor in a folder you can write to; its settings are saved beside it.
 
 ## Running from source
 
-For the tutorial test candidate, **Python 3.12 is recommended**. The automated
-checks have passed on Python 3.10 and 3.12, on Linux and Windows. The code's
-minimum syntax version is 3.10; this does not mean dependencies have been
-validated on every newer Python release. Python 3.15 is not validated.
+Use **Python 3.10 or later**, with Tkinter and `zstandard`. Python 3.10 and 3.12
+are the versions used for validation; Python 3.12 is recommended.
 
-Follow [the source setup guide](docs/source-setup.md) before the gameplay tests.
-It includes a Bazzite/Distrobox route with packaged dependencies and a virtual
-environment route for an existing Python 3.12 installation.
-
-With Python 3.12 and Tkinter already installed (Linux/macOS):
+With Python 3.12 and Tkinter installed, on Linux/macOS:
 
 ```sh
-python3.12 -m venv .venv-fefw312
-.venv-fefw312/bin/python -m pip install --only-binary=:all: -r requirements.txt
-.venv-fefw312/bin/python editor.py
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python editor.py
 ```
 
-On Arch and other distros that block system-wide `pip install`, install the
-two dependencies from the distro instead and skip pip:
+On Windows:
 
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe editor.py
 ```
+
+Alternatively, use your distro packages:
+
+```sh
+# Arch
 sudo pacman -S tk python-zstandard
 python editor.py
+
+# Debian / Ubuntu
+sudo apt install python3-tk python3-zstandard
+/usr/bin/python3 -s editor.py
 ```
 
-(Debian/Ubuntu: `sudo apt install python3-tk python3-zstandard`, then use
-`/usr/bin/python3 -s editor.py`.) For a virtual environment, use the explicit
-Python 3.12 commands above rather than an unqualified `python` command.
+On Bazzite, the Debian/Ubuntu commands can be used inside an Ubuntu Distrobox.
+The Windows `FEFW Save Editor.bat` launcher also works once its Python has the
+dependencies installed. To open a particular save folder or slot:
 
-or double-click **FEFW Save Editor.bat** on Windows once its Python interpreter
-has the dependencies installed. You can also
-pass a save folder (or any slot file in it): `python editor.py "C:\path\to\save"`.
+```sh
+python editor.py "/path/to/save"
+```
 
 ## Finding your save
 
@@ -332,8 +214,8 @@ Otherwise use **Open folder…** and pick any slot file inside it.
   played, and it opens first. `Route_<lord>` (e.g. `Route_Ism`) holds that
   lord's route while you play someone else. `Chapter_<lord>_<part>_<chapter>`
   are chapter checkpoints, the points the game's "go back in time" feature
-  returns to. `Part_<lord>_<part>` are part checkpoints. `Global` holds settings
-  only. The slot list shows the lord, part and chapter each slot was saved in
+  returns to. `Part_<lord>_<part>` are part checkpoints. `Global` is maintained separately by the game; its progression and carryover
+  data are not fully mapped by this editor. The slot list shows the lord, part and chapter each slot was saved in
   (e.g. `★ Auto · Theodora P1 Ch12`), read from the save itself; ★ marks `Auto`.
 * **Edit `Auto`.** It's the save the game continues from, so editing it alone is
   enough.
@@ -345,8 +227,12 @@ Otherwise use **Open folder…** and pick any slot file inside it.
   written into every copy. Story progression deliberately clears old internal
   restart snapshots so the game can rebuild the selected chapter start.
 * **"Also edit this route's other saves"** (off by default) also writes each edit
-  into the same route's other live saves, e.g. that lord's `Route_*`. Another
-  lord's route and every `Chapter_*` checkpoint are never touched. Open a
+  into matching live saves of the same character, part and playthrough, e.g.
+  that lord's `Route_*`. This includes Tutorials, Blessings/audiences, Fast
+  Travel, Notable Deeds, Boons, Add Unit, Functions and named flag edits, as well
+  as existing unit, inventory, map and support edits. Targets are checked before
+  applying the added features' edits, and Undo/Redo restores them together.
+  Another route/part/playthrough and every `Chapter_*` checkpoint are excluded. Open a
   checkpoint to edit it on its own. The separate Story progression checkbox can
   create or replace its selected chapter file on Save, with confirmation and backup.
 * **Nothing is written until you press Save** (Ctrl+S). Slots with unsaved
@@ -409,6 +295,7 @@ PNGs into `icons/items/` and `icons/units/` to use real images; see
 | Ctrl+Z / Ctrl+Y | Undo / redo |
 | Ctrl+O | Open a save folder |
 | Ctrl+F | Jump to the search box on the current page |
+| Ctrl+Tab / Ctrl+Shift+Tab | Move between pages |
 | Ctrl+A | Select every row in the table you last clicked |
 | Shift+click / Shift+drag | Select a range of rows (convoy, classes, masteries, flags…) |
 | F5 | Reload every slot from disk (asks first if you have unsaved edits) |
@@ -430,49 +317,35 @@ PNGs into `icons/items/` and `icons/units/` to use real images; see
 * Built and tested against saves from one game version. Another version may need
   the name tables rebuilt; unknown ids then show as `unknown <hash>`.
 
+* Tutorial records and menu visibility are separate: the game can hide
+  scenario-specific entries or unlock tutorials again during play.
+* Showing a map point or travel destination does not necessarily unlock its
+  facility, gate or story event. Functions exposes separate controls where known.
+* Fortuna's Blessings EXP effect is unknown. Divine Sand and selection are
+  read-only; other gods have known level previews.
+* Deed counter changes preserve reward claim records and currency. Lowering
+  progress below a claimed milestone can make the game clear that claim.
+* Inferred mappings remain labelled in the editor; they are not guarantees of
+  in-game behavior.
+
 ## Files
 
-```
-editor.py            the GUI
-editor_advanced.py   Arts & skills, Player, Classes, Supports, Flags and Mounts pages
-ui_util.py           table helpers: Ctrl+A and Shift+drag range selection
-fefw_core.py         the save's record tree: blocks, units, resizing edits, convoy, mounts, flags
-fefw_layer.py        what the GUI uses: units, items, skills, convoy and gold through fefw_core
-fefw_save.py         save container (decompress, checksums, write), ids and labels, small CLI
-supports.py          support pair chart, conversation-flag and support-point lookup
-unit_ids.json        person id -> name
-item_ids.json        item id   -> Japanese + English name
-job_ids.json         class id  -> Japanese + English name
-skill_ids.json       skill id  -> Japanese + English name
-supports.json        support pair -> highest rank and its conversation flags
-support_points.json  support pair hash -> the two characters it joins (2628 pairs)
-flag_names.json      flag id   -> readable name
-map_spots.json       map point hash -> name, kind, position; the road chains
-worldmap.py          reads and edits the save's map points (GmapSpotMgr)
-map_page.py          the World map page
-tutorials.py         tutorial catalogue, list recognition and preserving edits
-tutorial_page.py     the single-slot Tutorials page
-tutorial_names.json  identified tutorial keys and official English names
-blessings.py         seven-god identity/layout checks and EXP-only writes
-blessing_page.py     the single-slot Blessings page
-deed_names.json     mapped deed counter/milestone identities, targets and rewards
-deeds.py            Notable Deeds locator and bounded counter-only edits
-deed_page.py        the single-slot Notable Deeds page
-tests/               synthetic tests and opt-in private-save regression check
-build_map_spots.py   rebuilds map_spots.json from a romfs dump
-build_skill_ids.py   rebuilds skill_ids.json from a romfs dump
-build_item_names.py  puts the game's official English item names into item_ids.json
-build_unit_names.py  English names for generic units, enemies and NPCs in unit_ids.json
-msbt.py              reads the game's message files (used by the build scripts)
-build_flag_names.py  rebuilds flag_names.json from a romfs dump
-icons/               optional item / unit images
-requirements.txt     zstandard
-FEFW Save Editor.bat launcher (source install)
-.github/workflows/   release build
-```
+| Files | Purpose |
+|---|---|
+| `editor.py`, `editor_advanced.py`, `*_page.py` | Interface and feature pages |
+| `fefw_core.py`, `fefw_layer.py`, `fefw_save.py` | Save parsing, edits, checksums and writing |
+| Feature modules and `.json` catalogues | Units, story, supports, maps, tutorials, blessings, functions, deeds and Boons |
+| `build_*.py`, `msbt.py` | Rebuild name and item tables from your own game dump |
+| `icons/` | Optional item and unit images |
+| `requirements.txt`, `FEFW Save Editor.bat` | Source dependencies and Windows launcher |
+| `.github/workflows/` | Source checks and release packaging |
 
-`editor_settings.json` (theme, last folder, options) is created next to the
-editor, or next to the `.exe` / Linux binary, on first use.
+`editor_settings.json` is created beside the editor on first use.
+Research scripts, test suites and development reports are retained on the
+[feature branches](https://github.com/Destorino5/fefw-editor/branches), including
+[Part 3 story](https://github.com/Destorino5/fefw-editor/tree/feature/part3-story),
+[Part 2 story](https://github.com/Destorino5/fefw-editor/tree/feature/part2-story)
+and [unit creation](https://github.com/Destorino5/fefw-editor/tree/feature/unit-creation).
 
 ### Rebuilding the name tables
 

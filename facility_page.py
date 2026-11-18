@@ -35,7 +35,7 @@ class FacilityPageMixin:
         ttk.Label(switches, style='CardFaint.TLabel', wraplength=950, justify='left', text=(
             'Enable/Disable changes only the selected saved switches. Enabling movement clears its restriction; area-unlock switches are separate. Route, story and NPC conditions may still limit access. '
             'Gate registrations are separate from ordinary fast travel.\n'
-            'Stables stays unchanged unless selected. Turn off “Also edit this route’s other saves”. Ctrl+Z undoes; Ctrl+S saves.'
+            'Stables stays unchanged unless selected. Uses the same-route mirroring selection. Ctrl+Z undoes; Ctrl+S saves.'
         )).pack(side='bottom', anchor='w', pady=(8, 0))
         self.facility_detail = ttk.Label(switches, style='CardMuted.TLabel', wraplength=950,
                                          justify='left', padding=(12, 8), text='Select a switch to see its evidence and limits.')
@@ -115,8 +115,6 @@ class FacilityPageMixin:
 
     def set_facilities(self, state):
         if not self.sv: return
-        if self.mirror.get():
-            self.flash('Turn off “Also edit this route’s other saves” for function edits.', 'warn'); return
         picked = self.facility_tree.selection()
         if not picked:
             self.flash('Select one or more function switches first.', 'info'); return
@@ -126,9 +124,6 @@ class FacilityPageMixin:
             before = self.core_of(); after = facilities.edited(before, edits)
         except (ValueError, core.SaveError) as exc:
             self.flash(str(exc), 'error'); return
-        if after == before.payload:
-            self.flash('Selected switches already have that state.', 'info'); return
-        self.push_undo()
         self._core_edit(lambda f: facilities.edited(f, edits),
                         f"{'Enabled' if state else 'Disabled'} {len(edits)} function switch(es)")
 

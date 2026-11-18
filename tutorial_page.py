@@ -1,4 +1,4 @@
-"""Tutorials page; conservative, single-slot edits with the existing undo stack."""
+"""Tutorials page; mirrored edits with grouped Undo/Redo."""
 from tkinter import ttk
 
 import tutorials
@@ -17,7 +17,7 @@ class TutorialPageMixin:
         self.tutorial_count = ttk.Label(top, style="CardMuted.TLabel", wraplength=950)
         self.tutorial_count.pack(anchor="w", pady=(8, 0))
         self.tutorial_buttons = []
-        for label, value in (("Remove selected", None), ("Make available", tutorials.AVAILABLE)):
+        for label, value in (("Remove selected", None), ("Add to save", tutorials.AVAILABLE)):
             button = ttk.Button(row, text=label, style="Small.TButton",
                                 command=lambda v=value: self.set_tutorials(v))
             button.pack(side="right", padx=(6, 0))
@@ -25,10 +25,10 @@ class TutorialPageMixin:
         ttk.Button(row, text='Select shown', style='Small.TButton',
                    command=lambda: self.tutorial_tree.selection_set(self.tutorial_tree.get_children())).pack(side='right', padx=(6, 0))
         filters = ttk.Frame(top, style='Card.TFrame'); filters.pack(fill='x', pady=(8, 0))
-        self.tutorial_category = ttk.Combobox(filters, state='readonly', width=16,
+        self.tutorial_category = ttk.Combobox(filters, state='readonly', width=19,
                                               values=('All categories', *tutorials.CATEGORIES))
         self.tutorial_state = ttk.Combobox(filters, state='readonly', width=16,
-                                         values=('All states', 'Absent', 'Available (2)', 'Present (1)', 'Unknown'))
+                                         values=('All states', 'Absent', 'Stored (2)', 'Present (1)', 'Unknown'))
         self.tutorial_evidence = ttk.Combobox(filters, state='readonly', width=19,
                                             values=('All names', 'Game title checked', 'Provisional name'))
         for combo in (self.tutorial_category, self.tutorial_state, self.tutorial_evidence):
@@ -38,9 +38,11 @@ class TutorialPageMixin:
         self.tutorial_search.pack(fill="x", expand=True)
         self.tutorial_search.bind("<KeyRelease>", lambda e: self.refresh_tutorials())
         ttk.Label(page, style="CardFaint.TLabel", wraplength=920, justify="left", text=(
-            "Search English, Japanese or hash. Make available adds the selected help entries; "
-            "it does not unlock the features they describe. Unknown states are preserved. "
-            "This page edits only the selected save: turn off ‘Also edit this route’s other saves’. "
+            "Search English, Japanese or hash. Add to save stores the selected records; "
+            "the game controls menu visibility and can unlock tutorials again during play. "
+            "Select shown uses the current filters; "
+            "other entries stay saved. Unknown states are preserved. "
+            "Uses the same-route mirroring selection. "
             "Ctrl+Z undoes an edit; Ctrl+S writes it."
         )).pack(side="bottom", anchor="w", pady=(8, 0))
         self.tutorial_detail = ttk.Label(page, style='CardMuted.TLabel', wraplength=950,
@@ -50,8 +52,8 @@ class TutorialPageMixin:
         frame.pack(fill="both", expand=True, pady=(8, 0))
         tree = self.tutorial_tree = ttk.Treeview(frame, columns=("category", "state", "evidence", "jp", "hash"),
                                                 show="tree headings", selectmode="extended")
-        for col, label, width in (("#0", "Name", 285), ('category', 'Category', 110),
-                                  ("state", "State", 155), ('evidence', 'Name evidence', 145),
+        for col, label, width in (("#0", "Name", 285), ('category', 'Category', 145),
+                                  ("state", "Stored state", 155), ('evidence', 'Name evidence', 145),
                                   ("jp", "Reads as", 310), ("hash", "Hash", 95)):
             tree.heading(col, text=label, anchor="w")
             tree.column(col, width=width, minwidth=width, stretch=False)
@@ -97,9 +99,12 @@ class TutorialPageMixin:
         tree.selection_set([i for i in keep if tree.exists(i)])
         if any(tree.exists(i) for i in keep) and view: tree.yview_moveto(view[0])
         present = sum(h in values for h in cat)
+        shown_present = sum(int(i, 16) in values for i in tree.get_children())
         unknown = len(values.keys() - cat.keys())
         self.tutorial_count.configure(text=(
-            f"{len(tree.get_children())} shown · {present} of {len(cat)} catalogue entries present · "
+            f"{len(tree.get_children())} shown ({shown_present} saved) · "
+            f"{present} of {len(cat)} catalogue entries saved overall "
+            f"({present - shown_present} outside filters) · "
             f"{sum(r['evidence'] == 'provisional-translation' for r in cat.values())} provisional names · "
             f"{unknown} unlisted records preserved"))
         for button in self.tutorial_buttons:
@@ -113,7 +118,8 @@ class TutorialPageMixin:
             note = ('English title is provisional and absent from the supplied screenshots. If it appears during normal play, a title screenshot would help confirm it.'
                     if row['evidence'] == 'provisional-translation' else
                     'English title, category and order match the supplied in-game screenshots. This verifies the name, not feature unlocks or availability on every route.')
-            text = row['label'] + ' · ' + tutorials.evidence_label(row) + '\n' + note
+            text = (row['label'] + ' · ' + tutorials.evidence_label(row) + '\n' + note
+                    + '\n' + tutorials.visibility_note(row))
         elif picked:
             text = f'{len(picked)} tutorials selected. The whole selection changes together; unknown saved states are preserved by refusing the batch.'
         else:
@@ -122,11 +128,6 @@ class TutorialPageMixin:
 
     def set_tutorials(self, value):
         if not self.sv:
-            return
-        # Upstream undo snapshots only the shown slot. Do not silently mirror
-        # a multi-slot edit that Ctrl+Z cannot completely reverse.
-        if self.mirror.get():
-            self.flash("Turn off ‘Also edit this route’s other saves’ for tutorial edits.", "warn")
             return
         picked = self.tutorial_tree.selection()
         if not picked:
@@ -140,9 +141,7 @@ class TutorialPageMixin:
         except core.SaveError as exc:
             self.flash(str(exc), "error")
             return
-        if after == before.payload:
-            self.flash("Selected tutorials already have the requested state.", "info")
-            return
-        self.push_undo()
-        what = f"{'Removed' if value is None else 'Made available'} {len(edits)} tutorial(s)"
+        count = len((tutorials.read(before).keys() - edits.keys()) |
+                    {h for h, v in edits.items() if v is not None})
+        what = f"{'Removed' if value is None else 'Stored'} {len(edits)} tutorial(s); {count} records remain in this save"
         self._core_edit(lambda f: tutorials.edited(f, edits), what)
