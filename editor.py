@@ -1684,10 +1684,13 @@ class App(AdvancedMixin, tk.Tk):
         for name in os.listdir(folder):
             path = os.path.join(folder, name)
             if is_slot_name(name) and os.path.isfile(path):
-                out.append(path)
+                try:
+                    out.append((path, os.path.getmtime(path)))
+                except OSError:
+                    continue  # A game save can disappear between listing and stat.
         # Auto (the live save) first, then the rest newest first
-        out.sort(key=lambda pth: (os.path.basename(pth) != "Auto", -os.path.getmtime(pth)))
-        return out
+        out.sort(key=lambda row: (os.path.basename(row[0]) != "Auto", -row[1]))
+        return [path for path, _ in out]
 
     def _get(self, path: str) -> SaveFile | None:
         """Cached SaveFile; re-read from disk when the game changed it (and we didn't)."""
@@ -1722,7 +1725,7 @@ class App(AdvancedMixin, tk.Tk):
 
     def open_folder(self, folder: str, prefer: str | None = None):
         slots = self._slot_files(folder)
-        if not slots and prefer:
+        if not slots and prefer and os.path.isfile(prefer):
             slots = [prefer]
         if not slots:
             messagebox.showerror(APP_NAME, f"No Auto / Chapter_* / Route_* slots in\n{folder}")
@@ -1739,6 +1742,8 @@ class App(AdvancedMixin, tk.Tk):
                 self._get(pth)
             self._save_settings()
             target = os.path.abspath(prefer) if prefer else self._default_slot()
+            if target not in self.slot_paths:
+                target = self._default_slot()
             self._populate_slot_box()
             self.load(target)
         finally:
@@ -1760,8 +1765,14 @@ class App(AdvancedMixin, tk.Tk):
             star = "★ " if base == "Auto" else ""          # the live save
             # which lord / part / chapter the slot was saved in, read from the save
             route = layer.route_label(sv.payload) if sv else ""
+            try:
+                stamp = _fmt_time(os.path.getmtime(pth))
+            except FileNotFoundError:
+                stamp = "Missing on disk — cached copy" if sv else "Missing on disk"
+            except OSError:
+                stamp = "Unavailable on disk"
             labels.append(f"{mark}{star}{base}  ·  {route + '  ·  ' if route else ''}"
-                          f"{_fmt_time(os.path.getmtime(pth))}")
+                          f"{stamp}")
         self.slot_box.configure(values=labels)
         if self.sv is not None and self.sv.path in self.slot_paths:
             self.slot_box.current(self.slot_paths.index(self.sv.path))
@@ -1829,6 +1840,7 @@ class App(AdvancedMixin, tk.Tk):
         try:
             changed = [p for p in self.slot_paths if self._changed_on_disk(p)]
             if not changed:
+                self._populate_slot_box()  # Refresh missing/renamed-file labels too.
                 return
             clean = [p for p in changed if p not in self.dirty]
             if clean:
@@ -1879,6 +1891,15 @@ class App(AdvancedMixin, tk.Tk):
         if not self.dirty:
             self.flash("Nothing to save — no changes yet.")
             return True
+        missing = [p for p in self.dirty if not os.path.isfile(p)]
+        if missing:
+            messagebox.showerror(APP_NAME,
+                "Nothing saved. These edited slots were removed or renamed on disk:\n\n"
+                + "\n".join(os.path.basename(p) for p in sorted(missing))
+                + "\n\nYour edits are still in memory. Restore the original file(s) before saving, "
+                  "or use Reload to discard the edits and read the current folder.", parent=self)
+            self._populate_slot_box()
+            return False
         import story_files
         try:
             chapter_writes = story_files.prepare(self.files, self.dirty)
