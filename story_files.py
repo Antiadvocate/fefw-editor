@@ -91,4 +91,5 @@ def completed(app, sv):
     if getattr(app, '_history_slot', None) is sv:
         for name in ('_undo_stack', '_redo_stack'):
             stack = getattr(app, name, [])
-            stack[:] = [(payload, None) for payload, pending in stack]
+            stack[:] = [[(slot, payload, None if slot is sv else pending)
+                         for slot, payload, pending in snapshot] for snapshot in stack]

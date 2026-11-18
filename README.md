@@ -1,5 +1,20 @@
 # Fortune's Weave Save Editor
 
+**Eshmel Part 3:** Player offers provisional Chapters **1–6** on supported
+Eshmel Part 3 free-time and chapter-start saves. This does not convert other
+characters or earlier parts into Part 3. All six editor entry paths need game
+testing. Battle and unknown resume states remain read-only for story changes.
+
+**Mirroring:** “Also edit this route’s other saves” now covers Tutorials,
+Blessings and audiences, Fast Travel, Notable Deeds, Boons, Add Unit, Functions,
+and named flag changes, alongside Maps, Support and existing unit/inventory
+edits. Targets must match character, part and playthrough; chapter checkpoints
+remain excluded. Added-page edits validate all targets before applying, and
+Undo/Redo restores the affected saves together. Add Unit retains its Part 1
+free-time restriction and allocates unused numbers independently in each save.
+Story progress and its chapter-specific troubleshooting repairs stay selected-only.
+
+
 **New-unit test feature:** Units now has **Add unit…**, a visible **Unit #**,
 and guarded number editing. The searchable catalogue enables 54 data-derived
 level-one candidates, blocks duplicate characters/numbers and preserves existing
@@ -223,7 +238,7 @@ Ctrl+O and the existing unsaved-change prompt still work. This candidate retains
 **Blessings EXP** editing for all seven gods and the tested **Tutorials** page
 with 218 identities (180 screenshot-checked titles and 38 provisional translations) and
 the original Japanese keys. Search, select, **Make available** or **Remove
-selected**, then Ctrl+S. Ctrl+Z/Ctrl+Y undo/redo. Turn off route mirroring for
+selected**, then Ctrl+S. Ctrl+Z/Ctrl+Y undo/redo. Route mirroring is supported for
 these edits; unknown records and unrelated progress are preserved.
 
 The same labels appear in **Flags**, with the Japanese key in **Reads as**.

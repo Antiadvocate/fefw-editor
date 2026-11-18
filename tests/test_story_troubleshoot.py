@@ -78,7 +78,7 @@ class TroubleshootTest(unittest.TestCase):
         f.payload[i.header+13] = f.payload[i.user+4] = 3
         report = trouble.diagnose(f)
         self.assertEqual(report.progress.part, 3)
-        self.assertIn('Part 3 has not been investigated', report.note)
+        self.assertIn('No established Part 3 progress repair', report.note)
         self.assertFalse(report.checks)
         self.assertEqual(trouble.edited(f), f.payload)
         self.assertEqual(trouble.ISSUES_URL, 'https://github.com/Antiadvocate/fefw-editor/issues')

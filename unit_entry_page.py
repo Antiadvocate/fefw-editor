@@ -1,4 +1,4 @@
-"""Selected-slot recruit preview and identity controls."""
+"""Recruit preview and identity controls with same-route mirroring."""
 import tkinter as tk
 from tkinter import ttk, simpledialog
 
@@ -9,9 +9,6 @@ import unit_entries as entries
 class UnitEntryPageMixin:
     def _unit_entry_ready(self):
         if not self.sv: return False
-        if self.mirror.get():
-            self.flash('Turn off “Also edit this route’s other saves” for unit creation and numbering.', 'warn')
-            return False
         self._commit_form()
         try: entries.require_context(self.core_of())
         except core.SaveError as exc:
@@ -22,20 +19,30 @@ class UnitEntryPageMixin:
         if not self._unit_entry_ready():return False
         if expected is not None and (self.sv is not expected[0] or bytes(self.sv.payload)!=expected[1]):
             self.flash('The selected save changed. Reopen the unit preview.', 'warn');return False
+        def edit(f):
+            entries.require_context(f)
+            if action in ('add', 'restore'):
+                state = entries.status(f, person)
+                if state == 'Already in party':
+                    return f.payload
+                if state.startswith('Existing inactive'):
+                    return entries.restore(f, person)
+                return entries.add(f, person)  # Reject duplicates/unknown states.
+            if action == 'renumber':
+                return entries.renumber(f, person, number)
+            raise core.SaveError('Unknown unit action.')
+        # The preview action is exact for the selected slot. Peers may need
+        # creation, flag restoration, or no change, and allocate numbers locally.
         try:
-            f=self.core_of()
-            if action=='add':new=entries.add(f,person)
-            elif action=='restore':new=entries.restore(f,person)
-            elif action=='renumber':new=entries.renumber(f,person,number)
-            else:raise core.SaveError('Unknown unit action.')
+            if action == 'add': entries.add(self.core_of(), person)
+            elif action == 'restore': entries.restore(self.core_of(), person)
         except core.SaveError as exc:
-            self.flash(str(exc),'error');return False
-        if new==f.payload:
-            self.flash('The unit already has that number.','info');return False
-        self.push_undo()
-        self.sv.payload=bytearray(new);self.sv.scan();self.sv._core_cache=None
-        self.uid=person;self._touch([self.sv]);self.refresh_after_core();self.show_unit()
-        self.flash({'add':'Unit added','restore':'Recruitment restored','renumber':'Unit number and mapped ownership references updated'}[action]+' — Ctrl+S to save.','ok')
+            self.flash(str(exc), 'error'); return False
+        label = {'add':'Unit added where missing', 'restore':'Recruitment restored',
+                 'renumber':'Unit number and mapped ownership references updated'}.get(action, 'Unit edit')
+        if not self._core_edit(edit, label):
+            return False
+        self.uid=person;self.show_unit()
         return True
 
     def open_add_unit(self):
@@ -76,7 +83,8 @@ class UnitEntryPageMixin:
             else:preview=f"Level 1 · {class_label(int(r['class'],16))} · HP {r['hp']} · Unit number {number if number is not None else 'unavailable'}\n{len(r['items'])} starting items · {len(r['magic'])} spells · {len(r['skills'][5])} learned abilities. No mount or battalion is copied."
             if action=='add':preview+='\nNo existing unit record to restore; this creates a new unit.'
             preview+=f"\nRecruitment flag (Reads As): {r['recruit_flag']}"
-            detail.configure(text=f"{r['name']} — {state}\n{preview}\n{r['evidence']}. {r['route_scope']}\nRecruitment may interact with later story events. Undo/Redo is available; changes are written on Save."+(f'\n{allocation_error}' if allocation_error and action!='restore' else ''))
+            mirror_note = ('\nMirroring: each target keeps existing records or restores recruitment; missing characters get a free local unit number. All targets are checked before editing.' if self.mirror.get() else '')
+            detail.configure(text=f"{r['name']} — {state}\n{preview}\n{r['evidence']}. {r['route_scope']}\nRecruitment may interact with later story events. Undo/Redo is available; changes are written on Save."+mirror_note+(f'\n{allocation_error}' if allocation_error and action!='restore' else ''))
             apply.configure(text='Restore recruitment' if action=='restore' else 'Add unit')
             if action:apply.state(['!disabled'])
         def fill(*_):

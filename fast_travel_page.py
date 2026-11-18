@@ -88,9 +88,6 @@ class FastTravelPageMixin:
     def set_fast_travel(self, value):
         if not self.sv:
             return
-        if self.mirror.get():
-            self.flash("Turn off ‘Also edit this route’s other saves’ for fast-travel edits.", "warn")
-            return
         picked = self.fast_travel_tree.selection()
         if not picked:
             self.flash("Select one or more destinations first.", "info")
@@ -103,9 +100,5 @@ class FastTravelPageMixin:
         except core.SaveError as exc:
             self.flash(str(exc), "error")
             return
-        if after == before.payload:
-            self.flash("Selected destinations already have the requested state.", "info")
-            return
-        self.push_undo()
         what = f"{'Removed' if value is None else 'Made available'} {len(edits)} destination(s)"
         self._core_edit(lambda f: fast_travel.edited(f, edits), what)

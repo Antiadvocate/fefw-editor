@@ -115,8 +115,6 @@ class FacilityPageMixin:
 
     def set_facilities(self, state):
         if not self.sv: return
-        if self.mirror.get():
-            self.flash('Turn off “Also edit this route’s other saves” for function edits.', 'warn'); return
         picked = self.facility_tree.selection()
         if not picked:
             self.flash('Select one or more function switches first.', 'info'); return
@@ -126,9 +124,6 @@ class FacilityPageMixin:
             before = self.core_of(); after = facilities.edited(before, edits)
         except (ValueError, core.SaveError) as exc:
             self.flash(str(exc), 'error'); return
-        if after == before.payload:
-            self.flash('Selected switches already have that state.', 'info'); return
-        self.push_undo()
         self._core_edit(lambda f: facilities.edited(f, edits),
                         f"{'Enabled' if state else 'Disabled'} {len(edits)} function switch(es)")
 

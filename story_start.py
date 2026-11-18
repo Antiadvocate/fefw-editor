@@ -146,11 +146,15 @@ PART2_UPPER_MOVEMENT = core.id_hash("行動範囲制限_上層")
 PART2_MIDDLE_MOVEMENT = core.id_hash("行動範囲制限_中層")
 PART2_DATES = {1: (1, 1, 12, 0), 2: (2, 1, 12, 0), 3: (3, 1, 12, 0),
                4: (4, 3, 12, 0), 5: (4, 30, 9, 30), 6: (4, 30, 12, 0)}
+PART3_DATES = {1: (1, 24, 8, 0), 2: (2, 1, 12, 0), 3: (2, 16, 12, 0),
+               4: (3, 7, 12, 0), 5: (4, 6, 12, 0), 6: (5, 16, 12, 0)}
 
 
 def chapters_for(route, part=1):
     if type(part) is not int or type(route) is not int:
         raise story.StoryError('Unsupported story route or part.')
+    if part == 3 and route == 9:
+        return story.PART3_CHAPTERS
     if part == 2 and route in story.PREFIXES:
         return story.PART2_CHAPTERS
     if part == 1 and route in TARGETS:
@@ -159,6 +163,9 @@ def chapters_for(route, part=1):
 
 
 def target(chapter, route=4, part=1):
+    if part == 3:
+        story.sequence(chapter, route, part)
+        return PART3_DATES[chapter]
     if part == 2:
         story.sequence(chapter, route, part)
         return PART2_DATES[chapter]
@@ -209,6 +216,8 @@ def validate(f):
 def edited(f, chapter):
     info = validate(f)
     date = target(chapter, info.route, info.part)
+    if info.part == 3:
+        return _edited_at_entry(f, chapter, 1454, date)
     if info.part == 2:
         p = _edited_at_entry(f, chapter, 1450, date)
         if chapter == 5:

@@ -20,6 +20,11 @@ EVIDENCE_NOTE = ('Chapters 2–12 passed opening and next-story-beat tests. Edit
 
 
 def warning_points(route, part=1):
+    if part == 3 and route == 9:
+        return ('Eshmel Part 3 Chapters 1–6 are available for testing. Chapter 1/2 have native checkpoint references; editor replay and later chapters still need game tests.',
+                'Chapter selection keeps the current party, stored carryover data, flags and inventory. It does not perform the native Part 3 transition or create missing route-completion state.',
+                'Entry resets the clock and internal restart state. Missing earlier objectives, units or unlocks can still block progress. No Part 3 unlock repairs have been established.',
+                *WARNING_POINTS[3:])
     if part == 2:
         if route not in story.PREFIXES:
             raise story.StoryError('Part 2 supports the four main routes only.')
@@ -54,6 +59,8 @@ def warning_points(route, part=1):
 
 
 def evidence_note(route, part=1):
+    if part == 3 and route == 9:
+        return 'Eshmel Part 3 only: Chapters 1–6 are provisional. Native Chapter 1/2 checkpoints establish those entry targets; replay, later chapter progression and Obelisk loading remain untested.'
     if part == 2:
         if route != 1:
             return f'{story.ROUTES[route]} Part 2 Chapters 1–6 reached the next battle from the tested Part 1 baseline. Theodora 6 passed both manual repair and fresh entry with automatic middle-city access. Other baselines, Obelisk loading and long-term progression remain untested.'
@@ -70,6 +77,9 @@ def evidence_note(route, part=1):
 
 
 def chapter_evidence(route, chapter, part=1):
+    if part == 3 and route == 9:
+        return ('Native checkpoint reference — editor replay test pending' if chapter in (1, 2)
+                else 'Inferred — game test pending')
     if part == 2:
         if route == 3 and chapter == 6:
             return 'Game-tested opening and progression with automatic midtown access'
@@ -117,12 +127,12 @@ class StoryPageMixin:
         if hasattr(self, 'troubleshoot_button'):
             self.troubleshoot_button.state(['!disabled'] if self.sv else ['disabled'])
         if not self.sv:
-            self.story_status.configure(text='Open a supported Part 1 save or a supported Part 2 save (provisional).')
+            self.story_status.configure(text='Open a supported Part 1/2 save or an Eshmel Part 3 save (provisional).')
             return
         route = layer.route_info(self.sv.payload)
         label = f'{route[0]} · Part {route[1]} · Chapter {route[2]}\n' if route else ''
-        if route and (route[0], route[1]) not in (('Leda', 1), ('Cai', 1), ('Dietrich', 1), ('Theodora', 1), ('Cai', 2), ('Leda', 2), ('Dietrich', 2), ('Theodora', 2)):
-            self.story_status.configure(text=label + 'Read-only. Supported: the four Part 1 routes and provisional Part 2 for those routes.')
+        if route and (route[0], route[1]) not in (('Leda', 1), ('Cai', 1), ('Dietrich', 1), ('Theodora', 1), ('Cai', 2), ('Leda', 2), ('Dietrich', 2), ('Theodora', 2), ('Eshmel', 3)):
+            self.story_status.configure(text=label + 'Read-only. Supported: the four Part 1/2 routes and Eshmel Part 3.')
             return
         try:
             info = story_start.validate(self.core_of())
@@ -135,9 +145,9 @@ class StoryPageMixin:
         evidence = {4: 'Chapters 2–12 game-tested; Chapter 1 unavailable.',
                     1: 'Chapters 1–12 game-tested; Chapter 3+ enables Sewers access.',
                     2: 'Chapters 3–12 game-tested, including direct entry for 5/6. Chapters 1/2 unavailable because of the Chapter 2 rescue block.',
-                    3: 'Chapters 1–12 passed; targeted repairs for 4/6/8/9. Chapter 6 uses alternate traversal.'}[info.route]
-        if info.part == 2:
-            evidence = evidence_note(info.route, 2)
+                    3: 'Chapters 1–12 passed; targeted repairs for 4/6/8/9. Chapter 6 uses alternate traversal.'}.get(info.route, '')
+        if info.part in (2, 3):
+            evidence = evidence_note(info.route, info.part)
         if info.part == 2 and getattr(self.sv, '_allow_part_transition', False):
             evidence += ' This session used experimental Part 1-to-2 entry.'
         self.story_status.configure(text=info.label + '\n' + evidence + note)
@@ -147,7 +157,7 @@ class StoryPageMixin:
 
     def _story_ready(self):
         if not self.sv:
-            self.flash('Open a supported Part 1 save or a supported Part 2 save first.', 'warn'); return False
+            self.flash('Open a supported Part 1/2 save or an Eshmel Part 3 save first.', 'warn'); return False
         if self.mirror.get():
             self.flash('Turn off “Also edit this route’s other saves” before editing story progression.', 'warn')
             return False
@@ -288,9 +298,9 @@ class StoryPageMixin:
         ttk.Label(frame, text='Choose a chapter start', style='CardH3.TLabel').pack(anchor='w')
         limit = {4: 'Chapter 1 is unavailable.', 1: 'Cai Chapter 3+ also enables Sewers access.',
                  2: 'Dietrich Chapters 1/2 are unavailable because of the Chapter 2 rescue block. Chapters 5–7 apply targeted prerequisites; party and tutorials are preserved.',
-                 3: 'Theodora 4/6/8/9 apply targeted access repairs. Chapter 6 uses an alternate route around the NPC barrier. Chapters 1–2 use 1446; Chapter 3+ uses 1449. Party and tutorials are preserved.'}[info.route]
-        if info.part == 2:
-            limit = evidence_note(info.route, 2)
+                 3: 'Theodora 4/6/8/9 apply targeted access repairs. Chapter 6 uses an alternate route around the NPC barrier. Chapters 1–2 use 1446; Chapter 3+ uses 1449. Party and tutorials are preserved.'}.get(info.route, '')
+        if info.part in (2, 3):
+            limit = evidence_note(info.route, info.part)
         ttk.Label(frame, text='Selected save only. Apply stages the chapter start and date; Ctrl+S saves and Ctrl+Z undoes. ' + limit,
                   wraplength=625, justify='left').pack(anchor='w', pady=(4, 10))
         buttons = ttk.Frame(frame); buttons.pack(side='bottom', fill='x', pady=(12, 0))

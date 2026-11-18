@@ -50,7 +50,8 @@ class Part2RoutesTest(unittest.TestCase):
 
     def test_route_specific_files_and_undo_after_save_for_each_route(self):
         with tempfile.TemporaryDirectory() as tmp:
-            for route, code in story.FILE_CODES.items():
+            for route in story.PREFIXES:
+                code = story.FILE_CODES[route]
                 a = StoryHarness(route); a.sv = box_for(fixture(route, 1))
                 a.sv.path = str(Path(tmp)/f'Auto-{code}')
                 original = bytes(a.sv.payload)

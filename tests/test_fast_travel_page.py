@@ -29,10 +29,8 @@ class FastTravelPageTest(unittest.TestCase):
         self.assertEqual(ft.read(app.core_of())[STABLES], 1)
         self.assertEqual(app.refreshes, 4)
 
-    def test_mirroring_refused_no_selection_noop_and_invalid_batch(self):
+    def test_no_selection_noop_and_invalid_batch(self):
         app = FastTravelHarness(); before = bytes(app.sv.payload)
-        app.mirrored = True; app.set_fast_travel(None)
-        self.assertEqual(app.messages[-1][1], 'warn')
         app.mirrored = False; app.selected = (); app.set_fast_travel(None)
         app.selected = (f'{STABLES:08x}',); app.set_fast_travel(1)
         app.selected = (f'{TAVERN:08x}', 'deadbeef'); app.set_fast_travel(1)

@@ -56,12 +56,10 @@ class BoonPageTest(unittest.TestCase):
         self.assertEqual(app.messages[-1][1], 'error')
         self.assertEqual(app.buttons, dict(on='disabled', off='disabled'))
 
-    def test_weapon_noop_mirroring_and_unknown_states_have_no_history(self):
+    def test_weapon_noop_and_unknown_states_have_no_history(self):
         app = BoonHarness(); app.selected = (boons.matching_rows('武器割引')[0][0],)
         app.refresh_boons(); original = bytes(app.sv.payload)
         app.set_boon_active(True)
-        app.mirrored = True; app.set_boon_active(False)
-        self.assertEqual(app.messages[-1][1], 'warn')
         self.assertEqual(bytes(app.sv.payload), original)
         app.mirrored = False
         for f in (weapon_save(owner=99), weapon_save(disabled=0)):
@@ -94,11 +92,9 @@ class BoonPageTest(unittest.TestCase):
         self.assertEqual(app.messages[-1][1], 'error')
         self.assertEqual(app.buttons, dict(on='disabled', off='disabled'))
 
-    def test_noop_mirroring_and_wrong_rows_do_not_modify_or_create_undo(self):
+    def test_noop_and_wrong_rows_do_not_modify_or_create_undo(self):
         app = BoonHarness(); original = bytes(app.sv.payload)
         app.set_boon_active(True)
-        app.mirrored = True; app.set_boon_active(False)
-        self.assertEqual(app.messages[-1][1], 'warn')
         app.mirrored = False
         for selected in ((), (boons.matching_rows('経験値')[1][0],),
                          (boons.matching_rows('武器割引')[1][0],),

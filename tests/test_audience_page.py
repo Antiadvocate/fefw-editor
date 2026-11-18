@@ -39,12 +39,9 @@ class AudiencePageTest(unittest.TestCase):
         app.toggle_blessing_audience()
         self.assertEqual(app.sv.payload, expected)
 
-    def test_mirroring_noop_fortuna_and_no_selection_do_not_create_undo(self):
+    def test_noop_fortuna_and_no_selection_do_not_create_undo(self):
         app = AudienceHarness(); original = bytes(app.sv.payload)
-        app.mirrored = True; app.toggle_blessing_audience()
-        self.assertTrue(app.checked)
-        self.assertEqual(app.messages[-1][1], 'warn')
-        app.mirrored = False; app.toggle_blessing_audience()  # unchanged on
+        app.checked = True; app.toggle_blessing_audience()  # unchanged on
         app.selected = (f'{FORTUNA:016x}',); app.toggle_blessing_audience()
         self.assertEqual(app.messages[-1][1], 'error')
         app.selected = (); app.toggle_blessing_audience()

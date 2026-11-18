@@ -31,10 +31,9 @@ class UnitEntryPageTest(unittest.TestCase):
         self.assertEqual(other.payload,other_before)
         self.assertTrue(a.apply_unit_entry('restore',CAI))
 
-    def test_duplicate_mirror_stale_preview_and_noop_do_not_add_history(self):
+    def test_duplicate_stale_preview_and_noop_do_not_add_history(self):
         a=Harness();expected=(a.sv,bytes(a.sv.payload))
         self.assertFalse(a.apply_unit_entry('add',CAI))
-        a.mirrored=True;self.assertFalse(a.apply_unit_entry('add',CATANIA));a.mirrored=False
         self.assertFalse(a.apply_unit_entry('renumber',CAI,12))
         self.assertFalse(hasattr(a,'_undo_stack'))
         a.sv=SimpleNamespace(path='different',payload=bytearray(expected[1]),scan=lambda:None)

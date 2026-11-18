@@ -34,13 +34,13 @@ class BlessingPageTest(unittest.TestCase):
         self.assertEqual(bytes(app.sv.payload), after)
         self.assertEqual(app.refreshes, 3)
 
-    def test_mirroring_blocks_before_mutation(self):
+    def test_mirroring_with_no_peers_still_edits_selected(self):
         app = BlessingHarness(); app.mirrored = True
         before = bytes(app.sv.payload)
         app.apply_blessing_exp()
-        self.assertEqual(bytes(app.sv.payload), before)
-        self.assertFalse(hasattr(app, '_undo_stack'))
-        self.assertEqual(app.messages[-1][1], 'warn')
+        self.assertNotEqual(bytes(app.sv.payload), before)
+        self.assertEqual(len(app._undo_stack), 1)
+        app.undo(); self.assertEqual(bytes(app.sv.payload), before)
 
     def test_invalid_values_and_selection_leave_history_and_payload_alone(self):
         for value in ('', '-1', '1.5', '65536', 'nan', '0x10', '１２'):

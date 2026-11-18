@@ -134,11 +134,8 @@ class BoonLevelPageTest(unittest.TestCase):
         app.redo(); self.assertEqual(bytes(app.sv.payload), after)
         app.max_boons(); self.assertEqual(len(app._undo_stack), count + 1)
 
-    def test_bulk_refuses_mirroring_and_revalidates_new_payload(self):
+    def test_bulk_revalidates_new_payload(self):
         app = BoonHarness(); original = bytes(app.sv.payload)
-        app.mirrored = True; app.max_boons(); app.set_boon_tier(remove=True)
-        self.assertEqual(bytes(app.sv.payload), original)
-        self.assertFalse(hasattr(app, '_undo_stack'))
         app.mirrored = False; app.sv.payload = weapon_save(owner=99).payload
         original = bytes(app.sv.payload); app.max_boons()
         self.assertEqual(bytes(app.sv.payload), original)

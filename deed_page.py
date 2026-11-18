@@ -157,9 +157,6 @@ class DeedPageMixin:
     def set_deed(self):
         if not self.sv:
             return
-        if self.mirror.get():
-            self.flash("Turn off ‘Also edit this route’s other saves’ for deed edits.", "warn")
-            return
         picked = self.deed_tree.selection()
         if len(picked) != 1 or picked[0] not in self._deed_rows:
             self.flash("Select one milestone first.", "info")
@@ -177,12 +174,16 @@ class DeedPageMixin:
         except core.SaveError as exc:
             self.flash(str(exc), "error")
             return
-        if after == before.payload:
-            self.flash("This activity already has that total.", "info")
-            return
-        affected = deeds.claims_at_risk(h, value, deeds.read(before))
+        try:
+            risks = {}
+            for sv in self._targets():
+                for tier in deeds.claims_at_risk(h, value, deeds.read(self.core_of(sv))):
+                    risks[tier['target']] = tier
+            affected = list(risks.values())
+        except core.SaveError as exc:
+            from os.path import basename
+            self.flash(f'Nothing changed: {basename(sv.path)} — {exc}', 'error'); return
         if affected and not self._confirm_deed_unclaim(h, value, affected):
             self.flash("Progress edit cancelled; no deed changes applied.", "info")
             return
-        self.push_undo()
         self._core_edit(lambda f: deeds.edited(f, h, value), f"Set {deeds.catalog()[h]['label']} to {value:,}")

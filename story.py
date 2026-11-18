@@ -1,4 +1,4 @@
-"""Live story validation for Part 1 and provisional Part 2 chapter tests.
+"""Live story validation for Parts 1/2 and provisional Eshmel Part 3.
 
 Production chapter-entry targets and acceptance live in story_start. The low-level
 sequence writer retains Chapter 1 for reproducing historical failed probes.
@@ -15,6 +15,7 @@ DIETRICH_PREFIX = 0x13dfaa82ebb06dc7
 THEODORA_PREFIX = 0xa0f55a5342799b29
 PREFIXES = {4: LEDA_PREFIX, 1: CAI_PREFIX, 2: DIETRICH_PREFIX, 3: THEODORA_PREFIX}
 FILE_CODES = {4: 'Led', 1: 'Kai', 2: 'Dit', 3: 'Seo'}
+FILE_CODES[9] = 'Ism'
 ROUTES = {1: 'Cai', 2: 'Dietrich', 3: 'Theodora', 4: 'Leda', 9: 'Eshmel'}
 
 
@@ -26,11 +27,20 @@ class StoryError(core.SaveError):
 # other routes is inferred until their game tests pass; route identity is retained.
 PART2_PREFIX = 0x6462d9c33a114480
 PART2_CHAPTERS = tuple(range(1, 7))
+PART3_PREFIX = 0x93fa44edcc987313
+PART3_CHAPTERS = tuple(range(1, 7))
 
 
 def sequence(chapter, route=4, part=1):
-    if type(part) is not int or part not in (1, 2):
+    if type(part) is not int or part not in (1, 2, 3):
         raise StoryError('Unsupported story part.')
+    if part == 3:
+        if type(route) is not int or route != 9 or type(chapter) is not int or chapter not in PART3_CHAPTERS:
+            raise StoryError('Part 3 chapter editing is only available for Eshmel, chapters 1–6.')
+        value = PART3_PREFIX
+        for byte in f'{chapter}_1'.encode('ascii'):
+            value = ((value * 0x100000001b3) & 0xffffffffffffffff) ^ byte
+        return value
     if part == 2:
         if type(route) is not int or route not in PREFIXES or type(chapter) is not int or chapter not in PART2_CHAPTERS:
             raise StoryError('Provisional Part 2 editing supports the four main routes, chapters 1–6 only.')
@@ -120,10 +130,12 @@ def require_leda(f):
 
 def require_supported(f):
     info = read(f)
+    if info.route == 9 and info.part == 3 and info.chapter in PART3_CHAPTERS:
+        return info
     if info.route in PREFIXES and info.part == 2 and info.chapter in PART2_CHAPTERS:
         return info
     if info.route not in PREFIXES or info.part != 1 or info.chapter not in CHAPTERS:
-        raise StoryError(f'{info.label}. Story editing supports the four Part 1 routes and provisional Part 2 chapters 1–6.')
+        raise StoryError(f'{info.label}. Story editing supports the four Part 1/2 routes and Eshmel Part 3 chapters 1–6.')
     return info
 
 

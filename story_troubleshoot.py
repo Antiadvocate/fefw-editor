@@ -96,7 +96,7 @@ def diagnose(f):
     if rule is None:
         note = 'No established progress repair for this character, part and chapter.'
         if info.part == 3:
-            note += ' Part 3 has not been investigated yet.'
+            note += ' No established Part 3 progress repair is available yet.'
         elif info.route == 2 and info.part == 1 and info.chapter in (1, 2):
             note += ' Dietrich Chapter 2 replay can block at Esmerelda’s rescue; '
             note += 'the attempted flag repairs failed. Chapter 1 leads into that block.'

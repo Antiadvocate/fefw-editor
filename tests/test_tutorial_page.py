@@ -117,13 +117,13 @@ class TutorialPageTest(unittest.TestCase):
         self.assertEqual(bytes(app.sv.payload), after)
         self.assertEqual(app.refreshes, 3)
 
-    def test_mirroring_refused_without_mutation_or_undo(self):
+    def test_mirroring_with_no_peers_still_edits_selected(self):
         app = PageHarness(); app.mirrored = True
         before = bytes(app.sv.payload)
         app.set_tutorials(None)
-        self.assertEqual(bytes(app.sv.payload), before)
-        self.assertFalse(hasattr(app, '_undo_stack'))
-        self.assertEqual(app.messages[-1][1], 'warn')
+        self.assertNotEqual(bytes(app.sv.payload), before)
+        self.assertEqual(len(app._undo_stack), 1)
+        app.undo(); self.assertEqual(bytes(app.sv.payload), before)
 
     def test_no_selection_and_noop_do_not_create_undo(self):
         app = PageHarness(); app.selected = ()

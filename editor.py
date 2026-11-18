@@ -1992,17 +1992,13 @@ class App(AdvancedMixin, tk.Tk):
         return {u.uid for u in sv.units if not is_enemy(u)}
 
     def _same_route(self, other: SaveFile) -> bool:
-        """True when `other` holds the same playthrough as the open slot.
-
-        Each lord's route has its own party, convoy and gold (Auto may be
-        Theodora's route while Route_Ism is Ishmael's).  Slots of one route
-        share most of their party — an older Chapter_* slot just has fewer
-        members — so at least half of the smaller party must overlap.
-        """
-        a, b = self._party(self.sv), self._party(other)
-        if not a or not b:
+        """Match explicit character, part and playthrough, not party overlap."""
+        a, b = layer.route_info(self.sv.payload), layer.route_info(other.payload)
+        if not a or not b or a[:2] != b[:2]:
             return False
-        return len(a & b) * 2 >= min(len(a), len(b))
+        sa = core.read_settings(core.SaveFile(self.sv.payload))
+        sb = core.read_settings(core.SaveFile(other.payload))
+        return sa is not None and sb is not None and sa[0] == sb[0]
 
     @staticmethod
     def _is_checkpoint(path: str) -> bool:
@@ -2021,7 +2017,7 @@ class App(AdvancedMixin, tk.Tk):
             return []
         out = []
         for pth in self.slot_paths:
-            if pth == self.sv.path or self._is_checkpoint(pth):
+            if pth == self.sv.path or self._is_checkpoint(pth) or not os.path.isfile(pth):
                 continue
             sv = self._get(pth)
             if sv is not None and self._same_route(sv):
@@ -2568,7 +2564,6 @@ class App(AdvancedMixin, tk.Tk):
                 "Undo can take it back, and the original stays in the slot's .bak.",
                 parent=self):
             return
-        self.push_undo()
         if self._core_edit(lambda f: (layer.repair_convoy(f.payload) >= 0 and f.payload) or None,
                            "Repair convoy"):
             self.flash(f"Convoy repaired: {n_items} items, {got[0]} slots — Ctrl+S to write it.",
@@ -2646,7 +2641,6 @@ class App(AdvancedMixin, tk.Tk):
         gear = sorted({self._conv_row(s).iid for s in slots
                        if self._conv_row(s) and not layer.stacks(self._conv_row(s).iid)})
         if gear:
-            self.push_undo()
             for iid in gear:
                 if not self._core_edit(
                         lambda f, i=iid: (layer.set_convoy_copies(f.payload, i, qty)

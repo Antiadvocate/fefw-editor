@@ -129,11 +129,6 @@ class TutorialPageMixin:
     def set_tutorials(self, value):
         if not self.sv:
             return
-        # Upstream undo snapshots only the shown slot. Do not silently mirror
-        # a multi-slot edit that Ctrl+Z cannot completely reverse.
-        if self.mirror.get():
-            self.flash("Turn off ‘Also edit this route’s other saves’ for tutorial edits.", "warn")
-            return
         picked = self.tutorial_tree.selection()
         if not picked:
             self.flash("Select one or more tutorials first.", "info")
@@ -146,11 +141,7 @@ class TutorialPageMixin:
         except core.SaveError as exc:
             self.flash(str(exc), "error")
             return
-        if after == before.payload:
-            self.flash("Selected tutorials already have the requested state.", "info")
-            return
         count = len((tutorials.read(before).keys() - edits.keys()) |
                     {h for h, v in edits.items() if v is not None})
-        self.push_undo()
         what = f"{'Removed' if value is None else 'Stored'} {len(edits)} tutorial(s); {count} records remain in this save"
         self._core_edit(lambda f: tutorials.edited(f, edits), what)

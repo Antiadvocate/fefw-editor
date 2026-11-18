@@ -59,7 +59,6 @@ class FlagEditingTest(unittest.TestCase):
         app._write_flag(fm.index,JOIN,1)
         app._write_flag(999,JOIN,0)
         app._write_flag(fm.index,0xdeadbeef,0)
-        app.mirrored=True;app._write_flag(fm.index,JOIN,0)
         self.assertEqual(app.sv.payload,before)
         self.assertFalse(hasattr(app,'_undo_stack'))
         f=core.SaveFile(before);fm=facilities.locate(f);fm.flags.append(fm.flags[-1])

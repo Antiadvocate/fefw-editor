@@ -32,8 +32,6 @@ class FacilityPageTest(unittest.TestCase):
 
     def test_refusal_noop_and_invalid_batch_leave_no_history(self):
         app=FacilityHarness();before=bytes(app.sv.payload)
-        app.mirrored=True;app.set_facilities(True)
-        self.assertEqual(app.messages[-1][1],'warn')
         app.mirrored=False;app.selected=();app.set_facilities(True)
         app.selected=(f'{ITEMS:08x}',);app.set_facilities(True)
         app.selected=(f'{EXAM:08x}','deadbeef');app.set_facilities(False)

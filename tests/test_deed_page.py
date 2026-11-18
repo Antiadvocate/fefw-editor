@@ -60,7 +60,7 @@ class DeedPageTest(unittest.TestCase):
         for value in ('60', '50', '75', '65', '-1', '101', 'bad'):
             app, _ = self.claimed_training(); app.input = value; app.set_deed()
         app = DeedHarness(); app.input = '15'; app.set_deed()  # 20 is unclaimed, 10 still met.
-        app, _ = self.claimed_training(); app.input = '40'; app.mirrored = True; app.set_deed()
+        app, _ = self.claimed_training(); app.input = '50'; app.mirrored = True; app.set_deed()
         app.mirrored = False; app.selected = (); app.set_deed()
         confirm.assert_not_called()
 
@@ -74,10 +74,8 @@ class DeedPageTest(unittest.TestCase):
         app.redo(); self.assertEqual(bytes(app.sv.payload), after)
         self.assertEqual(app.refreshes, 3)
 
-    def test_mirroring_invalid_noop_readonly_and_missing_selection_make_no_history(self):
+    def test_invalid_noop_readonly_and_missing_selection_make_no_history(self):
         app = DeedHarness(); original = bytes(app.sv.payload)
-        app.mirrored = True; app.set_deed()
-        self.assertEqual(app.messages[-1][1], 'warn')
         app.mirrored = False
         for value in ('bad', '1.5', '-1', '101', '65'):
             app.input = value; app.set_deed()
