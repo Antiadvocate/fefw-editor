@@ -20,7 +20,7 @@ class DeedPageMixin:
         ttk.Label(page, style="CardFaint.TLabel", wraplength=980, justify="left", text=(
             "Edit one activity total; it feeds every milestone for that activity. Claim rewards in game. "
             "The game can clear claimed rewards if their progress falls below target. Unlisted milestones may have game conditions.\n"
-            "Turn off ‘Also edit this route’s other saves’. Apply changes memory; Ctrl+S saves, Ctrl+Z undoes."
+            "Uses the same-route mirroring selection. Apply changes memory; Ctrl+S saves, Ctrl+Z undoes."
         )).pack(side="bottom", anchor="w", pady=(8, 0))
         form = ttk.Frame(page, style="Card.TFrame", padding=(14, 10))
         form.pack(side="bottom", fill="x", pady=(8, 0))

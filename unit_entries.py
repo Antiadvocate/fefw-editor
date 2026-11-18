@@ -96,8 +96,9 @@ def apply_labels(names):
 
 def require_context(f):
     info = story.read(f)
-    if info.part != 1 or info.route not in (1,2,3,4):
-        raise core.SaveError('Unit creation/renumbering currently supports the four Part 1 routes.')
+    if not ((info.part in (1, 2) and info.route in (1, 2, 3, 4))
+            or (info.part == 3 and info.route == 9)):
+        raise core.SaveError('Unit creation/renumbering supports the four Part 1/2 routes and Eshmel Part 3.')
     if bytes(f.payload[info.header+20:info.header+22]) != b'\x12\x05':
         raise core.SaveError('Use a free-time save; battle and chapter-start records are not edited here.')
     if f.block('UnitPool') is None: raise core.SaveError('No live unit pool.')

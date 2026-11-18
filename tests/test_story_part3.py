@@ -20,7 +20,8 @@ class Part3Test(unittest.TestCase):
         self.assertEqual(story.sequence(2,9,3),0xe1d565330eb7b38b)
         self.assertEqual(start.chapters_for(9,3),(1,2,3,4,5,6))
         self.assertIn('pending',story_page.chapter_evidence(9,1,3))
-        self.assertIn('Inferred',story_page.chapter_evidence(9,6,3))
+        self.assertIn('progression untested',story_page.chapter_evidence(9,6,3))
+        self.assertIn('Game-tested',story_page.chapter_evidence(9,2,3))
         self.assertIn('does not perform',story_page.warning_points(9,3)[1])
 
     def test_six_targets_preserve_entire_user_object_except_story_fields(self):

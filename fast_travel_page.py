@@ -27,9 +27,9 @@ class FastTravelPageMixin:
         ttk.Label(page, style="CardFaint.TLabel", wraplength=980, justify="left", text=(
             "Aurora’s room/garden require Cai for their travel locators; Salamis Guesthouse requires Theodora. Yu Phas travel/exit passed on Leda Chapter 9; its entrance remains restricted. See Facilities > Access conditions. "
             "Search by name, Japanese key or hash. "
-            "Edits affect the selected save's destination list. Travel still depends on game conditions; "
+            "Edits update destination lists in the selected save and enabled mirror targets. Travel still depends on game conditions; "
             "the Stables destination does not unlock the stable facility. Keep at least three original destinations.\n"
-            "Turn off ‘Also edit this route’s other saves’. Ctrl+Z undoes; Ctrl+S saves."
+            "Uses the same-route mirroring selection. Ctrl+Z undoes; Ctrl+S saves."
         )).pack(side="bottom", anchor="w", pady=(8, 0))
         frame = ttk.Frame(page, style="Card.TFrame")
         frame.pack(fill="both", expand=True, pady=(8, 0))

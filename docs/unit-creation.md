@@ -77,11 +77,13 @@ API now delegates only supported catalogue defaults to the guarded creator.
 
 ## Scope and editor behavior
 
-Creation/import/renumbering support recognized **Part 1 free-time saves** for
-the four routes. Battle saves, chapter-start checkpoints, unknown layouts and
-other parts are refused. The selected save is edited alone; turn off
-**Also edit this route's other saves**. A changed destination invalidates an
-open preview. Actions support Undo/Redo, apply in memory and write on Save;
+Creation/import/renumbering support recognized **Part 1 and Part 2 free-time
+saves** for the four main routes, plus **Eshmel Part 3 free-time saves**. Battle,
+dungeon-resume and chapter-start contexts and unknown layouts are refused.
+**Also edit this route's other saves** applies the action to matching live saves.
+Each target is validated first and allocates a free local number; existing
+active records are kept and inactive recruitment can be restored. A changed
+destination invalidates an open preview. Actions support Undo/Redo, apply in memory and write on Save;
 the existing numbered backup behavior remains in use.
 
 Automated coverage includes aliases, hidden/duplicate identities, equipment

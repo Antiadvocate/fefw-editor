@@ -21,9 +21,9 @@ EVIDENCE_NOTE = ('Chapters 2–12 passed opening and next-story-beat tests. Edit
 
 def warning_points(route, part=1):
     if part == 3 and route == 9:
-        return ('Eshmel Part 3 Chapters 1–6 are available for testing. Chapter 1/2 have native checkpoint references; editor replay and later chapters still need game tests.',
+        return ('Eshmel Part 3: Chapters 2–5 passed opening and progression checks. Chapter 6 reached its opening battle only. Chapter 1 replay is blocked at the cauldron objective and needs a repair.',
                 'Chapter selection keeps the current party, stored carryover data, flags and inventory. It does not perform the native Part 3 transition or create missing route-completion state.',
-                'Entry resets the clock and internal restart state. Missing earlier objectives, units or unlocks can still block progress. No Part 3 unlock repairs have been established.',
+                'Entry resets the clock and internal restart state. The game can regroup the party or reset unit stats during the opening. No Part 3 unlock repairs have been established.',
                 *WARNING_POINTS[3:])
     if part == 2:
         if route not in story.PREFIXES:
@@ -60,7 +60,7 @@ def warning_points(route, part=1):
 
 def evidence_note(route, part=1):
     if part == 3 and route == 9:
-        return 'Eshmel Part 3 only: Chapters 1–6 are provisional. Native Chapter 1/2 checkpoints establish those entry targets; replay, later chapter progression and Obelisk loading remain untested.'
+        return 'Eshmel Part 3: Chapters 2–5 passed opening and progression checks. Chapter 6 reached its opening battle; progression is untested. Chapter 1 replay is blocked at the cauldron, with party/magic problems. Obelisk loading and longer-term progression remain untested.'
     if part == 2:
         if route != 1:
             return f'{story.ROUTES[route]} Part 2 Chapters 1–6 reached the next battle from the tested Part 1 baseline. Theodora 6 passed both manual repair and fresh entry with automatic middle-city access. Other baselines, Obelisk loading and long-term progression remain untested.'
@@ -78,8 +78,11 @@ def evidence_note(route, part=1):
 
 def chapter_evidence(route, chapter, part=1):
     if part == 3 and route == 9:
-        return ('Native checkpoint reference — editor replay test pending' if chapter in (1, 2)
-                else 'Inferred — game test pending')
+        if chapter == 1:
+            return 'Blocked — cauldron objective, party and magic; repair testing pending'
+        if chapter == 6:
+            return 'Opening battle reached — progression untested'
+        return 'Game-tested opening and next battle'
     if part == 2:
         if route == 3 and chapter == 6:
             return 'Game-tested opening and progression with automatic midtown access'

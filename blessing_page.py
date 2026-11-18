@@ -70,7 +70,7 @@ class BlessingPageMixin:
             "Edit one god at a time. Level previews use game-data thresholds; Fortuna is special. "
             "The audience toggle changes only the first-talk flag; other access conditions may still apply. "
             "Audience edits leave EXP, selected blessings, Divine Sand and travel destinations unchanged.\n"
-            "Turn off ‘Also edit this route’s other saves’. Apply EXP and the toggle change memory; "
+            "Uses the same-route mirroring selection. Apply EXP and the toggle change memory; "
             "Ctrl+S saves, Ctrl+Z undoes, Ctrl+Y redoes."
         )).pack(anchor="w", pady=(8, 0))
         self._blessing_selected()

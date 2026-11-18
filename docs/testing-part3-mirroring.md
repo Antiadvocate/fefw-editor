@@ -7,7 +7,11 @@ against the test directory at the same time.
 ## Part 3
 
 Open an Eshmel Part 3 free-time save (or a native chapter-start save). On Player,
-Story progression should offer Chapters 1–6 with provisional evidence labels.
+Story progression offers Chapters 1–6 with per-chapter evidence labels.
+Editor checks passed. Chapters 2–5 reached the next battle; Chapter 6 reached
+its opening battle only. Chapter 1 replay is blocked at the cauldron objective,
+with missing active companions and zero magic. Use the separate diagnostic
+cases for Chapter 1 until a repair is confirmed.
 Other characters must not offer Part 3. Unknown and battle resume states remain
 read-only. This feature does not perform a Part 2-to-3 transition.
 
@@ -38,7 +42,7 @@ change. Undo/Redo should restore both even after switching mirroring off. Save
 and reopen both to verify persistence. Chapter checkpoints and other routes,
 parts and playthroughs should stay unchanged.
 
-For Add Unit, use supported Part 1 free-time saves. Test a character missing
+For Add Unit, use supported main-route Part 1/2 or Eshmel Part 3 free-time saves. Test a character missing
 from both saves, then one already present in a peer. Existing recruited records
 must retain their number, stats and inventory. Inactive records should restore
 recruitment; new records allocate an unused number in their own save. A duplicate
@@ -55,5 +59,7 @@ terminal traceback or silently recreating the file.
 
 Automated tests cover atomic preflight, multi-slot Undo/Redo, duplicate checking,
 flag-list identity, peer selection, chapter state preservation and serialization.
-They do not establish in-game acceptance or visual UI acceptance. All six Part 3
-editor chapter entry paths remain provisional until tested in-game.
+They do not establish in-game acceptance or visual UI acceptance. Chapter 1 remains blocked. Chapter 6 progression, Obelisk loading and
+long-term progression remain untested. The natural Part 3 opening can also
+reset unit stats before the fight; editing before that transition does not
+guarantee that the game retains those values.

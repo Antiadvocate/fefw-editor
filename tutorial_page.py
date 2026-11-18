@@ -1,4 +1,4 @@
-"""Tutorials page; conservative, single-slot edits with the existing undo stack."""
+"""Tutorials page; mirrored edits with grouped Undo/Redo."""
 from tkinter import ttk
 
 import tutorials
@@ -42,7 +42,7 @@ class TutorialPageMixin:
             "the game controls menu visibility and can unlock tutorials again during play. "
             "Select shown uses the current filters; "
             "other entries stay saved. Unknown states are preserved. "
-            "This page edits only the selected save: turn off ‘Also edit this route’s other saves’. "
+            "Uses the same-route mirroring selection. "
             "Ctrl+Z undoes an edit; Ctrl+S writes it."
         )).pack(side="bottom", anchor="w", pady=(8, 0))
         self.tutorial_detail = ttk.Label(page, style='CardMuted.TLabel', wraplength=950,
