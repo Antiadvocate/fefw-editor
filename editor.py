@@ -36,7 +36,7 @@ import fefw_layer as layer  # noqa: E402
 import supports  # noqa: E402  (support pair chart + conversation flags)
 import fefw_core as core  # noqa: E402  (save object tree: resizing edits)
 from editor_advanced import AdvancedMixin  # noqa: E402  (Player / Classes / Flags pages)
-from ui_util import enable_multi_select, last_tree  # noqa: E402  (Ctrl+A / Shift+drag in tables)
+from ui_util import ScrollableFrame, enable_multi_select, last_tree  # noqa: E402  (Ctrl+A / Shift+drag in tables)
 
 APP_NAME = "Fortune's Weave Save Editor"
 __version__ = "1.3.9"
@@ -403,7 +403,7 @@ class App(AdvancedMixin, tk.Tk):
         self.title(APP_NAME)
         self.ui_scale = _install_scaling(self)
         sw, sh = self.winfo_screenwidth(), self.winfo_screenheight()
-        w, h = min(self.px(1240), sw - 40), min(self.px(780), sh - 80)
+        w, h = min(self.px(1360), sw - 40), min(self.px(900), sh - 80)
         self.geometry(f"{w}x{h}+{max(0, (sw - w) // 2)}+{max(0, (sh - h) // 3)}")
         self.minsize(min(self.px(1000), w), min(self.px(640), h))
 
@@ -871,7 +871,6 @@ class App(AdvancedMixin, tk.Tk):
         bar = ttk.Frame(self, style="Header.TFrame", padding=(18, 6))
         bar.pack(side="bottom", fill="x")
         self.status_lbl = ttk.Label(bar, text="Ready", style="Status.TLabel")
-        self.status_lbl.pack(side="left")
         self.dirty_lbl = ttk.Label(bar, text="", style="Status.TLabel")
         self.dirty_lbl.pack(side="right")
 
@@ -908,6 +907,15 @@ class App(AdvancedMixin, tk.Tk):
         self.pages.add(self.deeds_page, text="Notable Deeds")
         self.pages.add(self.boons_page, text="Boons")
         self.pages.add(self.flags_page, text="Flags")
+
+        tab_menu = tk.Menu(self, tearoff=False)
+        for page in self.pages.tabs():
+            tab_menu.add_command(label=self.pages.tab(page, 'text'),
+                                 command=lambda page=page: self.pages.select(page))
+        self.tab_menu_button = ttk.Menubutton(bar, text='Go to tab', menu=tab_menu)
+        self.tab_menu_button.pack(side='right', padx=(10, 16))
+        self.status_lbl.pack(side='left', fill='x', expand=True)
+        self.pages.enable_traversal()
 
         self._build_units()
         self._build_convoy()
@@ -957,18 +965,20 @@ class App(AdvancedMixin, tk.Tk):
         side = ttk.Frame(pane, style="Card.TFrame", padding=12)
         pane.add(side, weight=0)
         top = ttk.Frame(side, style="Card.TFrame")
-        top.pack(fill="x")
+        side.columnconfigure(0, weight=1)
+        side.rowconfigure(3, weight=1)
+        top.grid(row=0, column=0, sticky="ew")
         ttk.Label(top, text="Units", style="CardH3.TLabel").pack(side="left")
         self.unit_count = ttk.Label(top, text="", style="CardMuted.TLabel")
         self.unit_count.pack(side="right")
         self.unit_search = SearchEntry(side, "Search units or classes…  (Ctrl+F)",
                                        self.refresh_units, width=30)
-        self.unit_search.pack(fill="x", pady=(8, 6))
+        self.unit_search.grid(row=1, column=0, sticky="ew", pady=(8, 6))
         self.unit_search.bind("<Down>", lambda e: (self.unit_tree.focus_set(), "break")[1])
         ttk.Checkbutton(side, text="Show enemies & NPCs", style="Card.TCheckbutton",
                         variable=self.show_enemies,
                         command=lambda: (self.refresh_units(), self._save_settings())
-                        ).pack(anchor="w", pady=(0, 6))
+                        ).grid(row=2, column=0, sticky="w", pady=(0, 6))
         self.unit_tree = scrolled_tree(side, columns=("number", "lv"), show="tree headings",
                                        selectmode="browse")
         self.unit_tree.heading("#0", text="Name", anchor="w")
@@ -977,10 +987,10 @@ class App(AdvancedMixin, tk.Tk):
         self.unit_tree.column("number", width=62, minwidth=55, anchor="e", stretch=False)
         self.unit_tree.column("#0", width=200, minwidth=140)
         self.unit_tree.column("lv", width=44, minwidth=40, anchor="e", stretch=False)
-        self.unit_tree.container.pack(fill="both", expand=True)
+        self.unit_tree.container.grid(row=3, column=0, sticky="nsew")
         self.unit_tree.bind("<<TreeviewSelect>>", self.on_unit_select)
         acts = ttk.Frame(side, style="Card.TFrame")
-        acts.pack(fill="x", pady=(8, 0))
+        acts.grid(row=4, column=0, sticky="ew", pady=(8, 0))
         ttk.Button(acts, text="Add unit…", style="Small.TButton",
                    command=self.open_add_unit).pack(fill="x", pady=(0, 6))
         ttk.Button(acts, text="Change unit number…", style="Small.TButton",
@@ -1023,8 +1033,9 @@ class App(AdvancedMixin, tk.Tk):
         return (self.register(lambda P: P == "" or (P.isdigit() and len(P) <= 7)), "%P")
 
     def _build_stats_tab(self):
-        tab = ttk.Frame(self.unit_tabs, style="Card.TFrame", padding=18)
-        self.unit_tabs.add(tab, text="Stats")
+        self.stats_scroll = ScrollableFrame(self.unit_tabs, style="Card.TFrame", padding=18)
+        self.unit_tabs.add(self.stats_scroll, text="Stats")
+        tab = self.stats_scroll.body
         self._stat_spins: list[ttk.Spinbox] = []
         vcmd = self._num_vcmd()
 
@@ -1684,10 +1695,13 @@ class App(AdvancedMixin, tk.Tk):
         for name in os.listdir(folder):
             path = os.path.join(folder, name)
             if is_slot_name(name) and os.path.isfile(path):
-                out.append(path)
+                try:
+                    out.append((path, os.path.getmtime(path)))
+                except OSError:
+                    continue  # A game save can disappear between listing and stat.
         # Auto (the live save) first, then the rest newest first
-        out.sort(key=lambda pth: (os.path.basename(pth) != "Auto", -os.path.getmtime(pth)))
-        return out
+        out.sort(key=lambda row: (os.path.basename(row[0]) != "Auto", -row[1]))
+        return [path for path, _ in out]
 
     def _get(self, path: str) -> SaveFile | None:
         """Cached SaveFile; re-read from disk when the game changed it (and we didn't)."""
@@ -1722,7 +1736,7 @@ class App(AdvancedMixin, tk.Tk):
 
     def open_folder(self, folder: str, prefer: str | None = None):
         slots = self._slot_files(folder)
-        if not slots and prefer:
+        if not slots and prefer and os.path.isfile(prefer):
             slots = [prefer]
         if not slots:
             messagebox.showerror(APP_NAME, f"No Auto / Chapter_* / Route_* slots in\n{folder}")
@@ -1739,6 +1753,8 @@ class App(AdvancedMixin, tk.Tk):
                 self._get(pth)
             self._save_settings()
             target = os.path.abspath(prefer) if prefer else self._default_slot()
+            if target not in self.slot_paths:
+                target = self._default_slot()
             self._populate_slot_box()
             self.load(target)
         finally:
@@ -1760,8 +1776,14 @@ class App(AdvancedMixin, tk.Tk):
             star = "★ " if base == "Auto" else ""          # the live save
             # which lord / part / chapter the slot was saved in, read from the save
             route = layer.route_label(sv.payload) if sv else ""
+            try:
+                stamp = _fmt_time(os.path.getmtime(pth))
+            except FileNotFoundError:
+                stamp = "Missing on disk — cached copy" if sv else "Missing on disk"
+            except OSError:
+                stamp = "Unavailable on disk"
             labels.append(f"{mark}{star}{base}  ·  {route + '  ·  ' if route else ''}"
-                          f"{_fmt_time(os.path.getmtime(pth))}")
+                          f"{stamp}")
         self.slot_box.configure(values=labels)
         if self.sv is not None and self.sv.path in self.slot_paths:
             self.slot_box.current(self.slot_paths.index(self.sv.path))
@@ -1829,6 +1851,7 @@ class App(AdvancedMixin, tk.Tk):
         try:
             changed = [p for p in self.slot_paths if self._changed_on_disk(p)]
             if not changed:
+                self._populate_slot_box()  # Refresh missing/renamed-file labels too.
                 return
             clean = [p for p in changed if p not in self.dirty]
             if clean:
@@ -1879,6 +1902,15 @@ class App(AdvancedMixin, tk.Tk):
         if not self.dirty:
             self.flash("Nothing to save — no changes yet.")
             return True
+        missing = [p for p in self.dirty if not os.path.isfile(p)]
+        if missing:
+            messagebox.showerror(APP_NAME,
+                "Nothing saved. These edited slots were removed or renamed on disk:\n\n"
+                + "\n".join(os.path.basename(p) for p in sorted(missing))
+                + "\n\nYour edits are still in memory. Restore the original file(s) before saving, "
+                  "or use Reload to discard the edits and read the current folder.", parent=self)
+            self._populate_slot_box()
+            return False
         import story_files
         try:
             chapter_writes = story_files.prepare(self.files, self.dirty)
@@ -1971,17 +2003,13 @@ class App(AdvancedMixin, tk.Tk):
         return {u.uid for u in sv.units if not is_enemy(u)}
 
     def _same_route(self, other: SaveFile) -> bool:
-        """True when `other` holds the same playthrough as the open slot.
-
-        Each lord's route has its own party, convoy and gold (Auto may be
-        Theodora's route while Route_Ism is Ishmael's).  Slots of one route
-        share most of their party — an older Chapter_* slot just has fewer
-        members — so at least half of the smaller party must overlap.
-        """
-        a, b = self._party(self.sv), self._party(other)
-        if not a or not b:
+        """Match explicit character, part and playthrough, not party overlap."""
+        a, b = layer.route_info(self.sv.payload), layer.route_info(other.payload)
+        if not a or not b or a[:2] != b[:2]:
             return False
-        return len(a & b) * 2 >= min(len(a), len(b))
+        sa = core.read_settings(core.SaveFile(self.sv.payload))
+        sb = core.read_settings(core.SaveFile(other.payload))
+        return sa is not None and sb is not None and sa[0] == sb[0]
 
     @staticmethod
     def _is_checkpoint(path: str) -> bool:
@@ -2000,7 +2028,7 @@ class App(AdvancedMixin, tk.Tk):
             return []
         out = []
         for pth in self.slot_paths:
-            if pth == self.sv.path or self._is_checkpoint(pth):
+            if pth == self.sv.path or self._is_checkpoint(pth) or not os.path.isfile(pth):
                 continue
             sv = self._get(pth)
             if sv is not None and self._same_route(sv):
@@ -2490,7 +2518,7 @@ class App(AdvancedMixin, tk.Tk):
         prev = select if select is not None else [int(i) for i in tree.selection()
                                                   if i.isdigit()]
         tree.delete(*tree.get_children())
-        conv = live_convoy(bytes(self.sv.payload)) if self.sv else None
+        conv = live_convoy(self.core_of()) if self.sv else None
         # live_convoy() returns every slot; only the filled ones are items
         self._conv_rows = [r for r in (conv.rows if conv else []) if r.qty and r.iid]
         names = item_ids()
@@ -2547,7 +2575,6 @@ class App(AdvancedMixin, tk.Tk):
                 "Undo can take it back, and the original stays in the slot's .bak.",
                 parent=self):
             return
-        self.push_undo()
         if self._core_edit(lambda f: (layer.repair_convoy(f.payload) >= 0 and f.payload) or None,
                            "Repair convoy"):
             self.flash(f"Convoy repaired: {n_items} items, {got[0]} slots — Ctrl+S to write it.",
@@ -2625,7 +2652,6 @@ class App(AdvancedMixin, tk.Tk):
         gear = sorted({self._conv_row(s).iid for s in slots
                        if self._conv_row(s) and not layer.stacks(self._conv_row(s).iid)})
         if gear:
-            self.push_undo()
             for iid in gear:
                 if not self._core_edit(
                         lambda f, i=iid: (layer.set_convoy_copies(f.payload, i, qty)

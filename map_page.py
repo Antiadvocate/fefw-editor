@@ -220,7 +220,6 @@ class MapPageMixin:
             skipped["n"] = max(skipped["n"], skip)
             return g.payload
 
-        self.push_undo()
         if self._core_edit(edit, what) and skipped["n"]:
             self.flash("%s — %d skipped (a layout or value the editor hasn't seen) — "
                        "Ctrl+S to write it." % (what, skipped["n"]), "warn")

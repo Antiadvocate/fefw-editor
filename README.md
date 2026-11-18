@@ -19,8 +19,8 @@ library, or a ready-made Windows `.exe`.
 | Page | What |
 |---|---|
 | **Units** | Level, EXP, HP and stat gains; carried items; classes; arts and skills. Add a character from the catalogue, copy one from another save, remove one, restore recruitment, or change its **Unit #**, with duplicate checks. |
-| **Convoy** | Add, swap or remove items and materials, change quantities, stock all materials, and repair damaged storage lists. |
-| **Player** | Gold, renown EXP and Karma Shards; difficulty, mode and playthrough number; Part 1 chapter selection and optional chapter-start files. |
+| **Convoy** | Add, swap or remove items and materials (including Building Materials), change quantities, stock all materials, and repair damaged storage lists. |
+| **Player** | Gold, renown EXP and Karma Shards; difficulty, mode and playthrough number; Part 1/2 and Eshmel Part 3 chapter selection, optional chapter-start files, and **Troubleshoot Progress**. |
 | **Classes** | Current and learned classes, class EXP, weapon ranks and mastery EXP, with batch editing. |
 | **Supports** | Support points, current level and next-level requirements, and recorded conversations. |
 | **Mounts** | The battalion and mount each unit carries, chosen from the save's pool. |
@@ -35,21 +35,45 @@ library, or a ready-made Windows `.exe`.
 
 Edits support **Undo/Redo** (Ctrl+Z / Ctrl+Y). **Snapshot** / **Restore…** keep
 copies of the whole save folder. Frequently used save data is cached to keep
-switching pages and editing large lists responsive.
+switching pages and editing large lists responsive. The window sizes to fit your
+screen; longer forms and previews scroll, action buttons stay visible, and
+**Go to tab** reaches every page when the tab strip is too wide.
 
 ### Story progression
 
-Part 1 chapter selection is available for **Leda 2–12**, **Cai 1–12**,
-**Dietrich 3–12** and **Theodora 1–12**. Leda Chapter 1 and Dietrich Chapters 1–2
-are unavailable because replay cannot progress their early objectives.
-Targeted access fixes are applied where needed. Theodora Chapter 6 may still
-require the alternate route around the city barrier.
+Chapter selection is available from **Player → Story progression…**:
+
+| Story | Available chapters |
+|---|---|
+| Leda Part 1 | 2–12 |
+| Cai Part 1 | 1–12 |
+| Dietrich Part 1 | 3–12 |
+| Theodora Part 1 | 1–12 |
+| All four routes, Part 2 | 1–6 |
+| Eshmel Part 3 | 2–6, on existing Eshmel Part 3 saves only |
+
+Leda Part 1 Chapter 1, Dietrich Part 1 Chapters 1–2 and Eshmel Part 3 Chapter 1
+are unavailable because replay can block progression. Start Part 3 Chapter 1
+naturally through the Obelisk door. Part 3 Chapters 2–5 passed their opening and
+next story event; Chapter 6 was checked only as far as its opening battle.
+Complete playthroughs and every Obelisk checkpoint have not been validated.
 
 Chapter selection preserves your party and earlier progress; it does not grant
-all skipped units, facilities or quests. You can optionally create the selected
-chapter's checkpoint file when saving. Existing files require confirmation and
-receive a backup. Opening and the next story event have been tested; complete
-playthroughs and every Obelisk checkpoint have not.
+all skipped units, facilities or quests. Known access fixes are applied where
+needed, including Part 2 temple and midtown access. Theodora Part 1 Chapter 6
+may still require the alternate route around the city barrier. **Troubleshoot
+Progress** reads the current character, part and chapter and offers a known
+repair where one exists. If none is known, it points to the upstream issue page.
+
+**Try Part 2 entry…** offers experimental entry from a supported Part 1 save.
+It does not reproduce the whole native transition or create the separate
+`Part_<lord>_2` handoff file. Part 3 selection does not create missing route
+completion or carryover state. Story changes and troubleshooting apply only to
+the selected save, even when mirroring is enabled.
+
+You can optionally create the selected chapter's checkpoint file when saving.
+Existing files require confirmation and receive a backup. Battle states are
+not supported for story changes.
 
 ### Adding units
 
@@ -59,10 +83,19 @@ re-enables the relevant flags for an existing eligible record while retaining
 its stats and inventory; it is not a general revival feature. Manual number
 changes also reject collisions.
 
-Creation, copying and renumbering require supported **Part 1 free-time saves**
-and operate on the selected save. Some characters need equipment from the
-convoy. Anna is added dismounted and cannot remount. The catalogue does not
-claim to be an exhaustive list of naturally recruitable characters.
+The catalogue has **67 enabled characters**, including special characters with
+individual notes. Add Unit and recruitment restoration support the four Part
+1/2 routes and Eshmel Part 3 in recognized **free-time, normal pre-battle and
+chapter-start** saves. Pre-battle additions show a warning: units may have
+reduced HP/stats or be absent from the editor view. Mid-battle additions are
+disabled; world-map battle states are unsupported. Copying and renumbering
+remain limited to free-time saves.
+
+Some characters need equipment from the convoy. Anna starts dismounted; mounted
+deployment has also worked in Part 3, but remounting and map eligibility are not
+established. Eshmel's special entry has a helmeted portrait and a generic
+unhelmeted battle model. Read each character's preview for its limitations;
+these entries are not a guarantee of natural recruitment or every story context.
 
 ### Stats
 
@@ -181,8 +214,8 @@ Otherwise use **Open folder…** and pick any slot file inside it.
   played, and it opens first. `Route_<lord>` (e.g. `Route_Ism`) holds that
   lord's route while you play someone else. `Chapter_<lord>_<part>_<chapter>`
   are chapter checkpoints, the points the game's "go back in time" feature
-  returns to. `Part_<lord>_<part>` are part checkpoints. `Global` holds settings
-  only. The slot list shows the lord, part and chapter each slot was saved in
+  returns to. `Part_<lord>_<part>` are part checkpoints. `Global` is maintained separately by the game; its progression and carryover
+  data are not fully mapped by this editor. The slot list shows the lord, part and chapter each slot was saved in
   (e.g. `★ Auto · Theodora P1 Ch12`), read from the save itself; ★ marks `Auto`.
 * **Edit `Auto`.** It's the save the game continues from, so editing it alone is
   enough.
@@ -194,8 +227,12 @@ Otherwise use **Open folder…** and pick any slot file inside it.
   written into every copy. Story progression deliberately clears old internal
   restart snapshots so the game can rebuild the selected chapter start.
 * **"Also edit this route's other saves"** (off by default) also writes each edit
-  into the same route's other live saves, e.g. that lord's `Route_*`. Another
-  lord's route and every `Chapter_*` checkpoint are never touched. Open a
+  into matching live saves of the same character, part and playthrough, e.g.
+  that lord's `Route_*`. This includes Tutorials, Blessings/audiences, Fast
+  Travel, Notable Deeds, Boons, Add Unit, Functions and named flag edits, as well
+  as existing unit, inventory, map and support edits. Targets are checked before
+  applying the added features' edits, and Undo/Redo restores them together.
+  Another route/part/playthrough and every `Chapter_*` checkpoint are excluded. Open a
   checkpoint to edit it on its own. The separate Story progression checkbox can
   create or replace its selected chapter file on Save, with confirmation and backup.
 * **Nothing is written until you press Save** (Ctrl+S). Slots with unsaved
@@ -258,6 +295,7 @@ PNGs into `icons/items/` and `icons/units/` to use real images; see
 | Ctrl+Z / Ctrl+Y | Undo / redo |
 | Ctrl+O | Open a save folder |
 | Ctrl+F | Jump to the search box on the current page |
+| Ctrl+Tab / Ctrl+Shift+Tab | Move between pages |
 | Ctrl+A | Select every row in the table you last clicked |
 | Shift+click / Shift+drag | Select a range of rows (convoy, classes, masteries, flags…) |
 | F5 | Reload every slot from disk (asks first if you have unsaved edits) |
@@ -305,6 +343,7 @@ PNGs into `icons/items/` and `icons/units/` to use real images; see
 `editor_settings.json` is created beside the editor on first use.
 Research scripts, test suites and development reports are retained on the
 [feature branches](https://github.com/Destorino5/fefw-editor/branches), including
+[Part 3 story](https://github.com/Destorino5/fefw-editor/tree/feature/part3-story),
 [Part 2 story](https://github.com/Destorino5/fefw-editor/tree/feature/part2-story)
 and [unit creation](https://github.com/Destorino5/fefw-editor/tree/feature/unit-creation).
 

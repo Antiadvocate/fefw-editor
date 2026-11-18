@@ -1,8 +1,15 @@
-"""Leda Part 1 chapter entry, using the game-tested Test 3 D profile.
+"""Chapter entry for tested Part 1 routes and provisional Part 2.
 
 Leda Chapters 2–12 have short-session game evidence. Chapter 1 is unavailable:
 its opening plays but its first objective cannot be progressed.
 No private captures or GameData are required at runtime.
+Cai Part 2 Chapters 1–6 passed opening and next-battle checks.
+Chapter 5 upper-city movement repair passed both resumed and fresh entry.
+Part 1 Chapter 4-to-Part 2 Chapter 1 entry passed short-session checks;
+other conversion starting states and long-term progression remain untested.
+Leda, Dietrich and Theodora Part 2 Chapters 1–6 reached the next battle from
+their tested Part 1 baselines. Theodora Chapter 6 needed a manual middle-city
+movement repair; the automatic chapter-entry repair subsequently passed its retest.
 Cai Part 1 Chapters 1–12 passed short-session game tests.
 Dietrich Chapters 3–12 passed short-session checks, including integrated
 prerequisites for 5–7. Chapters 1/2 are unavailable: Chapter 2 replay remains
@@ -131,7 +138,41 @@ def normalized_blocks(f):
 
 
 
-def target(chapter, route=4):
+# Part 2 title dates from the private timeline; Chapter 1/year from the native
+# checkpoint. Cai Chapters 1–6 subsequently passed short-session game checks.
+PART2_TESTED = frozenset(range(1, 7))
+PART2_TESTED_BY_ROUTE = {route: PART2_TESTED for route in story.PREFIXES}
+PART2_UPPER_MOVEMENT = core.id_hash("行動範囲制限_上層")
+PART2_MIDDLE_MOVEMENT = core.id_hash("行動範囲制限_中層")
+PART2_DATES = {1: (1, 1, 12, 0), 2: (2, 1, 12, 0), 3: (3, 1, 12, 0),
+               4: (4, 3, 12, 0), 5: (4, 30, 9, 30), 6: (4, 30, 12, 0)}
+PART3_DATES = {1: (1, 24, 8, 0), 2: (2, 1, 12, 0), 3: (2, 16, 12, 0),
+               4: (3, 7, 12, 0), 5: (4, 6, 12, 0), 6: (5, 16, 12, 0)}
+
+
+def chapters_for(route, part=1):
+    if type(part) is not int or type(route) is not int:
+        raise story.StoryError('Unsupported story route or part.')
+    if part == 3 and route == 9:
+        return tuple(ch for ch in story.PART3_CHAPTERS if ch != 1)
+    if part == 2 and route in story.PREFIXES:
+        return story.PART2_CHAPTERS
+    if part == 1 and route in TARGETS:
+        return TARGETS[route]
+    raise story.StoryError('Unsupported story route or part.')
+
+
+def target(chapter, route=4, part=1):
+    if part == 3:
+        story.sequence(chapter, route, part)
+        if chapter == 1:
+            raise story.StoryError('Part 3 Chapter 1 replay is unavailable. Start it through the Obelisk door instead.')
+        return PART3_DATES[chapter]
+    if part == 2:
+        story.sequence(chapter, route, part)
+        return PART2_DATES[chapter]
+    if type(part) is not int or part != 1:
+        raise story.StoryError('Unsupported story part.')
     if type(route) is not int or route not in TARGETS:
         raise story.StoryError('Story editing supports Leda, Cai, Dietrich and Theodora Part 1 only.')
     if type(chapter) is not int or chapter not in TARGETS[route]:
@@ -176,7 +217,16 @@ def validate(f):
 
 def edited(f, chapter):
     info = validate(f)
-    date = target(chapter, info.route)
+    date = target(chapter, info.route, info.part)
+    if info.part == 3:
+        return _edited_at_entry(f, chapter, 1454, date)
+    if info.part == 2:
+        p = _edited_at_entry(f, chapter, 1450, date)
+        if chapter == 5:
+            p = repair_part2_chapter5(core.SaveFile(p))
+        if chapter == 6:
+            p = repair_part2_chapter6(core.SaveFile(p))
+        return p
     year = (THEODORA_YEARS[chapter] if info.route == 3 else
             ENTRY_YEARS[chapter] if info.route == 4 else 1449)
     p = _edited_at_entry(f, chapter, year, date)
@@ -211,8 +261,68 @@ def _edited_at_entry(f, chapter, year, date):
         raise story.StoryError('An unrelated object changed; the chapter edit was refused.')
     user = bytearray(original['GameUserData'])
     user[9] = chapter
-    struct.pack_into('<Q', user, 85, story.sequence(chapter, info.route))
+    struct.pack_into('<Q', user, 85, story.sequence(chapter, info.route, info.part))
     struct.pack_into('<Q', user, 4+RESUME_OFFSET, CHECKPOINT_ID)
     if bytes(user) != after['GameUserData'] or check.chapter != chapter:
         raise story.StoryError('Unexpected player or flag changes; the chapter edit was refused.')
     return p
+
+
+def repair_part2_chapter5(f):
+    """Shared A30 gate repair; all four routes reached the Chapter 5 battle."""
+    info = validate(f)
+    if info.route not in story.PREFIXES or (info.part, info.chapter) != (2, 5):
+        raise story.StoryError('The temple-access repair requires Part 2 Chapter 5.')
+    return facilities.edited(f, {PART2_UPPER_MOVEMENT: True})
+
+
+def repair_part2_chapter6(f):
+    """Clear only middle-city movement; Theodora's manual repair reached battle."""
+    info = validate(f)
+    if info.route not in story.PREFIXES or (info.part, info.chapter) != (2, 6):
+        raise story.StoryError('The midtown-access repair requires Part 2 Chapter 6.')
+    return facilities.edited(f, {PART2_MIDDLE_MOVEMENT: True})
+
+
+def enter_part2(f):
+    """Experimental direct entry; preserve Part 1 party, flags and world state.
+
+    This deliberately tests whether chapter entry suffices without importing the
+    native transition's flag changes. Native 1208 handoff/battle states remain
+    unsupported. The caller must opt its container into part-summary syncing.
+    """
+    info = validate(f)
+    if info.route not in story.PREFIXES or info.part != 1:
+        raise story.StoryError('Start this experiment from a supported Part 1 free-time or chapter-start save.')
+    original = normalized_blocks(f)
+    p = bytearray(f.payload)
+    for part_at, chapter_at, seq_at in ((info.header+13, info.header+14, info.header+45),
+                                       (info.user+4, info.user+5, info.user+81)):
+        p[part_at] = 2; p[chapter_at] = 1
+        struct.pack_into('<Q', p, seq_at, story.sequence(1, info.route, 2))
+    result = core.SaveFile(_edited_at_entry(core.SaveFile(p), 1, 1450, PART2_DATES[1]))
+    after = normalized_blocks(result)
+    allowed = {'Header','GameUserData','GameSchedule','Calendar','GameRestartData'}
+    if original.keys() != after.keys() or any(original[n] != after[n] for n in original.keys()-allowed):
+        raise story.StoryError('Unexpected changes during Part 2 entry; no changes applied.')
+    expected = bytearray(original['GameUserData'])
+    expected[8:10] = bytes((2, 1))
+    struct.pack_into('<Q', expected, 85, story.sequence(1, info.route, 2))
+    struct.pack_into('<Q', expected, 4+RESUME_OFFSET, CHECKPOINT_ID)
+    if expected != after['GameUserData']:
+        raise story.StoryError('Part 2 entry unexpectedly changed player data or flags.')
+    return bytearray(result.payload)
+
+
+def enter_cai_part2(f):
+    """Keep historical Cai-only research probes bounded to their original route."""
+    if validate(f).route != 1:
+        raise story.StoryError('This historical probe requires Cai.')
+    return enter_part2(f)
+
+
+def repair_cai_part2_chapter5(f):
+    """Keep the original Cai-only repair probe reproducible."""
+    if validate(f).route != 1:
+        raise story.StoryError('This historical probe requires Cai.')
+    return repair_part2_chapter5(f)
