@@ -1746,6 +1746,31 @@ def copy_unit_in(self):
 
 
 
+def revive_current_unit(self):
+    if not self.sv or self.uid is None:
+        return
+    u = self._current()
+    if u is None:
+        return
+    import unit_entries
+    try:
+        if not unit_entries.is_withdrawn(self.core_of(), self.uid):
+            self.flash(f"{u.name} is not in the withdrawn/dead list.", "info")
+            return
+    except core.SaveError as exc:
+        self.flash(str(exc), 'error')
+        return
+    if not messagebox.askyesno(
+            APP_NAME, f"Restore {u.name} to the party?\n\n"
+                      "This moves the existing record out of the withdrawn/dead list, "
+                      "keeping its level, stats, class and inventory.", parent=self):
+        return
+    if self._core_edit(lambda f: unit_entries.revive(f, self.uid),
+                       f"Restored {u.name} to the party"):
+        self.uid = u.uid
+        self.show_unit()
+
+
 def remove_current_unit(self):
     if not self.sv or self.uid is None:
         return
@@ -1857,6 +1882,7 @@ for _name in ("push_undo", "undo", "redo", "snapshot_root", "take_snapshot",
               "restore_snapshot", "_build_skill_tab", "refresh_skill_lists",
               "add_skill", "remove_skill", "_build_mounts", "refresh_mounts",
               "assign_battalion", "remove_battalion", "copy_unit_in",
-              "remove_current_unit", "add_convoy_item_ui", "remove_convoy_item_ui",
+              "remove_current_unit", "revive_current_unit",
+              "add_convoy_item_ui", "remove_convoy_item_ui",
               "fill_materials_ui"):
     setattr(AdvancedMixin, _name, globals()[_name])

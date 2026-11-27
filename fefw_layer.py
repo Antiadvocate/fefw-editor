@@ -93,7 +93,20 @@ def _record(f: core.SaveFile, u: core.SaveUnit) -> UnitRecord:
 
 def find_units(payload: bytes) -> list:
     f = core.SaveFile(bytes(payload))
-    return [_record(f, u) for u in f.units()]
+    out = [_record(f, u) for u in f.units()]
+    try:
+        import unit_entries
+        seen = {r.start for r in out}
+        for kind, _, _, rows in unit_entries.pool_groups(f):
+            if kind != 5:
+                continue
+            for u, _ in rows:
+                if u.start not in seen:
+                    out.append(_record(f, u))
+                    seen.add(u.start)
+    except core.SaveError:
+        pass
+    return out
 
 
 def pick_live(recs):
