@@ -993,6 +993,8 @@ class App(AdvancedMixin, tk.Tk):
         acts.grid(row=4, column=0, sticky="ew", pady=(8, 0))
         ttk.Button(acts, text="Add unit…", style="Small.TButton",
                    command=self.open_add_unit).pack(fill="x", pady=(0, 6))
+        ttk.Button(acts, text="Restore withdrawn unit", style="Small.TButton",
+                   command=self.revive_current_unit).pack(fill="x", pady=(0, 6))
         ttk.Button(acts, text="Change unit number…", style="Small.TButton",
                    command=self.open_unit_number).pack(fill="x", pady=(0, 6))
         ttk.Button(acts, text="Copy unit in…", style="Small.TButton",

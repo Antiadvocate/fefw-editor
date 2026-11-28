@@ -162,8 +162,7 @@ def _unit_gear(f, u):
         number_at=end+1
     else:
         number_at=cur+1
-    if (number_at+10>=u.end or p[number_at-1]!=0
-            or p[number_at+1:number_at+3]!=b'\0\3'
+    if (number_at+10>=u.end or p[number_at-1]!=0 or p[number_at+1]!=0
             or p[number_at+9] not in (33,65)):
         raise core.SaveError('Unknown unit identity layout.')
     return core.Gear(p[number_at],ride_at,legion_at-ride_at,ride,
@@ -182,7 +181,7 @@ def _pool_groups(f):
             if bytes(f.payload[at:pool.end])!=b'\xff'+bytes(pool.end-at-1) or pool.end-at>4:
                 raise core.SaveError('Unexpected data after the live unit pool.')
             return groups
-        if kind not in (0,1,3,4,6,7) or kind in seen or at+3>pool.end:
+        if kind not in (0,1,3,4,5,6,7) or kind in seen or at+3>pool.end:
             raise core.SaveError('Unknown or duplicate unit-pool group.')
         seen.add(kind);count=f.u16(at+1);start=(at+6)&~3
         if any(f.payload[at+3:start]):raise core.SaveError('Unknown unit-pool padding.')
@@ -211,7 +210,7 @@ def roster(f):
     Opponents may legitimately share an identity (including a protagonist).
     Their numbers are reserved separately during allocation.
     """
-    return [row for kind,_,_,rows in pool_groups(f) if kind in (0,4,6,7) for row in rows]
+    return [row for kind,_,_,rows in pool_groups(f) if kind in (0,4,5,6,7) for row in rows]
 
 
 def flag_values(f):
@@ -224,6 +223,8 @@ def status(f, person, rows=None, values=None):
     if hits:
         if len(hits)>1: return 'Duplicate character records — review required'
         if hits[0][0].person != person: return 'Alternate record exists — review required'
+        if len(withdrawn(f, person)) == len(hits):
+            return 'Withdrawn — use Restore withdrawn unit'
         recruited = (flag_values(f) if values is None else values).get(core.id_hash(row['recruit_flag']))
         if recruited == 1: return 'Already in party'
         if recruited in (None,0) and hits[0][0].flags == 0:
@@ -368,6 +369,79 @@ def restore(f,person):
     nums=[g.unit_number for _,g in rows]
     if len(nums)!=len(set(nums)): raise core.SaveError('Existing duplicate unit numbers must be repaired first.')
     return _recruit(f,catalog()[person]).payload
+
+
+WITHDRAWN_GROUPS = (5,)
+
+
+def withdrawn(f, person):
+    """Rows for the character in the withdrawn/dead group, if any."""
+    want = canonical(person)
+    return [(u, g) for kind, _, _, rows in pool_groups(f) if kind in WITHDRAWN_GROUPS
+            for u, g in rows if canonical(u.person) == want]
+
+
+def is_withdrawn(f, person):
+    return bool(withdrawn(f, person))
+
+
+def revive(f, person):
+    """Move a withdrawn/dead record back into the active party group."""
+    require_context(f)
+    hits = withdrawn(f, person)
+    if not hits:
+        return None
+    if len(hits) != 1:
+        raise core.SaveError('This character has multiple withdrawn records; review them first.')
+    want = canonical(person)
+    groups = pool_groups(f)
+    if any(canonical(u.person) == want for kind, _, _, rows in groups
+           if kind not in WITHDRAWN_GROUPS for u, _ in rows):
+        raise core.SaveError('This character already has an active record.')
+    if not any(kind == 4 for kind, _, _, _ in groups):
+        raise core.SaveError('No active party group to restore the unit into.')
+    number = hits[0][1].unit_number
+    if any(g.unit_number == number for kind, _, _, rows in groups
+           if kind not in WITHDRAWN_GROUPS for _, g in rows):
+        raise core.SaveError('That unit number is already used by another active unit.')
+    pool = f.block('UnitPool'); tree = f.tree()
+    body = bytearray(b'\0')
+    for kind, _, _, rows in groups:
+        if kind in WITHDRAWN_GROUPS:
+            keep = [(u, g) for u, g in rows if canonical(u.person) != want]
+            if not keep:
+                continue
+        elif kind == 4:
+            keep = list(rows) + list(hits)
+        else:
+            keep = rows
+        body.append(kind); body.extend(struct.pack('<H', len(keep)))
+        body.extend(bytes(-(pool.start + 4 + len(body)) % 4))
+        for u, _ in keep:
+            new_start = pool.start + 4 + len(body)
+            body.extend(tree.copy_object(tree.node_at(u.start), new_start))
+    body.append(255); body.extend(bytes(-(pool.start + 4 + len(body)) % 4))
+    new = tree.splice(tree.node_at(pool.start), pool.start + 4,
+                      pool.end - pool.start - 4, body)
+    result = core.SaveFile(new)
+    if withdrawn(result, want):
+        raise core.SaveError('The withdrawn record did not leave the withdrawn list.')
+    moved = [(u, g) for kind, _, _, rows in pool_groups(result) if kind == 4
+             for u, g in rows if canonical(u.person) == want]
+    if len(moved) != 1:
+        raise core.SaveError('The restored record did not read back in the party.')
+    old = sorted((u.person, g.unit_number) for kind, _, _, rows in groups
+                 if kind not in WITHDRAWN_GROUPS for u, g in rows)
+    active = sorted((u.person, g.unit_number) for kind, _, _, rows in pool_groups(result)
+                    if kind not in WITHDRAWN_GROUPS for u, g in rows)
+    if active != sorted(old + [(moved[0][0].person, number)]):
+        raise core.SaveError('Existing unit identities changed; nothing applied.')
+    before = tree.copy_object(tree.node_at(hits[0][0].start), 0)
+    newtree = result.tree()
+    after = newtree.copy_object(newtree.node_at(moved[0][0].start), 0)
+    if before != after:
+        raise core.SaveError('The restored record changed; nothing applied.')
+    return new
 
 
 def renumber(f,person,number):
