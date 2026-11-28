@@ -162,8 +162,7 @@ def _unit_gear(f, u):
         number_at=end+1
     else:
         number_at=cur+1
-    if (number_at+10>=u.end or p[number_at-1]!=0
-            or p[number_at+1]!=0 or p[number_at+2] not in (2,3)
+    if (number_at+10>=u.end or p[number_at-1]!=0 or p[number_at+1]!=0
             or p[number_at+9] not in (33,65)):
         raise core.SaveError('Unknown unit identity layout.')
     return core.Gear(p[number_at],ride_at,legion_at-ride_at,ride,
